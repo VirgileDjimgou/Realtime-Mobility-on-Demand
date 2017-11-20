@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/windowBackground"
-    tools:context="com.robertnorthard.dtbs.mobile.android.dtbsandroidclient.dtbsandroidclient.controller.AboutFragment">
+    tools:context="com.robertnorthard.dtbs.mobile.android.dtbsandroidclient.com.bee.dtbs.mobile.android.dtbsandroidclient.dtbsandroidclient.controller.AboutFragment">
 
     <TextView
         android:layout_width="match_parent"

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.robertnorthard.dtbs.mobile.android.dtbsandroidclient" >
+    package="com.bee.dtbs.mobile.android.dtbsandroidclient" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -20,13 +20,13 @@
     <uses-permission android:name="com.robertnorthard.dtbs.mobile.android.dtbsandroidclient.dtbsandroidclient.permission.C2D_MESSAGE" />
 
     <application
-        android:name=".dtbsandroidclient.DTBSApplication"
+        android:name="com.bee.dtbs.mobile.android.dtbsandroidclient.dtbsandroidclient.DTBSApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
-        <activity android:name=".dtbsandroidclient.controller.LoginActivity" >
+        <activity android:name="com.bee.dtbs.mobile.android.dtbsandroidclient.dtbsandroidclient.controller.LoginActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,7 +34,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".dtbsandroidclient.controller.passenger.PassengerMainActivity"
+            android:name="com.bee.dtbs.mobile.android.dtbsandroidclient.dtbsandroidclient.controller.passenger.PassengerMainActivity"
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
@@ -48,32 +48,32 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".dtbsandroidclient.controller.ForgottenPasswordActivity"
+            android:name="com.bee.dtbs.mobile.android.dtbsandroidclient.dtbsandroidclient.controller.ForgottenPasswordActivity"
             android:label="@string/title_activity_forgotten_password"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
-            android:name=".dtbsandroidclient.controller.RegisterActivity"
+            android:name="com.bee.dtbs.mobile.android.dtbsandroidclient.dtbsandroidclient.controller.RegisterActivity"
             android:label="@string/title_activity_register"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
 
         <service
-            android:name=".dtbsandroidclient.service.gps.GpsLocationListener"
+            android:name="com.bee.dtbs.mobile.android.dtbsandroidclient.dtbsandroidclient.service.gps.GpsLocationListener"
             android:exported="false" >
         </service>
         <service
-            android:name=".dtbsandroidclient.service.gcm.GcmTokenRefreshService"
+            android:name="com.bee.dtbs.mobile.android.dtbsandroidclient.dtbsandroidclient.service.gcm.GcmTokenRefreshService"
             android:exported="false" >
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
         <service
-            android:name=".dtbsandroidclient.service.gcm.GcmRegistrationIntentService"
+            android:name="com.bee.dtbs.mobile.android.dtbsandroidclient.dtbsandroidclient.service.gcm.GcmRegistrationIntentService"
             android:exported="false" />
         <service
-            android:name=".dtbsandroidclient.service.gcm.GcmReceiver"
+            android:name="com.bee.dtbs.mobile.android.dtbsandroidclient.dtbsandroidclient.service.gcm.GcmReceiver"
             android:exported="false" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
@@ -90,14 +90,14 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".dtbsandroidclient.service.network.NetworkMonitor" >
+        <receiver android:name="com.bee.dtbs.mobile.android.dtbsandroidclient.dtbsandroidclient.service.network.NetworkMonitor" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
 
         <activity
-            android:name=".dtbsandroidclient.controller.driver.DriverActivity"
+            android:name="com.bee.dtbs.mobile.android.dtbsandroidclient.dtbsandroidclient.controller.driver.DriverActivity"
             android:label="@string/title_activity_driver"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>

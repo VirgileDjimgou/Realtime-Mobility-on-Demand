@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     android:background="@color/windowBackground"
     android:layout_marginBottom="40dp"
-    tools:context="com.robertnorthard.dtbs.mobile.android.dtbsandroidclient.dtbsandroidclient.controller.booking.state.BookingCompleteStateFragment">
+    tools:context="com.robertnorthard.dtbs.mobile.android.dtbsandroidclient.com.bee.dtbs.mobile.android.dtbsandroidclient.dtbsandroidclient.controller.booking.state.BookingCompleteStateFragment">
 
 
     <TextView

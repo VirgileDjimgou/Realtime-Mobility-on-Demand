@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/windowBackground"
-    tools:context="com.robertnorthard.dtbs.mobile.android.dtbsandroidclient.dtbsandroidclient.controller.driver.booking.state.PickupPassengerDriverBookingState">
+    tools:context="com.robertnorthard.dtbs.mobile.android.dtbsandroidclient.com.bee.dtbs.mobile.android.dtbsandroidclient.dtbsandroidclient.controller.driver.booking.state.PickupPassengerDriverBookingState">
 
 
     <TextView
