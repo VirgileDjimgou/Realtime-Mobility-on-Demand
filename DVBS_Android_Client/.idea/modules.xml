@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/DVBS_Android_Client.iml" filepath="$PROJECT_DIR$/DVBS_Android_Client.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/distributed-taxi-booking-system-android-client-master.iml" filepath="$PROJECT_DIR$/distributed-taxi-booking-system-android-client-master.iml" />
+      <module fileurl="file://C:\Bee_Transport\DVBS_Android_Client\distributed-taxi-booking-system-android-client-master.iml" filepath="C:\Bee_Transport\DVBS_Android_Client\distributed-taxi-booking-system-android-client-master.iml" />
     </modules>
   </component>
 </project>
