@@ -54,7 +54,7 @@ public class MainActivity_App extends AppCompatActivity implements View.OnClickL
     private Button buttonLeft, buttonRight;
 
     private FormView formView;
-    private String Type_Of_User;
+    private String Type_Of_User = "Rider";
 
     private ViewGroup contianer;
 
@@ -291,6 +291,7 @@ public class MainActivity_App extends AppCompatActivity implements View.OnClickL
                             formView.animate().translationY(0).alpha(1).setDuration(500).start();
                             buttonLeft.setText(R.string.button_confirm_signup);
                             buttonRight.setText(R.string.button_cancel_signup);
+                            inputType = InputType.SIGN_UP;
                         } else {
                             Driver_Or_Rider();
                             //startActivity(new Intent(MainActivity_App.this, MainActivity_profile.class));
@@ -347,10 +348,13 @@ public class MainActivity_App extends AppCompatActivity implements View.OnClickL
 
                                                 buttonLeft.setText(R.string.button_confirm_login);
                                                 buttonRight.setText(R.string.button_cancel_login);
+                                                inputType = InputType.LOGIN;
                                             } else {
                                                 Toast.makeText(MainActivity_App.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
                                                 buttonLeft.setText(R.string.button_confirm_login);
                                                 buttonRight.setText(R.string.button_cancel_login);
+                                                inputType = InputType.LOGIN;
+
                                             }
                                         } else {
                                             Driver_Or_Rider();
