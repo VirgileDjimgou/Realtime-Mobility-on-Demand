@@ -253,6 +253,7 @@ public class MainActivity_App extends AppCompatActivity implements View.OnClickL
 
 
         // add
+        // a.replaceAll("\\s+","");
 
         String email_sign_up = inputEmail.getText().toString().trim();
         String password_sign_up = inputPassword.getText().toString().trim();
@@ -302,8 +303,8 @@ public class MainActivity_App extends AppCompatActivity implements View.OnClickL
     }
     private void Login(){
 
-        final String email = inputEmail.getText().toString();
-        final String password = inputPassword.getText().toString();
+        final String email = inputEmail.getText().toString().trim();
+        final String password = inputPassword.getText().toString().trim();
 
         if (TextUtils.isEmpty(email)) {
             Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
