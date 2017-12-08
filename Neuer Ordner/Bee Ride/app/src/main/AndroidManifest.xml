@@ -30,6 +30,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+aq
+
         <activity android:name="com.Bee.Booking.DriverLoginActivity" />
         <activity android:name="com.Bee.Booking.CustomerLoginActivity" />
 
