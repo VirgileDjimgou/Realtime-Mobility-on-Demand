@@ -68,9 +68,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     FloatingActionMenu materialDesignFAM;
     FloatingActionButton floatingActionButton1, floatingActionButton2, floatingActionButton3;
-
-
-
     private Button mLogout, mSettings, mRideStatus, mHistory;
 
     private Switch mWorkingSwitch;
