@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Bee Driver</string>
+    <string name="app_name">Bee Trips</string>
 
 
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBb7F-tT5vbdBNFsUdrr8kwPJh6SkEeUiI</string>
