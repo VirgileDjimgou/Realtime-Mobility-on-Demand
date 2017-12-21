@@ -31,7 +31,6 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.firebase.client.Firebase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -68,7 +67,7 @@ public class Facebook_Activity extends AppCompatActivity {
     private LovelyProgressDialog waitingDialog;
 
     //Add YOUR Firebase Reference URL instead of the following URL
-    Firebase mRef=new Firebase("https://androidbashfirebaseupdat-bd094.firebaseio.com/users/");
+    // Firebase mRef=new Firebase("https://androidbashfirebaseupdat-bd094.firebaseio.com/users/");
 
     //FaceBook callbackManager
     private CallbackManager callbackManager;
@@ -79,12 +78,32 @@ public class Facebook_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.facebook_login_activity);
 
+        waitingDialog = new LovelyProgressDialog(this).setCancelable(false);
+        mAuth = FirebaseAuth.getInstance();
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser mUser = firebaseAuth.getCurrentUser();
+                if (mUser != null) {
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + mUser.getUid());
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                }
+
+            }
+        };
+
+
+
+
         //FaceBook
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
-        LoginButton loginButton = (LoginButton) findViewById(R.id.button_facebook_login);
-        loginButton.setReadPermissions("email", "public_profile");
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+
+        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.d(TAG, "facebook:onSuccess:" + loginResult);
@@ -125,9 +144,6 @@ public class Facebook_Activity extends AppCompatActivity {
     }
     //
 
-    protected void setUpUser() {
-        user = new User();
-    }
 
 
     private void signInWithFacebook(AccessToken token) {
@@ -154,28 +170,32 @@ public class Facebook_Activity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }else{
-                            String uid=task.getResult().getUser().getUid();
-                            String name=task.getResult().getUser().getDisplayName();
-                            String email=task.getResult().getUser().getEmail();
-                            String image=task.getResult().getUser().getPhotoUrl().toString();
 
                             //Create a new User and Save it in Firebase database
                             User newUser = new User();
 
-                            newUser.firsName = "textxxxx";
-                            newUser.LastName = "hjbkhkjn";
-                            newUser.phone = "gfhjklö";
-                            newUser.DriverType = "xcvbnm,";
-                            newUser.email = "mail@yahoo.fr";
-                            newUser.name = "NameApp";
+
+                            String uid_facebook=task.getResult().getUser().getUid();
+                            String name_facebook=task.getResult().getUser().getDisplayName();
+                            String email_facebook=task.getResult().getUser().getEmail();
+                            String image_facebook=task.getResult().getUser().getPhotoUrl().toString();
+
+
+                            newUser.firsName = name_facebook;
+                            newUser.LastName = name_facebook;
+                            newUser.phone = "000000000000";
+                            newUser.DriverType = "Not Selected";
+                            newUser.email = email_facebook;
+                            newUser.name = name_facebook;
                             newUser.avata = StaticConfig.STR_DEFAULT_BASE64;
-                            FirebaseDatabase.getInstance().getReference().child("Driver/"+ user.getUid()).setValue(newUser);
+                            FirebaseDatabase.getInstance().getReference().child("Driver/"+ uid_facebook).setValue(newUser);
 
                             Toast.makeText(getApplicationContext(), "Register and Login success", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), SplaschScreen.class));
                             finish();
 
                             // mRef.child(uid).setValue(user);
+                            waitingDialog.dismiss();
 
                         }
 
