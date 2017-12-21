@@ -94,8 +94,8 @@
             fab:menu_animationDelayPerItem="55"
             fab:menu_backgroundColor="@android:color/transparent"
             fab:menu_buttonSpacing="0dp"
-            fab:menu_colorNormal="#da3c2f"
-            fab:menu_colorPressed="#dc4b3f"
+            fab:menu_colorNormal="#99d4d4d4"
+            fab:menu_colorPressed="#99d4d4d4"
             fab:menu_colorRipple="#99d4d4d4"
             fab:menu_fab_label="Menu"
             fab:menu_fab_size="normal"
@@ -134,8 +134,8 @@
                 android:id="@+id/material_design_floating_action_menu_item2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/ic_car"
-                fab:fab_label="Menu Item 2"
+                android:src="@mipmap/ic_person"
+                fab:fab_label="Rider Status"
                 fab:fab_size="mini" />
 
             <com.github.clans.fab.FloatingActionButton

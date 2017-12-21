@@ -10,9 +10,16 @@ public class StaticConfig {
     public static String STR_EXTRA_USERNAME = "username";
     public static String STR_EXTRA_PASSWORD = "password";
     public static String STR_DEFAULT_BASE64 = "default";
+
+    public static String STR_EXTRA_FIRST_NAME = "fn";
+    public static String STR_EXTRA_LAST_NAME = "lln";
+    public static String STR_EXTRA_PHONE_NUMBER = "ph";
+    public static String STR_EXTRA_DRIVER_TYPE = "dt";
+
+
     public static String UID = "";
     //TODO only use this UID for debug mode
-//    public static String UID = "6kU0SbJPF5QJKZTfvW1BqKolrx22";
+    //    public static String UID = "6kU0SbJPF5QJKZTfvW1BqKolrx22";
     public static String INTENT_KEY_CHAT_FRIEND = "friendname";
     public static String INTENT_KEY_CHAT_AVATA = "friendavata";
     public static String INTENT_KEY_CHAT_ID = "friendid";

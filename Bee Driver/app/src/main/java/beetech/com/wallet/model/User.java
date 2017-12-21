@@ -3,6 +3,9 @@ package beetech.com.wallet.model;
 
 
 public class User {
+    public String firsName;
+    public String LastName;
+    public String DriverType;
     public String name;
     public String email;
     public String avata;

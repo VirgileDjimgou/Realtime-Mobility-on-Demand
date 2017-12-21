@@ -111,7 +111,9 @@
             android:screenOrientation="portrait"
             android:label="@string/activity_title_privacy_policy" />
 
-        <activity android:name="beetech.com.wallet.DriverSettingsActivity"
+
+
+        <activity android:name="beetech.com.wallet.activity.Settings_Activity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:label="@string/nav_settings" />

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.regex.Matcher;
@@ -28,7 +29,8 @@ public class RegisterActivity extends AppCompatActivity {
     CardView cvAdd;
     private final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
-    private EditText editTextUsername, editTextPassword, editTextRepeatPassword;
+    private EditText FirstName, LastName , mPhoneNumberField, mVerificationField, editTextUsername, editTextPassword, editTextRepeatPassword;
+    private Spinner DriverType;
     public static String STR_EXTRA_ACTION_REGISTER = "register";
 
     @Override
@@ -40,6 +42,12 @@ public class RegisterActivity extends AppCompatActivity {
         editTextUsername = (EditText) findViewById(R.id.et_username);
         editTextPassword = (EditText) findViewById(R.id.et_password);
         editTextRepeatPassword = (EditText) findViewById(R.id.et_repeatpassword);
+        FirstName = (EditText) findViewById(R.id.first_name);
+        LastName = (EditText) findViewById(R.id.last_name);
+        mPhoneNumberField = (EditText) findViewById(R.id.field_phone_number);
+        mVerificationField = (EditText) findViewById(R.id.field_verification_code);
+        DriverType = (Spinner) findViewById(R.id.spinner);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ShowEnterAnimation();
         }
@@ -130,18 +138,27 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void clickRegister(View view) {
+        String FN = FirstName.getText().toString().trim();
+        String LN = LastName.getText().toString().trim();
+        String Phone = mPhoneNumberField.getText().toString().trim();
+        String Driver_Type = DriverType.getSelectedItem().toString().trim();
         String username = editTextUsername.getText().toString();
         String password = editTextPassword.getText().toString();
         String repeatPassword = editTextRepeatPassword.getText().toString();
-        if(validate(username, password, repeatPassword)){
+        if(validate(FN , LN , Phone , Driver_Type , username, password, repeatPassword)){
             Intent data = new Intent();
+            data.putExtra(StaticConfig.STR_EXTRA_FIRST_NAME, FN);
+            data.putExtra(StaticConfig.STR_EXTRA_LAST_NAME, LN);
+            data.putExtra(StaticConfig.STR_EXTRA_PHONE_NUMBER , Phone);
+            data.putExtra(StaticConfig.STR_EXTRA_DRIVER_TYPE , Driver_Type);
+
             data.putExtra(StaticConfig.STR_EXTRA_USERNAME, username);
             data.putExtra(StaticConfig.STR_EXTRA_PASSWORD, password);
             data.putExtra(StaticConfig.STR_EXTRA_ACTION, STR_EXTRA_ACTION_REGISTER);
             setResult(RESULT_OK, data);
             finish();
         }else {
-            Toast.makeText(this, "Invalid email or not match password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Invalid email , name , Phone or not match password", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -151,8 +168,8 @@ public class RegisterActivity extends AppCompatActivity {
      * @param password
      * @return
      */
-    private boolean validate(String emailStr, String password, String repeatPassword) {
+    private boolean validate(String fn , String ln , String ph , String dt, String emailStr, String password, String repeatPassword) {
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(emailStr);
-        return password.length() > 0 && repeatPassword.equals(password) && matcher.find();
+        return  dt.length() > 0 &&  ph.length()> 0 && ln.length() > 0  && fn.length()> 0 && password.length() > 0 && repeatPassword.equals(password) && matcher.find();
     }
 }

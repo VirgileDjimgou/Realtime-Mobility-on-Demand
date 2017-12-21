@@ -389,7 +389,7 @@ public class MainActivity extends AppCompatActivity {
 
                     case R.id.nav_settings:
                         // launch new intent instead of loading fragment
-                        startActivity(new Intent(MainActivity.this, DriverSettingsActivity.class));
+                        startActivity(new Intent(MainActivity.this, Settings_Activity.class));
                         drawer.closeDrawers();
                         return true;
 

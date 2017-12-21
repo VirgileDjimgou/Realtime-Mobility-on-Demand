@@ -84,6 +84,8 @@ import java.util.List;
 import java.util.Map;
 
 import beetech.com.wallet.R;
+import beetech.com.wallet.activity.AboutUsActivity;
+import beetech.com.wallet.activity.MainActivity;
 import beetech.com.wallet.data.FriendDB;
 import beetech.com.wallet.data.GroupDB;
 import beetech.com.wallet.service.ServiceUtils;
@@ -101,7 +103,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     LocationRequest mLocationRequest;
 
     FloatingActionMenu materialDesignFAM;
-    FloatingActionButton floatingActionButton1, floatingActionButton2, float_logout_disconnect;
+    FloatingActionButton floatingActionButton1,Rider_status, float_logout_disconnect;
 
 
 
@@ -226,7 +228,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
         materialDesignFAM = (FloatingActionMenu) rootView.findViewById(R.id.material_design_android_floating_action_menu);
         floatingActionButton1 = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item1);
-        floatingActionButton2 = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item2);
+        Rider_status = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item2);
         float_logout_disconnect = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item3);
 
         floatingActionButton1.setOnClickListener(new View.OnClickListener() {
@@ -235,9 +237,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
             }
         });
-        floatingActionButton2.setOnClickListener(new View.OnClickListener() {
+        Rider_status.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu second item clicked
+                // start Rider Status Activity ...
+                //
+                startActivity(new Intent(getActivity(), AboutUsActivity.class));
 
             }
         });
