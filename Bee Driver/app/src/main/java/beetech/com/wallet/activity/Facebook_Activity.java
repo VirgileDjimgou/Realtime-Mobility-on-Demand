@@ -183,8 +183,8 @@ public class Facebook_Activity extends AppCompatActivity {
 
                             newUser.firsName = name_facebook;
                             newUser.LastName = name_facebook;
-                            newUser.phone = "000000000000";
-                            newUser.DriverType = "Not Selected";
+                            newUser.phone = "enter your Phone Number";
+                            newUser.DriverType = "Select a Type of driver";
                             newUser.email = email_facebook;
                             newUser.name = name_facebook;
                             newUser.avata = StaticConfig.STR_DEFAULT_BASE64;
