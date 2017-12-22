@@ -71,6 +71,7 @@ public class Facebook_Activity extends AppCompatActivity {
 
     //FaceBook callbackManager
     private CallbackManager callbackManager;
+    private EditText firstName ; PhoneNumber;
     //
 
     @Override
@@ -179,6 +180,7 @@ public class Facebook_Activity extends AppCompatActivity {
                             String name_facebook=task.getResult().getUser().getDisplayName();
                             String email_facebook=task.getResult().getUser().getEmail();
                             String image_facebook=task.getResult().getUser().getPhotoUrl().toString();
+                            Toast.makeText(getApplicationContext(), uid_facebook +"   "+ email_facebook , Toast.LENGTH_LONG).show();;
 
 
                             newUser.firsName = name_facebook;
@@ -187,7 +189,7 @@ public class Facebook_Activity extends AppCompatActivity {
                             newUser.DriverType = "Select a Type of driver";
                             newUser.email = email_facebook;
                             newUser.name = name_facebook;
-                            newUser.avata = StaticConfig.STR_DEFAULT_BASE64;
+                            newUser.avata = image_facebook;
                             FirebaseDatabase.getInstance().getReference().child("Driver/"+ uid_facebook).setValue(newUser);
 
                             Toast.makeText(getApplicationContext(), "Register and Login success", Toast.LENGTH_SHORT).show();
