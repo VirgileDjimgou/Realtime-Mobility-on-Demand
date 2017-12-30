@@ -56,29 +56,17 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     LocationRequest mLocationRequest;
-
     private Button mLogout, mRequest, mSettings, mHistory;
-
     private LatLng pickupLocation;
-
     private Boolean requestBol = false;
-
     private Marker pickupMarker;
-
     private SupportMapFragment mapFragment;
-
     private String destination, requestService;
-
     private LatLng destinationLatLng;
-
     private LinearLayout mDriverInfo;
-
     private ImageView mDriverProfileImage;
-
     private TextView mDriverName, mDriverPhone, mDriverCar;
-
     private RadioGroup mRadioGroup;
-
     private RatingBar mRatingBar;
 
     @Override
