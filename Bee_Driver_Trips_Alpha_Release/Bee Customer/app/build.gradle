@@ -95,6 +95,14 @@ dependencies {
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'com.github.jd-alexander:library:1.1.0'
     compile 'com.jakewharton:butterknife:6.1.0'
+
+    // interactive windows
+
+    compile 'com.appolica:interactive-info-window:v1.0.6'
+
+
+    compile 'com.google.android.gms:play-services-location:11.6.2'
+    // compile 'com.google.android.gms:play-services-maps:11.6.2'
 }
 
 apply plugin: 'com.google.gms.google-services'
