@@ -2,7 +2,7 @@ package beetech.com.wallet.model;
 
 import android.content.Context;
 
-import com.purvotara.airbnbmapexample.controller.BaseInterface;
+import beetech.com.wallet.controller.BaseInterface;
 
 import org.json.JSONException;
 import org.json.JSONObject;

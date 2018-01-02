@@ -11,10 +11,10 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import beetech.com.wallet.R;
-import com.purvotara.airbnbmapexample.constants.NetworkConstants;
-import com.purvotara.airbnbmapexample.controller.BaseInterface;
-import com.purvotara.airbnbmapexample.model.AddressModel;
-import com.purvotara.airbnbmapexample.ui.adapter.ListViewAdapter;
+import beetech.com.wallet.constants.NetworkConstants;
+import beetech.com.wallet.controller.BaseInterface;
+import beetech.com.wallet.model.AddressModel;
+import beetech.com.wallet.ui.adapter.ListViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

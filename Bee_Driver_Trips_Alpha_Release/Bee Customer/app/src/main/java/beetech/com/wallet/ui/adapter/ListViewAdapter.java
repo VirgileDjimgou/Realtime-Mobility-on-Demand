@@ -12,10 +12,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.purvotara.airbnbmapexample.R;
-import com.purvotara.airbnbmapexample.model.AddressModel;
-import com.purvotara.airbnbmapexample.network.util.CustomVolleyRequestQueue;
-import com.purvotara.airbnbmapexample.ui.widget.MyAnimationUtils;
+import beetech.com.wallet.R;
+import beetech.com.wallet.model.AddressModel;
+import beetech.com.wallet.network.util.CustomVolleyRequestQueue;
+import beetech.com.wallet.ui.widget.MyAnimationUtils;
 
 import java.util.List;
 

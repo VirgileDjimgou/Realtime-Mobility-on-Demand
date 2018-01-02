@@ -7,9 +7,9 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
-import com.purvotara.airbnbmapexample.constants.NetworkConstants;
-import com.purvotara.airbnbmapexample.controller.BaseInterface;
-import com.purvotara.airbnbmapexample.network.BaseNetwork;
+import beetech.com.wallet.constants.NetworkConstants;
+import beetech.com.wallet.controller.BaseInterface;
+import beetech.com.wallet.network.BaseNetwork;
 
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -13,10 +13,10 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
-import com.purvotara.airbnbmapexample.constants.NetworkConstants;
-import com.purvotara.airbnbmapexample.model.BaseModel;
-import com.purvotara.airbnbmapexample.network.util.CustomVolleyRequestQueue;
-import com.purvotara.airbnbmapexample.network.util.NetworkUtil;
+import beetech.com.wallet.constants.NetworkConstants;
+import beetech.com.wallet.model.BaseModel;
+import beetech.com.wallet.network.util.CustomVolleyRequestQueue;
+import beetech.com.wallet.network.util.NetworkUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;

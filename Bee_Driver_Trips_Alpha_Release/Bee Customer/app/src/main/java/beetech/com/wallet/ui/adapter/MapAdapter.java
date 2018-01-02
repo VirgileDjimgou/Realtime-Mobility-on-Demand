@@ -6,8 +6,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.LayoutInflater;
 
-import com.purvotara.airbnbmapexample.model.AddressModel;
-import com.purvotara.airbnbmapexample.ui.fragment.MapFragment;
+import beetech.com.wallet.model.AddressModel;
+import beetech.com.wallet.ui.fragment.MapFragment;
 
 import java.util.List;
 

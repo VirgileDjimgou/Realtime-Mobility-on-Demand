@@ -6,11 +6,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
-import com.purvotara.airbnbmapexample.R;
-import com.purvotara.airbnbmapexample.constants.NetworkConstants;
-import com.purvotara.airbnbmapexample.controller.BaseInterface;
-import com.purvotara.airbnbmapexample.model.AddressModel;
-import com.purvotara.airbnbmapexample.ui.adapter.RecyclerViewLiteModeAdapter;
+import beetech.com.wallet.R;
+import beetech.com.wallet.constants.NetworkConstants;
+import beetech.com.wallet.controller.BaseInterface;
+import beetech.com.wallet.model.AddressModel;
+import beetech.com.wallet.ui.adapter.RecyclerViewLiteModeAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +46,8 @@ public class RecyclerViewLiteModeMapActivity extends AppCompatActivity {
                     if (object instanceof ArrayList) {
                         addresses = new ArrayList<>();
                         addresses = (ArrayList) object;
-                        mAdapter = new RecyclerViewLiteModeAdapter(addresses, RecyclerViewLiteModeMapActivity.this);
+                        mAdapter = new RecyclerViewLiteModeAdapter(addresses,
+                                RecyclerViewLiteModeMapActivity.this);
                         mRecyclerView.setAdapter(mAdapter);
                         mAdapter.notifyDataSetChanged();
                         mRecyclerView.requestLayout();
