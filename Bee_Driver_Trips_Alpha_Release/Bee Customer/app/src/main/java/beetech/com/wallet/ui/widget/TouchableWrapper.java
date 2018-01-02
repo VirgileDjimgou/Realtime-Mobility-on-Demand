@@ -5,12 +5,8 @@ import android.os.SystemClock;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
-import com.purvotara.airbnbmapexample.ui.activity.SearchPlaceOnMapActivity;
+import beetech.com.wallet.ui.activity.SearchPlaceOnMapActivity;
 
-
-/**
- * Created by skyrreasure on 1/4/16.
- */
 public class TouchableWrapper extends FrameLayout {
     private static final long SCROLL_TIME = 200L; // 200 Milliseconds, but you can adjust that to your liking
     private long lastTouched = 0;

@@ -6,7 +6,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.model.Marker;
-import com.purvotara.airbnbmapexample.R;
+import beetech.com.wallet.R;
 
 public class IconizedWindowAdapter implements InfoWindowAdapter {
   LayoutInflater inflater=null;

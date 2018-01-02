@@ -34,10 +34,10 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
-import com.purvotara.airbnbmapexample.R;
-import com.purvotara.airbnbmapexample.ui.adapter.PlaceAutocompleteAdapter;
-import com.purvotara.airbnbmapexample.ui.util.PermissionUtils;
-import com.purvotara.airbnbmapexample.ui.widget.TouchableWrapper;
+import beetech.com.wallet.R;
+import beetech.com.wallet.ui.adapter.PlaceAutocompleteAdapter;
+import beetech.com.wallet.ui.util.PermissionUtils;
+import beetech.com.wallet.ui.widget.TouchableWrapper;
 
 /**
  * Created by skyrreasure on 12/5/16.

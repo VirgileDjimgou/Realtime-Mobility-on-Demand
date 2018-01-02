@@ -29,6 +29,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
@@ -36,6 +37,7 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -44,9 +46,11 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.purvotara.airbnbmapexample.R;
-import com.purvotara.airbnbmapexample.ui.adapter.PlaceAutocompleteAdapter;
-import com.purvotara.airbnbmapexample.ui.util.Util;
+
+import beetech.com.wallet.CustomerMapActivity;
+import beetech.com.wallet.R;
+import beetech.com.wallet.ui.adapter.PlaceAutocompleteAdapter;
+import beetech.com.wallet.ui.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,10 +59,8 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-/**
- * Created by skyrreasure on 12/5/16.
- */
-public class ShowDirectionActivity extends AppCompatActivity implements RoutingListener, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
+
+public class ShowDirectionActivity extends AppCompatActivity implements OnMapReadyCallback, RoutingListener, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
 
 
     protected GoogleMap map;
@@ -107,8 +109,10 @@ public class ShowDirectionActivity extends AppCompatActivity implements RoutingL
         if (mapFragment == null) {
             mapFragment = SupportMapFragment.newInstance();
             getSupportFragmentManager().beginTransaction().replace(R.id.map, mapFragment).commit();
+
         }
-        map = mapFragment.getMap();
+       //  map = mapFragment-getMap;
+        mapFragment.getMapAsync((OnMapReadyCallback) this);
 
         mAdapter = new PlaceAutocompleteAdapter(this, android.R.layout.simple_list_item_1,
                 mGoogleApiClient, null, null);
@@ -363,6 +367,28 @@ public class ShowDirectionActivity extends AppCompatActivity implements RoutingL
             hideKeyboard();
         }
     }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(ShowDirectionActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
+        }
+        buildGoogleApiClient();
+        map.setMyLocationEnabled(true);
+    }
+
+    protected synchronized void buildGoogleApiClient(){
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiClient.connect();
+    }
+
+    final int LOCATION_REQUEST_CODE = 1;
 
 
     @Override

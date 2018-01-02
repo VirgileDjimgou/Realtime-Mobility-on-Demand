@@ -34,7 +34,7 @@
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/map"
-            class="com.purvotara.airbnbmapexample.ui.fragment.MySupportMapFragment"
+            class="beetech.com.wallet.ui.fragment.MySupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context="gomalon.io.com.gomalon.ui.activity.GoogleMapsActivity" />
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
-            android:src="@drawable/ic_add_circle_outline_white_48dp" />
+            android:src="@drawable/ic_float_add_group" />
 
     </FrameLayout>
 

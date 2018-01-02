@@ -51,9 +51,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.purvotara.airbnbmapexample.R;
-import com.purvotara.airbnbmapexample.ui.adapter.PlaceAutocompleteAdapter;
-import com.purvotara.airbnbmapexample.ui.util.Util;
+import beetech.com.wallet.R;
+import beetech.com.wallet.ui.adapter.PlaceAutocompleteAdapter;
+import beetech.com.wallet.ui.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -24,11 +24,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
-import com.purvotara.airbnbmapexample.R;
-import com.purvotara.airbnbmapexample.constants.NetworkConstants;
-import com.purvotara.airbnbmapexample.controller.BaseInterface;
-import com.purvotara.airbnbmapexample.model.AddressModel;
-import com.purvotara.airbnbmapexample.ui.adapter.MapAdapter;
+import beetech.com.wallet.R;
+import beetech.com.wallet.constants.NetworkConstants;
+import beetech.com.wallet.controller.BaseInterface;
+import beetech.com.wallet.model.AddressModel;
+import beetech.com.wallet.ui.adapter.MapAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_2);
 
         getSupportActionBar().setHomeButtonEnabled(true);
 

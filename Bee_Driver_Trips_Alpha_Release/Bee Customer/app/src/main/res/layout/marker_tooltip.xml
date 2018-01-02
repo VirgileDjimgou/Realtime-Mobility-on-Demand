@@ -10,7 +10,7 @@
 		android:layout_height="wrap_content"
 		android:layout_gravity="center_vertical"
 		android:padding="2dip"
-		android:src="@mipmap/ic_launcher"
+		android:src="@mipmap/beetech_round"
 		android:contentDescription="ToolTip"/>
 
 	<LinearLayout

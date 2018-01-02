@@ -22,9 +22,9 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.purvotara.airbnbmapexample.R;
-import com.purvotara.airbnbmapexample.model.AddressModel;
-import com.purvotara.airbnbmapexample.ui.widget.MyAnimationUtils;
+import beetech.com.wallet.R;
+import beetech.com.wallet.model.AddressModel;
+import beetech.com.wallet.ui.widget.MyAnimationUtils;
 
 import java.util.ArrayList;
 import java.util.List;

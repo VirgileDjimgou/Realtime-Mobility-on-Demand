@@ -6,7 +6,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
-import beetech.com.wallet.R;
 import beetech.com.wallet.constants.NetworkConstants;
 import beetech.com.wallet.controller.BaseInterface;
 import beetech.com.wallet.model.AddressModel;
@@ -14,6 +13,8 @@ import beetech.com.wallet.ui.adapter.RecyclerViewLiteModeAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import beetech.com.wallet.R;
+
 
 public class RecyclerViewLiteModeMapActivity extends AppCompatActivity {
 
