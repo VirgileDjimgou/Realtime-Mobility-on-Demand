@@ -101,8 +101,10 @@ dependencies {
     compile 'com.appolica:interactive-info-window:v1.0.6'
 
 
-    compile 'com.google.android.gms:play-services-location:11.6.2'
+    // compile 'com.google.android.gms:play-services-location:11.6.2'
     // compile 'com.google.android.gms:play-services-maps:11.6.2'
+
+
 }
 
 apply plugin: 'com.google.gms.google-services'
