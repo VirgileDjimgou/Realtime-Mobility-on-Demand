@@ -5,12 +5,17 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.widget.AppCompatCheckBox;
+import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -68,7 +73,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     Location mLastLocation;
     LocationRequest mLocationRequest;
 
-    private Button mLogout, mSettings, mRideStatus, mHistory;
+    private Button mRideStatus;
 
     private Switch mWorkingSwitch;
 
@@ -91,6 +96,20 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     FloatingActionMenu materialDesignFAM;
     FloatingActionButton History,Rider_status, float_logout_disconnect , Settings;
+
+
+
+    int[][] states = new int[][] {
+            new int[] {-android.R.attr.state_checked},
+            new int[] {android.R.attr.state_checked},
+    };
+
+    int[] trackColors = new int[] {
+            Color.GRAY,
+            Color.GREEN,
+    };
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +144,12 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         mCustomerPhone = (TextView) findViewById(R.id.customerPhone);
         mCustomerDestination = (TextView) findViewById(R.id.customerDestination);
 
+
+
+
         mWorkingSwitch = (Switch) findViewById(R.id.workingSwitch);
+
+        DrawableCompat.setTintList(DrawableCompat.wrap(mWorkingSwitch.getTrackDrawable()), new ColorStateList(states, trackColors));
         mWorkingSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -485,6 +509,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             ActivityCompat.requestPermissions(DriverMapActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+
     }
 
     private void disconnectDriver(){
