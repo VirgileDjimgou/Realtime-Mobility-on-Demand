@@ -12,27 +12,14 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.os.Bundle;
+
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -43,19 +30,12 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.yarolegovich.lovelydialog.LovelyProgressDialog;
 
-import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import beetech.com.wallet.R;
-import beetech.com.wallet.data.SharedPreferenceHelper;
 import beetech.com.wallet.data.StaticConfig;
 import beetech.com.wallet.model.User;
-import beetech.com.wallet.ubersplash.MainActivity_App;
-
-
-import beetech.com.wallet.R;
-import beetech.com.wallet.ubersplash.MainActivity_App;
 
 
 public class Facebook_Activity extends AppCompatActivity {

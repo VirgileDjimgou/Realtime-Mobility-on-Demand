@@ -60,7 +60,10 @@ import beetech.com.wallet.data.FriendDB;
 import beetech.com.wallet.data.GroupDB;
 import beetech.com.wallet.service.ServiceUtils;
 
-public class CustomerMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
+public class CustomerMapActivity extends FragmentActivity implements OnMapReadyCallback,
+                                                                    GoogleApiClient.ConnectionCallbacks,
+                                                                    GoogleApiClient.OnConnectionFailedListener,
+                                                                    com.google.android.gms.location.LocationListener {
 
     private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
@@ -220,25 +223,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             }
         });
 
-
-
-
-
-        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
-                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                // TODO: Get info about the selected place.
-                destination = place.getName().toString();
-                destinationLatLng = place.getLatLng();
-            }
-            @Override
-            public void onError(Status status) {
-                // TODO: Handle the error.
-            }
-        });
 
     }
     private int radius = 1;

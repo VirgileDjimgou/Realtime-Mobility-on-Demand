@@ -12,7 +12,7 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 
 import beetech.com.wallet.R;
-import beetech.com.wallet.ubersplash.MainActivity_App;
+import beetech.com.wallet.ubersplash.MainActivity_Driver;
 
 
 public class FacebookActivity_save extends AppCompatActivity {
@@ -61,7 +61,7 @@ public class FacebookActivity_save extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(FacebookActivity_save.this, MainActivity_App.class);
+        Intent intent = new Intent(FacebookActivity_save.this, MainActivity_Driver.class);
         startActivity(intent);
         finish();
     }

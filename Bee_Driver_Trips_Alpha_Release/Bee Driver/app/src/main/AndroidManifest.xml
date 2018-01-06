@@ -61,7 +61,7 @@
 
 
         <activity
-            android:name="beetech.com.wallet.ubersplash.MainActivity_App">
+            android:name="beetech.com.wallet.ubersplash.MainActivity_Driver">
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             <intent-filter>
@@ -86,7 +86,7 @@
             android:theme="@style/Translucent" />
 
         <activity
-            android:name="beetech.com.wallet.activity.RegisterActivity"
+            android:name="beetech.com.wallet.activity.RegisterActivity_Drive"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Translucent" />
@@ -137,7 +137,7 @@
             android:screenOrientation="portrait"/>
 
 
-        <activity android:name="beetech.com.wallet.activity.EmailLoginActivity"
+        <activity android:name="beetech.com.wallet.activity.EmailLoginActivity_driver"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
 

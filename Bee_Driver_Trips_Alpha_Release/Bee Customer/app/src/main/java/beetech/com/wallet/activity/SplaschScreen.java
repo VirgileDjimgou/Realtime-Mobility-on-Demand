@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
 import beetech.com.wallet.CustomerMapActivity;
+import beetech.com.wallet.CustomerMapActivity_v2;
 import beetech.com.wallet.R;
 import beetech.com.wallet.ubersplash.MainActivity_App;
 
@@ -31,7 +32,7 @@ public class SplaschScreen extends AppCompatActivity{
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(SplaschScreen.this, CustomerMapActivity.class);
+                Intent intent = new Intent(SplaschScreen.this, CustomerMapActivity_v2.class);
                 startActivity(intent);
                 finish();
 

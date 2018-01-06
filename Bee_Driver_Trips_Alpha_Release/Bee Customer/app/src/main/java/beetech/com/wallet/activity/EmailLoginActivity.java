@@ -32,6 +32,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import beetech.com.wallet.CustomerMapActivity;
+import beetech.com.wallet.CustomerMapActivity_v2;
 import beetech.com.wallet.R;
 import beetech.com.wallet.data.SharedPreferenceHelper;
 import beetech.com.wallet.data.StaticConfig;
@@ -91,7 +92,7 @@ public class EmailLoginActivity extends AppCompatActivity {
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                     if (firstTimeAccess) {
                         authUtils.saveUserInfo();
-                        startActivity(new Intent(EmailLoginActivity.this, CustomerMapActivity.class));
+                        startActivity(new Intent(EmailLoginActivity.this, CustomerMapActivity_v2.class));
                         // startActivity(new Intent(EmailLoginActivity.this, MapsActivity.class));
 
                         // startActivity(new Intent(EmailLoginActivity.this, LocationsOverviewActivity.class));

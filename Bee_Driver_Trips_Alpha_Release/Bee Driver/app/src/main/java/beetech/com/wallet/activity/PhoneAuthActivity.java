@@ -26,7 +26,7 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import java.util.concurrent.TimeUnit;
 
 import beetech.com.wallet.R;
-import beetech.com.wallet.ubersplash.MainActivity_App;
+import beetech.com.wallet.ubersplash.MainActivity_Driver;
 
 
 /**
@@ -163,7 +163,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(PhoneAuthActivity.this, MainActivity_App.class);
+        Intent intent = new Intent(PhoneAuthActivity.this, MainActivity_Driver.class);
         startActivity(intent);
         finish();
     }

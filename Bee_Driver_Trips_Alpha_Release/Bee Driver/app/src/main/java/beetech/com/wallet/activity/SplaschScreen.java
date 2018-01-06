@@ -8,7 +8,6 @@ import android.view.WindowManager;
 
 import beetech.com.wallet.DriverMapActivity;
 import beetech.com.wallet.R;
-import beetech.com.wallet.ubersplash.MainActivity_App;
 
 /**
  * Created by chichikolon on 07.12.2017.

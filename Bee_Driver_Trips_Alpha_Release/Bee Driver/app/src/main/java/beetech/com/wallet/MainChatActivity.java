@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import beetech.com.wallet.data.StaticConfig;
 import beetech.com.wallet.service.ServiceUtils;
-import beetech.com.wallet.ubersplash.MainActivity_App;
+import beetech.com.wallet.ubersplash.MainActivity_Driver;
 import beetech.com.wallet.ui.FriendsFragment;
 import beetech.com.wallet.ui.GroupFragment;
 import beetech.com.wallet.ui.UserAlteProfileFragment;
@@ -73,7 +73,7 @@ public class MainChatActivity extends AppCompatActivity {
                 } else {
                     MainChatActivity.this.finish();
                     // User is signed in
-                    startActivity(new Intent(MainChatActivity.this, MainActivity_App.class));
+                    startActivity(new Intent(MainChatActivity.this, MainActivity_Driver.class));
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
                 // ...
