@@ -279,6 +279,10 @@ public class CustomerMapActivity_v2 extends AppCompatActivity implements OnMapRe
                     endRide();
 
 
+                    Toast.makeText(getApplicationContext(), "End Ride  Requested",
+                            Toast.LENGTH_LONG).show();
+
+
                 }else{
                     int selectId = mRadioGroup.getCheckedRadioButtonId();
 
@@ -294,16 +298,24 @@ public class CustomerMapActivity_v2 extends AppCompatActivity implements OnMapRe
 
                     String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
-                    GeoFire geoFire = new GeoFire(ref);
-                    geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
+                    try{
 
-                    pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                    pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Pickup Here").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_pickup)));
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
+                        GeoFire geoFire = new GeoFire(ref);
+                        geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
 
-                    mRequest.setText("Getting your Driver....");
+                        pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                        pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Pickup Here").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_pickup)));
 
-                    getClosestDriver();
+                        mRequest.setText("Getting your Driver....");
+
+                        getClosestDriver();
+
+                    }catch (Exception ex){
+                        ex.printStackTrace();
+
+                    }
+
                 }
             }
         });
@@ -385,6 +397,11 @@ public class CustomerMapActivity_v2 extends AppCompatActivity implements OnMapRe
                         toLongitude = place.getLatLng().longitude;
 
                         end = place.getLatLng();
+
+                        // get the destination
+
+                        destination = place.getName().toString();
+                        destinationLatLng = place.getLatLng();
                     }
                 });
 
@@ -1363,8 +1380,10 @@ public class CustomerMapActivity_v2 extends AppCompatActivity implements OnMapRe
 
             LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
 
+            Toast.makeText(this, "neu Lat : " + location.getLatitude() + " long  : " + location.getLongitude() , Toast.LENGTH_SHORT).show();
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+            // i don't need zoom
+            // mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
         }
     }
 
