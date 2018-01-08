@@ -272,6 +272,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(DriverMapActivity.this, databaseError.toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }

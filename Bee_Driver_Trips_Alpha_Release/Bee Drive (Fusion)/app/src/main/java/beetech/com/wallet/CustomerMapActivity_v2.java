@@ -139,9 +139,8 @@ public class CustomerMapActivity_v2 extends AppCompatActivity implements OnMapRe
             // setHasOptionsMenu(true);
         }
     };
-    private GoogleMap mMap;
+    // private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
-    Location mLastLocation;
     LocationRequest mLocationRequest;
     private Button mLogout, mRequest, mSettings, mHistory;
     private LatLng pickupLocation;
@@ -206,6 +205,11 @@ public class CustomerMapActivity_v2 extends AppCompatActivity implements OnMapRe
 
                         mLatitude = location.getLatitude();
                         mLongitude = location.getLongitude();
+
+                        LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
+
+                        // Toast.makeText(this, "neu Lat : " + location.getLatitude() + " long  : " + location.getLongitude() , Toast.LENGTH_SHORT).show();
+                        // mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                     }
 
                     @Override
@@ -232,6 +236,12 @@ public class CustomerMapActivity_v2 extends AppCompatActivity implements OnMapRe
 
                         mLatitude = location.getLatitude();
                         mLongitude = location.getLongitude();
+
+
+                        LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
+
+                        // Toast.makeText(this, "neu Lat : " + location.getLatitude() + " long  : " + location.getLongitude() , Toast.LENGTH_SHORT).show();
+                        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
                     }
 
@@ -302,10 +312,10 @@ public class CustomerMapActivity_v2 extends AppCompatActivity implements OnMapRe
 
                         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
                         GeoFire geoFire = new GeoFire(ref);
-                        geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
+                        geoFire.setLocation(userId, new GeoLocation(mLatitude, mLongitude));
 
-                        pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                        pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Pickup Here").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_pickup)));
+                        pickupLocation = new LatLng(mLatitude, mLongitude);
+                        pickupMarker = mGoogleMap.addMarker(new MarkerOptions().position(pickupLocation).title("Pickup Here").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_pickup)));
 
                         mRequest.setText("Getting your Driver....");
 
@@ -1237,7 +1247,7 @@ public class CustomerMapActivity_v2 extends AppCompatActivity implements OnMapRe
 
 
 
-                    mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLatLng).title("your driver").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_car)));
+                    mDriverMarker = mGoogleMap.addMarker(new MarkerOptions().position(driverLatLng).title("your driver").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_car)));
                 }
 
             }
@@ -1375,17 +1385,18 @@ public class CustomerMapActivity_v2 extends AppCompatActivity implements OnMapRe
 
     @Override
     public void onLocationChanged(Location location) {
+        // this function don't work at the moment  ....
+        ///i have already defined this in Oncreate methode  ...after manager instance  ... 
         if(getApplicationContext()!=null){
-            mLastLocation = location;
-
             LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
 
             Toast.makeText(this, "neu Lat : " + location.getLatitude() + " long  : " + location.getLongitude() , Toast.LENGTH_SHORT).show();
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             // i don't need zoom
             // mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
         }
     }
+
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
