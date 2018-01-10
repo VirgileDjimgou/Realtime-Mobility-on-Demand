@@ -61,6 +61,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import beetech.com.wallet.Utility.LocationTrack;
 import beetech.com.wallet.activity.AboutUsActivity;
 import beetech.com.wallet.data.FriendDB;
 import beetech.com.wallet.data.GroupDB;
@@ -98,6 +99,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     FloatingActionButton History,Rider_status, float_logout_disconnect , Settings;
 
 
+    private     LocationTrack locationTrack;
 
     int[][] states = new int[][] {
             new int[] {-android.R.attr.state_checked},
@@ -115,6 +117,20 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_map_v2);
+
+        locationTrack = new LocationTrack(DriverMapActivity.this);
+
+        // verifie activation of gps  sensor  ...
+        if (locationTrack.canGetLocation()) {
+
+            Toast.makeText(getApplicationContext(), "GPS Sensor Activated .... ", Toast.LENGTH_SHORT).show();
+        } else {
+
+            //  you must activated settings
+            // locationTrack.showSettingsAlert();
+
+            locationTrack.showSettingsAlert();
+        }
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         polylines = new ArrayList<>();
         mapFragment = (SupportMapFragment) getSupportFragmentManager()

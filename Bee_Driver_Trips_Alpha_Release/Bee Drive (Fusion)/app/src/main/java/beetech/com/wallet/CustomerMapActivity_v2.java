@@ -159,6 +159,7 @@ public class CustomerMapActivity_v2 extends AppCompatActivity implements OnMapRe
 
     private Boolean isLoggingOut = false;
 
+
     private     LocationTrack locationTrack;
 
 
