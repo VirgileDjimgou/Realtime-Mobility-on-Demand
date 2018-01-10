@@ -154,7 +154,7 @@ public class LocationTrack extends Service implements LocationListener {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
 
 
-        alertDialog.setTitle("GPS is not Enabled!");
+        alertDialog.setTitle("GPS is not Enabled ... you can not use this app without turning on GPS !");
 
         alertDialog.setMessage("Do you want to turn on GPS?");
 
@@ -170,6 +170,17 @@ public class LocationTrack extends Service implements LocationListener {
         alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
+
+                try {
+                    // complete close the Application after the validation of User  ...
+                    Thread.sleep(2000);
+
+                    int pid = android.os.Process.myPid();
+                    android.os.Process.killProcess(pid);
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         });
 

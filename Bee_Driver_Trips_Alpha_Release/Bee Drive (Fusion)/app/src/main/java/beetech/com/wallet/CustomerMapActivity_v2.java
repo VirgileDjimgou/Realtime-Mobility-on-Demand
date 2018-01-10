@@ -176,14 +176,12 @@ public class CustomerMapActivity_v2 extends AppCompatActivity implements OnMapRe
 
 
 
+        locationTrack = new LocationTrack(CustomerMapActivity_v2.this);
+
         // verifie activation of gps  sensor  ...
         if (locationTrack.canGetLocation()) {
 
-
-            double longitude = locationTrack.getLongitude();
-            double latitude = locationTrack.getLatitude();
-
-            Toast.makeText(getApplicationContext(), "GPS Sensor Activated", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "GPS Sensor Activated .... ", Toast.LENGTH_SHORT).show();
         } else {
 
             //  you must activated settings
