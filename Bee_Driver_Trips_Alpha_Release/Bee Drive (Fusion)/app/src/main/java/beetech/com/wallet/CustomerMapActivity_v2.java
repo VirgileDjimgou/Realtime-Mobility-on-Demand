@@ -565,6 +565,7 @@ public class CustomerMapActivity_v2 extends AppCompatActivity implements OnMapRe
         });
 
 
+        // end
 
     }
 
@@ -1150,7 +1151,7 @@ public class CustomerMapActivity_v2 extends AppCompatActivity implements OnMapRe
 
 
     /// end Add
-    private int radius = 1;
+    private int radius = 5; // radius in km ...
     private Boolean driverFound = false;
     private String driverFoundID;
 
@@ -1373,6 +1374,7 @@ public class CustomerMapActivity_v2 extends AppCompatActivity implements OnMapRe
             driverFoundID = null;
 
         }
+        //  Testing of the  Driver ... triggers in Firebase ...
         driverFound = false;
         radius = 1;
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
