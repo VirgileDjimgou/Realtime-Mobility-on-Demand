@@ -47,7 +47,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import beetech.com.wallet.CustomerMapActivity;
 import beetech.com.wallet.R;
 import beetech.com.wallet.ui.adapter.PlaceAutocompleteAdapter;
 import beetech.com.wallet.ui.util.Util;

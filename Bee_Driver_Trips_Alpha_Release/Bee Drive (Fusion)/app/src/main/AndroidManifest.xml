@@ -136,9 +136,6 @@
             android:screenOrientation="portrait"
             android:label="@string/app_name" />
 
-        <activity android:name="beetech.com.wallet.CustomerMapActivity"
-            android:label="@string/app_name" />
-
         <activity android:name="beetech.com.wallet.CustomerSettingsActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"

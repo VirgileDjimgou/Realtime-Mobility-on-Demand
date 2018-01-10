@@ -16,7 +16,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Base64;
 import android.util.Log;
 
-import beetech.com.wallet.CustomerMapActivity;
+import beetech.com.wallet.CustomerMapActivity_v2;
 import beetech.com.wallet.R;
 import beetech.com.wallet.data.FriendDB;
 import beetech.com.wallet.data.GroupDB;
@@ -176,7 +176,7 @@ public class FriendChatService extends Service {
     }
 
     public void createNotify(String name, String content, int id, Bitmap icon, boolean isGroup) {
-        Intent activityIntent = new Intent(this, CustomerMapActivity.class);
+        Intent activityIntent = new Intent(this, CustomerMapActivity_v2.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, activityIntent, PendingIntent.FLAG_ONE_SHOT);
         NotificationCompat.Builder notificationBuilder = new
                 NotificationCompat.Builder(this)
