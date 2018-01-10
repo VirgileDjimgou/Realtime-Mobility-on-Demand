@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -70,6 +71,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -161,6 +164,8 @@ public class CustomerMapActivity_v2 extends AppCompatActivity implements OnMapRe
 
 
     private     LocationTrack locationTrack;
+    private Circle searchCircle;
+
 
 
 
@@ -265,6 +270,11 @@ public class CustomerMapActivity_v2 extends AppCompatActivity implements OnMapRe
 
                         // Toast.makeText(this, "neu Lat : " + location.getLatitude() + " long  : " + location.getLongitude() , Toast.LENGTH_SHORT).show();
                         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+
+                        searchCircle = mGoogleMap.addCircle(new CircleOptions().center(latLng).radius(1000));
+                        searchCircle.setFillColor(Color.argb(66, 255, 0, 255));
+                        searchCircle.setStrokeColor(Color.argb(66, 0, 0, 0));
 
                     }
 
@@ -553,6 +563,7 @@ public class CustomerMapActivity_v2 extends AppCompatActivity implements OnMapRe
 
             }
         });
+
 
 
     }
