@@ -100,6 +100,8 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
+import beetech.com.wallet.Utility.LocationTrack;
+
 public class CustomerMapActivity_v2 extends AppCompatActivity implements OnMapReadyCallback,
                                                                     RoutingListener,
                                                                     GoogleApiClient.ConnectionCallbacks,
@@ -157,6 +159,9 @@ public class CustomerMapActivity_v2 extends AppCompatActivity implements OnMapRe
 
     private Boolean isLoggingOut = false;
 
+    private     LocationTrack locationTrack;
+
+
 
     FloatingActionMenu materialDesignFAM;
     FloatingActionButton History,Request_status, float_logout_disconnect , Settings;
@@ -168,6 +173,25 @@ public class CustomerMapActivity_v2 extends AppCompatActivity implements OnMapRe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_costumer_map);
+
+
+
+        // verifie activation of gps  sensor  ...
+        if (locationTrack.canGetLocation()) {
+
+
+            double longitude = locationTrack.getLongitude();
+            double latitude = locationTrack.getLatitude();
+
+            Toast.makeText(getApplicationContext(), "GPS Sensor Activated", Toast.LENGTH_SHORT).show();
+        } else {
+
+            //  you must activated settings
+            // locationTrack.showSettingsAlert();
+
+            locationTrack.showSettingsAlert();
+        }
+
 
         ButterKnife.inject(this);
 
@@ -530,6 +554,7 @@ public class CustomerMapActivity_v2 extends AppCompatActivity implements OnMapRe
 
             }
         });
+
 
     }
 
