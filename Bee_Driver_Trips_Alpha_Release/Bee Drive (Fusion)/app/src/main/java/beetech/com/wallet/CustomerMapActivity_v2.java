@@ -319,11 +319,15 @@ public class CustomerMapActivity_v2 extends AppCompatActivity implements OnMapRe
             public void onClick(View v) {
 
                 if (requestBol){
-                    endRide();
 
+                    try{
+                        endRide();
+                        Toast.makeText(getApplicationContext(), "End Ride  Requested",
+                                Toast.LENGTH_LONG).show();
 
-                    Toast.makeText(getApplicationContext(), "End Ride  Requested",
-                            Toast.LENGTH_LONG).show();
+                    }catch(Exception ex){
+                        ex.printStackTrace();
+                    }
 
 
                 }else{
@@ -1199,6 +1203,8 @@ public class CustomerMapActivity_v2 extends AppCompatActivity implements OnMapRe
                         }
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
+                            Log.d("Error ", databaseError.toString());
+                            Toast.makeText(CustomerMapActivity_v2.this, databaseError.toString(), 5000).show();
                         }
                     });
                 }
@@ -1218,8 +1224,10 @@ public class CustomerMapActivity_v2 extends AppCompatActivity implements OnMapRe
             public void onGeoQueryReady() {
                 if (!driverFound)
                 {
+                    Toast.makeText(CustomerMapActivity_v2.this, "driver not Found  onGeoQuery Ready  ... expand the Radius of Recherche ", 5000).show();
                     radius++;
                     getClosestDriver();
+
                 }
             }
 
