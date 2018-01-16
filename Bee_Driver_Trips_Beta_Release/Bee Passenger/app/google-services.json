@@ -1,0 +1,161 @@
+{
+  "project_info": {
+    "project_number": "594753687386",
+    "firebase_url": "https://beewallet-114e7.firebaseio.com",
+    "project_id": "beewallet-114e7",
+    "storage_bucket": "beewallet-114e7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594753687386:android:00fe69b002d074ee",
+        "android_client_info": {
+          "package_name": "com.android.beewallet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBAxOoUN1spN7YEnSSwaFU6x3vRP1EkHI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594753687386:android:6f51d0b2dfdfc91a",
+        "android_client_info": {
+          "package_name": "com.beewallet.phone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "594753687386-0b879rgu9maitle43qafe3lmfu139mvu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.beewallet.phone",
+            "certificate_hash": "d5f3bd5337e60087c7ebc9ab26b1c288a81ce048"
+          }
+        },
+        {
+          "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBAxOoUN1spN7YEnSSwaFU6x3vRP1EkHI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594753687386:android:9490184d3bb2daab",
+        "android_client_info": {
+          "package_name": "beetech.com.wallet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "594753687386-fnuf88bkllbe810ek3rmr3m5oq4up81u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "beetech.com.wallet",
+            "certificate_hash": "d5f3bd5337e60087c7ebc9ab26b1c288a81ce048"
+          }
+        },
+        {
+          "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBAxOoUN1spN7YEnSSwaFU6x3vRP1EkHI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594753687386:android:40c04e1184fd92ec",
+        "android_client_info": {
+          "package_name": "com.bee.passenger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBAxOoUN1spN7YEnSSwaFU6x3vRP1EkHI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

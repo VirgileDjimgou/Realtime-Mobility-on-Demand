@@ -124,6 +124,68 @@
           "status": 2
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594753687386:android:40c04e1184fd92ec",
+        "android_client_info": {
+          "package_name": "com.bee.passenger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBAxOoUN1spN7YEnSSwaFU6x3vRP1EkHI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594753687386:android:137f9e6b9f71ec3f",
+        "android_client_info": {
+          "package_name": "com.bee.drive"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBAxOoUN1spN7YEnSSwaFU6x3vRP1EkHI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
     }
   ],
   "configuration_version": "1"

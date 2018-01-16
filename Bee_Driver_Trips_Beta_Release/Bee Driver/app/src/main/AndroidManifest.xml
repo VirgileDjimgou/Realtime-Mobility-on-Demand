@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="beetech.com.wallet">
+    package="com.bee.drive">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -40,6 +40,9 @@
     <uses-feature android:name="android.hardware.location.network" android:required="false" />
     <uses-feature android:name="android.hardware.microphone" android:required="false" />
 
+
+
+
     <supports-screens android:anyDensity="true" />
 
     <application
@@ -50,9 +53,32 @@
         android:supportsRtl="true"
         android:launchMode="singleTop"
         android:screenOrientation="portrait"
+        android:resizeableActivity="true"
         android:theme="@style/AppTheme">
-        <service android:name="beetech.com.wallet.onAppKilled" android:stopWithTask="false"/>
+        <service android:name="com.bee.drive.onAppKilled" android:stopWithTask="false"/>
 
+
+        <!-- mULTIWINDOWS  -->
+
+        <uses-library android:required="false" android:name="com.sec.android.app.multiwindow"/>
+
+        <meta-data android:name="com.sec.android.support.multiwindow.penwindow.enable" android:value = "true" />
+        <meta-data android:name="com.sec.android.support.multiwindow" android:value = "true" />
+        <meta-data android:name="com.sec.android.multiwindow.DEFAULT_SIZE_W"
+                   android:resource="@dimen/app_defaulsize_w"/>
+        <meta-data android:name="com.sec.android.multiwindow.DEFAULT_SIZE_H"
+            android:resource="@dimen/app_defaulsize_h"/>
+        <meta-data android:name="com.sec.android.multiwindow.MINIMUN_SIZE_W"
+            android:resource="@dimen/app_minimunsize_w"/>
+        <meta-data android:name="com.sec.android.multiwindow.MINIMUN_SIZE_H"
+            android:resource="@dimen/app_minimunsize_h"/>
+
+
+        <meta-data android:name="com.samsung.android.sdk.multiwindow.multiinstance.enable"
+            android:value="true"/>
+
+
+        <!-- End Multiwindows -->
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -60,21 +86,24 @@
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
 
 
+
         <activity
-            android:name="beetech.com.wallet.ubersplash.MainActivity_App">
+            android:name="com.bee.drive.ubersplash.MainActivity_App">
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
+
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
             </intent-filter>
         </activity>
 
 
 
         <activity
-            android:name="beetech.com.wallet.activity.MainActivity"
+            android:name="com.bee.drive.activity.MainActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/TranslucentBackground">
@@ -82,55 +111,67 @@
 
 
         <activity
-            android:name="beetech.com.wallet.activity.PhoneAuthActivity"
+            android:name="com.bee.drive.activity.PhoneAuthActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:supportsRtl="true"
             android:theme="@style/Translucent" />
 
         <activity
-            android:name="beetech.com.wallet.activity.MainActivityPhone"
+            android:name="com.bee.drive.activity.MainActivityPhone"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Translucent" />
 
         <activity
-            android:name="beetech.com.wallet.activity.RegisterActivity"
+            android:name="com.bee.drive.activity.RegisterActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Translucent" />
 
         <activity
-            android:name="beetech.com.wallet.activity.AboutUsActivity"
+            android:name="com.bee.drive.activity.AboutUsActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:label="@string/nav_about" />
         <activity
-            android:name="beetech.com.wallet.activity.PrivacyPolicyActivity"
+            android:name="com.bee.drive.activity.PrivacyPolicyActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:label="@string/activity_title_privacy_policy" />
 
 
 
-        <activity android:name="beetech.com.wallet.activity.Settings_Activity"
+        <activity android:name="com.bee.drive.activity.Settings_Activity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:label="@string/nav_settings" />
 
-        <activity android:name="beetech.com.wallet.activity.Facebook_Activity"
+        <activity android:name="com.bee.drive.activity.Facebook_Activity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:label="@string/app_name" />
 
-        <activity android:name="beetech.com.wallet.activity.SplaschScreen"
+        <activity android:name="com.bee.drive.activity.SplaschScreen"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
 
 
-        <activity android:name="beetech.com.wallet.activity.EmailLoginActivity"
+
+
+        <activity android:name="com.bee.drive.activity.EmailLoginActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
+
+        <activity android:name="com.bee.drive.DriverSettingsActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name="com.bee.drive.HistoryActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
+
 
 
         <activity android:name="com.facebook.FacebookActivity"
