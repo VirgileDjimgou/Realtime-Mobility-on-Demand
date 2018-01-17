@@ -9,9 +9,9 @@
     <string name="nav_home">Home</string>
     <string name="nav_profil">Profil</string>
     <string name="nav_history">History</string>
-    <string name="nav_notifications">Notifications/Promotions</string>
+    <string name="nav_notifications">Notifications/Promo</string>
     <string name="nav_share">Share</string>
-    <string name="nav_settings">Settings</string>
+    <string name="nav_settings">Adv. Settings</string>
     <string name="nav_chat">Zone Chat</string>
     <string name="nav_about">About Us</string>
     <string name="nav_sign_out">logout</string>
@@ -32,7 +32,6 @@
         <item>Profil</item>
         <item>History</item>
         <item>Notifications</item>
-        <item>Promotions</item>
         <item>Share</item>
         <item>Zone Chat</item>
     </string-array>

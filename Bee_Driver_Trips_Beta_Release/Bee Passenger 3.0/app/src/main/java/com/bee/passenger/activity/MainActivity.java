@@ -311,7 +311,7 @@ public class MainActivity extends AppCompatActivity {
                 PassengerMapFragment passengerMapFragment = new PassengerMapFragment();
                 return passengerMapFragment;
             case 1:
-                // home
+                // profil Fragment
                 UserProfileFragment profilFragment = new UserProfileFragment();
                 return profilFragment;
 
@@ -326,7 +326,7 @@ public class MainActivity extends AppCompatActivity {
                 return notificationsFragment;
 
             case 4:
-                // notifications fragment
+                // Promotions fragment
                 PromotionsFragment promotionsFragment = new PromotionsFragment();
                 return promotionsFragment;
 

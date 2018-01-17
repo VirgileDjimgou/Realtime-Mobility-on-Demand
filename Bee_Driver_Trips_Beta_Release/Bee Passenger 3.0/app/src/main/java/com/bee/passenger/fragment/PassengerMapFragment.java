@@ -1,6 +1,7 @@
 package com.bee.passenger.fragment;
 
 import android.app.AlertDialog;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
@@ -11,6 +12,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +38,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -114,6 +117,8 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
 
 
 
+
+
     FloatingActionMenu materialDesignFAM;
     FloatingActionButton Request_status,
                          Promotions,
@@ -152,10 +157,19 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.activity_costumer_map, container, false);
 
-        mMapView = (MapView) rootView.findViewById(R.id.mapView);
-        mMapView.onCreate(savedInstanceState);
+
+
+            final View rootView = inflater.inflate(R.layout.activity_costumer_map, container, false);
+
+        try{
+            mMapView = (MapView) rootView.findViewById(R.id.mapView);
+            mMapView.onCreate(savedInstanceState);
+
+        }catch(Exception ex ){
+            ex.printStackTrace();
+        }
+
 
         mMapView.onResume(); // needed to get the map to display immediately
 
@@ -236,7 +250,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
         Depart_autocompleteFragment = (PlaceAutocompleteFragment)
                getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment_depart);
 
-        Depart_autocompleteFragment.setHint("Please enter your Start point ...");
+        Depart_autocompleteFragment.setHint("enter your Start point ...");
         Depart_autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
@@ -256,7 +270,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
         Destination_autocompleteFragment = (PlaceAutocompleteFragment)
                 getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment_destination);
 
-        Destination_autocompleteFragment.setHint("Please enter your Destination ...");
+        Destination_autocompleteFragment.setHint("enter your Destination ...");
         Destination_autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
@@ -366,6 +380,20 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
 
 
         return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        /*
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.mapView);
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.remove(fragment);
+        fragmentTransaction.commit();
+
+       */
     }
 
     @Override
