@@ -369,7 +369,7 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         /*if(id == R.id.action_home){
-            Intent i=new Intent(MainActivity.this,MainActivity.class);
+            Intent i=new Intent(MainActivity_fcm.this,MainActivity_fcm.class);
             startActivity(i);
             return true;
         }*/

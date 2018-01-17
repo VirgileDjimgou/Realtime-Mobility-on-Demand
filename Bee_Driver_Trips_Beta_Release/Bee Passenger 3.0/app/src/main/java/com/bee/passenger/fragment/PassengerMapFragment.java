@@ -20,6 +20,7 @@ import com.bee.passenger.HistoryActivity;
 import com.bee.passenger.activity.AboutUsActivity;
 import com.bee.passenger.data.FriendDB;
 import com.bee.passenger.data.GroupDB;
+import com.bee.passenger.fcm.MainActivity_fcm;
 import com.bee.passenger.service.ServiceUtils;
 import com.bumptech.glide.Glide;
 import com.bee.passenger.activity.MainActivity;
@@ -114,7 +115,11 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
 
 
     FloatingActionMenu materialDesignFAM;
-    FloatingActionButton History,Request_status, float_logout_disconnect , Settings;
+    FloatingActionButton Request_status,
+                         Promotions,
+                         About,
+                         Share,
+                         float_logout_disconnect , Settings;
 
 
 
@@ -269,19 +274,19 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
         materialDesignFAM = (FloatingActionMenu) rootView.findViewById(R.id.material_design_android_floating_action_menu);
 
 
-        History = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item_history);
         Request_status = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item_request_status);
         Settings = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item_settings);
         float_logout_disconnect = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item_logout);
+        Promotions =  (FloatingActionButton) rootView.findViewById(R.id.menu_item_notifications);
+        About =  (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item_about);
+        Share =  (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item_share);
 
 
-
-
-        History.setOnClickListener(new View.OnClickListener() {
+        Promotions.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu second item clicked
 
-                Intent intent = new Intent(getActivity(), HistoryActivity.class);
+                Intent intent = new Intent(getActivity(), MainActivity_fcm.class);
                 intent.putExtra("customerOrDriver", "Customers");
                 startActivity(intent);
                 return;
@@ -308,6 +313,27 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                 startActivity(intent);
                 return;
 
+            }
+        });
+
+        Share.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //TODO something when floating action menu second item clicked
+                // start Rider Status Activity ...
+                //
+                Toast.makeText(getActivity(),"not yet implemented " , Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+        About.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //TODO something when floating action menu second item clicked
+                // start Rider Status Activity ...
+                //
+                Intent intent = new Intent(getActivity(), AboutUsActivity.class);
+                startActivity(intent);
+                return;
             }
         });
 

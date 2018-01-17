@@ -11,8 +11,7 @@ android {
         versionName "3.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-
-
+        resConfigs('en', 'xxxhdpi')
         javaCompileOptions {
             annotationProcessorOptions {
                 includeCompileClasspath = true
@@ -21,9 +20,21 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            splits.abi.enable = false
+            splits.density.enable = false
+            aaptOptions.cruncherEnabled = false
+        }
+    }
+
+
+    dexOptions {
+        preDexLibraries true
+        maxProcessCount 8
     }
 }
 
@@ -103,6 +114,12 @@ dependencies {
     // interactive windows
 
     compile 'com.appolica:interactive-info-window:v1.0.6'
+
+
+    implementation ("com.android.support:appcompat-v7:26.0.2") {
+        force = true
+    }
+    implementation "com.google.firebase:firebase-messaging:11.6.0"
 
 
     // compile 'com.jakewharton:butterknife:8.8.1'

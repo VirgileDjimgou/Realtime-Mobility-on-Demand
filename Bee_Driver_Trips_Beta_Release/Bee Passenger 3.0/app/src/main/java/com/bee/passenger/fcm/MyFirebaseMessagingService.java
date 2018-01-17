@@ -1,4 +1,4 @@
-package com.bee.fcm;
+package com.bee.passenger.fcm;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -10,7 +10,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
@@ -23,6 +22,8 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
+import com.bee.passenger.R;
+
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 	public static final String FCM_PARAM = "picture";
@@ -61,7 +62,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 				.setLights(Color.RED, 1000, 300)
 				.setDefaults(Notification.DEFAULT_VIBRATE)
 				.setNumber(++numMessages)
-				.setSmallIcon(R.drawable.ic_notification);
+				.setSmallIcon(R.mipmap.ic_bee_round);
 
 		try {
 			String picture = data.get(FCM_PARAM);

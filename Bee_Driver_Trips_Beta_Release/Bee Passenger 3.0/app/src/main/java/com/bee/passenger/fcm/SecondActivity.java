@@ -1,8 +1,9 @@
-package com.bee.fcm;
+package com.bee.passenger.fcm;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
+import com.bee.passenger.R;
 
 public class SecondActivity extends AppCompatActivity {
 	@Override

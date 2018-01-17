@@ -95,7 +95,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
 
     FloatingActionMenu materialDesignFAM;
-    FloatingActionButton History,Request_status, float_logout_disconnect , Settings;
+    FloatingActionButton Request_status, float_logout_disconnect , Settings;
 
 
     @Override
@@ -218,9 +218,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
 
         materialDesignFAM = (FloatingActionMenu) findViewById(R.id.material_design_android_floating_action_menu);
-
-
-        History = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item_history);
         Request_status = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item_request_status);
         Settings = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item_settings);
         float_logout_disconnect = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item_logout);

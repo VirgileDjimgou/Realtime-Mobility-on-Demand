@@ -1,4 +1,4 @@
-package com.bee.fcm;
+package com.bee.passenger.fcm;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,10 +21,11 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
+import com.bee.passenger.R;
 
-import static com.bee.fcm.R.id.txt;
+import static com.bee.passenger.R.id.txt;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity_fcm extends AppCompatActivity {
 	private static final String AUTH_KEY = "key=AAAAinoVD1o:APA91bFCvqGv9MnIPqQ0TZIGmwr93EQ4TeH-9pi0cXVowV-GFhPybWYHPWO-eb2OZJmAMJLrMcIaCPBAjhXfjdyOZP8BRyBgvceBrktnOSC2oSLk4iUORTW5B-THzV1obqmpLu7yYzIt";
 	private TextView mTextView;
 
@@ -53,6 +54,13 @@ public class MainActivity extends AppCompatActivity {
 	public void subscribe(View view) {
 		FirebaseMessaging.getInstance().subscribeToTopic("news");
 		mTextView.setText(R.string.subscribed);
+	}
+
+	public void subcribeNews(){
+
+		FirebaseMessaging.getInstance().subscribeToTopic("news");
+		mTextView.setText(R.string.subscribed);
+
 	}
 
 	public void unsubscribe(View view) {
@@ -86,12 +94,12 @@ public class MainActivity extends AppCompatActivity {
 		JSONObject jNotification = new JSONObject();
 		JSONObject jData = new JSONObject();
 		try {
-			jNotification.put("title", "Google I/O 2016");
-			jNotification.put("body", "Firebase Cloud Messaging (App)");
+			jNotification.put("title", "Bee Realtime Mobility on Demand 2018");
+			jNotification.put("body", "Firebase Cloud Messaging  from Bee Realtime Mobility on Demand (App)");
 			jNotification.put("sound", "default");
 			jNotification.put("badge", "1");
 			jNotification.put("click_action", "OPEN_ACTIVITY_1");
-			jNotification.put("icon", "ic_notification");
+			jNotification.put("icon", "ic_bee_round");
 
 			jData.put("picture", "http://opsbug.com/static/google-io.jpg");
 
