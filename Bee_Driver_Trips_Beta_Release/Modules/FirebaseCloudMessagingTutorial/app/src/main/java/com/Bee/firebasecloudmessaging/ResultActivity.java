@@ -1,8 +1,10 @@
-package com.androidtutorialpoint.firebasecloudmessagingtutorial;
+package com.Bee.firebasecloudmessaging;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
+
+import com.androidtutorialpoint.firebasecloudmessagingtutorial.R;
 
 public class ResultActivity extends AppCompatActivity {
 

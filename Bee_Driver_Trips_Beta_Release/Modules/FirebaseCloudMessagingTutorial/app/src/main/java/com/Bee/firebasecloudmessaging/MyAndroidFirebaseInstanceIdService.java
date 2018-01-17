@@ -1,4 +1,4 @@
-package com.androidtutorialpoint.firebasecloudmessagingtutorial;
+package com.Bee.firebasecloudmessaging;
 
 
 import android.util.Log;

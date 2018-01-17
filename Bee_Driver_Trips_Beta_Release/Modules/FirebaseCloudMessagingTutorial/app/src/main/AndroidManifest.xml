@@ -10,22 +10,22 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name="com.Bee.firebasecloudmessaging.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ResultActivity"/>
+        <activity android:name="com.Bee.firebasecloudmessaging.ResultActivity"/>
         <service
-            android:name=".MyAndroidFirebaseMsgService">
+            android:name="com.Bee.firebasecloudmessaging.MyAndroidFirebaseMsgService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
         <service
-            android:name=".MyAndroidFirebaseInstanceIdService">
+            android:name="com.Bee.firebasecloudmessaging.MyAndroidFirebaseInstanceIdService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>

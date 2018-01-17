@@ -1,4 +1,4 @@
-package com.example.fcm;
+package com.bee.fcm;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,7 +22,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
 
-import static com.example.fcm.R.id.txt;
+import static com.bee.fcm.R.id.txt;
 
 public class MainActivity extends AppCompatActivity {
 	private static final String AUTH_KEY = "key=YOUR_SERVER_KEY";

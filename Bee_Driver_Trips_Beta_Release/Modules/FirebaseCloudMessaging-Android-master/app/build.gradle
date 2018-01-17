@@ -1,15 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
-	compileSdkVersion compileAndTargetSdkVersion
-	buildToolsVersion '27.0.3'
+	compileSdkVersion 26
+	buildToolsVersion '26.0.2'
 
 	defaultConfig {
-		applicationId "com.example.fcm"
-		minSdkVersion compileAndTargetSdkVersion
-		targetSdkVersion compileAndTargetSdkVersion
-		versionCode 1
-		versionName "1.0"
+		applicationId "com.bee.drive"
+		minSdkVersion 21
+		targetSdkVersion 26
+		versionCode 3
+		versionName "3.0"
+		testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 		resConfigs('en', 'xxxhdpi')
 	}
 

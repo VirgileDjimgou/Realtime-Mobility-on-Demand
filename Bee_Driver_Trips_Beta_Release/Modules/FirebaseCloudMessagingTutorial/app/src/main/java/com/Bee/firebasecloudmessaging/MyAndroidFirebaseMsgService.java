@@ -1,4 +1,4 @@
-package com.androidtutorialpoint.firebasecloudmessagingtutorial;
+package com.Bee.firebasecloudmessaging;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -8,6 +8,8 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import com.androidtutorialpoint.firebasecloudmessagingtutorial.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
