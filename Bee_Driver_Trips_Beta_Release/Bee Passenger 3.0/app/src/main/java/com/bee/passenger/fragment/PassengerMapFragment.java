@@ -279,7 +279,6 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
         float_logout_disconnect = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item_logout);
         Promotions =  (FloatingActionButton) rootView.findViewById(R.id.menu_item_notifications);
         About =  (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item_about);
-        Share =  (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item_share);
 
 
         Promotions.setOnClickListener(new View.OnClickListener() {
@@ -312,16 +311,6 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                 Intent intent = new Intent(getActivity(), CustomerSettingsActivity.class);
                 startActivity(intent);
                 return;
-
-            }
-        });
-
-        Share.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                //TODO something when floating action menu second item clicked
-                // start Rider Status Activity ...
-                //
-                Toast.makeText(getActivity(),"not yet implemented " , Toast.LENGTH_LONG).show();
 
             }
         });

@@ -316,7 +316,7 @@ public class MainActivity extends AppCompatActivity {
                 return profilFragment;
 
             case 2:
-                // photos
+                // History
                 HistoryFragment historyFragment = new HistoryFragment();
                 return historyFragment;
 
@@ -331,7 +331,7 @@ public class MainActivity extends AppCompatActivity {
                 return promotionsFragment;
 
             case 5:
-                // notifications fragment
+                // share  fragment
                 ShareFragment shareFragement = new ShareFragment();
                 return shareFragement;
 
