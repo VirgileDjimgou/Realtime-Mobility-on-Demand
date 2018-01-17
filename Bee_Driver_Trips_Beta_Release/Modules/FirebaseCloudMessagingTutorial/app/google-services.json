@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "30923447492",
+    "firebase_url": "https://fir-cloudmessagingtutorial.firebaseio.com",
+    "project_id": "fir-cloudmessagingtutorial",
+    "storage_bucket": "fir-cloudmessagingtutorial.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:30923447492:android:9a3071c5a16976c7",
+        "android_client_info": {
+          "package_name": "com.androidtutorialpoint.firebasecloudmessagingtutorial"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "30923447492-o7v5di08k94k5d492bpc6vie1pil448g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOsEakSZEuAaO_zvgVfMO4WwlgR3_vcsc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

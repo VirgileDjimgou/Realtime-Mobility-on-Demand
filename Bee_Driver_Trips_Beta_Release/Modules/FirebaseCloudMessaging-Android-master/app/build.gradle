@@ -1,0 +1,42 @@
+apply plugin: 'com.android.application'
+
+android {
+	compileSdkVersion compileAndTargetSdkVersion
+	buildToolsVersion '27.0.3'
+
+	defaultConfig {
+		applicationId "com.example.fcm"
+		minSdkVersion compileAndTargetSdkVersion
+		targetSdkVersion compileAndTargetSdkVersion
+		versionCode 1
+		versionName "1.0"
+		resConfigs('en', 'xxxhdpi')
+	}
+
+	buildTypes {
+		release {
+			minifyEnabled true
+			shrinkResources true
+			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+		}
+		debug {
+			splits.abi.enable = false
+			splits.density.enable = false
+			aaptOptions.cruncherEnabled = false
+		}
+	}
+
+	dexOptions {
+		preDexLibraries true
+		maxProcessCount 8
+	}
+}
+
+dependencies {
+	implementation ("com.android.support:appcompat-v7:$supportLibraryVersion") {
+		force = true
+	}
+	implementation "com.google.firebase:firebase-messaging:$firebaseLibraryVersion"
+}
+
+apply plugin: 'com.google.gms.google-services'
