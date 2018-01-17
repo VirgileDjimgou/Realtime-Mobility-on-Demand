@@ -8,10 +8,12 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -32,6 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.bee.passenger.R;
+import com.yarolegovich.lovelydialog.LovelyProgressDialog;
 
 public class CustomerSettingsActivity extends AppCompatActivity {
 
@@ -50,12 +53,19 @@ public class CustomerSettingsActivity extends AppCompatActivity {
     private String mProfileImageUrl;
 
     private Uri resultUri;
+    private LovelyProgressDialog waitingDialog;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_settings);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+        waitingDialog = new LovelyProgressDialog(this).setCancelable(false);
 
         mNameField = (EditText) findViewById(R.id.name);
         mPhoneField = (EditText) findViewById(R.id.phone);
@@ -95,7 +105,34 @@ public class CustomerSettingsActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == android.R.id.home) {
+            // finish the activity
+            onBackPressed();
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
     private void getUserInfo(){
+
+        waitingDialog.setIcon(R.drawable.ic_add_friend)
+                .setTitle("fetching Data from  Cloud Backend .... please wait")
+                .setTopColorRes(R.color.colorPrimary)
+                .show();
+
+
         mCustomerDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -113,11 +150,14 @@ public class CustomerSettingsActivity extends AppCompatActivity {
                         mProfileImageUrl = map.get("profileImageUrl").toString();
                         Glide.with(getApplication()).load(mProfileImageUrl).into(mProfileImage);
                     }
+
+                    waitingDialog.dismiss();
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(getApplicationContext(), databaseError.toString(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -132,6 +172,11 @@ public class CustomerSettingsActivity extends AppCompatActivity {
         userInfo.put("name", mName);
         userInfo.put("phone", mPhone);
         mCustomerDatabase.updateChildren(userInfo);
+
+        waitingDialog.setIcon(R.drawable.ic_add_friend)
+                .setTitle("Upload new Settings Data to the Cloud Backend ....")
+                .setTopColorRes(R.color.colorPrimary)
+                .show();
 
         if(resultUri != null) {
 
@@ -151,6 +196,7 @@ public class CustomerSettingsActivity extends AppCompatActivity {
             uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
+                    waitingDialog.dismiss();
                     finish();
                     return;
                 }
@@ -164,13 +210,18 @@ public class CustomerSettingsActivity extends AppCompatActivity {
                     newImage.put("profileImageUrl", downloadUrl.toString());
                     mCustomerDatabase.updateChildren(newImage);
 
-                    finish();
+                    waitingDialog.dismiss();
+                    //finish();
                     return;
                 }
             });
         }else{
-            finish();
+            waitingDialog.dismiss();
+            // finish();
         }
+
+        waitingDialog.dismiss();
+
 
     }
 

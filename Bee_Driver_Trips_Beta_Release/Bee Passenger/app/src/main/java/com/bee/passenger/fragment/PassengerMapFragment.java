@@ -1,5 +1,7 @@
 package com.bee.passenger.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.support.annotation.NonNull;
@@ -15,12 +17,18 @@ import android.view.ViewGroup;
 
 import com.bee.passenger.AutompleteDestinationActivity;
 import com.bee.passenger.HistoryActivity;
+import com.bee.passenger.activity.AboutUsActivity;
+import com.bee.passenger.data.FriendDB;
+import com.bee.passenger.data.GroupDB;
+import com.bee.passenger.service.ServiceUtils;
 import com.bumptech.glide.Glide;
 import com.bee.passenger.activity.MainActivity;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
 import com.firebase.geofire.GeoQueryEventListener;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
@@ -58,8 +66,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.bee.passenger.R.id.action_bar_root;
 import static com.bee.passenger.R.id.place_autocomplete_fragment;
 import static com.facebook.FacebookSdk.getApplicationContext;
+import static java.lang.System.exit;
+
 import android.widget.RadioButton;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
@@ -99,6 +110,11 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+
+
+    FloatingActionMenu materialDesignFAM;
+    FloatingActionButton History,Request_status, float_logout_disconnect , Settings;
 
 
 
@@ -166,21 +182,8 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
         mRadioGroup = (RadioGroup) rootView.findViewById(R.id.radioGroup);
         mRadioGroup.check(R.id.UberX);
 
-        mLogout = (Button) rootView.findViewById(R.id.logout);
         mRequest = (Button) rootView.findViewById(R.id.request);
-        mSettings = (Button) rootView.findViewById(R.id.settings);
-        mHistory = (Button) rootView.findViewById(R.id.history);
 
-        mLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                startActivity(intent);
-                getActivity().finish();
-                return;
-            }
-        });
 
         mRequest.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -221,26 +224,6 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
 
 
 
-        mSettings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), CustomerSettingsActivity.class);
-                startActivity(intent);
-                return;
-            }
-        });
-
-
-        mHistory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), HistoryActivity.class);
-                intent.putExtra("customerOrDriver", "Customers");
-                startActivity(intent);
-                return;
-            }
-        });
-
 
 
 
@@ -248,6 +231,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
         Depart_autocompleteFragment = (PlaceAutocompleteFragment)
                getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment_depart);
 
+        Depart_autocompleteFragment.setHint("Please enter your Start point ...");
         Depart_autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
@@ -267,6 +251,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
         Destination_autocompleteFragment = (PlaceAutocompleteFragment)
                 getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment_destination);
 
+        Destination_autocompleteFragment.setHint("Please enter your Destination ...");
         Destination_autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
@@ -280,6 +265,88 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
             }
         });
 
+
+        materialDesignFAM = (FloatingActionMenu) rootView.findViewById(R.id.material_design_android_floating_action_menu);
+
+
+        History = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item_history);
+        Request_status = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item_request_status);
+        Settings = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item_settings);
+        float_logout_disconnect = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item_logout);
+
+
+
+
+        History.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //TODO something when floating action menu second item clicked
+
+                Intent intent = new Intent(getActivity(), HistoryActivity.class);
+                intent.putExtra("customerOrDriver", "Customers");
+                startActivity(intent);
+                return;
+
+            }
+        });
+
+
+        Request_status.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //TODO something when floating action menu second item clicked
+                Toast.makeText(getContext(), "not Implemented  at the moment .... " , Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+
+        Settings.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //TODO something when floating action menu second item clicked
+                // start Rider Status Activity ...
+                //
+                Intent intent = new Intent(getActivity(), CustomerSettingsActivity.class);
+                startActivity(intent);
+                return;
+
+            }
+        });
+
+
+        float_logout_disconnect.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //TODO something when floating action menu second item clicked
+                // start Rider Status Activity ...
+
+                new AlertDialog.Builder(getActivity())
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle("Sign Out Dialog")
+                        .setMessage("Are you sure you want to sign out and close the app ?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                FirebaseAuth.getInstance().signOut();
+                                FriendDB.getInstance(getApplicationContext()).dropDB();
+                                GroupDB.getInstance(getApplicationContext()).dropDB();
+                                ServiceUtils.stopServiceFriendChat(getApplicationContext(), true);
+                                getActivity().finish();
+
+                                try {
+                                    Thread.sleep(2000);
+                                    exit(0);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                        })
+                        .setNegativeButton("No", null)
+                        .show();
+
+                return;
+
+            }
+        });
 
 
 

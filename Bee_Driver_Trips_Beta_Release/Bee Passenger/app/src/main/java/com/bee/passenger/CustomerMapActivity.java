@@ -1,5 +1,7 @@
 package com.bee.passenger;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -18,12 +20,18 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bee.passenger.activity.AboutUsActivity;
+import com.bee.passenger.data.FriendDB;
+import com.bee.passenger.data.GroupDB;
+import com.bee.passenger.service.ServiceUtils;
 import com.bumptech.glide.Glide;
 import com.bee.passenger.activity.MainActivity;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
 import com.firebase.geofire.GeoQueryEventListener;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
@@ -83,6 +91,12 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private RadioGroup mRadioGroup;
 
     private RatingBar mRatingBar;
+
+
+
+    FloatingActionMenu materialDesignFAM;
+    FloatingActionButton History,Request_status, float_logout_disconnect , Settings;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,6 +201,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
 
+
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
@@ -200,7 +215,33 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             }
         });
 
+
+
+        materialDesignFAM = (FloatingActionMenu) findViewById(R.id.material_design_android_floating_action_menu);
+
+
+        History = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item_history);
+        Request_status = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item_request_status);
+        Settings = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item_settings);
+        float_logout_disconnect = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item_logout);
+
+        Request_status.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //TODO something when floating action menu second item clicked
+                // start Rider Status Activity ...
+                //
+                startActivity(new Intent(getApplication(), AboutUsActivity.class));
+
+            }
+        });
+
+
+
+        // end
+
     }
+
+
     private int radius = 1;
     private Boolean driverFound = false;
     private String driverFoundID;

@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bee.passenger.CustomerSettingsActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bee.passenger.data.SharedPreferenceHelper;
@@ -388,9 +389,10 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case R.id.nav_settings:
-                        // launch new intent instead of loading fragment
-                        startActivity(new Intent(MainActivity.this, DriverSettingsActivity.class));
-                        drawer.closeDrawers();
+                        // launch new intent instead of loading fragment//
+                        Intent intent = new Intent(MainActivity.this, CustomerSettingsActivity.class);
+                        startActivity(intent);
+                        // drawer.closeDrawers();
                         return true;
 
                     case R.id.nav_about_us:

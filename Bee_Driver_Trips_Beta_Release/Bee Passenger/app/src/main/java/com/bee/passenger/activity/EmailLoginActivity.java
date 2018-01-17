@@ -76,7 +76,6 @@ public class EmailLoginActivity extends AppCompatActivity {
 
 
     private void initFirebase() {
-        //Khoi tao thanh phan de dang nhap, dang ky
         mAuth = FirebaseAuth.getInstance();
         authUtils = new AuthUtils();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -103,7 +102,6 @@ public class EmailLoginActivity extends AppCompatActivity {
             }
         };
 
-        //Khoi tao dialog waiting khi dang nhap
         waitingDialog = new LovelyProgressDialog(this).setCancelable(false);
     }
 
@@ -209,7 +207,7 @@ public class EmailLoginActivity extends AppCompatActivity {
                                         .setTopColorRes(R.color.colorAccent)
                                         .setIcon(R.drawable.ic_add_friend)
                                         .setTitle("Register false")
-                                        .setMessage("Email exist or weak password!")
+                                        .setMessage("Email exist or wrong value ...please check you value!")
                                         .setConfirmButtonText("ok")
                                         .setCancelable(false)
                                         .show();
