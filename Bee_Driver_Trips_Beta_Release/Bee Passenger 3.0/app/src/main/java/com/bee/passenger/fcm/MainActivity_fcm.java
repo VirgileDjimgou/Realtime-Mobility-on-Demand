@@ -98,8 +98,8 @@ public class MainActivity_fcm extends AppCompatActivity {
 			jNotification.put("body", "Firebase Cloud Messaging  from Bee Realtime Mobility on Demand (App)");
 			jNotification.put("sound", "default");
 			jNotification.put("badge", "1");
-			jNotification.put("click_action", "OPEN_ACTIVITY_1");
-			jNotification.put("icon", "ic_bee_round");
+			jNotification.put("click_action", "Start_Main");
+			jNotification.put("icon", "ic_bee");
 
 			jData.put("picture", "http://opsbug.com/static/google-io.jpg");
 

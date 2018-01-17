@@ -16,6 +16,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.bee.passenger.activity.MainActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -44,7 +45,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 		Bundle bundle = new Bundle();
 		bundle.putString(FCM_PARAM, data.get(FCM_PARAM));
 
-		Intent intent = new Intent(this, SecondActivity.class);
+		Intent intent = new Intent(this, MainActivity.class);
 		intent.putExtras(bundle);
 
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -57,7 +58,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 				// .setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.win))
 				.setContentIntent(pendingIntent)
 				.setContentInfo("Hello")
-				.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+				.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_bee_round))
 				.setColor(ContextCompat.getColor(this, R.color.colorAccent))
 				.setLights(Color.RED, 1000, 300)
 				.setDefaults(Notification.DEFAULT_VIBRATE)

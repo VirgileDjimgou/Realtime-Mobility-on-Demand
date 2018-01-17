@@ -131,14 +131,6 @@
 
 
 
-        <activity android:name="com.bee.passenger.fcm.SecondActivity">
-            <intent-filter>
-                <action android:name="OPEN_ACTIVITY_1"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
-
-
         <activity
             android:name="com.bee.passenger.fcm.MainActivity_fcm"
             android:launchMode="singleTop"
@@ -147,11 +139,14 @@
         </activity>
 
 
-        <activity
-            android:name="com.bee.passenger.activity.MainActivity"
+        <activity android:name="com.bee.passenger.activity.MainActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/TranslucentBackground">
+        <intent-filter>
+            <action android:name="Start_Main"/>
+            <category android:name="android.intent.category.DEFAULT"/>
+        </intent-filter>>
         </activity>
 
 
