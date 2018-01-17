@@ -174,14 +174,13 @@ public class PlaceAutocompleteAdapter
 //
             // Copy the results into our own data structure, because we can't hold onto the buffer.
             // AutocompletePrediction objects encapsulate the API response (place ID and description).
-
             Iterator<AutocompletePrediction> iterator = autocompletePredictions.iterator();
             ArrayList resultList = new ArrayList<>(autocompletePredictions.getCount());
             while (iterator.hasNext()) {
                 AutocompletePrediction prediction = iterator.next();
                 // Get the details of this prediction and copy it into a new PlaceAutocomplete object.
                 resultList.add(new PlaceAutocomplete(prediction.getPlaceId(),
-                        prediction.getDescription()));
+                        prediction.getFullText(null)));
             }
 
             // Release the buffer now that all data has been copied.

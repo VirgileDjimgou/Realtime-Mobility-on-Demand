@@ -36,6 +36,7 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -58,7 +59,12 @@ import butterknife.OnClick;
 /**
  * Created by skyrreasure on 12/5/16.
  */
-public class ShowDirectionActivity extends AppCompatActivity implements RoutingListener, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
+public class ShowDirectionActivity extends AppCompatActivity implements
+        RoutingListener,
+        GoogleApiClient.OnConnectionFailedListener,
+        OnMapReadyCallback,
+        GoogleApiClient.ConnectionCallbacks
+         {
 
 
     protected GoogleMap map;
@@ -102,16 +108,18 @@ public class ShowDirectionActivity extends AppCompatActivity implements RoutingL
         MapsInitializer.initialize(this);
         mGoogleApiClient.connect();
 
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 
         if (mapFragment == null) {
             mapFragment = SupportMapFragment.newInstance();
             getSupportFragmentManager().beginTransaction().replace(R.id.map, mapFragment).commit();
         }
-        map = mapFragment.getMap();
+        mapFragment.getMapAsync(this);
 
         mAdapter = new PlaceAutocompleteAdapter(this, android.R.layout.simple_list_item_1,
                 mGoogleApiClient, null, null);
+
 
 
         /*
@@ -430,6 +438,38 @@ public class ShowDirectionActivity extends AppCompatActivity implements RoutingL
     }
 
 
+
+    @Override
+    public void onMapReady(GoogleMap map) {
+        // DO WHATEVER YOU WANT WITH GOOGLEMAP
+        map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        map.setMyLocationEnabled(true);
+        map.setTrafficEnabled(true);
+        map.setIndoorEnabled(true);
+        map.setBuildingsEnabled(true);
+        map.getUiSettings().setZoomControlsEnabled(true);
+    }
+
     @Override
     public void onRoutingCancelled() {
         Log.i(LOG_TAG, "Routing was cancelled.");
@@ -449,6 +489,8 @@ public class ShowDirectionActivity extends AppCompatActivity implements RoutingL
     public void onConnectionSuspended(int i) {
 
     }
+
+
 
 
     public void hideKeyboard() {

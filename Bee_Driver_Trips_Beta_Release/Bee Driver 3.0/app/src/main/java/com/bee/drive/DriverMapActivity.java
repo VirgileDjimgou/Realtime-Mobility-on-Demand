@@ -52,7 +52,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import beetech.com.wallet.R;
+import com.bee.drive.R;
 
 import com.bee.drive.activity.MainActivity;
 

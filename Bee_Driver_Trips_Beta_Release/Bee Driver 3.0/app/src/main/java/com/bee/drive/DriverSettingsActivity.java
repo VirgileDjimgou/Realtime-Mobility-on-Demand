@@ -32,8 +32,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import beetech.com.wallet.R;
+import com.bee.drive.R;
 
 public class DriverSettingsActivity extends AppCompatActivity {
 
