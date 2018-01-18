@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -115,6 +116,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
     private String mParam1;
     private String mParam2;
 
+    private static View rootView;
 
 
 
@@ -126,6 +128,8 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                          Share,
                          float_logout_disconnect , Settings;
 
+    public PassengerMapFragment() {
+    }
 
 
     /**
@@ -155,20 +159,35 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
         }
     }
 
+
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 
 
-            final View rootView = inflater.inflate(R.layout.activity_costumer_map, container, false);
 
-        try{
-            mMapView = (MapView) rootView.findViewById(R.id.mapView);
-            mMapView.onCreate(savedInstanceState);
+                rootView = inflater.inflate(R.layout.activity_costumer_map, container, false);
 
-        }catch(Exception ex ){
-            ex.printStackTrace();
-        }
+                mMapView = (MapView) rootView.findViewById(R.id.mapView);
+                mMapView.onCreate(savedInstanceState);
+
+                mMapView.onResume(); // needed to get the map to display immediately
+
+                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
+                }else{
+                mMapView.getMapAsync(this);
+                }
+
+                try {
+                MapsInitializer.initialize(getActivity().getApplicationContext());
+                } catch (Exception e) {
+                e.printStackTrace();
+                }
+
 
 
         mMapView.onResume(); // needed to get the map to display immediately

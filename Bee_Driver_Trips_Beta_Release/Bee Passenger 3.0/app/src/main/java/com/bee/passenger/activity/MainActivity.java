@@ -40,7 +40,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import com.bee.passenger.DriverSettingsActivity;
 import com.bee.passenger.R;
 import com.bee.passenger.Utility.ImageUtils;
 import com.bee.passenger.data.FriendDB;

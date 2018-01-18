@@ -181,12 +181,6 @@
             android:label="@string/activity_title_privacy_policy" />
 
 
-
-        <activity android:name="com.bee.passenger.DriverSettingsActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:label="@string/nav_settings" />
-
         <activity android:name="com.bee.passenger.activity.Facebook_Activity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"

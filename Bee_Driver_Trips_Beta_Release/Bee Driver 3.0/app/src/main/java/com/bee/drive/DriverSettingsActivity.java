@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -131,42 +132,56 @@ public class DriverSettingsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
-                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                    if(map.get("name")!=null){
-                        mName = map.get("name").toString();
-                        mNameField.setText(mName);
-                    }
-                    if(map.get("phone")!=null){
-                        mPhone = map.get("phone").toString();
-                        mPhoneField.setText(mPhone);
-                    }
-                    if(map.get("car")!=null){
-                        mCar = map.get("car").toString();
-                        mCarField.setText(mCar);
-                    }
-                    if(map.get("service")!=null){
-                        mService = map.get("service").toString();
-                        switch (mService){
-                            case"UberX":
-                                mRadioGroup.check(R.id.UberX);
-                                break;
-                            case"UberBlack":
-                                mRadioGroup.check(R.id.UberBlack);
-                                break;
-                            case"UberXl":
-                                mRadioGroup.check(R.id.UberXl);
-                                break;
+
+                    try{
+
+                        Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                        if(map.get("name")!=null){
+                            mName = map.get("name").toString();
+                            mNameField.setText(mName);
                         }
+                        if(map.get("phone")!=null){
+                            mPhone = map.get("phone").toString();
+                            mPhoneField.setText(mPhone);
+                        }
+                        if(map.get("car")!=null){
+                            mCar = map.get("car").toString();
+                            mCarField.setText(mCar);
+                        }
+                        if(map.get("service")!=null){
+                            mService = map.get("service").toString();
+                            switch (mService){
+                                case"BeeBenSkin":
+                                    mRadioGroup.check(R.id.BeeBenSkin);
+                                    break;
+                                case"BeeTaxi":
+                                    mRadioGroup.check(R.id.BeeTaxi);
+                                    break;
+                                case"BeeDelivery":
+                                    mRadioGroup.check(R.id.BeeDelivery);
+                                    break;
+                            }
+                        }
+                        if(map.get("profileImageUrl")!=null){
+                            mProfileImageUrl = map.get("profileImageUrl").toString();
+                            Glide.with(getApplication()).load(mProfileImageUrl).into(mProfileImage);
+                        }
+
+
+
+                    }catch(Exception ex){
+                        Toast.makeText(DriverSettingsActivity.this, ex.toString() , Toast.LENGTH_LONG).show();
+                        ex.printStackTrace();
+
                     }
-                    if(map.get("profileImageUrl")!=null){
-                        mProfileImageUrl = map.get("profileImageUrl").toString();
-                        Glide.with(getApplication()).load(mProfileImageUrl).into(mProfileImage);
-                    }
+
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+
+                Toast.makeText(DriverSettingsActivity.this, databaseError.toString() , Toast.LENGTH_LONG).show();
             }
         });
     }

@@ -160,6 +160,9 @@ public class CustomerSettingsActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), databaseError.toString(), Toast.LENGTH_LONG).show();
             }
         });
+
+
+        waitingDialog.dismiss();
     }
 
 

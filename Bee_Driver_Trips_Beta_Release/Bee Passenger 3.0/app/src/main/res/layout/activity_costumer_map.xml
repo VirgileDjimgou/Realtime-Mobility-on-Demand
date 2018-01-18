@@ -134,17 +134,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="BeeBenSkin"
-                    android:id="@+id/UberX"/>
+                    android:id="@+id/BeeBenSkin"/>
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="BeeTaxi"
-                    android:id="@+id/UberBlack"/>
+                    android:id="@+id/BeeTaxi"/>
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="BeeDelivery"
-                    android:id="@+id/UberXl"/>
+                    android:id="@+id/BeeDelivery"/>
             </RadioGroup>
 
             <Button

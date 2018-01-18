@@ -97,6 +97,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+
         View rootView = inflater.inflate(R.layout.activity_driver_map_origin, container, false);
 
         mMapView = (MapView) rootView.findViewById(R.id.map);
