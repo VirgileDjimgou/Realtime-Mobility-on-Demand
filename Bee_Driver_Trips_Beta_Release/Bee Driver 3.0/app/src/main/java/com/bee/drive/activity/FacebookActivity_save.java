@@ -12,7 +12,7 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 
-import beetech.com.wallet.R;
+import com.bee.drive.R;
 
 
 public class FacebookActivity_save extends AppCompatActivity {

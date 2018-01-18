@@ -6,7 +6,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
-import beetech.com.wallet.R;
+import com.bee.drive.R;
 
 /**
  * Created by chichikolon on 07.12.2017.

@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 // import HistoryActivity;
-import beetech.com.wallet.R;
+import com.bee.drive.R;
 
 import android.annotation.SuppressLint;
 import android.support.v7.widget.LinearLayoutManager;

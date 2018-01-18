@@ -17,7 +17,7 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.bee.drive.activity.MainActivity;
-import beetech.com.wallet.R;
+import com.bee.drive.R;
 import com.bee.drive.data.FriendDB;
 import com.bee.drive.data.GroupDB;
 import com.bee.drive.data.StaticConfig;

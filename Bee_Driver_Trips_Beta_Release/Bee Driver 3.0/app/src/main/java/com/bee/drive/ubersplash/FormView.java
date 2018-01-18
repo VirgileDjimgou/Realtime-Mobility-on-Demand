@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import beetech.com.wallet.R;
+import com.bee.drive.R;
 
 
 /**

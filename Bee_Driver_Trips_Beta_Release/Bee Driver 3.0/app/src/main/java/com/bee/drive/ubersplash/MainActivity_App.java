@@ -25,7 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import beetech.com.wallet.R;
+import com.bee.drive.R;
 import com.bee.drive.activity.Facebook_Activity;
 import com.bee.drive.activity.EmailLoginActivity;
 import com.bee.drive.activity.PhoneAuthActivity;

@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import beetech.com.wallet.R;
+import com.bee.drive.R;
 
 /**
  * Created by chichikolon on 16.12.2017.

@@ -25,7 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import beetech.com.wallet.R;
+import com.bee.drive.R;
 import com.bee.drive.Utility.ImageUtils;
 import com.bee.drive.data.FriendDB;
 import com.bee.drive.data.GroupDB;

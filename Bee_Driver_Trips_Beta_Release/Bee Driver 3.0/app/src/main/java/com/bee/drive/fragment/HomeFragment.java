@@ -16,6 +16,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bee.drive.activity.MainActivity;
+import com.bee.drive.airbnbmapexample.ui.activity.MovingMarkerActivity;
+import com.bee.drive.fcm.MainActivity_fcm;
 import com.bumptech.glide.Glide;
 import com.bee.drive.data.FriendDB;
 import com.bee.drive.data.GroupDB;
@@ -45,7 +48,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import beetech.com.wallet.R;
+import com.bee.drive.R;
 
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -84,7 +87,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     LocationRequest mLocationRequest;
 
     FloatingActionMenu materialDesignFAM;
-    FloatingActionButton floatingActionButton1,Rider_status, float_logout_disconnect;
+    FloatingActionButton Adv_Settings, Road_Simulation, About, logout_disconnect;
 
 
 
@@ -208,26 +211,31 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
 
         materialDesignFAM = (FloatingActionMenu) rootView.findViewById(R.id.material_design_android_floating_action_menu);
-        floatingActionButton1 = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item1);
-        Rider_status = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item2);
-        float_logout_disconnect = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item3);
+        Road_Simulation = (FloatingActionButton) rootView.findViewById(R.id.menu_road_simulation);
+        Adv_Settings = (FloatingActionButton) rootView.findViewById(R.id.menu_item_settings);
+        logout_disconnect = (FloatingActionButton) rootView.findViewById(R.id.menu_item_logout);
+        About = (FloatingActionButton) rootView.findViewById(R.id.menu_item_about);
 
-        floatingActionButton1.setOnClickListener(new View.OnClickListener() {
+
+        Road_Simulation.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu first item clicked
 
+                // launch new intent instead of loading fragment
+                startActivity(new Intent(getActivity(), MovingMarkerActivity.class));
+
             }
         });
-        Rider_status.setOnClickListener(new View.OnClickListener() {
+        Adv_Settings.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu second item clicked
                 // start Rider Status Activity ...
                 //
-                startActivity(new Intent(getActivity(), AboutUsActivity.class));
+                startActivity(new Intent(getActivity(), MainActivity_fcm.class));
 
             }
         });
-        float_logout_disconnect.setOnClickListener(new View.OnClickListener() {
+        logout_disconnect.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu third item clicked
 
@@ -254,6 +262,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                         .setNegativeButton("No", null)
                         .show();
                 return;
+
+            }
+        });
+
+        About.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //TODO something when floating action menu second item clicked
+                // start Rider Status Activity ...
+                //
+                startActivity(new Intent(getActivity(), AboutUsActivity.class));
 
             }
         });

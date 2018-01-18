@@ -58,7 +58,7 @@ import java.util.Map;
 
 import com.bee.drive.DriverSettingsActivity;
 import com.bee.drive.HistoryActivity;
-import beetech.com.wallet.R;
+import com.bee.drive.R;
 
 import com.bee.drive.activity.MainActivity;
 

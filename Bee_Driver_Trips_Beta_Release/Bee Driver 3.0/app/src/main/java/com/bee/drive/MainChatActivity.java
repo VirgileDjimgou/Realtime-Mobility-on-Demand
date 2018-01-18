@@ -17,7 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import beetech.com.wallet.R;
+import com.bee.drive.R;
 
 import com.bee.drive.data.StaticConfig;
 import com.bee.drive.service.ServiceUtils;

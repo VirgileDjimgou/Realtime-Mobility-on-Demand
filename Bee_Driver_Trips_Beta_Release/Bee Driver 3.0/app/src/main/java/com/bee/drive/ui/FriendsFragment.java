@@ -24,7 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import beetech.com.wallet.R;
+import com.bee.drive.R;
 import com.bee.drive.data.FriendDB;
 import com.bee.drive.data.StaticConfig;
 import com.bee.drive.model.Friend;

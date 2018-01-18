@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@null"
-        android:hint="Car"
+        android:hint="Car or Taxi model"
         android:layout_marginBottom="20sp"/>
     <RadioGroup
         android:layout_width="match_parent"
@@ -42,17 +42,17 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="UberX"
+            android:text="BeeBenSkin"
             android:id="@+id/UberX"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="UberBlack"
+            android:text="BeeTaxi"
             android:id="@+id/UberBlack"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="UberXl"
+            android:text="BeeDelivery"
             android:id="@+id/UberXl"/>
     </RadioGroup>
 
@@ -60,11 +60,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/confirm"
-        android:text="confirm"/>
+        android:text="confirm Update "/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/back"
-        android:text="back"/>
+        android:text="back to Main Menu"/>
 
 </LinearLayout>

@@ -33,7 +33,7 @@ import com.yarolegovich.lovelydialog.LovelyProgressDialog;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import beetech.com.wallet.R;
+import com.bee.drive.R;
 
 import com.bee.drive.data.StaticConfig;
 import com.bee.drive.model.User;

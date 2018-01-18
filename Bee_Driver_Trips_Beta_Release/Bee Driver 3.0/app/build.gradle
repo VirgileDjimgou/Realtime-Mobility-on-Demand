@@ -114,6 +114,12 @@ dependencies {
     // interactive windows
 
     compile 'com.appolica:interactive-info-window:v1.0.6'
+
+
+    implementation ("com.android.support:appcompat-v7:26.0.2") {
+        force = true
+    }
+    implementation "com.google.firebase:firebase-messaging:11.6.0"
 }
 
 apply plugin: 'com.google.gms.google-services'

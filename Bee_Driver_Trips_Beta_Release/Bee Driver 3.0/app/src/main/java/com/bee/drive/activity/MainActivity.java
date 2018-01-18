@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bee.drive.DriverSettingsActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bee.drive.Utility.ImageUtils;
@@ -45,7 +46,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import beetech.com.wallet.R;
+import com.bee.drive.R;
 
 import com.bee.drive.data.SharedPreferenceHelper;
 import com.bee.drive.data.StaticConfig;
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Declare  differents Fragements
     // private HomeFragment homeFragment = new HomeFragment();
-    private MapFragment homeFragment = new MapFragment();
+    private HomeFragment homeFragment = new HomeFragment();
     private UserProfileFragment profilFragment = new UserProfileFragment();
     private HistoryFragment historyFragment = new HistoryFragment();
     private NotificationsFragment notificationsFragment = new NotificationsFragment();
@@ -398,7 +399,7 @@ public class MainActivity extends AppCompatActivity {
 
                     case R.id.nav_settings:
                         // launch new intent instead of loading fragment
-                        startActivity(new Intent(MainActivity.this, Settings_Activity.class));
+                        startActivity(new Intent(MainActivity.this, DriverSettingsActivity.class));
                         drawer.closeDrawers();
                         return true;
 

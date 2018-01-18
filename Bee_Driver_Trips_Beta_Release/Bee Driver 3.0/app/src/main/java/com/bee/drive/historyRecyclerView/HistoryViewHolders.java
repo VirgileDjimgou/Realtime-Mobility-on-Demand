@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bee.drive.HistorySingleActivity;
-import beetech.com.wallet.R;
+import com.bee.drive.R;
 
 /**
  * Created by manel on 10/10/2017.

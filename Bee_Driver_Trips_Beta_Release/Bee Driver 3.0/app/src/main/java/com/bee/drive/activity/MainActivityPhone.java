@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-import beetech.com.wallet.R;
+import com.bee.drive.R;
 
 /**
  * Created by Djimgou Patrick

@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import beetech.com.wallet.R;
+import com.bee.drive.R;
 
 import java.util.List;
 

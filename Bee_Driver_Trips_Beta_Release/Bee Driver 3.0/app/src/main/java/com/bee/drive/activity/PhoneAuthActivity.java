@@ -26,7 +26,7 @@ import com.google.firebase.auth.PhoneAuthProvider;
 
 import java.util.concurrent.TimeUnit;
 
-import beetech.com.wallet.R;
+import com.bee.drive.R;
 
 
 /**

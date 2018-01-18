@@ -51,7 +51,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import beetech.com.wallet.R;
+import com.bee.drive.R;
 
 public class HistorySingleActivity extends AppCompatActivity implements OnMapReadyCallback, RoutingListener {
     private String rideId, currentUserId, customerId, driverId, userDriverOrCustomer;

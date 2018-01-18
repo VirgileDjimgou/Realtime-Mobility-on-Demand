@@ -22,7 +22,7 @@ import com.bee.drive.data.StaticConfig;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import beetech.com.wallet.R;
+import com.bee.drive.R;
 
 
 public class RegisterActivity extends AppCompatActivity {
