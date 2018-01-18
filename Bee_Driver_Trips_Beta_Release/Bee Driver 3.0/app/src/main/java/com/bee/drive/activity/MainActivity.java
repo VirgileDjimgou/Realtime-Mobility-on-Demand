@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         txtName.setText(myAccount.name);
         txtWebsite.setText(myAccount.email);
 
-        Toast.makeText(this, myAccount.name + myAccount.email, 4000).show();
+        Toast.makeText(this, myAccount.name +"  Email : " + myAccount.email, 8000).show();
 
         // initializing navigation menu
         setUpNavigationView();
