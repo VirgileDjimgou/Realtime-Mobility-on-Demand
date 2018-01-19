@@ -1,8 +1,12 @@
 package com.bee.drive.fragment;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,12 +16,16 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bee.drive.Utility.ImageUtils;
 import com.bee.drive.activity.MainActivity;
 import com.bee.drive.airbnbmapexample.ui.activity.MovingMarkerActivity;
+import com.bee.drive.data.StaticConfig;
 import com.bee.drive.fcm.MainActivity_fcm;
 import com.bumptech.glide.Glide;
 import com.bee.drive.data.FriendDB;
@@ -111,13 +119,27 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
     private TextView mCustomerName, mCustomerPhone, mCustomerDestination;
 
+    private DatabaseReference userDB;
+    private FirebaseAuth mAuth;
+    ImageView avatar;
+    private Context context;
+
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        polylines = new ArrayList<>();
+
+        userDB = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(StaticConfig.UID);
+
         View rootView = inflater.inflate(R.layout.activity_driver_map, container, false);
 
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
+
+        context = rootView.getContext();
 
         mMapView.onResume(); // needed to get the map to display immediately
 
@@ -134,6 +156,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         }
 
         // add old Activity
+
 
         mCustomerInfo = (LinearLayout) rootView .findViewById(R.id.customerInfo);
 
@@ -276,6 +299,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             }
         });
 
+        getAssignedCustomer();
+
+
         return rootView;
     }
 
@@ -310,19 +336,33 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         assignedCustomerRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
-                    status = 1;
-                    customerId = dataSnapshot.getValue().toString();
-                    getAssignedCustomerPickupLocation();
-                    getAssignedCustomerDestination();
-                    getAssignedCustomerInfo();
-                }else{
-                    endRide();
+
+                try{
+
+                    if(dataSnapshot.exists()){
+                        status = 1;
+                        customerId = dataSnapshot.getValue().toString();
+                        getAssignedCustomerPickupLocation();
+                        getAssignedCustomerDestination();
+                        getAssignedCustomerInfo();
+                    }else{
+                        endRide();
+                    }
+
+                }catch(Exception ex){
+                    Log.e("getAssignedCustomer" , ex.toString());
+                    ex.printStackTrace();
+                    Toast.makeText(context, "getAssignedCustomer  : " +ex.toString(), Toast.LENGTH_LONG).show();
+
                 }
+
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+
+                Log.e("getAssignedCustomer" , databaseError.toString());
+                Toast.makeText(context , "getAssignedCustomer  : " +databaseError.toString() , Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -404,22 +444,35 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
 
     private void getAssignedCustomerInfo(){
+
+        Toast.makeText(context, "Incomming Customer Offer  ...." , Toast.LENGTH_LONG).show();
         mCustomerInfo.setVisibility(View.VISIBLE);
         DatabaseReference mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerId);
         mCustomerDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
-                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                    if(map.get("name")!=null){
-                        mCustomerName.setText(map.get("name").toString());
+
+                    try{
+                        Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                        if(map.get("name")!=null){
+                            mCustomerName.setText(map.get("name").toString());
+                        }
+                        if(map.get("phone")!=null){
+                            mCustomerPhone.setText(map.get("phone").toString());
+                        }
+                        if(map.get("profileImageUrl")!=null){
+
+
+                            Glide.with(getActivity()).load(map.get("profileImageUrl").toString()).into(mCustomerProfileImage);
+                        }
+
+                    }catch (Exception ex){
+                        ex.printStackTrace();
+                        Toast.makeText(context, ex.toString() , Toast.LENGTH_LONG).show();
+
                     }
-                    if(map.get("phone")!=null){
-                        mCustomerPhone.setText(map.get("phone").toString());
-                    }
-                    if(map.get("profileImageUrl")!=null){
-                        Glide.with(getActivity()).load(map.get("profileImageUrl").toString()).into(mCustomerProfileImage);
-                    }
+
                 }
             }
 
@@ -431,30 +484,40 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
 
     private void endRide(){
-        mRideStatus.setText("picked customer");
-        erasePolylines();
 
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(userId).child("customerRequest");
-        driverRef.removeValue();
+        try{
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
-        GeoFire geoFire = new GeoFire(ref);
-        geoFire.removeLocation(customerId);
-        customerId="";
-        rideDistance = 0;
+            mRideStatus.setText("picked customer");
+            erasePolylines();
 
-        if(pickupMarker != null){
-            pickupMarker.remove();
+            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(userId).child("customerRequest");
+            driverRef.removeValue();
+
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
+            GeoFire geoFire = new GeoFire(ref);
+            geoFire.removeLocation(customerId);
+            customerId="";
+            rideDistance = 0;
+
+            if(pickupMarker != null){
+                pickupMarker.remove();
+            }
+            if (assignedCustomerPickupLocationRefListener != null){
+                assignedCustomerPickupLocationRef.removeEventListener(assignedCustomerPickupLocationRefListener);
+            }
+            mCustomerInfo.setVisibility(View.GONE);
+            mCustomerName.setText("");
+            mCustomerPhone.setText("");
+            mCustomerDestination.setText("Destination: --");
+            mCustomerProfileImage.setImageResource(R.mipmap.ic_default_user);
+
+
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+            Toast.makeText(context , "endRide " + ex.toString(), Toast.LENGTH_LONG).show();
         }
-        if (assignedCustomerPickupLocationRefListener != null){
-            assignedCustomerPickupLocationRef.removeEventListener(assignedCustomerPickupLocationRefListener);
-        }
-        mCustomerInfo.setVisibility(View.GONE);
-        mCustomerName.setText("");
-        mCustomerPhone.setText("");
-        mCustomerDestination.setText("Destination: --");
-        mCustomerProfileImage.setImageResource(R.mipmap.ic_default_user);
     }
 
     private void recordRide(){
@@ -641,6 +704,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         }
         polylines.clear();
     }
+
+     // Profil image ...
+
+
 
 
 }

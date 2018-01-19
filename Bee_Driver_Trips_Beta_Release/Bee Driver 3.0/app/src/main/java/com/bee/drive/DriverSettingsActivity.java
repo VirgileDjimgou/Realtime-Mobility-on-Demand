@@ -67,16 +67,16 @@ public class DriverSettingsActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mNameField = (EditText) findViewById(R.id.name);
-        mPhoneField = (EditText) findViewById(R.id.phone);
-        mCarField = (EditText) findViewById(R.id.car);
+        mNameField = findViewById(R.id.name);
+        mPhoneField = findViewById(R.id.phone);
+        mCarField = findViewById(R.id.car);
 
-        mProfileImage = (ImageView) findViewById(R.id.profileImage);
+        mProfileImage = findViewById(R.id.profileImage);
 
-        mRadioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+        mRadioGroup = findViewById(R.id.radioGroup);
 
-        mBack = (Button) findViewById(R.id.back);
-        mConfirm = (Button) findViewById(R.id.confirm);
+        mBack = findViewById(R.id.back);
+        mConfirm = findViewById(R.id.confirm);
 
         mAuth = FirebaseAuth.getInstance();
         userID = mAuth.getCurrentUser().getUid();
@@ -195,7 +195,7 @@ public class DriverSettingsActivity extends AppCompatActivity {
 
         int selectId = mRadioGroup.getCheckedRadioButtonId();
 
-        final RadioButton radioButton = (RadioButton) findViewById(selectId);
+        final RadioButton radioButton = findViewById(selectId);
 
         if (radioButton.getText() == null){
             return;

@@ -115,7 +115,10 @@ public class UserProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        userDB = FirebaseDatabase.getInstance().getReference().child(MainActivity_App.AppTypeDriver_or_Rider ).child(StaticConfig.UID);
+
+        userDB = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(StaticConfig.UID);
+
+       //  userDB = FirebaseDatabase.getInstance().getReference().child(MainActivity_App.AppTypeDriver_or_Rider ).child(StaticConfig.UID);
         userDB.addListenerForSingleValueEvent(userListener);
         mAuth = FirebaseAuth.getInstance();
 

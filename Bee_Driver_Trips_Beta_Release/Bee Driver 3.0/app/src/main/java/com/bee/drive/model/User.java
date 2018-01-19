@@ -3,8 +3,7 @@ package com.bee.drive.model;
 
 
 public class User {
-    public String firsName;
-    public String LastName;
+
     public String DriverType;
     public String name;
     public String email;

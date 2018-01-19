@@ -13,7 +13,7 @@ public class StaticConfig {
 
     public static String STR_EXTRA_FIRST_NAME = "fn";
     public static String STR_EXTRA_LAST_NAME = "lln";
-    public static String STR_EXTRA_PHONE_NUMBER = "ph";
+    public static String STR_EXTRA_PHONE_NUMBER = "00000000000";
     public static String STR_EXTRA_DRIVER_TYPE = "dt";
     public static String STR_EXTRA_EMAIL= "email";
 

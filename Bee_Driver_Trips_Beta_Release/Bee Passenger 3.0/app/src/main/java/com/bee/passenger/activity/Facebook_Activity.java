@@ -198,8 +198,6 @@ public class Facebook_Activity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), uid_facebook +"   "+ email_facebook , Toast.LENGTH_LONG).show();;
 
 
-                            newUser.firsName = name_facebook;
-                            newUser.LastName = name_facebook;
                             newUser.phone = "enter your Phone Number";
                             newUser.DriverType = "Select a Type of driver";
                             newUser.email = email_facebook;

@@ -45,33 +45,6 @@
                     android:layout_marginTop="10dp"
                     android:paddingEnd="30dp"
                     android:paddingStart="50dp">
-
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColorHint="#f0f7f4"
-                        android:theme="@style/TextLabel">
-
-                        <EditText
-                            android:id="@+id/first_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/selector_bg_edit_2"
-                            android:hint="First Name"
-                            android:inputType="textEmailAddress"
-                            android:paddingBottom="2dp"
-                            android:textColor="#f0f7f4"
-                            android:textCursorDrawable="@drawable/bg_input_cursor_2"
-                            android:textSize="13sp" />
-                    </android.support.design.widget.TextInputLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="10dp"
-                    android:paddingEnd="30dp"
-                    android:paddingStart="50dp">
 rr
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
@@ -80,12 +53,11 @@ rr
                         android:theme="@style/TextLabel">
 
                         <EditText
-                            android:id="@+id/last_name"
+                            android:id="@+id/username"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/selector_bg_edit_2"
-                            android:hint="Last Name"
-                            android:inputType="textEmailAddress"
+                            android:hint="Username"
                             android:paddingBottom="2dp"
                             android:textColor="#f0f7f4"
                             android:textCursorDrawable="@drawable/bg_input_cursor_2"

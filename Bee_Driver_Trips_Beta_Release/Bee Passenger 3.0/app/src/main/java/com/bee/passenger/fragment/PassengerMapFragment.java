@@ -168,8 +168,15 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
 
 
 
+        try{
 
-                rootView = inflater.inflate(R.layout.activity_costumer_map, container, false);
+            rootView = inflater.inflate(R.layout.activity_costumer_map, container, false);
+
+        }catch(Exception ex){
+
+            ex.printStackTrace();
+        }
+
 
                 mMapView = (MapView) rootView.findViewById(R.id.mapView);
                 mMapView.onCreate(savedInstanceState);
@@ -680,7 +687,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
         if (mDriverMarker != null){
             mDriverMarker.remove();
         }
-        mRequest.setText("call Uber");
+        mRequest.setText("call Bee Service");
 
         mDriverInfo.setVisibility(View.GONE);
         mDriverName.setText("");

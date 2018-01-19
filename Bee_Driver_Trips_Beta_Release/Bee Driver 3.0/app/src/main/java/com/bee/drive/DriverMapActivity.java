@@ -119,10 +119,10 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             }
         });
 
-        mSettings = (Button) findViewById(R.id.settings);
-        mLogout = (Button) findViewById(R.id.logout);
-        mRideStatus = (Button) findViewById(R.id.rideStatus);
-        mHistory = (Button) findViewById(R.id.history);
+       //  mSettings = (Button) findViewById(R.id.settings);
+        // mLogout = (Button) findViewById(R.id.logout);
+        // mRideStatus = (Button) findViewById(R.id.rideStatus);
+        // mHistory = (Button) findViewById(R.id.history);
         mRideStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -299,6 +299,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+
+                Toast.makeText(DriverMapActivity.this, databaseError.toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }

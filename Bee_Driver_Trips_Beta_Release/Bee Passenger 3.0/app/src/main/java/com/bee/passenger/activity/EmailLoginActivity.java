@@ -132,7 +132,11 @@ public class EmailLoginActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == StaticConfig.REQUEST_CODE_REGISTER && resultCode == RESULT_OK) {
-            authUtils.createUser(data.getStringExtra(StaticConfig.STR_EXTRA_EMAIL), data.getStringExtra(StaticConfig.STR_EXTRA_PASSWORD));
+            authUtils.createUser(
+                                data.getStringExtra(StaticConfig.STR_EXTRA_USERNAME),
+                                data.getStringExtra(StaticConfig.STR_EXTRA_PHONE_NUMBER),
+                                data.getStringExtra(StaticConfig.STR_EXTRA_EMAIL),
+                                data.getStringExtra(StaticConfig.STR_EXTRA_PASSWORD));
         }
     }
 
@@ -177,7 +181,7 @@ public class EmailLoginActivity extends AppCompatActivity {
          * @param email
          * @param password
          */
-        void createUser(String email, String password) {
+        void createUser(final String Username , final String Phone_numb  , String email, String password) {
             waitingDialog.setIcon(R.drawable.ic_add_friend)
                     .setTitle("Registering....")
                     .setTopColorRes(R.color.colorPrimary)
@@ -212,7 +216,18 @@ public class EmailLoginActivity extends AppCompatActivity {
                                         .setCancelable(false)
                                         .show();
                             } else {
-                                initNewUserInfo();
+                                User newUser = new User();
+
+                                newUser.phone = Phone_numb;
+                                newUser.email = user.getEmail();
+                                newUser.name = Username;
+                                newUser.avata = StaticConfig.STR_DEFAULT_BASE64;
+                                // FirebaseDatabase.getInstance().getReference().child("Driver/"+ user.getUid()).setValue(newUser);
+
+                                FirebaseDatabase.getInstance().getReference().child("Users").child("Customers/"+ user.getUid()).setValue(newUser);
+
+                                Toast.makeText(EmailLoginActivity.this, "Register and Login success", Toast.LENGTH_SHORT).show();
+
                                 Toast.makeText(EmailLoginActivity.this, "Register and Login success", Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(EmailLoginActivity.this, SplaschScreen.class));
                                 EmailLoginActivity.this.finish();
@@ -351,7 +366,7 @@ public class EmailLoginActivity extends AppCompatActivity {
         void saveUserInfo() {
 
             try{
-                FirebaseDatabase.getInstance().getReference().child("Driver/" + StaticConfig.UID).addListenerForSingleValueEvent(new ValueEventListener() {
+                FirebaseDatabase.getInstance().getReference().child("Users").child("Customers/" + StaticConfig.UID).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         waitingDialog.dismiss();
@@ -360,6 +375,7 @@ public class EmailLoginActivity extends AppCompatActivity {
                         userInfo.name = (String) hashUser.get("name");
                         userInfo.email = (String) hashUser.get("email");
                         userInfo.avata = (String) hashUser.get("avata");
+                        userInfo.phone = (String) hashUser.get("phone");
                         SharedPreferenceHelper.getInstance(EmailLoginActivity.this).saveUserInfo(userInfo);
                     }
 
@@ -375,15 +391,5 @@ public class EmailLoginActivity extends AppCompatActivity {
 
         }
 
-        /**
-         * Init new  User in  Firebase  Realtime DB ...
-         */
-        void initNewUserInfo() {
-            User newUser = new User();
-            newUser.email = user.getEmail();
-            newUser.name = user.getEmail().substring(0, user.getEmail().indexOf("@"));
-            newUser.avata = StaticConfig.STR_DEFAULT_BASE64;
-            FirebaseDatabase.getInstance().getReference().child("Driver/"+ user.getUid()).setValue(newUser);
-        }
     }
 }

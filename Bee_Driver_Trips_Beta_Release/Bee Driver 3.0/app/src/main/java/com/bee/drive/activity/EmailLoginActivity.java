@@ -134,11 +134,10 @@ public class EmailLoginActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == StaticConfig.REQUEST_CODE_REGISTER && resultCode == RESULT_OK) {
             authUtils.createUser(
-                    data.getStringExtra(StaticConfig.STR_EXTRA_FIRST_NAME),
-                    data.getStringExtra(StaticConfig.STR_EXTRA_LAST_NAME),
+                    data.getStringExtra(StaticConfig.STR_EXTRA_USERNAME),
                     data.getStringExtra(StaticConfig.STR_EXTRA_PHONE_NUMBER),
                     data.getStringExtra(StaticConfig.STR_EXTRA_DRIVER_TYPE),
-                    data.getStringExtra(StaticConfig.STR_EXTRA_USERNAME),
+                    data.getStringExtra(StaticConfig.STR_EXTRA_EMAIL),
                     data.getStringExtra(StaticConfig.STR_EXTRA_PASSWORD));
         }
     }
@@ -184,13 +183,13 @@ public class EmailLoginActivity extends AppCompatActivity {
          * @param email
          * @param password
          */
-        void createUser(final String First_Name , final String Last_Name , final String Phone_numb , final String Driver_Type , String email, String password) {
+        void createUser(final String Username , final String Phone_numb , final String Driver_Type , String email, String password) {
             waitingDialog.setIcon(R.drawable.ic_add_friend)
                     .setTitle("Registering....")
                     .setTopColorRes(R.color.colorPrimary)
                     .show();
 
-            if(First_Name  == Last_Name){}
+
 
             mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(EmailLoginActivity.this, new OnCompleteListener<AuthResult>() {
@@ -224,14 +223,14 @@ public class EmailLoginActivity extends AppCompatActivity {
                             } else {
                                 User newUser = new User();
 
-                                newUser.firsName = First_Name;
-                                newUser.LastName = Last_Name;
                                 newUser.phone = Phone_numb;
                                 newUser.DriverType = Driver_Type;
                                 newUser.email = user.getEmail();
-                                newUser.name = user.getEmail().substring(0, user.getEmail().indexOf("@"));
+                                newUser.name = Username;
                                 newUser.avata = StaticConfig.STR_DEFAULT_BASE64;
-                                FirebaseDatabase.getInstance().getReference().child("Driver/"+ user.getUid()).setValue(newUser);
+                                // FirebaseDatabase.getInstance().getReference().child("Driver/"+ user.getUid()).setValue(newUser);
+
+                                FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers/"+ user.getUid()).setValue(newUser);
 
                                 Toast.makeText(EmailLoginActivity.this, "Register and Login success", Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(EmailLoginActivity.this, SplaschScreen.class));
@@ -368,7 +367,10 @@ public class EmailLoginActivity extends AppCompatActivity {
         void saveUserInfo() {
 
             try{
-                FirebaseDatabase.getInstance().getReference().child("Driver/" + StaticConfig.UID).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                // FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child("Driver/"+ user.getUid()).setValue(newUser);
+
+                FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers/" + StaticConfig.UID).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         waitingDialog.dismiss();

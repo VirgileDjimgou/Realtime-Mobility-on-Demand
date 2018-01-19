@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         // get Data of Aktual USer
-        userDB = FirebaseDatabase.getInstance().getReference().child("Driver").child(StaticConfig.UID);
+        userDB = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(StaticConfig.UID);
         userDB.addListenerForSingleValueEvent(userListener);
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {

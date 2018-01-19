@@ -34,7 +34,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bee.drive.Utility.ImageUtils;
 import com.bee.drive.data.FriendDB;
 import com.bee.drive.data.GroupDB;
-import com.bee.drive.fragment.MapFragment;
 import com.bee.drive.fragment.ShareFragment;
 import com.bee.drive.fragment.UserProfileFragment;
 import com.bee.drive.model.Configuration;
@@ -175,7 +174,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         // get Data of Aktual USer
-        userDB = FirebaseDatabase.getInstance().getReference().child("Driver").child(StaticConfig.UID);
+        // FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child("Driver/"+ user.getUid());
+
+        userDB = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(StaticConfig.UID);
         userDB.addListenerForSingleValueEvent(userListener);
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -541,5 +542,6 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 
 }

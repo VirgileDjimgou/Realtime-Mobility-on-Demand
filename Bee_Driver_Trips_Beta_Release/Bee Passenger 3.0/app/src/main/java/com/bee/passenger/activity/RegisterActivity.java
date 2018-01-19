@@ -28,7 +28,7 @@ public class RegisterActivity extends AppCompatActivity {
     CardView cvAdd;
     private final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
-    private EditText FirstName, LastName , mPhoneNumberField, mVerificationField, email_user, editTextPassword, editTextRepeatPassword;
+    private EditText UserName, mPhoneNumberField, mVerificationField, email_user, editTextPassword, editTextRepeatPassword;
     public static String STR_EXTRA_ACTION_REGISTER = "register";
 
     @Override
@@ -40,9 +40,8 @@ public class RegisterActivity extends AppCompatActivity {
         email_user = (EditText) findViewById(R.id.email_user);
         editTextPassword = (EditText) findViewById(R.id.et_password);
         editTextRepeatPassword = (EditText) findViewById(R.id.et_repeatpassword);
-        FirstName = (EditText) findViewById(R.id.first_name);
-        LastName = (EditText) findViewById(R.id.last_name);
-        mPhoneNumberField = (EditText) findViewById(R.id.field_phone_number);
+        UserName = (EditText) findViewById(R.id.username);
+        mPhoneNumberField = (EditText) findViewById(R.id.phone_number);
         mVerificationField = (EditText) findViewById(R.id.field_verification_code);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -135,18 +134,15 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void clickRegister(View view) {
-        String FN = FirstName.getText().toString().trim();
-        String LN = LastName.getText().toString().trim();
+        String uname = UserName.getText().toString().trim();
         String Phone = mPhoneNumberField.getText().toString().trim();
         String email_u = email_user.getText().toString();
         String password = editTextPassword.getText().toString();
         String repeatPassword = editTextRepeatPassword.getText().toString();
-        if(validate(FN , LN , Phone , email_u, password, repeatPassword)){
+        if(validate(uname , Phone , email_u, password, repeatPassword)){
             Intent data = new Intent();
-            data.putExtra(StaticConfig.STR_EXTRA_FIRST_NAME, FN);
-            data.putExtra(StaticConfig.STR_EXTRA_LAST_NAME, LN);
+            data.putExtra(StaticConfig.STR_EXTRA_USERNAME, uname);
             data.putExtra(StaticConfig.STR_EXTRA_PHONE_NUMBER , Phone);
-
             data.putExtra(StaticConfig.STR_EXTRA_EMAIL, email_u);
             data.putExtra(StaticConfig.STR_EXTRA_PASSWORD, password);
             data.putExtra(StaticConfig.STR_EXTRA_ACTION, STR_EXTRA_ACTION_REGISTER);
@@ -163,8 +159,10 @@ public class RegisterActivity extends AppCompatActivity {
      * @param password
      * @return
      */
-    private boolean validate(String fn , String ln , String ph , String emailStr, String password, String repeatPassword) {
+    private boolean validate(String uname, String ph , String emailStr, String password, String repeatPassword) {
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(emailStr);
-        return  ph.length()> 0 && ln.length() > 0  && fn.length()> 0 && password.length() > 0 && repeatPassword.equals(password) && matcher.find();
+        return  ph.length()> 0 && uname.length() > 0  && password.length() > 0 && repeatPassword.equals(password) && matcher.find();
     }
+
+
 }
