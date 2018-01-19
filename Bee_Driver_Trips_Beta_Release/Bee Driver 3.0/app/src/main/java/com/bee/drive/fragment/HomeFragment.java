@@ -627,7 +627,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     private void disconnectDriver(){
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+
+        try{
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+
+        }catch (Exception ex ){
+            ex.printStackTrace();
+            Toast.makeText(this.getContext(), ex.toString() , Toast.LENGTH_LONG).show();
+
+        }
+
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("driversAvailable");
 
