@@ -63,6 +63,8 @@ import java.util.List;
 
 
 
+
+
 public class MainActivity extends AppCompatActivity {
 
     private NavigationView navigationView;
@@ -121,6 +123,8 @@ public class MainActivity extends AppCompatActivity {
         initFirebase();
 
 
+        // Init KeyHashes ...
+        // printhashkey();
 
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -160,6 +164,10 @@ public class MainActivity extends AppCompatActivity {
      * like background image, profile image
      * name, website, notifications action view (dot)
      */
+
+
+
+
 
     private void initFirebase(){
 

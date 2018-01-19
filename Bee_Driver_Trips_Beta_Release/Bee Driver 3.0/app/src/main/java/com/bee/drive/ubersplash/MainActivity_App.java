@@ -45,6 +45,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
+
+
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+
 public class MainActivity_App extends AppCompatActivity {
 
     public static final String VIDEO_NAME = "welcome_video.mp4";
@@ -94,6 +108,10 @@ public class MainActivity_App extends AppCompatActivity {
 
         findView();
 
+
+        // print KeyHashes  ...
+        printhashkey();
+
         File videoFile = getFileStreamPath(VIDEO_NAME);
         if (!videoFile.exists()) {
             videoFile = copyVideoFile();
@@ -142,6 +160,31 @@ public class MainActivity_App extends AppCompatActivity {
                 finish();
             }
         });
+
+    }
+
+    // print KeyHashes
+    public void printhashkey(){
+
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "com.bee.drive",
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+
+            e.printStackTrace();
+            Log.e("KeyHash:", e.toString());
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            Log.e("KeyHash:", e.toString());
+
+        }
 
     }
 
