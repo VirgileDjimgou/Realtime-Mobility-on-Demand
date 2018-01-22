@@ -36,7 +36,6 @@ import com.bee.passenger.R;
 
 import com.bee.passenger.data.StaticConfig;
 import com.bee.passenger.model.User;
-import com.bee.passenger.ubersplash.MainActivity_App;
 
 
 public class EmailLoginActivity extends AppCompatActivity {

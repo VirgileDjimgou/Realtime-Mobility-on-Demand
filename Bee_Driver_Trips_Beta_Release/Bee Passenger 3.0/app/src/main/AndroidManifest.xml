@@ -120,7 +120,7 @@
 
 
         <activity
-            android:name="com.bee.passenger.ubersplash.MainActivity_App">
+            android:name="com.bee.passenger.activity.MainActivity_App">
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             <intent-filter>

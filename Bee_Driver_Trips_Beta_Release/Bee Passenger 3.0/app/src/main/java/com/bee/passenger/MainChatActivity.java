@@ -17,11 +17,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.bee.passenger.R;
-
 import com.bee.passenger.data.StaticConfig;
 import com.bee.passenger.service.ServiceUtils;
-import com.bee.passenger.ubersplash.MainActivity_App;
+import com.bee.passenger.activity.MainActivity_App;
 import com.bee.passenger.ui.FriendsFragment;
 import com.bee.passenger.ui.GroupFragment;
 import com.bee.passenger.ui.UserAlteProfileFragment;

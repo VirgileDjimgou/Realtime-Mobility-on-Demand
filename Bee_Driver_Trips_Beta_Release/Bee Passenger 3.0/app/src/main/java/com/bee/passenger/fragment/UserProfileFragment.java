@@ -52,8 +52,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.bee.passenger.ubersplash.MainActivity_App.AppTypeDriver_or_Rider;
-
 
 public class UserProfileFragment extends Fragment {
     TextView tvUserName;

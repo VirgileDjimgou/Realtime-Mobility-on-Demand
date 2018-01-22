@@ -17,11 +17,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.bee.drive.R;
-
 import com.bee.drive.data.StaticConfig;
 import com.bee.drive.service.ServiceUtils;
-import com.bee.drive.ubersplash.MainActivity_App;
+import com.bee.drive.activity.MainActivity_App;
 import com.bee.drive.ui.FriendsFragment;
 import com.bee.drive.ui.GroupFragment;
 import com.bee.drive.ui.UserAlteProfileFragment;

@@ -35,7 +35,6 @@ import com.bee.drive.data.StaticConfig;
 import com.bee.drive.model.Configuration;
 import com.bee.drive.model.User;
 import com.bee.drive.service.ServiceUtils;
-import com.bee.drive.ubersplash.MainActivity_App;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;

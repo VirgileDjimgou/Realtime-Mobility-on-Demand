@@ -5,20 +5,32 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
+    android:background="@drawable/ebe_main_screen">
 
-    android:background="@drawable/bee_black_1">
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="22dp"
+        android:text="@string/app_name"
+        android:textColor="@color/button_text"
+        android:textSize="32dp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:layout_above="@+id/phone_auth_fields"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="43dp"
-        android:text="Bee Driver Phone Authentification"
-        android:textColor="@color/grey_100"
+        android:text="Phone Authentification"
         android:textColorHint="@color/grey_100"
+        android:textStyle="bold"
+        android:textColor="@color/button_text"
         android:textSize="20sp" />
 
     <LinearLayout

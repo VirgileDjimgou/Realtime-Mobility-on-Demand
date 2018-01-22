@@ -26,7 +26,6 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import java.util.concurrent.TimeUnit;
 
 import com.bee.passenger.R;
-import com.bee.passenger.ubersplash.MainActivity_App;
 
 
 /**

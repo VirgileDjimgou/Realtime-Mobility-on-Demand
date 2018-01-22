@@ -132,7 +132,7 @@
 
 
         <activity
-            android:name="com.bee.drive.ubersplash.MainActivity_App">
+            android:name="com.bee.drive.activity.MainActivity_App">
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             <intent-filter>
