@@ -119,6 +119,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
     private TextView mCustomerName, mCustomerPhone, mCustomerDestination;
 
+    private Button mButtonDeclineDrive , mButtonAcceptDrive ;
+
     private DatabaseReference userDB;
     private FirebaseAuth mAuth;
     ImageView avatar;
@@ -158,13 +160,36 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         // add old Activity
 
 
-        mCustomerInfo = (LinearLayout) rootView .findViewById(R.id.customerInfo);
+        mCustomerInfo = (LinearLayout) rootView .findViewById(R.id.PassengerInfoCustom);
+        // always mask this Layout  after the creation ....
+        mCustomerInfo.setVisibility(View.GONE);
 
-        mCustomerProfileImage = (ImageView) rootView.findViewById(R.id.customerProfileImage);
 
-        mCustomerName = (TextView) rootView .findViewById(R.id.customerName);
-        mCustomerPhone = (TextView) rootView .findViewById(R.id.customerPhone);
-        mCustomerDestination = (TextView) rootView .findViewById(R.id.customerDestination);
+        mButtonDeclineDrive  = (Button) rootView.findViewById(R.id.btn_decline_drive) ;
+        mButtonDeclineDrive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "Passenger refused ", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
+        mButtonAcceptDrive = (Button)  rootView.findViewById(R.id.btn_accept_passenger) ;
+        mButtonAcceptDrive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "Passenger accepted ", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
+        mCustomerProfileImage = (ImageView) rootView.findViewById(R.id.profil_img_customer);
+
+        mCustomerName = (TextView) rootView .findViewById(R.id.name_customer);
+        mCustomerPhone = (TextView) rootView .findViewById(R.id.customer_phone);
+        mCustomerDestination = (TextView) rootView .findViewById(R.id.customer_destination);
 
         mWorkingSwitch = (Switch) rootView .findViewById(R.id.workingSwitch);
         mWorkingSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -573,32 +598,47 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     public void onLocationChanged(Location location) {
         if(getContext()!=null){
 
-            if(!customerId.equals("")){
-                rideDistance += mLastLocation.distanceTo(location)/1000;
+            try{
+
+                customerId = customerId;
+
+                if(!customerId.equals("")){
+                    rideDistance += mLastLocation.distanceTo(location)/1000;
+                }
+
+
+            }catch(Exception ex){
+                mCustomerInfo.setVisibility(View.GONE);
+                Toast.makeText(context, ex.toString(), Toast.LENGTH_SHORT).show();
+                ex.printStackTrace();
             }
 
-            mLastLocation = location;
-            LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
-            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            DatabaseReference refAvailable = FirebaseDatabase.getInstance().getReference("driversAvailable");
-            DatabaseReference refWorking = FirebaseDatabase.getInstance().getReference("driversWorking");
-            GeoFire geoFireAvailable = new GeoFire(refAvailable);
-            GeoFire geoFireWorking = new GeoFire(refWorking);
+                mLastLocation = location;
+                LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
-            switch (customerId){
-                case "":
-                    geoFireWorking.removeLocation(userId);
-                    geoFireAvailable.setLocation(userId, new GeoLocation(location.getLatitude(), location.getLongitude()));
-                    break;
+                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                DatabaseReference refAvailable = FirebaseDatabase.getInstance().getReference("driversAvailable");
+                DatabaseReference refWorking = FirebaseDatabase.getInstance().getReference("driversWorking");
+                GeoFire geoFireAvailable = new GeoFire(refAvailable);
+                GeoFire geoFireWorking = new GeoFire(refWorking);
 
-                default:
-                    geoFireAvailable.removeLocation(userId);
-                    geoFireWorking.setLocation(userId, new GeoLocation(location.getLatitude(), location.getLongitude()));
-                    break;
-            }
+                switch (customerId){
+                    case "":
+                        geoFireWorking.removeLocation(userId);
+                        geoFireAvailable.setLocation(userId, new GeoLocation(location.getLatitude(), location.getLongitude()));
+                        break;
+
+                    default:
+                        geoFireAvailable.removeLocation(userId);
+                        geoFireWorking.setLocation(userId, new GeoLocation(location.getLatitude(), location.getLongitude()));
+                        break;
+                }
+
+
+
         }
     }
 

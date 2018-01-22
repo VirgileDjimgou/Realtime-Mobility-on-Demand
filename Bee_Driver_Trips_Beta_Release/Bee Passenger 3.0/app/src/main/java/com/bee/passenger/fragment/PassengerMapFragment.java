@@ -2,6 +2,7 @@ package com.bee.passenger.fragment;
 
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
@@ -18,8 +19,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bee.passenger.AutompleteDestinationActivity;
-import com.bee.passenger.HistoryActivity;
 import com.bee.passenger.activity.AboutUsActivity;
 import com.bee.passenger.data.FriendDB;
 import com.bee.passenger.data.GroupDB;
@@ -54,8 +53,11 @@ import com.bee.passenger.CustomerSettingsActivity;
 import com.bee.passenger.R;
 
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.NumberPicker;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -72,7 +74,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.bee.passenger.R.id.action_bar_root;
-import static com.bee.passenger.R.id.place_autocomplete_fragment;
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static java.lang.System.exit;
 
@@ -86,28 +87,24 @@ import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 public class PassengerMapFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
 
     MapView mMapView;
-    private GoogleMap googleMap;
-    private Boolean isLoggingOut = false;
-    private LinearLayout mCustomerInfo;
-    private ImageView mCustomerProfileImage;
-    private TextView mCustomerName, mCustomerPhone, mCustomerDestination;
+
+
     private Marker pickupMarker;
     private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     LocationRequest mLocationRequest;
-    private Button mLogout, mRequest, mSettings, mHistory;
+    private Button mAcceptDriver , mDeclineDriver, mRequest;
     private Boolean requestBol = false;
     private SupportMapFragment mapFragment;
-    private String destination, position_depart ,  requestService;
+    private String destination = "", position_depart = "",  requestService ;
     private LatLng destinationLatLng , position_depart_LatLng;
-    private LinearLayout mDriverInfo;
+    private LinearLayout mDriverInfo  ;
     private ImageView mDriverProfileImage;
     private TextView mDriverName, mDriverPhone, mDriverCar;
-    private RadioGroup mRadioGroup;
     private RatingBar mRatingBar;
-    private RadioButton radioButton ;
     private LatLng pickupLocation;
+    private ProgressBar progressBar_Search;
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -119,7 +116,13 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
     private static View rootView;
 
 
-
+    // attribut Request Setiings ...
+    private LinearLayout RequestSettingsLinearLayout;
+    private Button request_cancel , mfind_a_rider;
+    private EditText TripCost;
+    private NumberPicker NumOfPassenger;
+    private TextView From_point , ToPoint ;
+    private RadioGroup mRadioGroupService , mRadioGroup_Option;
 
     FloatingActionMenu materialDesignFAM;
     FloatingActionButton Request_status,
@@ -166,8 +169,6 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-
-
         try{
 
             rootView = inflater.inflate(R.layout.activity_costumer_map, container, false);
@@ -212,22 +213,94 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
         }
 
 
+
+
+        From_point = (TextView) rootView.findViewById(R.id.from);
+        ToPoint = (TextView) rootView.findViewById(R.id.to_destination_passenger);
+        NumOfPassenger = (NumberPicker) rootView.findViewById(R.id.number_of_passenger);
+
+
+        TripCost = (EditText) rootView.findViewById(R.id.cost_proposition);
         destinationLatLng = new LatLng(0.0,0.0);
+        mDriverInfo = (LinearLayout) rootView.findViewById(R.id.driverInfoCustom);
+        mDriverInfo.setVisibility(View.GONE);
+        RequestSettingsLinearLayout = (LinearLayout) rootView.findViewById(R.id.RequestCustomizer);
+        RequestSettingsLinearLayout.setVisibility(View.GONE);
 
-        mDriverInfo = (LinearLayout) rootView.findViewById(R.id.driverInfo);
+        mDriverProfileImage = (ImageView) rootView.findViewById(R.id.profil_img_driver);
+        mDriverName = (TextView) rootView.findViewById(R.id.driver_name_custom);
+        mDriverPhone = (TextView) rootView.findViewById(R.id.driverPhone_custom);
+        mDriverCar = (TextView) rootView.findViewById(R.id.driver_car_infos);
+        mRatingBar = (RatingBar) rootView.findViewById(R.id.ratingBar_custom);
+        mRadioGroupService = (RadioGroup) rootView.findViewById(R.id.radioGroup);
+        mRadioGroupService.check(R.id.BeeBenSkin);
 
-        mDriverProfileImage = (ImageView) rootView.findViewById(R.id.driverProfileImage);
-
-        mDriverName = (TextView) rootView.findViewById(R.id.driverName);
-        mDriverPhone = (TextView) rootView.findViewById(R.id.driverPhone);
-        mDriverCar = (TextView) rootView.findViewById(R.id.driverCar);
-
-        mRatingBar = (RatingBar) rootView.findViewById(R.id.ratingBar);
-
-        mRadioGroup = (RadioGroup) rootView.findViewById(R.id.radioGroup);
-        mRadioGroup.check(R.id.UberX);
+        mRadioGroup_Option = (RadioGroup) rootView.findViewById(R.id.radioGroup_type);
+        mRadioGroup_Option.check(R.id.standart_service);
 
         mRequest = (Button) rootView.findViewById(R.id.request);
+        mAcceptDriver = (Button) rootView.findViewById(R.id.accept);
+
+        // android:indeterminateDrawable="@android:drawable/progress_indeterminate_horizontal"
+        // android:indeterminate="true"
+        progressBar_Search = (ProgressBar) rootView.findViewById(R.id.progressBarSearchDriver);
+        progressBar_Search.setIndeterminate(false);
+        // progressBar_Search.setIndeterminateDrawable("@android:drawable/progress_indeterminate_horizontal");
+
+
+
+        request_cancel = (Button) rootView.findViewById(R.id.request_cancel);
+        request_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Toast.makeText(getActivity(), "request Cancelled !!! ..." , Toast.LENGTH_LONG).show();
+                RequestSettingsLinearLayout.setVisibility(View.GONE);
+                RequestSettingsInit();
+
+                // after reinit Firebase
+
+
+            }
+        });
+
+        mfind_a_rider = (Button) rootView.findViewById(R.id.find_a_rider);
+        mfind_a_rider.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(destination.isEmpty()){
+                    Toast.makeText(getActivity(), "You must enter a valid Destination ....  " , Toast.LENGTH_LONG).show();
+                }else{
+
+                    Toast.makeText(getActivity(), "Find a Driver  ....  " , Toast.LENGTH_LONG).show();
+                    ToPoint.setText("to : "+destination.toString());
+                    From_point.setText("from : "+position_depart.toString());
+                    RequestSettingsLinearLayout.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+
+
+        mAcceptDriver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Toast.makeText(getActivity(), "Driver accepted ....  " , Toast.LENGTH_LONG).show();
+            }
+        });
+
+        mDeclineDriver = (Button) rootView.findViewById(R.id.DeclineDriver);
+        mDeclineDriver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Toast.makeText(getActivity(), "Driver declined  .... find another Driver" , Toast.LENGTH_LONG).show();
+            }
+        });
+
+
 
 
         mRequest.setOnClickListener(new View.OnClickListener() {
@@ -236,10 +309,10 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
 
                 if (requestBol){
                     endRide();
-
+                    progressBar_Search.setIndeterminate(false);
 
                 }else{
-                    int selectId = mRadioGroup.getCheckedRadioButtonId();
+                    int selectId = mRadioGroupService.getCheckedRadioButtonId();
 
                     final RadioButton radioButton = (RadioButton) rootView.findViewById(selectId);
 
@@ -261,23 +334,18 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                     pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Pickup Here").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_pickup)));
 
                     mRequest.setText("Getting your Driver....");
-
+                    progressBar_Search.setIndeterminate(true);
                     getClosestDriver();
                 }
             }
         });
 
 
-
-
-
-        /*
-
         PlaceAutocompleteFragment Depart_autocompleteFragment;
         Depart_autocompleteFragment = (PlaceAutocompleteFragment)
-               getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment_depart);
+               getActivity().getFragmentManager().findFragmentById(R.id.place_depart);
 
-        Depart_autocompleteFragment.setHint("enter your Start point ...");
+        Depart_autocompleteFragment.setHint("Start point ...");
         Depart_autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
@@ -293,15 +361,15 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
         });
 
 
-        */
+
 
 
 
         PlaceAutocompleteFragment Destination_autocompleteFragment;
         Destination_autocompleteFragment = (PlaceAutocompleteFragment)
-                getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment_destination);
+                getActivity().getFragmentManager().findFragmentById(R.id.fragment_destination);
 
-        Destination_autocompleteFragment.setHint("enter your Destination ...");
+        Destination_autocompleteFragment.setHint("Destination ...");
         Destination_autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
@@ -343,6 +411,8 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
             public void onClick(View v) {
                 //TODO something when floating action menu second item clicked
                 Toast.makeText(getContext(), "not Implemented  at the moment .... " , Toast.LENGTH_LONG).show();
+                mDriverInfo.setVisibility(View.VISIBLE);
+
 
             }
         });
@@ -365,6 +435,9 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                 //TODO something when floating action menu second item clicked
                 // start Rider Status Activity ...
                 //
+
+                mDriverInfo.setVisibility(View.GONE);
+
                 Intent intent = new Intent(getActivity(), AboutUsActivity.class);
                 startActivity(intent);
                 return;
@@ -410,7 +483,30 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
 
 
 
+        // Init Request settings
+        RequestSettingsInit();
         return rootView;
+    }
+
+
+
+    public void RequestSettingsInit(){
+
+        NumOfPassenger.setMaxValue(4);
+        NumOfPassenger.setMinValue(1);
+        NumOfPassenger.setValue(1);
+
+        // Init Cost Trip  ...
+        TripCost.setText("0");
+
+        // init destination and location
+        From_point.setText("from : ");
+        ToPoint.setText("To : ");
+        RequestSettingsLinearLayout.setVisibility(View.GONE);
+
+
+
+
     }
 
     @Override
@@ -493,6 +589,8 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                                     getDriverInfo();
                                     getHasRideEnded();
                                     mRequest.setText("Looking for Driver Location....");
+                                    progressBar_Search.setIndeterminate(false);
+                                    RequestSettingsInit();
                                 }
                             }
                         }
@@ -576,8 +674,10 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
 
                     if (distance<100){
                         mRequest.setText("Driver's Here");
+                        progressBar_Search.setIndeterminate(false);
                     }else{
                         mRequest.setText("Driver Found: " + String.valueOf(distance));
+                        progressBar_Search.setIndeterminate(false);
                     }
 
 
@@ -603,6 +703,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
     |
     *-------------------------------------------------------------------*/
     private void getDriverInfo(){
+        RequestSettingsInit();
         mDriverInfo.setVisibility(View.VISIBLE);
         DatabaseReference mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID);
         mCustomerDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -687,7 +788,8 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
         if (mDriverMarker != null){
             mDriverMarker.remove();
         }
-        mRequest.setText("call Bee Service");
+        mRequest.setText("Find Driver ");
+        progressBar_Search.setIndeterminate(false);
 
         mDriverInfo.setVisibility(View.GONE);
         mDriverName.setText("");

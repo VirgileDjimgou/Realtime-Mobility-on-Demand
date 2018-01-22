@@ -194,7 +194,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
 
-        <activity android:name="com.bee.passenger.AutompleteDestinationActivity"/>
         <activity android:name="com.bee.passenger.CustomerSettingsActivity"/>
         <activity android:name="com.bee.passenger.HistorySingleActivity"/>
         <activity android:name="com.bee.passenger.HistoryActivity"/>

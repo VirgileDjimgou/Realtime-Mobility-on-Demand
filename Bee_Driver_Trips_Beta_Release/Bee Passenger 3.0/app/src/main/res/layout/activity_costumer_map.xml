@@ -1,4 +1,5 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:fab="http://schemas.android.com/apk/res-auto">
@@ -16,7 +17,7 @@
         android:layout_height="wrap_content">
 
         <android.support.v7.widget.CardView
-            android:id="@+id/to"
+            android:id="@+id/card_view_depart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
@@ -25,7 +26,26 @@
 
 
             <fragment
-                android:id="@+id/place_autocomplete_fragment_destination"
+                android:id="@+id/place_depart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+                />
+        </android.support.v7.widget.CardView>
+
+
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/end_destination"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="65dp">
+
+
+            <fragment
+                android:id="@+id/fragment_destination"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
@@ -43,63 +63,178 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_gravity="bottom">
+        android:id="@+id/RequestCustomizer"
+        android:background="@android:color/holo_blue_light"
+        android:layout_gravity="center">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/driverInfo"
             android:layout_gravity="bottom"
             android:orientation="horizontal"
-            android:background="@android:color/white"
-            android:visibility="gone">
-            <ImageView
-                android:layout_width="100sp"
-                android:layout_height="100sp"
-                android:id="@+id/driverProfileImage"
-                android:src="@mipmap/ic_default_user"
-                android:padding="20sp"/>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="40sp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/driverName"
-                    android:paddingBottom="10sp"
-                    android:paddingTop="20sp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/driverPhone"
-                    android:paddingBottom="10sp"
-                    android:paddingTop="20sp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/driverCar"
-                    android:paddingBottom="10sp"
-                    android:paddingTop="20sp"/>
-                <RatingBar
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/ratingBar"
-                    android:layout_gravity="center"
-                    android:numStars="5"
-                    android:stepSize="0.1"/>
-            </LinearLayout>
+            android:background="@android:color/holo_blue_light">
+
+
+            <android.support.v7.widget.CardView
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/card_view_request_customizer"
+                android:layout_width="395dp"
+                android:layout_height="200dp"
+                android:layout_gravity="top|left|center_horizontal|right"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                card_view:cardCornerRadius="3dp"
+                card_view:cardElevation="3dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/holo_blue_light"
+                    android:orientation="vertical">
+
+
+
+                    <Button
+                        android:id="@+id/titel"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginTop="1dp"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textSize="20dp"
+                        android:layout_width="275dp"
+                        android:layout_height="40dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginRight="6dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/blue_border_button"
+                        android:text="Request Settings Dialog"
+                        android:textColor="@color/gomalan_bule_bg"
+                        android:textStyle="bold" />
+
+
+                    <TextView
+                        android:id="@+id/from"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginTop="40dp"
+                        android:drawablePadding="4dp"
+                        android:text="from : "
+                        android:textStyle="bold"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/white"
+                        android:textSize="16dp" />
+
+                    <TextView
+                        android:id="@+id/to_destination_passenger"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginTop="75dp"
+                        android:drawablePadding="4dp"
+                        android:text="to : "
+                        android:textStyle="bold"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/white"
+                        android:textSize="16dp" />
+
+                    <TextView
+                        android:id="@+id/number_of_passenger_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginTop="110dp"
+                        android:drawablePadding="4dp"
+                        android:text="Number of Passenger : "
+                        android:textStyle="bold"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/white"
+                        android:textSize="16dp" />
+
+                    <TextView
+                        android:id="@+id/Cost"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginTop="160dp"
+                        android:drawablePadding="4dp"
+                        android:text="Trip Cost : "
+                        android:textStyle="bold"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/black"
+                        android:textSize="20dp" />
+
+
+                    <EditText
+                        android:id="@+id/cost_proposition"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="100dp"
+                        android:layout_marginTop="160dp"
+                        android:hint="enter"
+                        android:inputType="number"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/grey_100" />
+
+                    <TextView
+                        android:id="@+id/Current"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="200dp"
+                        android:layout_marginTop="160dp"
+                        android:drawablePadding="4dp"
+                        android:text="Euro/Dollar/Fcfa"
+                        android:textStyle="bold"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/black"
+                        android:textSize="20dp" />
+
+
+
+                    <NumberPicker
+                        android:id="@+id/number_of_passenger"
+                        android:layout_width="50dp"
+                        android:layout_height="20dp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        android:layout_marginLeft="170dp"
+                        android:layout_marginTop="110dp" />
+
+
+
+                </FrameLayout>
+
+
+            </android.support.v7.widget.CardView>
+
         </LinearLayout>
+
+
         <LinearLayout
             android:background="@android:color/white"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+
             <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/radioGroup"
                 android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/Services"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Services : "
+                    android:textStyle="bold"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/normalBlack"
+                    android:textSize="16dp" />
+
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -117,12 +252,398 @@
                     android:id="@+id/BeeDelivery"/>
             </RadioGroup>
 
+
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/radioGroup_type"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/option"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Options : "
+                    android:textStyle="bold"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/normalBlack"
+                    android:textSize="16dp" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Standart"
+                    android:id="@+id/standart_service"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Smart"
+                    android:id="@+id/Smart"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Deluxe"
+                    android:id="@+id/Deluxe"/>
+            </RadioGroup>
+
+
+            <ProgressBar
+                android:id="@+id/progressBarSearchDriver"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:tooltipText="request progression"
+                android:indeterminateDrawable="@android:drawable/progress_indeterminate_horizontal"
+                android:indeterminate="true" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal">
+
+
+            <Button
+
+                android:id="@+id/request"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="12dp"
+                android:layout_weight="1"
+                android:alpha="1"
+                android:background="@drawable/blue_rounded_corners_bg"
+                android:clickable="false"
+                android:text="execute request"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/request_cancel"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="75dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="6dp"
+                android:layout_marginTop="12dp"
+                android:layout_weight="1"
+                android:background="@drawable/blue_border_button"
+                android:text="cancel request"
+                android:textColor="@color/gomalan_bule_bg"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="bottom">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/driverInfoCustom"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:background="@drawable/ubuntu_back">
+
+
+            <android.support.v7.widget.CardView
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/card_view_driver_notification"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:layout_gravity="top|left|center_horizontal|right"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                card_view:cardCornerRadius="3dp"
+                card_view:cardElevation="3dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/iv_main"
+                        android:alpha="0.7"
+                        android:scaleType="fitXY"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="50dp"
+                        />
+
+                    <ImageView
+                        android:layout_width="405dp"
+                        android:layout_height="205dp"
+                        android:layout_marginBottom="50dp"
+                        android:background="@drawable/ubuntu_back"
+                        android:src="@drawable/ubuntu_back"/>
+
+
+                    <ImageView
+                        android:id="@+id/profil_img_driver"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_marginLeft="100dp"
+                        android:layout_marginTop="2dp"
+                        android:src="@drawable/default_avata" />
+
+
+                    <ImageView
+                        android:id="@+id/location_distance"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="2dp"
+                        android:text="distance location ... "
+                        android:layout_marginTop="2dp"
+                        android:src="@drawable/location_distance" />
+
+                    <TextView
+                        android:id="@+id/tv_distanceinkm"
+                        android:layout_width="40dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left|top"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginTop="7dp"
+                        android:gravity="center"
+                        android:lines="1"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:text="80"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="#ffffff"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_kms"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left|top"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="25dp"
+                        android:text="Kms"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="#ffffff"
+                        android:textStyle="bold" />
+
+
+
+                    <ImageView
+                        android:id="@+id/trip_distance"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginTop="70dp"
+                        android:src="@drawable/location_distance"
+                        />
+
+                    <TextView
+                        android:id="@+id/trip_distanceinkm"
+                        android:layout_width="40dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left|top"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginTop="75dp"
+                        android:gravity="center"
+                        android:lines="1"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:text="9000"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="#ffffff"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/trip_kms"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left|top"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="95dp"
+                        android:text="Kms"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="#ffffff"
+                        android:textStyle="bold" />
+
+
+
+                    <TextView
+                        android:id="@+id/tv_rating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|top"
+                        android:layout_marginRight="18dp"
+                        android:layout_marginTop="3dp"
+                        android:drawableLeft="@drawable/star_icon_white"
+                        android:drawablePadding="4dp"
+                        android:gravity="right"
+                        android:text="4.0"
+                        android:textStyle="bold"
+
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/white"
+                        android:textSize="16dp" />
+
+                    <RatingBar
+                        android:id="@+id/ratingBar_custom"
+                        style="@style/Widget.AppCompat.RatingBar"
+                        android:layout_width="250dp"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="152dp"
+                        android:layout_marginTop="110dp"
+                        android:isIndicator="false"
+                        android:numStars="5"
+                        android:rating="5"
+                        android:stepSize="0.1"
+                        android:visibility="visible" />
+
+
+                    <TextView
+                        android:id="@+id/driverPhone_custom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|top"
+                        android:layout_marginRight="18dp"
+                        android:layout_marginTop="60dp"
+                        android:drawablePadding="4dp"
+                        android:gravity="right"
+                        android:text="driver Phone number"
+                        android:textStyle="bold"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/white"
+                        android:textSize="16dp" />
+
+
+                    <TextView
+                        android:id="@+id/driver_car_infos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|top"
+                        android:layout_marginRight="18dp"
+                        android:layout_marginTop="90dp"
+                        android:drawablePadding="4dp"
+                        android:gravity="right"
+                        android:text="driver Cars Infos"
+                        android:textStyle="bold"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/white"
+                        android:textSize="16dp" />
+
+                    <TextView
+                        android:id="@+id/driver_name_custom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|top"
+                        android:layout_marginRight="18dp"
+                        android:layout_marginTop="30dp"
+                        android:drawablePadding="4dp"
+                        android:gravity="right"
+                        android:text="driver name"
+                        android:textStyle="bold"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/white"
+                        android:textSize="16dp" />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:layout_gravity="bottom"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/driver_actual_location"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center|center_horizontal"
+                            android:layout_marginBottom="12dp"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginTop="20dp"
+                            android:textStyle="bold"
+                            android:layout_weight="1"
+                            android:paddingBottom="4dp"
+                            android:drawablePadding="6dp"
+                            android:text="Driver actual location"
+                            android:textColor="@color/white"
+                            android:textSize="14sp" />
+
+                        <Button
+
+                            android:id="@+id/accept"
+                            style="?android:attr/borderlessButtonStyle"
+                            android:layout_width="80dp"
+                            android:layout_height="40dp"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="12dp"
+                            android:layout_weight="1"
+                            android:alpha="1"
+                            android:background="@drawable/blue_rounded_corners_bg"
+                            android:clickable="false"
+                            android:text="Accept this Driver."
+                            android:textColor="@color/white"
+                            android:textStyle="bold" />
+
+                        <Button
+                            android:id="@+id/DeclineDriver"
+                            style="?android:attr/borderlessButtonStyle"
+                            android:layout_width="75dp"
+                            android:layout_height="40dp"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="6dp"
+                            android:layout_marginTop="12dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/blue_border_button"
+                            android:text="Decline this Offer"
+                            android:textColor="@color/gomalan_bule_bg"
+                            android:textStyle="bold" />
+
+
+                    </LinearLayout>
+
+                </FrameLayout>
+
+
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:background="@android:color/white"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
             <Button
                 android:layout_gravity="bottom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="call Bee Service"
-                android:id="@+id/request"/>
+                android:text="Find a Rider."
+                android:id="@+id/find_a_rider"/>
+
         </LinearLayout>
     </LinearLayout>
 
@@ -215,6 +736,9 @@
                 fab:fab_label="About"
                 fab:fab_size="mini" />
         </com.github.clans.fab.FloatingActionMenu>
+
+
+
 
     </RelativeLayout>
 
