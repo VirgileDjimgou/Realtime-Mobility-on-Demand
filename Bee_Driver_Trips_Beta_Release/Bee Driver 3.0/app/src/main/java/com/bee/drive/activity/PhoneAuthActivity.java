@@ -41,6 +41,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements
 
     EditText mPhoneNumberField, mVerificationField;
     Button mStartButton, mVerifyButton, mResendButton;
+    private String phoneNumber;
 
     private CountryCodePicker ccp;
 
@@ -155,14 +156,14 @@ public class PhoneAuthActivity extends AppCompatActivity implements
 
     private boolean validatePhoneNumber() {
         String ContryCode  = ccp.getSelectedCountryCode().toString();
-        String phoneNumber = mPhoneNumberField.getText().toString();
+        this.phoneNumber = mPhoneNumberField.getText().toString();
 
-        Toast.makeText(getApplicationContext(), "Phone number ist : " + ContryCode+phoneNumber, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Phone number ist : " + ContryCode+this.phoneNumber, Toast.LENGTH_LONG).show();
         if (TextUtils.isEmpty(phoneNumber)) {
             mPhoneNumberField.setError("Invalid phone number.");
             return false;
         }
-        phoneNumber = ContryCode+phoneNumber;
+        this.phoneNumber = ContryCode+phoneNumber;
         return true;
     }
     @Override
@@ -192,9 +193,12 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                 if (!validatePhoneNumber()) {
                     return;
                 }
-                startPhoneNumberVerification(mPhoneNumberField.getText().toString());
+                startPhoneNumberVerification(phoneNumber);
                 break;
             case R.id.button_verify_phone:
+                if (!validatePhoneNumber()) {
+                    return;
+                }
                 String code = mVerificationField.getText().toString();
                 if (TextUtils.isEmpty(code)) {
                     mVerificationField.setError("Cannot be empty.");
@@ -204,7 +208,10 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                 verifyPhoneNumberWithCode(mVerificationId, code);
                 break;
             case R.id.button_resend:
-                resendVerificationCode(mPhoneNumberField.getText().toString(), mResendToken);
+                if (!validatePhoneNumber()) {
+                    return;
+                }
+                resendVerificationCode(phoneNumber, mResendToken);
                 break;
         }
 

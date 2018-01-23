@@ -48,6 +48,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements
     String mVerificationId;
 
     private CountryCodePicker ccp;
+    private String phoneNumber;
 
 
     private static final String TAG = "PhoneAuthActivity";
@@ -157,16 +158,19 @@ public class PhoneAuthActivity extends AppCompatActivity implements
     private boolean validatePhoneNumber() {
 
         String ContryCode  = ccp.getSelectedCountryCode().toString();
-        String phoneNumber = mPhoneNumberField.getText().toString();
+        this.phoneNumber = mPhoneNumberField.getText().toString();
 
-        Toast.makeText(getApplicationContext(), "Phone number ist : " + ContryCode+phoneNumber, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Phone number ist : " + ContryCode+this.phoneNumber, Toast.LENGTH_LONG).show();
         if (TextUtils.isEmpty(phoneNumber)) {
             mPhoneNumberField.setError("Invalid phone number.");
             return false;
         }
-        phoneNumber = ContryCode+phoneNumber;
+        this.phoneNumber = ContryCode+this.phoneNumber;
         return true;
     }
+
+
+
     @Override
     public void onStart() {
         super.onStart();
@@ -178,6 +182,8 @@ public class PhoneAuthActivity extends AppCompatActivity implements
     }
 
 
+
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -187,6 +193,8 @@ public class PhoneAuthActivity extends AppCompatActivity implements
     }
 
 
+
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -194,7 +202,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                 if (!validatePhoneNumber()) {
                     return;
                 }
-                startPhoneNumberVerification(mPhoneNumberField.getText().toString());
+                startPhoneNumberVerification(this.phoneNumber);
                 break;
             case R.id.button_verify_phone:
                 String code = mVerificationField.getText().toString();
@@ -206,10 +214,15 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                 verifyPhoneNumberWithCode(mVerificationId, code);
                 break;
             case R.id.button_resend:
-                resendVerificationCode(mPhoneNumberField.getText().toString(), mResendToken);
+                if (!validatePhoneNumber()) {
+                    return;
+                }
+                resendVerificationCode(this.phoneNumber, mResendToken);
                 break;
         }
 
     }
+
+
 
 }
