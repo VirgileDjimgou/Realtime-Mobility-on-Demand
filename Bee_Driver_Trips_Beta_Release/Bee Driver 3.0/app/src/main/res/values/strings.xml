@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">eBe Dri-#*%>_ver</string>
+    <string name="app_name">eBe Dri-#>_ver</string>
 
 
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBb7F-tT5vbdBNFsUdrr8kwPJh6SkEeUiI</string>
@@ -89,7 +89,7 @@
 
     <string name="sign_out">Sign Out</string>
     <string name="hint_phone_number">Enter your Phone Number</string>
-    <string name="hint_verification_code">Verification Code</string>
+    <string name="hint_verification_code">enter a Verification Code</string>
     <string name="start_phone_auth">Start</string>
     <string name="verify_phone_auth">Verify</string>
     <string name="resend_phone_auth">Resend</string>

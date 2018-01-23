@@ -140,10 +140,21 @@ dependencies {
 
 
     //hone country Selcted
-    compile 'com.hbb20:ccp:2.1.2'
 
-    // compile 'com.jakewharton:butterknife:8.8.1'
-    // annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    //  telephone Country  .,...
+    compile "com.googlecode.libphonenumber:libphonenumber:6.2"
+
+    compile 'com.github.joielechong:countrycodepicker:2.1.5'
+    // compile 'com.hbb20:ccp:1.7.1'
+
+
+    //  telephone Country  .,...
+    // compile "com.googlecode.libphonenumber:libphonenumber:6.2"
+
+    // contry compile 'com.hbb20:ccp:1.7.1'
+    compile 'com.github.joielechong:countrycodepicker:2.1.5'
+    // compile 'com.hbb20:ccp:1.7.1'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

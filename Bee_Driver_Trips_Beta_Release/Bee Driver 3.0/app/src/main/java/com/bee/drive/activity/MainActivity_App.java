@@ -159,7 +159,6 @@ public class MainActivity_App extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mVideoView.stopPlayback();
     }
 
 

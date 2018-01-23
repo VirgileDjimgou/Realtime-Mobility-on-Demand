@@ -34,7 +34,7 @@ public class SplaschScreen extends AppCompatActivity{
                 finish();
 
             }
-        },6000);
+        },9000);
 
 
         // getSupportActionBar().setDisplayHomeAsUpEnabled(true);

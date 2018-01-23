@@ -88,6 +88,8 @@ dependencies {
     compile 'com.android.support:design:26.0.2'
     compile 'com.facebook.android:facebook-android-sdk:4.20.0'
 
+
+
     testCompile 'junit:junit:4.12'
 
     // Glide image library
@@ -134,6 +136,14 @@ dependencies {
 
     // glide
     compile 'com.github.bumptech.glide:glide:3.7.0'
+
+    //  telephone Country  .,...
+    // compile "com.googlecode.libphonenumber:libphonenumber:6.2"
+
+    // contry compile 'com.hbb20:ccp:1.7.1'
+    compile 'com.github.joielechong:countrycodepicker:2.1.5'
+    // compile 'com.hbb20:ccp:1.7.1'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

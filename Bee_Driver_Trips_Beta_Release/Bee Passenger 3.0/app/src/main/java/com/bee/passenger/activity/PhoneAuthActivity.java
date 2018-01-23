@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -26,6 +27,8 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import java.util.concurrent.TimeUnit;
 
 import com.bee.passenger.R;
+import com.rilixtech.Country;
+import com.rilixtech.CountryCodePicker;
 
 
 /**
@@ -44,6 +47,9 @@ public class PhoneAuthActivity extends AppCompatActivity implements
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     String mVerificationId;
 
+    private CountryCodePicker ccp;
+
+
     private static final String TAG = "PhoneAuthActivity";
 
     @Override
@@ -57,6 +63,14 @@ public class PhoneAuthActivity extends AppCompatActivity implements
         mStartButton = (Button) findViewById(R.id.button_start_verification);
         mVerifyButton = (Button) findViewById(R.id.button_verify_phone);
         mResendButton = (Button) findViewById(R.id.button_resend);
+
+        ccp = (CountryCodePicker) findViewById(R.id.ccp);
+        ccp.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
+            @Override
+            public void onCountrySelected(Country selectedCountry) {
+                Toast.makeText(getApplicationContext(), "Updated " + selectedCountry.getName(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
         mStartButton.setOnClickListener(this);
         mVerifyButton.setOnClickListener(this);
@@ -141,11 +155,16 @@ public class PhoneAuthActivity extends AppCompatActivity implements
     }
 
     private boolean validatePhoneNumber() {
+
+        String ContryCode  = ccp.getSelectedCountryCode().toString();
         String phoneNumber = mPhoneNumberField.getText().toString();
+
+        Toast.makeText(getApplicationContext(), "Phone number ist : " + ContryCode+phoneNumber, Toast.LENGTH_LONG).show();
         if (TextUtils.isEmpty(phoneNumber)) {
             mPhoneNumberField.setError("Invalid phone number.");
             return false;
         }
+        phoneNumber = ContryCode+phoneNumber;
         return true;
     }
     @Override
