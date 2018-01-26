@@ -187,6 +187,15 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "Passenger refused ", Toast.LENGTH_SHORT).show();
+                // mask the  Dasboard ...
+                String driverId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId).child("AwaitingProposition");
+                // Set the  Driver Response to true ...
+                HashMap map = new HashMap();
+                map.put("ResponseDriver" , "false");
+                driverRef.updateChildren(map);
+                mCustomerInfo.setVisibility(View.GONE);
+
             }
         });
 
@@ -197,6 +206,18 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "Passenger accepted ", Toast.LENGTH_SHORT).show();
+
+                String driverId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId).child("AwaitingProposition");
+                // Set the  Driver Response to true ...
+                HashMap map = new HashMap();
+                map.put("ResponseDriver" , "true");
+                driverRef.updateChildren(map);
+
+
+                // Start  the Triggers  to begin with the Trips  ...
+                // getAssignedCustomer();
+
             }
         });
 
@@ -341,51 +362,176 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             }
         });
 
-        // getAssignedCustomer();
 
         getCustomerProposition();
-
-
         return rootView;
     }
+
+
 
 
     public void getCustomerProposition(){
 
         String driverId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference assignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId).child("customerRequest").child("customerRideId");
+        DatabaseReference assignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId).child("AwaitingProposition");
         assignedCustomerRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
+                Toast.makeText(context, "Awaiting Customer Offer  ...." , Toast.LENGTH_LONG).show();
 
-                try{
+                if(dataSnapshot.exists()) {
 
-                    if(dataSnapshot.exists()){
-                        status = 1;
-                        customerId = dataSnapshot.getValue().toString();
-                        getAssignedCustomerPickupLocation();
-                        getAssignedCustomerDestination_and_offers();
-                        getAssignedCustomerInfo();
-                        Toast.makeText(context, "Assigned  Customer  ...." , Toast.LENGTH_LONG).show();
-                    }else{
-                        endRide();
+                    // customerId = dataSnapshot.getValue().toString();
+                    mCustomerInfo.setVisibility(View.GONE);
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                    if(map.get("destination")!=null){
+                        destination = map.get("destination").toString();
+                        mCustomerDestination.setText("Destination: " + destination);
+                    }
+                    else{
+                        mCustomerDestination.setText("Destination: --");
                     }
 
-                }catch(Exception ex){
-                    Log.e("getAssignedCustomer" , ex.toString());
-                    ex.printStackTrace();
-                    Toast.makeText(context, "getAssignedCustomer  : " +ex.toString(), Toast.LENGTH_LONG).show();
+                    Double destinationLat = 0.0;
+                    Double destinationLng = 0.0;
+                    if(map.get("destinationLat") != null){
+                        destinationLat = Double.valueOf(map.get("destinationLat").toString());
+                    }
+                    if(map.get("destinationLng") != null){
+                        destinationLng = Double.valueOf(map.get("destinationLng").toString());
+                        destinationLatLng = new LatLng(destinationLat, destinationLng);
+                    }
+
+
+                    if(map.get("OptionsType") != null){
+                        Options = map.get("OptionsType").toString();
+                        mServicesOptions.setText(map.get("OptionsType").toString());
+
+                    }
+
+                    if(map.get("Service") !=null ){
+                        Type_of_Services = map.get("Service").toString();
+                        mcustomer_Service.setText(map.get("Service").toString());
+                    }
+
+                    if(map.get("NumPassenger") !=null){
+                        NumberOfPassengers = map.get("NumPassenger").toString();
+                        mnbOfPassengers.setText(map.get("NumPassenger").toString());
+
+                    }
+
+                    // get  numbers of passengers    ...that  shoul'd be max  4 passengers for taxi services  ..
+                    // and two passengers  for moto-Taxi Services ...
+
+                    if(map.get("CustomerPrice") != null){
+                        CustomerPrice = Double.valueOf(map.get("CustomerPrice").toString());
+                        mtrip_cost.setText(map.get("CustomerPrice").toString());
+
+                    }
+
+                    // set info about the propositions of the Customers  ..
+
+                    if(map.get("customerRideId") != null){
+
+                        customerId = map.get("customerRideId").toString();
+                    }
+
+
+                    String Res_Driver="" ;
+                    String Res_Customer="" ;
+
+                    if(map.get("ResponseDriver") != null){
+
+                        Res_Driver = map.get("ResponseDriver").toString();
+                        Toast.makeText(getApplicationContext(), map.get("ResponseDriver").toString() , Toast.LENGTH_LONG).show();
+                        if(Res_Driver.equalsIgnoreCase("false")){
+                            mCustomerInfo.setVisibility(View.GONE);
+
+
+                        }
+
+                    }
+
+                    if(map.get("ResponsePassenger") != null){
+
+                        Res_Customer = map.get("ResponsePassenger").toString();
+                        Toast.makeText(getApplicationContext(), map.get("ResponsePassenger").toString() , Toast.LENGTH_LONG).show();
+                        if(Res_Customer.equalsIgnoreCase("false")){
+                            mCustomerInfo.setVisibility(View.GONE);
+                        }
+
+                    }
+
+                    if(Res_Customer.equalsIgnoreCase("true") || (Res_Driver.equalsIgnoreCase("true"))){
+                        // Start with the trip
+
+                        Toast.makeText(getApplicationContext(), "positive Response for a Driver and Customer " , Toast.LENGTH_LONG).show();
+                        getAssignedCustomer();
+                        mRideStatus.setBackgroundColor(mRideStatus.getContext().getResources().getColor(R.color.green));
+                    }else{
+                        // find the Next Available Driver ...
+
+                        Toast.makeText(getApplicationContext(), "Negative Response of the  Driver or Customer ", Toast.LENGTH_LONG).show();
+
+                        // DeleteProposition
+
+                    }
+
 
                 }
 
+
             }
+
+
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
                 Log.e("getAssignedCustomer" , databaseError.toString());
                 Toast.makeText(context , "getAssignedCustomer  : " +databaseError.toString() , Toast.LENGTH_LONG).show();
+            }
+        });
+
+
+        // get Infos Profil Customers  ....
+
+        mCustomerInfo.setVisibility(View.VISIBLE);
+        DatabaseReference mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerId);
+        mCustomerDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
+
+                    Toast.makeText(context, "Customer Infos ...." , Toast.LENGTH_LONG).show();
+
+                    try{
+                        Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                        if(map.get("name")!=null){
+                            mCustomerName.setText(map.get("name").toString());
+                        }
+                        if(map.get("phone")!=null){
+                            // mCustomerPhone.setText(map.get("phone").toString());
+                        }
+                        if(map.get("profileImageUrl")!=null){
+
+
+                            Glide.with(getActivity()).load(map.get("profileImageUrl").toString()).into(mCustomerProfileImage);
+                        }
+
+
+                    }catch (Exception ex){
+                        ex.printStackTrace();
+                        Toast.makeText(context, ex.toString() , Toast.LENGTH_LONG).show();
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
             }
         });
 
@@ -613,7 +759,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
     private void getAssignedCustomerInfo(){
 
-        Toast.makeText(context, "Incomming Customer Offer  ...." , Toast.LENGTH_LONG).show();
         mCustomerInfo.setVisibility(View.VISIBLE);
         DatabaseReference mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerId);
         mCustomerDatabase.addListenerForSingleValueEvent(new ValueEventListener() {

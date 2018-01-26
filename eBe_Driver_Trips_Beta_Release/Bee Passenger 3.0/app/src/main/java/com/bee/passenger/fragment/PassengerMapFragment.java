@@ -97,7 +97,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
     private Button mAcceptDriver , mDeclineDriver, mRequest;
     private Boolean requestBol = false;
     private SupportMapFragment mapFragment;
-    private String destination = "", position_depart = "",  requestService , requestOptions="" ;
+    private String destination = "", position_depart = "",  requestService ="" , requestOptions="" ;
     private LatLng destinationLatLng , position_depart_LatLng;
     private LinearLayout mDriverInfo  ;
     private ImageView mDriverProfileImage;
@@ -130,6 +130,12 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                          About,
                          Share,
                          float_logout_disconnect , Settings;
+
+
+
+    PlaceAutocompleteFragment Destination_autocompleteFragment;
+    PlaceAutocompleteFragment Depart_autocompleteFragment;
+
 
     public PassengerMapFragment() {
     }
@@ -258,7 +264,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                 new AlertDialog.Builder(getActivity())
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setTitle("Sign Out Dialog")
-                        .setMessage("Are you sure you want to sign out and close the app ?")
+                        .setMessage("Are you sure  ? ... you want to cancel your Request")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener()
                         {
                             @Override
@@ -308,7 +314,14 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(getActivity(), "Driver accepted ....  " , Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "you are  accepted this Driver  ....  " , Toast.LENGTH_LONG).show();
+
+                DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("AwaitingProposition");
+                String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                HashMap map = new HashMap();
+                map.put("ResponsePassenger" , "true");
+
+                driverRef.updateChildren(map);
             }
         });
 
@@ -317,7 +330,15 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(getActivity(), "Driver rejected....the System find another Driver" , Toast.LENGTH_LONG).show();
+                DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("AwaitingProposition");
+                String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                HashMap map = new HashMap();
+                map.put("ResponsePassenger" , "false");
+
+                driverRef.updateChildren(map);
+                mDriverInfo.setVisibility(View.GONE);
+                RequestSettingsInit();
+                Toast.makeText(getActivity(), "you are rejected this Driver....the System find another Driver" , Toast.LENGTH_LONG).show();
             }
         });
 
@@ -353,11 +374,8 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
 
                     requestService = radioButtonServices.getText().toString();
                     requestOptions = radioButtonOptions.getText().toString();
-
-
                     //  get Price that the Client are proposed ...
                     TripCost.getText().toString();
-
                     // get number of passenger ...
                     NumOfPassenger.getText().toString();
 
@@ -382,7 +400,6 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
         });
 
 
-        PlaceAutocompleteFragment Depart_autocompleteFragment;
         Depart_autocompleteFragment = (PlaceAutocompleteFragment)
                getActivity().getFragmentManager().findFragmentById(R.id.place_depart);
 
@@ -406,7 +423,6 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
 
 
 
-        PlaceAutocompleteFragment Destination_autocompleteFragment;
         Destination_autocompleteFragment = (PlaceAutocompleteFragment)
                 getActivity().getFragmentManager().findFragmentById(R.id.fragment_destination);
 
@@ -534,17 +550,20 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
     public void RequestSettingsInit(){
 
         NumOfPassenger.setText("1");
-
         // Init Cost Trip  ...
         TripCost.setText("0");
-
         // init destination and location
         From_point.setText("from : ");
         ToPoint.setText("To : ");
+        destination = "";
+        position_depart = "";
+        requestService ="" ;
+        requestOptions="" ;
+        requestBol = false;
+        progressBar_Search.setIndeterminate(false);
         RequestSettingsLinearLayout.setVisibility(View.GONE);
-
-
-
+        Destination_autocompleteFragment.setText("");
+        Depart_autocompleteFragment.setText("");
 
     }
 
@@ -615,7 +634,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                                     driverFound = true;
                                     driverFoundID = dataSnapshot.getKey();
 
-                                    DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
+                                    DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("AwaitingProposition");
                                     String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                     HashMap map = new HashMap();
                                     map.put("customerRideId", customerId);
@@ -626,15 +645,21 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                                     map.put("NumPassenger", NumOfPassenger.getText().toString());
                                     map.put("OptionsType", requestOptions);
                                     map.put("Service" , requestService);
+                                    map.put("ResponsePassenger" , "");
+                                    map.put("ResponseDriver" , "");
+
 
                                     driverRef.updateChildren(map);
 
                                     getDriverLocation();
                                     getDriverInfo();
                                     getHasRideEnded();
-                                    mRequest.setText("Looking for Driver Location....");
-                                    progressBar_Search.setIndeterminate(false);
-                                    RequestSettingsInit();
+
+                                    // Listener Driver and Customer Response
+                                    getResponseDriver();
+                                    mRequest.setText("Waiting for Driver Response ....");
+                                    // progressBar_Search.setIndeterminate(false);
+                                    // RequestSettingsInit();
                                 }
                             }
                         }
@@ -784,6 +809,70 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+    }
+
+    private void getResponseDriver(){
+
+        mDriverInfo.setVisibility(View.VISIBLE);
+         DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("AwaitingProposition");
+        driverRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+
+
+                    // customerId = dataSnapshot.getValue().toString();
+
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+
+                    String Res_Driver="" ;
+                    String Res_Customer="" ;
+
+                    if(map.get("ResponseDriver") != null){
+
+                        Res_Driver = map.get("ResponseDriver").toString();
+                        Toast.makeText(getApplicationContext(), map.get("ResponseDriver").toString() , Toast.LENGTH_LONG).show();
+                        if(Res_Driver.equalsIgnoreCase("false")){
+                            mDriverInfo.setVisibility(View.GONE);
+
+
+                        }
+
+                    }
+
+                    if(map.get("ResponsePassenger") != null){
+
+                        Res_Customer = map.get("ResponsePassenger").toString();
+                        Toast.makeText(getApplicationContext(), map.get("ResponsePassenger").toString() , Toast.LENGTH_LONG).show();
+                        if(Res_Customer.equalsIgnoreCase("false")){
+                            mDriverInfo.setVisibility(View.GONE);
+                        }
+
+                    }
+
+                    if(Res_Customer.equalsIgnoreCase("true") || (Res_Driver.equalsIgnoreCase("true"))){
+                        // Start with the trip
+
+                        Toast.makeText(getApplicationContext(), "positive Response for a Driver and Customer " , Toast.LENGTH_LONG).show();
+                        // getAssignedCustomer();
+                        // mRideStatus.setBackgroundColor(mRideStatus.getContext().getResources().getColor(R.color.green));
+                    }else{
+                        // find the Next Available Driver ...
+
+                        Toast.makeText(getApplicationContext(), "Negative Response of the  Driver or Customer ", Toast.LENGTH_LONG).show();
+
+                        // DeleteProposition
+
+                    }
+
+
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
     }
 
     private DatabaseReference driveHasEndedRef;
