@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~  Copyright(c) 2017 lizhaotailang
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/preferences_settings">
+
+    <PreferenceCategory
+        android:title="@string/notifications">
+
+        <CheckBoxPreference
+            android:key="alert"
+            android:title="@string/alert"
+            android:defaultValue="true"
+            android:summary="@string/alert_desc" />
+
+        <CheckBoxPreference
+            android:key="do_not_disturb_mode"
+            android:title="@string/do_not_disturb_mode"
+            android:defaultValue="true"
+            android:dependency="alert"
+            android:summary="@string/do_not_disturb_mode_desc" />
+
+        <Preference
+            android:key="do_not_disturb_mode_start"
+            android:title="@string/start_time"
+            android:summary="@string/start_time_desc"
+            android:dependency="do_not_disturb_mode"/>
+
+        <Preference
+            android:key="do_not_disturb_mode_end"
+            android:title="@string/end_time"
+            android:summary="@string/end_time_desc"
+            android:dependency="do_not_disturb_mode" />
+
+        <ListPreference
+            android:key="notification_interval"
+            android:title="@string/notification_interval"
+            android:summary="%s"
+            android:dependency="alert"
+            android:entries="@array/notification_interval"
+            android:entryValues="@array/notification_interval_item"
+            android:defaultValue="1" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/browser">
+
+        <CheckBoxPreference
+            android:key="chrome_custom_tabs"
+            android:defaultValue="true"
+            android:title="@string/custom_tabs"
+            android:summary="@string/custom_tabs_desc" />
+
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/user_interface">
+
+        <CheckBoxPreference
+            android:key="navigation_bar_tint"
+            android:defaultValue="true"
+            android:title="@string/navigation_bar_tint"
+            android:summary="@string/navigation_bar_tint_desc"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
