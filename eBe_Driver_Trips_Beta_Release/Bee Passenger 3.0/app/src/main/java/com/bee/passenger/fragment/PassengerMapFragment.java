@@ -263,7 +263,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
 
                 new AlertDialog.Builder(getActivity())
                         .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setTitle("Sign Out Dialog")
+                        .setTitle("Cancel Request  Dialog Box ")
                         .setMessage("Are you sure  ? ... you want to cancel your Request")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener()
                         {
@@ -275,6 +275,8 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                                 Toast.makeText(getActivity(), "request Cancelled !!! ..." , Toast.LENGTH_LONG).show();
                                 RequestSettingsLinearLayout.setVisibility(View.GONE);
                                 RequestSettingsInit();
+                                mfind_a_rider.setEnabled(true);
+                                mRequest.setEnabled(true);
 
                                 // after reinit Firebase
 
@@ -300,6 +302,8 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                     Toast.makeText(getActivity(), "You must enter a valid Destination ....  " , Toast.LENGTH_LONG).show();
                 }else{
 
+                    // disable this button ...
+                    mfind_a_rider.setEnabled(false);
                     Toast.makeText(getActivity(), "Find a Driver  ....  " , Toast.LENGTH_LONG).show();
                     ToPoint.setText("to : "+destination.toString());
                     From_point.setText("from : "+position_depart.toString());
@@ -379,9 +383,6 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                     // get number of passenger ...
                     NumOfPassenger.getText().toString();
 
-
-
-
                     requestBol = true;
 
                     String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -417,11 +418,6 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                 // TODO: Handle the error.
             }
         });
-
-
-
-
-
 
         Destination_autocompleteFragment = (PlaceAutocompleteFragment)
                 getActivity().getFragmentManager().findFragmentById(R.id.fragment_destination);
@@ -565,6 +561,8 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
         Destination_autocompleteFragment.setText("");
         Depart_autocompleteFragment.setText("");
 
+
+        mfind_a_rider.setEnabled(true);
     }
 
     @Override
@@ -633,7 +631,6 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                                 if(driverMap.get("service").equals(requestService)){
                                     driverFound = true;
                                     driverFoundID = dataSnapshot.getKey();
-
                                     DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("AwaitingProposition");
                                     String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                     HashMap map = new HashMap();
@@ -685,6 +682,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                 if (!driverFound)
                 {
                     radius++;
+                    Toast.makeText(getContext() , "next Search  with Radius : " +radius , Toast.LENGTH_LONG).show();
                     getClosestDriver();
                 }
             }
