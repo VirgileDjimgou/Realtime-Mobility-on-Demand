@@ -373,12 +373,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     public void getCustomerProposition(){
 
         String driverId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference assignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId).child("AwaitingProposition");
-        assignedCustomerRef.addValueEventListener(new ValueEventListener() {
+        DatabaseReference proposalCustomerRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId).child("AwaitingProposition");
+        proposalCustomerRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                Toast.makeText(context, "Awaiting Customer Offer  ...." , Toast.LENGTH_LONG).show();
 
                 if(dataSnapshot.exists()) {
 
@@ -435,6 +434,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                     if(map.get("customerRideId") != null){
 
                         customerId = map.get("customerRideId").toString();
+                        mCustomerInfo.setVisibility(View.VISIBLE);
+                        getProfil_Proposed_Customers();
                     }
 
 
@@ -469,13 +470,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                         Toast.makeText(getApplicationContext(), "positive Response for a Driver and Customer " , Toast.LENGTH_LONG).show();
                         getAssignedCustomer();
                         mRideStatus.setBackgroundColor(mRideStatus.getContext().getResources().getColor(R.color.green));
-                    }else{
-                        // find the Next Available Driver ...
-
-                        Toast.makeText(getApplicationContext(), "Negative Response of the  Driver or Customer ", Toast.LENGTH_LONG).show();
-
-                        // DeleteProposition
-
                     }
 
 
@@ -495,45 +489,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         });
 
 
-        // get Infos Profil Customers  ....
-
-        mCustomerInfo.setVisibility(View.VISIBLE);
-        DatabaseReference mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerId);
-        mCustomerDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
-
-                    Toast.makeText(context, "Customer Infos ...." , Toast.LENGTH_LONG).show();
-
-                    try{
-                        Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                        if(map.get("name")!=null){
-                            mCustomerName.setText(map.get("name").toString());
-                        }
-                        if(map.get("phone")!=null){
-                            // mCustomerPhone.setText(map.get("phone").toString());
-                        }
-                        if(map.get("profileImageUrl")!=null){
-
-
-                            Glide.with(getActivity()).load(map.get("profileImageUrl").toString()).into(mCustomerProfileImage);
-                        }
-
-
-                    }catch (Exception ex){
-                        ex.printStackTrace();
-                        Toast.makeText(context, ex.toString() , Toast.LENGTH_LONG).show();
-
-                    }
-
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
 
     }
 
@@ -675,7 +630,49 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
     private void AcceptCustomersOffers(){
 
+    }
 
+    private void getProfil_Proposed_Customers(){
+
+
+        // get Infos Profil Customers  ....
+
+        DatabaseReference mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerId);
+        mCustomerDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
+
+
+                    try{
+                        Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                        if(map.get("name")!=null){
+                            mCustomerName.setText(map.get("name").toString());
+                        }
+                        if(map.get("phone")!=null){
+                            // mCustomerPhone.setText(map.get("phone").toString());
+                            Toast.makeText(getContext(), map.get("phone").toString(), Toast.LENGTH_LONG).show();
+                        }
+                        if(map.get("profileImageUrl")!=null){
+
+
+                            Glide.with(getActivity()).load(map.get("profileImageUrl").toString()).into(mCustomerProfileImage);
+                        }
+
+
+                    }catch (Exception ex){
+                        ex.printStackTrace();
+                        Toast.makeText(context, ex.toString() , Toast.LENGTH_LONG).show();
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
 
     }
 

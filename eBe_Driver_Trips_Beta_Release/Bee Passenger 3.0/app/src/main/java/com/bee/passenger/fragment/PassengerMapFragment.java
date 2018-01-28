@@ -270,13 +270,15 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
-
-
                                 Toast.makeText(getActivity(), "request Cancelled !!! ..." , Toast.LENGTH_LONG).show();
                                 RequestSettingsLinearLayout.setVisibility(View.GONE);
                                 RequestSettingsInit();
                                 mfind_a_rider.setEnabled(true);
                                 mRequest.setEnabled(true);
+                                endRide();
+                                mRequest.setText("Find a Driver");
+                                progressBar_Search.setIndeterminate(false);
+                                requestBol = false;
 
                                 // after reinit Firebase
 
@@ -285,11 +287,6 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                         })
                         .setNegativeButton("No", null)
                         .show();
-
-
-
-
-
             }
         });
 
@@ -320,7 +317,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
 
                 Toast.makeText(getActivity(), "you are  accepted this Driver  ....  " , Toast.LENGTH_LONG).show();
 
-                DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("AwaitingProposition");
+                DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
                 String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 HashMap map = new HashMap();
                 map.put("ResponsePassenger" , "true");
@@ -375,18 +372,14 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                         return;
                     }
 
-
                     requestService = radioButtonServices.getText().toString();
                     requestOptions = radioButtonOptions.getText().toString();
                     //  get Price that the Client are proposed ...
                     TripCost.getText().toString();
                     // get number of passenger ...
                     NumOfPassenger.getText().toString();
-
                     requestBol = true;
-
                     String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
                     GeoFire geoFire = new GeoFire(ref);
                     geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
@@ -395,6 +388,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                     pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Pickup Here").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_pickup)));
                     mRequest.setText("the system find your Driver...please wait !");
                     progressBar_Search.setIndeterminate(true);
+                    mRequest.setEnabled(false);
                     getClosestDriver();
                 }
             }
@@ -614,6 +608,10 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
         geoQuery = geoFire.queryAtLocation(new GeoLocation(pickupLocation.latitude, pickupLocation.longitude), radius);
         geoQuery.removeAllListeners();
 
+        if(requestBol == false){
+            // get out of this function ...
+            return;
+        }
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
@@ -682,6 +680,10 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                 if (!driverFound)
                 {
                     radius++;
+                    if(requestBol == false){
+                        // get out of this function ...
+                        return;
+                    }
                     Toast.makeText(getContext() , "next Search  with Radius : " +radius , Toast.LENGTH_LONG).show();
                     getClosestDriver();
                 }
@@ -812,7 +814,8 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
     private void getResponseDriver(){
 
         mDriverInfo.setVisibility(View.VISIBLE);
-         DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("AwaitingProposition");
+
+        DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("AwaitingProposition");
         driverRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -873,6 +876,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
 
     }
 
+
     private DatabaseReference driveHasEndedRef;
     private ValueEventListener driveHasEndedRefListener;
     private void getHasRideEnded(){
@@ -895,9 +899,14 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
 
     private void endRide(){
         requestBol = false;
-        geoQuery.removeAllListeners();
-        driverLocationRef.removeEventListener(driverLocationRefListener);
-        driveHasEndedRef.removeEventListener(driveHasEndedRefListener);
+        try{
+            geoQuery.removeAllListeners();
+            driverLocationRef.removeEventListener(driverLocationRefListener);
+            driveHasEndedRef.removeEventListener(driveHasEndedRefListener);
+        }catch(Exception ex){
+
+            ex.printStackTrace();
+        }
 
         if (driverFoundID != null){
             DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
