@@ -331,7 +331,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
 
-                DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("AwaitingProposition");
+                DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
                 String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 HashMap map = new HashMap();
                 map.put("ResponsePassenger" , "false");
@@ -629,7 +629,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                                 if(driverMap.get("service").equals(requestService)){
                                     driverFound = true;
                                     driverFoundID = dataSnapshot.getKey();
-                                    DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("AwaitingProposition");
+                                    DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
                                     String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                     HashMap map = new HashMap();
                                     map.put("customerRideId", customerId);
@@ -815,7 +815,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
 
         mDriverInfo.setVisibility(View.VISIBLE);
 
-        DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("AwaitingProposition");
+        DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
         driverRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

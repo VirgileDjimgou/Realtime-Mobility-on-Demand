@@ -189,7 +189,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 Toast.makeText(context, "Passenger refused ", Toast.LENGTH_SHORT).show();
                 // mask the  Dasboard ...
                 String driverId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId).child("AwaitingProposition");
+                DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId).child("customerRequest");
                 // Set the  Driver Response to true ...
                 HashMap map = new HashMap();
                 map.put("ResponseDriver" , "false");
@@ -208,7 +208,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 Toast.makeText(context, "Passenger accepted ", Toast.LENGTH_SHORT).show();
 
                 String driverId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId).child("AwaitingProposition");
+                DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId).child("customerRequest");
                 // Set the  Driver Response to true ...
                 HashMap map = new HashMap();
                 map.put("ResponseDriver" , "true");
@@ -373,7 +373,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     public void getCustomerProposition(){
 
         String driverId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference proposalCustomerRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId).child("AwaitingProposition");
+        DatabaseReference proposalCustomerRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId).child("customerRequest");
         proposalCustomerRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
