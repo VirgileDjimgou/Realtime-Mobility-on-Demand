@@ -1,32 +1,8 @@
-package com.bee.passenger.fcm;
+package com.bee.drive.fcm;
 
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.view.View;
-
-import com.bee.passenger.R;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.messaging.FirebaseMessaging;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Scanner;
-
-
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -42,9 +18,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
-import com.bee.passenger.R;
-
-import static com.bee.passenger.R.id.txt;
 
 /**
  * Created by allwithoutblue on 1/29/18.

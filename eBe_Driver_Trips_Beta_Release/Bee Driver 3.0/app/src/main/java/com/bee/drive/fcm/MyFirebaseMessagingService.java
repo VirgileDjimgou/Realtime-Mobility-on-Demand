@@ -57,7 +57,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 				.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
 				// .setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.win))
 				.setContentIntent(pendingIntent)
-				.setContentInfo("Hello")
+				.setContentInfo("eBe Cloud Notification")
 				.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_bee_round))
 				.setColor(ContextCompat.getColor(this, R.color.colorAccent))
 				.setLights(Color.RED, 1000, 300)

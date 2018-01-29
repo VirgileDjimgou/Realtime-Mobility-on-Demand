@@ -142,6 +142,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
     CustomFcm_Util FCM_Message_Sender ;
     PlaceAutocompleteFragment Destination_autocompleteFragment;
     PlaceAutocompleteFragment Depart_autocompleteFragment;
+    String DriverID_Fcm = "";
 
 
     public PassengerMapFragment() {
@@ -336,6 +337,12 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                     driverRef.updateChildren(map);
                     mAcceptDriver.setEnabled(false);
 
+
+                    FCM_Message_Sender.sendWithOtherThread("token" ,
+                            DriverID_Fcm ,
+                            "eBe Realtime Mobility on Demand 2018" ,
+                            "Passenger are accepted your ...");
+
                 }catch(Exception ex){
 
                 }
@@ -365,6 +372,13 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                     progressBar_Search.setIndeterminate(false);
                     requestBol = false;
                     mDeclineDriver.setEnabled(false);
+
+
+                    FCM_Message_Sender.sendWithOtherThread("token" ,
+                            DriverID_Fcm ,
+                            "eBe Realtime Mobility on Demand 2018" ,
+                            "Passenger unavaible (notification) ...");
+
                 }catch(Exception ex){
 
                     ex.printStackTrace();
@@ -425,10 +439,8 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
             }
         });
 
-
         Depart_autocompleteFragment = (PlaceAutocompleteFragment)
                getActivity().getFragmentManager().findFragmentById(R.id.place_depart);
-
         Depart_autocompleteFragment.setHint("Start point ...");
         Depart_autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
@@ -443,10 +455,8 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                 // TODO: Handle the error.
             }
         });
-
         Destination_autocompleteFragment = (PlaceAutocompleteFragment)
                 getActivity().getFragmentManager().findFragmentById(R.id.fragment_destination);
-
         Destination_autocompleteFragment.setHint("Destination ...");
         Destination_autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
@@ -460,8 +470,6 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                 // TODO: Handle the error.
             }
         });
-
-
         materialDesignFAM = (FloatingActionMenu) rootView.findViewById(R.id.material_design_android_floating_action_menu);
 
 
@@ -836,7 +844,11 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
 
                     if(dataSnapshot.child("IdFcm")!=null){
                         String IdfcmUser = dataSnapshot.child("IdFcm").getValue().toString();
-                        FCM_Message_Sender.sendWithOtherThread("token" , IdfcmUser);
+                        DriverID_Fcm = IdfcmUser;
+                        FCM_Message_Sender.sendWithOtherThread("token" ,
+                                IdfcmUser ,
+                                "eBe Realtime Mobility on Demand 2018" ,
+                                "Request Passenger Notification ...");
                     }
 
                     int ratingSum = 0;
@@ -883,6 +895,8 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                         if(Res_Driver.equalsIgnoreCase("false")){
                             mDriverInfo.setVisibility(View.GONE);
                             RequestSettingsInit();
+
+
 
                         }
 

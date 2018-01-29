@@ -29,6 +29,7 @@ import com.bee.drive.activity.MainActivity;
 import com.bee.drive.airbnbmapexample.ui.activity.MovingMarkerActivity;
 import com.bee.drive.data.SharedPreferenceHelper;
 import com.bee.drive.data.StaticConfig;
+import com.bee.drive.fcm.CustomFcm_Util;
 import com.bee.drive.fcm.MainActivity_fcm;
 import com.bee.drive.model.User;
 import com.bumptech.glide.Glide;
@@ -130,12 +131,15 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     private ProgressBar progressBar;
     private MyCountDownTimer myCountDownTimer;
     private String ID_FCM ="";
+    private CustomFcm_Util FCM_Util;
+    private String Customer_ID_FCM ="";
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         polylines = new ArrayList<>();
+        FCM_Util = new CustomFcm_Util();
 
         userDB = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(StaticConfig.UID);
 
@@ -192,7 +196,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 map.put("ResponseDriver" , "false");
                 driverRef.updateChildren(map);
                 mCustomerInfo.setVisibility(View.GONE);
-
+                    FCM_Util.sendWithOtherThread("token" ,
+                            Customer_ID_FCM ,
+                            "eBe Realtime Mobility on Demand 2018" ,
+                            "Driver rejected your proposition (notification) ...");
                     endRide();
                 }catch(Exception ex){
                     ex.printStackTrace();
@@ -218,6 +225,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                     map.put("ResponseDriver" , "true");
                     driverRef.updateChildren(map);
                     mButtonAcceptDrive.setEnabled(false);
+
+
+                    FCM_Util.sendWithOtherThread("token" ,
+                            Customer_ID_FCM ,
+                            "eBe Realtime Mobility on Demand 2018" ,
+                            "Driver accepted your proposition (notification) ...");
+
                 }catch(Exception ex){
                     ex.printStackTrace();
                 }
@@ -770,6 +784,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                         }
 
 
+                        if(map.get("IdFcm") !=null){
+                            Customer_ID_FCM = map.get("IdFcm").toString();
+                        }
+
+
+
                     }catch (Exception ex){
                         ex.printStackTrace();
                         Toast.makeText(context, ex.toString() , Toast.LENGTH_LONG).show();
@@ -1225,11 +1245,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 endRide();
                 status = 2;
                 RiderStatus_check();
-
             }catch(Exception ex){
 
                 ex.printStackTrace();
             }
+
+
+            FCM_Util.sendWithOtherThread("token" ,
+                    Customer_ID_FCM ,
+                    "eBe Realtime Mobility on Demand 2018" ,
+                    "Driver rejected your proposition (notification) ...");
         }
 
 
