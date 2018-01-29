@@ -86,6 +86,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.bee.drive.activity.AboutUsActivity;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -106,6 +107,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     private Switch mWorkingSwitch;
     private int status = 0;
     private String customerId = "", destination;
+    private String customer_Fcm_ID ="";
     private LatLng destinationLatLng, pickupLatLng;
     private float rideDistance;
     private Boolean isLoggingOut = false;
@@ -114,8 +116,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     private ImageView mCustomerProfileImage;
     private TextView mtrip_cost , mnbOfPassengers , mcustomer_Service ,
                      mServicesOptions, mCustomerName, mCustomerDestination;
-
-
     private Button mButtonDeclineDrive , mButtonAcceptDrive ;
     private DatabaseReference userDB;
     private FirebaseAuth mAuth;
@@ -129,6 +129,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     private User myAccount;
     private ProgressBar progressBar;
     private MyCountDownTimer myCountDownTimer;
+    private String ID_FCM ="";
 
 
     @Override
@@ -395,9 +396,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         });
 
 
+        onTokenRefresh();
         getCustomerProposition();
         return rootView;
     }
+
 
     private void ActivateTimerProgressbar(boolean timer){
 
@@ -518,6 +521,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                         mCustomerInfo.setVisibility(View.VISIBLE);
                         getProfil_Proposed_Customers();
                         ActivateTimerProgressbar(true);
+                    }
+
+                    if(map.get("idFcm") !=null){
+
+
+
                     }
 
 
@@ -1164,6 +1173,33 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
     // countdown Timer
 
+
+    public String onTokenRefresh() {
+        // Get updated InstanceID token.
+        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        Log.d("Token Instance", "Refreshed token: " + refreshedToken);
+
+        // Toast.makeText(getContext() , refreshedToken.toString() , Toast.LENGTH_LONG).show();
+        // If you want to send messages to this application instance or
+        // manage this apps subscriptions on the server side, send the
+        // Instance ID token to your app server.
+        // sendRegistrationToServer(refreshedToken);
+
+        try{
+            String DriverId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers/"+ DriverId);
+            HashMap map = new HashMap();
+            map.put("IdFcm" , refreshedToken);
+
+            driverRef.updateChildren(map);
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+        return refreshedToken;
+    }
+
     public class MyCountDownTimer extends CountDownTimer {
 
         String valconverted ;
@@ -1195,6 +1231,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 ex.printStackTrace();
             }
         }
+
+
+
 
     }
 

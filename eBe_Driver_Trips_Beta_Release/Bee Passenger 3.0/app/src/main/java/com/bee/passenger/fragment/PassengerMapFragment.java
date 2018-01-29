@@ -22,9 +22,14 @@ import android.view.ViewGroup;
 
 import com.bee.passenger.HistoryActivity;
 import com.bee.passenger.activity.AboutUsActivity;
+import com.bee.passenger.activity.EmailLoginActivity;
 import com.bee.passenger.data.FriendDB;
 import com.bee.passenger.data.GroupDB;
+import com.bee.passenger.data.SharedPreferenceHelper;
+import com.bee.passenger.data.StaticConfig;
+import com.bee.passenger.fcm.CustomFcm_Util;
 import com.bee.passenger.fcm.MainActivity_fcm;
+import com.bee.passenger.model.User;
 import com.bee.passenger.service.ServiceUtils;
 import com.bumptech.glide.Glide;
 import com.bee.passenger.activity.MainActivity;
@@ -134,8 +139,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                          History,
                          float_logout_disconnect , Settings;
 
-
-
+    CustomFcm_Util FCM_Message_Sender ;
     PlaceAutocompleteFragment Destination_autocompleteFragment;
     PlaceAutocompleteFragment Depart_autocompleteFragment;
 
@@ -223,8 +227,10 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
 
 
 
+        // init FCM Sender  ....
+        FCM_Message_Sender = new CustomFcm_Util();
 
-        From_point = (TextView) rootView.findViewById(R.id.from);
+                From_point = (TextView) rootView.findViewById(R.id.from);
         ToPoint = (TextView) rootView.findViewById(R.id.to_destination_passenger);
         NumOfPassenger = (EditText) rootView.findViewById(R.id.number_of_passenger);
 
@@ -484,7 +490,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                 //TODO something when floating action menu second item clicked
 
                 onTokenRefresh();
-                
+
                 if(mDriverInfo.isActivated()==true){
                     mDriverInfo.setActivated(false);
                     mDriverInfo.setVisibility(View.GONE);
@@ -564,6 +570,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
 
 
         // Init Request settings
+        onTokenRefresh();
         RequestSettingsInit();
         return rootView;
     }
@@ -677,7 +684,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                                     map.put("Service" , requestService);
                                     map.put("ResponsePassenger" , "");
                                     map.put("ResponseDriver" , "");
-
+                                    map.put("IdFcm" , onTokenRefresh());
 
                                     driverRef.updateChildren(map);
 
@@ -825,6 +832,11 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                     }
                     if(dataSnapshot.child("profileImageUrl")!=null){
                         Glide.with(getActivity()).load(dataSnapshot.child("profileImageUrl").getValue().toString()).into(mDriverProfileImage);
+                    }
+
+                    if(dataSnapshot.child("IdFcm")!=null){
+                        String IdfcmUser = dataSnapshot.child("IdFcm").getValue().toString();
+                        FCM_Message_Sender.sendWithOtherThread("token" , IdfcmUser);
                     }
 
                     int ratingSum = 0;
@@ -1050,16 +1062,30 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
     }
 
 
-    public void onTokenRefresh() {
+    public String onTokenRefresh() {
         // Get updated InstanceID token.
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d(TAG, "Refreshed token: " + refreshedToken);
+        Log.d("Token Instance", "Refreshed token: " + refreshedToken);
 
-        Toast.makeText(getContext() , refreshedToken.toString() , Toast.LENGTH_LONG).show();
+        // Toast.makeText(getContext() , refreshedToken.toString() , Toast.LENGTH_LONG).show();
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
         // Instance ID token to your app server.
         // sendRegistrationToServer(refreshedToken);
+
+        try{
+            String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers/"+ customerId);
+            HashMap map = new HashMap();
+            map.put("IdFcm" , refreshedToken);
+
+            driverRef.updateChildren(map);
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+        return refreshedToken;
     }
 
     /*-------------------------------------------- onRequestPermissionsResult -----
