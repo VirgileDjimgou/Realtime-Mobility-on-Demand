@@ -146,7 +146,7 @@ public class MainActivity_App extends AppCompatActivity {
         }
 
 
-        
+
         setContentView(R.layout.activity_main_splash);
         getSupportActionBar().hide();
 

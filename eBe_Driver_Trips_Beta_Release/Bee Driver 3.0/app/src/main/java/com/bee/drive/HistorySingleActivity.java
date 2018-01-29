@@ -328,7 +328,13 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
 
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
 
-        mMap.animateCamera(cameraUpdate);
+        try{
+
+            mMap.animateCamera(cameraUpdate);
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
 
         mMap.addMarker(new MarkerOptions().position(pickupLatLng).title("pickup location").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_pickup)));
         mMap.addMarker(new MarkerOptions().position(destinationLatLng).title("destination"));

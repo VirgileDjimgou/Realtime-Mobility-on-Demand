@@ -14,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,6 +75,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static android.content.ContentValues.TAG;
 import static com.bee.passenger.R.id.action_bar_root;
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static java.lang.System.exit;
@@ -83,6 +85,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 
 public class PassengerMapFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
@@ -480,6 +483,8 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
             public void onClick(View v) {
                 //TODO something when floating action menu second item clicked
 
+                onTokenRefresh();
+                
                 if(mDriverInfo.isActivated()==true){
                     mDriverInfo.setActivated(false);
                     mDriverInfo.setVisibility(View.GONE);
@@ -1045,6 +1050,18 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
     }
 
 
+    public void onTokenRefresh() {
+        // Get updated InstanceID token.
+        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        Log.d(TAG, "Refreshed token: " + refreshedToken);
+
+        Toast.makeText(getContext() , refreshedToken.toString() , Toast.LENGTH_LONG).show();
+        // If you want to send messages to this application instance or
+        // manage this apps subscriptions on the server side, send the
+        // Instance ID token to your app server.
+        // sendRegistrationToServer(refreshedToken);
+    }
+
     /*-------------------------------------------- onRequestPermissionsResult -----
     |  Function onRequestPermissionsResult
     |
@@ -1073,6 +1090,8 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
             }
         }
     }
+
+
 
 
 }
