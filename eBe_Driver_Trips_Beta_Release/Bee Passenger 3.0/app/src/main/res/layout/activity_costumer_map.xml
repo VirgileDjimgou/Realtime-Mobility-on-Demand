@@ -702,6 +702,14 @@
                 fab:fab_label="See/Mask Dasboard"
                 fab:fab_size="mini" />
 
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/History"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_history"
+                fab:fab_label="History"
+                fab:fab_size="mini" />
+
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/material_design_floating_action_menu_item_settings"
@@ -730,15 +738,6 @@
                 fab:fab_label="Logout "
                 fab:fab_size="mini" />
 
-
-
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/material_design_floating_action_menu_item_about"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/my_favourites_icon_active"
-                fab:fab_label="About"
-                fab:fab_size="mini" />
         </com.github.clans.fab.FloatingActionMenu>
 
 

@@ -82,9 +82,9 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history_single);
 
-        Intent intent = new Intent(this, PayPalService.class);
+        // Intent intent = new Intent(this, PayPalService.class);
         // intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
-        startService(intent);
+        // startService(intent);
 
         polylines = new ArrayList<>();
 

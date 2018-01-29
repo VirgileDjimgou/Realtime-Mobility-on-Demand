@@ -221,6 +221,11 @@
             android:screenOrientation="portrait"/>
 
 
+        <activity android:name="com.bee.drive.HistorySingleActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
+
 
 
         <activity android:name="com.facebook.FacebookActivity"

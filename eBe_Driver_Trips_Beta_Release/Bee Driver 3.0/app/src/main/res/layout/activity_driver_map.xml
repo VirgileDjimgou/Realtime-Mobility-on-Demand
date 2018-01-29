@@ -68,22 +68,21 @@
                         android:layout_gravity="left|top"
                         android:layout_marginLeft="5dp"
                         android:layout_marginTop="210dp"
-                        android:text="you are  to 2 minute to take a decision !"
+                        android:text="you are 20 seconds to take a decision !"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="#ffffff"
                         android:textStyle="bold" />
 
-                    <Chronometer
-                        android:id="@+id/chronometer"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginLeft="253dp"
-                        android:layout_marginTop="190dp"
-                        android:background="@android:color/holo_blue_bright"
-                        android:text="Chrono"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        android:textColor="@color/red" />
 
+                    <ProgressBar
+                        android:id="@+id/CounterDriver"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="25dp"
+                        android:layout_marginTop="185dp"
+                        android:tooltipText="request progression"
+                        android:indeterminateDrawable="@android:drawable/progress_indeterminate_horizontal"
+                        />
 
 
                     <ImageView
@@ -403,8 +402,17 @@
                 android:id="@+id/customerDashbord"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/ic_car"
+                android:src="@drawable/dashboard"
                 fab:fab_label="See/mask Customer dasboard"
+                fab:fab_size="mini" />
+
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/History"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_history"
+                fab:fab_label="History"
                 fab:fab_size="mini" />
 
 

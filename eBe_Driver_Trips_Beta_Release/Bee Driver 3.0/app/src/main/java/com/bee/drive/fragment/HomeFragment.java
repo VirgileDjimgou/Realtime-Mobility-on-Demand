@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bee.drive.HistoryActivity;
 import com.bee.drive.Utility.ImageUtils;
 import com.bee.drive.activity.MainActivity;
 import com.bee.drive.airbnbmapexample.ui.activity.MovingMarkerActivity;
@@ -64,6 +66,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -97,7 +100,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     LocationRequest mLocationRequest;
 
     FloatingActionMenu materialDesignFAM;
-    FloatingActionButton Dasboard , Adv_Settings, Road_Simulation, About, logout_disconnect;
+    FloatingActionButton Dasboard , History , Adv_Settings, Road_Simulation, About, logout_disconnect;
 
     private Button mRideStatus;
     private Switch mWorkingSwitch;
@@ -124,6 +127,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     String Type_of_Services ="";
     String Options= "";
     private User myAccount;
+    private ProgressBar progressBar;
+    private MyCountDownTimer myCountDownTimer;
 
 
     @Override
@@ -157,6 +162,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         }
 
         // add old Activity
+
+        //counter to take  a decisions ...
+        progressBar = (ProgressBar) rootView.findViewById(R.id.CounterDriver);
 
 
         mCustomerInfo = (LinearLayout) rootView .findViewById(R.id.PassengerInfoCustom);
@@ -285,6 +293,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
         materialDesignFAM = (FloatingActionMenu) rootView.findViewById(R.id.material_design_android_floating_action_menu);
         Dasboard = (FloatingActionButton) rootView.findViewById(R.id.customerDashbord);
+        History = (FloatingActionButton) rootView.findViewById(R.id.History);
         Road_Simulation = (FloatingActionButton) rootView.findViewById(R.id.menu_road_simulation);
         Adv_Settings = (FloatingActionButton) rootView.findViewById(R.id.menu_item_settings);
         logout_disconnect = (FloatingActionButton) rootView.findViewById(R.id.menu_item_logout);
@@ -312,12 +321,26 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         });
 
 
+
+        History.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getActivity(), HistoryActivity.class);
+                intent.putExtra("customerOrDriver", "Drivers");
+                startActivity(intent);
+                return;
+
+            }
+        });
+
         Road_Simulation.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu first item clicked
 
                 // launch new intent instead of loading fragment
-                startActivity(new Intent(getActivity(), MovingMarkerActivity.class));
+                // startActivity(new Intent(getActivity(), MovingMarkerActivity.class));
+                ActivateTimerProgressbar(true);
+
 
             }
         });
@@ -376,6 +399,23 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         return rootView;
     }
 
+    private void ActivateTimerProgressbar(boolean timer){
+
+        if(timer = true){
+
+            try {
+                progressBar.setProgress(500);
+                myCountDownTimer = new MyCountDownTimer(50000, 100);
+                myCountDownTimer.start();
+
+            }catch (Exception ex ){
+                ex.printStackTrace();
+            }
+
+        }else{
+
+        }
+    }
     private void InitViewDashboard(){
         mButtonAcceptDrive.setEnabled(true);
         mButtonDeclineDrive.setEnabled(true);
@@ -409,8 +449,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         }
 
     }
-
-
 
 
     public void getCustomerProposition(){
@@ -479,6 +517,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                         customerId = map.get("customerRideId").toString();
                         mCustomerInfo.setVisibility(View.VISIBLE);
                         getProfil_Proposed_Customers();
+                        ActivateTimerProgressbar(true);
                     }
 
 
@@ -1122,6 +1161,42 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
      // Profil image ...
 
 
+
+    // countdown Timer
+
+    public class MyCountDownTimer extends CountDownTimer {
+
+        String valconverted ;
+        public MyCountDownTimer(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            int progress = (int) (millisUntilFinished/500);
+            valconverted = String.valueOf(millisUntilFinished);
+            progressBar.setProgress(progress);
+            // Toast.makeText(getContext(), valconverted  , Toast.LENGTH_SHORT);
+        }
+
+        @Override
+        public void onFinish() {
+            progressBar.setProgress(0);
+            // hier i muss end the  Offers
+            try{
+                mCustomerInfo.setVisibility(View.GONE);
+                InitViewDashboard();
+                endRide();
+                status = 2;
+                RiderStatus_check();
+
+            }catch(Exception ex){
+
+                ex.printStackTrace();
+            }
+        }
+
+    }
 
 
 }

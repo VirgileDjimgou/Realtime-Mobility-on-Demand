@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bee.passenger.HistoryActivity;
 import com.bee.passenger.activity.AboutUsActivity;
 import com.bee.passenger.data.FriendDB;
 import com.bee.passenger.data.GroupDB;
@@ -127,8 +128,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
     FloatingActionMenu materialDesignFAM;
     FloatingActionButton DriverInfosDashbord,
                          Promotions,
-                         About,
-                         Share,
+                         History,
                          float_logout_disconnect , Settings;
 
 
@@ -460,7 +460,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
         Settings = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item_settings);
         float_logout_disconnect = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item_logout);
         Promotions =  (FloatingActionButton) rootView.findViewById(R.id.menu_item_notifications);
-        About =  (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item_about);
+        History =  (FloatingActionButton) rootView.findViewById(R.id.History);
 
 
         Promotions.setOnClickListener(new View.OnClickListener() {
@@ -506,15 +506,14 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
             }
         });
 
-        About.setOnClickListener(new View.OnClickListener() {
+        History.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu second item clicked
                 // start Rider Status Activity ...
                 //
 
-                mDriverInfo.setVisibility(View.GONE);
-
-                Intent intent = new Intent(getActivity(), AboutUsActivity.class);
+                Intent intent = new Intent(getActivity(), HistoryActivity.class);
+                intent.putExtra("customerOrDriver", "Customers");
                 startActivity(intent);
                 return;
             }
