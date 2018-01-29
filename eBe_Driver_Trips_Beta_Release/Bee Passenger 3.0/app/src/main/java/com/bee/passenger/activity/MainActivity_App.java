@@ -107,6 +107,46 @@ public class MainActivity_App extends AppCompatActivity {
 //                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
 //                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         }
+
+
+
+
+        // control if Gps activated  ...
+        permissions.add(ACCESS_FINE_LOCATION);
+        permissions.add(ACCESS_COARSE_LOCATION);
+
+        permissionsToRequest = findUnAskedPermissions(permissions);
+        //get the permissions we have asked for before but are not granted..
+        //we will store this in a global list to access later.
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+
+            if (permissionsToRequest.size() > 0)
+                requestPermissions(permissionsToRequest.toArray(new String[permissionsToRequest.size()]), ALL_PERMISSIONS_RESULT);
+        }
+
+        locationTrack = new LocationTrack(MainActivity_App.this);
+
+
+        if (locationTrack.canGetLocation()) {
+
+
+            double longitude = locationTrack.getLongitude();
+            double latitude = locationTrack.getLatitude();
+
+            Toast.makeText(getApplicationContext(), "Longitude:" + Double.toString(longitude) + "\nLatitude:" + Double.toString(latitude), Toast.LENGTH_SHORT).show();
+        } else {
+
+            //  you must activated settings
+            // locationTrack.showSettingsAlert();
+
+            locationTrack.showSettingsAlert();
+        }
+
+
+        
         setContentView(R.layout.activity_main_splash);
         getSupportActionBar().hide();
 
