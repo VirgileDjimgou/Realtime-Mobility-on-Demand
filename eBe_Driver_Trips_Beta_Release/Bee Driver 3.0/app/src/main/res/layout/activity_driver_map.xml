@@ -395,8 +395,18 @@
             fab:menu_shadowColor="#f2f1f1"
             fab:menu_shadowRadius="1dp"
             fab:menu_shadowXOffset="1dp"
-            fab:menu_shadowYOffset="5dp"
+            fab:menu_shadowYOffset="1dp"
             fab:menu_showShadow="true">
+
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/customerDashbord"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_car"
+                fab:fab_label="See/mask Customer dasboard"
+                fab:fab_size="mini" />
+
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/menu_road_simulation"

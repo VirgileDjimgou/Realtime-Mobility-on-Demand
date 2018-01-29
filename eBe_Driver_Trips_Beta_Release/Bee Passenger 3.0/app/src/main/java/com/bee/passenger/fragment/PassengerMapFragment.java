@@ -125,7 +125,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
     private RadioGroup mRadioGroupService , mRadioGroup_Option;
 
     FloatingActionMenu materialDesignFAM;
-    FloatingActionButton Request_status,
+    FloatingActionButton DriverInfosDashbord,
                          Promotions,
                          About,
                          Share,
@@ -315,14 +315,21 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(getActivity(), "you are  accepted this Driver  ....  " , Toast.LENGTH_LONG).show();
 
-                DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
-                String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                HashMap map = new HashMap();
-                map.put("ResponsePassenger" , "true");
+                try{
+                    Toast.makeText(getActivity(), "you are  accepted this Driver  ....  " , Toast.LENGTH_LONG).show();
 
-                driverRef.updateChildren(map);
+                    DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
+                    String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    HashMap map = new HashMap();
+                    map.put("ResponsePassenger" , "true");
+
+                    driverRef.updateChildren(map);
+                    mAcceptDriver.setEnabled(false);
+
+                }catch(Exception ex){
+
+                }
             }
         });
 
@@ -331,14 +338,29 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
 
-                DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
-                String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                HashMap map = new HashMap();
-                map.put("ResponsePassenger" , "false");
 
-                driverRef.updateChildren(map);
-                mDriverInfo.setVisibility(View.GONE);
-                RequestSettingsInit();
+                try{
+                    DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
+                    String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    HashMap map = new HashMap();
+                    map.put("ResponsePassenger" , "false");
+
+                    driverRef.updateChildren(map);
+                    mDriverInfo.setVisibility(View.GONE);
+                    RequestSettingsInit();
+                    RequestSettingsLinearLayout.setVisibility(View.GONE);
+                    mfind_a_rider.setEnabled(true);
+                    mRequest.setEnabled(true);
+                    endRide();
+                    mRequest.setText("Find a Driver");
+                    progressBar_Search.setIndeterminate(false);
+                    requestBol = false;
+                    mDeclineDriver.setEnabled(false);
+                }catch(Exception ex){
+
+                    ex.printStackTrace();
+                }
+
                 Toast.makeText(getActivity(), "you are rejected this Driver....the System find another Driver" , Toast.LENGTH_LONG).show();
             }
         });
@@ -434,7 +456,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
         materialDesignFAM = (FloatingActionMenu) rootView.findViewById(R.id.material_design_android_floating_action_menu);
 
 
-        Request_status = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item_request_status);
+        DriverInfosDashbord = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item_request_status);
         Settings = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item_settings);
         float_logout_disconnect = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item_logout);
         Promotions =  (FloatingActionButton) rootView.findViewById(R.id.menu_item_notifications);
@@ -454,11 +476,18 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
         });
 
 
-        Request_status.setOnClickListener(new View.OnClickListener() {
+        DriverInfosDashbord.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu second item clicked
-                Toast.makeText(getContext(), "not Implemented  at the moment .... " , Toast.LENGTH_LONG).show();
-                mDriverInfo.setVisibility(View.VISIBLE);
+
+                if(mDriverInfo.isActivated()==true){
+                    mDriverInfo.setActivated(false);
+                    mDriverInfo.setVisibility(View.GONE);
+
+                }else{
+                    mDriverInfo.setActivated(true);
+                    mDriverInfo.setVisibility(View.VISIBLE);
+                }
 
 
             }
@@ -539,6 +568,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
 
     public void RequestSettingsInit(){
 
+        mDriverInfo.setActivated(false);
         NumOfPassenger.setText("1");
         // Init Cost Trip  ...
         TripCost.setText("0");
@@ -554,9 +584,10 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
         RequestSettingsLinearLayout.setVisibility(View.GONE);
         Destination_autocompleteFragment.setText("");
         Depart_autocompleteFragment.setText("");
-
-
         mfind_a_rider.setEnabled(true);
+        mRequest.setEnabled(true);
+        mAcceptDriver.setEnabled(true);
+        mDeclineDriver.setEnabled(true);
     }
 
     @Override
@@ -684,7 +715,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                         // get out of this function ...
                         return;
                     }
-                    Toast.makeText(getContext() , "next Search  with Radius : " +radius , Toast.LENGTH_LONG).show();
+                    // Toast.makeText(getContext() , "next Search  with Radius : " +radius , Toast.LENGTH_LONG).show();
                     getClosestDriver();
                 }
             }
@@ -835,7 +866,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                         Toast.makeText(getApplicationContext(), map.get("ResponseDriver").toString() , Toast.LENGTH_LONG).show();
                         if(Res_Driver.equalsIgnoreCase("false")){
                             mDriverInfo.setVisibility(View.GONE);
-
+                            RequestSettingsInit();
 
                         }
 
@@ -847,6 +878,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                         Toast.makeText(getApplicationContext(), map.get("ResponsePassenger").toString() , Toast.LENGTH_LONG).show();
                         if(Res_Customer.equalsIgnoreCase("false")){
                             mDriverInfo.setVisibility(View.GONE);
+                            RequestSettingsInit();
                         }
 
                     }
@@ -855,7 +887,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                         // Start with the trip
 
                         Toast.makeText(getApplicationContext(), "positive Response for a Driver and Customer " , Toast.LENGTH_LONG).show();
-                        // getAssignedCustomer();
+                        //getAssignedCustomer();
                         // mRideStatus.setBackgroundColor(mRideStatus.getContext().getResources().getColor(R.color.green));
                     }else{
                         // find the Next Available Driver ...

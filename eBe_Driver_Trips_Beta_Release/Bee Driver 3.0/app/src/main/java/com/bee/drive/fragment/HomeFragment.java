@@ -97,33 +97,23 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     LocationRequest mLocationRequest;
 
     FloatingActionMenu materialDesignFAM;
-    FloatingActionButton Adv_Settings, Road_Simulation, About, logout_disconnect;
-
-
+    FloatingActionButton Dasboard , Adv_Settings, Road_Simulation, About, logout_disconnect;
 
     private Button mRideStatus;
-
     private Switch mWorkingSwitch;
-
     private int status = 0;
-
     private String customerId = "", destination;
     private LatLng destinationLatLng, pickupLatLng;
     private float rideDistance;
-
     private Boolean isLoggingOut = false;
-
     private SupportMapFragment mapFragment;
-
     private LinearLayout mCustomerInfo;
-
     private ImageView mCustomerProfileImage;
-
     private TextView mtrip_cost , mnbOfPassengers , mcustomer_Service ,
                      mServicesOptions, mCustomerName, mCustomerDestination;
 
-    private Button mButtonDeclineDrive , mButtonAcceptDrive ;
 
+    private Button mButtonDeclineDrive , mButtonAcceptDrive ;
     private DatabaseReference userDB;
     private FirebaseAuth mAuth;
     ImageView avatar;
@@ -134,9 +124,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     String Type_of_Services ="";
     String Options= "";
     private User myAccount;
-
-
-
 
 
     @Override
@@ -188,6 +175,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             public void onClick(View v) {
                 Toast.makeText(context, "Passenger refused ", Toast.LENGTH_SHORT).show();
                 // mask the  Dasboard ...
+                try{
                 String driverId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId).child("customerRequest");
                 // Set the  Driver Response to true ...
@@ -195,6 +183,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 map.put("ResponseDriver" , "false");
                 driverRef.updateChildren(map);
                 mCustomerInfo.setVisibility(View.GONE);
+
+                    endRide();
+                }catch(Exception ex){
+                    ex.printStackTrace();
+                }
 
             }
         });
@@ -207,12 +200,18 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             public void onClick(View v) {
                 Toast.makeText(context, "Passenger accepted ", Toast.LENGTH_SHORT).show();
 
-                String driverId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId).child("customerRequest");
-                // Set the  Driver Response to true ...
-                HashMap map = new HashMap();
-                map.put("ResponseDriver" , "true");
-                driverRef.updateChildren(map);
+                try{
+
+                    String driverId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId).child("customerRequest");
+                    // Set the  Driver Response to true ...
+                    HashMap map = new HashMap();
+                    map.put("ResponseDriver" , "true");
+                    driverRef.updateChildren(map);
+                    mButtonAcceptDrive.setEnabled(false);
+                }catch(Exception ex){
+                    ex.printStackTrace();
+                }
 
 
                 // Start  the Triggers  to begin with the Trips  ...
@@ -245,21 +244,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         mRideStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch(status){
-                    case 1:
-                        status=2;
-                        erasePolylines();
-                        if(destinationLatLng.latitude!=0.0 && destinationLatLng.longitude!=0.0){
-                            getRouteToMarker(destinationLatLng);
-                        }
-                        mRideStatus.setText("drive completed");
 
-                        break;
-                    case 2:
-                        recordRide();
-                        endRide();
-                        break;
-                }
+                status = 2;
+                RiderStatus_check();
             }
         });
 
@@ -297,10 +284,32 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
 
         materialDesignFAM = (FloatingActionMenu) rootView.findViewById(R.id.material_design_android_floating_action_menu);
+        Dasboard = (FloatingActionButton) rootView.findViewById(R.id.customerDashbord);
         Road_Simulation = (FloatingActionButton) rootView.findViewById(R.id.menu_road_simulation);
         Adv_Settings = (FloatingActionButton) rootView.findViewById(R.id.menu_item_settings);
         logout_disconnect = (FloatingActionButton) rootView.findViewById(R.id.menu_item_logout);
         About = (FloatingActionButton) rootView.findViewById(R.id.menu_item_about);
+
+
+        Dasboard.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //TODO something when floating action menu first item clicked
+
+                // launch new intent instead of loading fragment
+
+                if(mCustomerInfo.isActivated() == true){
+                    mCustomerInfo.setVisibility(View.GONE);
+                    mCustomerInfo.setActivated(false);
+
+                }else{
+
+
+                    mCustomerInfo.setVisibility(View.VISIBLE);
+                    mCustomerInfo.setActivated(true);
+
+                }
+            }
+        });
 
 
         Road_Simulation.setOnClickListener(new View.OnClickListener() {
@@ -365,6 +374,40 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
         getCustomerProposition();
         return rootView;
+    }
+
+    private void InitViewDashboard(){
+        mButtonAcceptDrive.setEnabled(true);
+        mButtonDeclineDrive.setEnabled(true);
+    }
+
+    private void RiderStatus_check(){
+
+        try{
+
+            switch(status){
+                case 1:
+                    // prepare the Trip ...
+                    // and prind the direction on map ...
+                    status=2;
+                    erasePolylines();
+                    if(destinationLatLng.latitude!=0.0 && destinationLatLng.longitude!=0.0){
+                        getRouteToMarker(destinationLatLng);
+                    }
+                    mRideStatus.setText("Terminate your Ride ");
+
+                    break;
+                case 2:
+                    recordRide();
+                    endRide();
+                    break;
+            }
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+
+        }
+
     }
 
 
@@ -448,7 +491,15 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                         Toast.makeText(getApplicationContext(), map.get("ResponseDriver").toString() , Toast.LENGTH_LONG).show();
                         if(Res_Driver.equalsIgnoreCase("false")){
                             mCustomerInfo.setVisibility(View.GONE);
+                            InitViewDashboard();
+                            try{
+                                endRide();
+                                status = 2;
+                                RiderStatus_check();
 
+                            }catch(Exception ex){
+                                ex.printStackTrace();
+                            }
 
                         }
 
@@ -460,16 +511,24 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                         Toast.makeText(getApplicationContext(), map.get("ResponsePassenger").toString() , Toast.LENGTH_LONG).show();
                         if(Res_Customer.equalsIgnoreCase("false")){
                             mCustomerInfo.setVisibility(View.GONE);
-                        }
+                            try{
+                                endRide();
+                                InitViewDashboard();
+                                status = 2;
+                                RiderStatus_check();
+                            }catch(Exception ex){
+                                ex.printStackTrace();
+                            }                        }
 
                     }
 
-                    if(Res_Customer.equalsIgnoreCase("true") || (Res_Driver.equalsIgnoreCase("true"))){
+                    if(Res_Customer.equalsIgnoreCase("true") && (Res_Driver.equalsIgnoreCase("true"))){
                         // Start with the trip
 
                         Toast.makeText(getApplicationContext(), "positive Response for a Driver and Customer " , Toast.LENGTH_LONG).show();
                         getAssignedCustomer();
                         mRideStatus.setBackgroundColor(mRideStatus.getContext().getResources().getColor(R.color.green));
+                        mRideStatus.setText("Terminate your Ride here !");
                     }
 
 
@@ -529,6 +588,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
                     if(dataSnapshot.exists()){
                         status = 1;
+                        RiderStatus_check();
                         customerId = dataSnapshot.getValue().toString();
                         getAssignedCustomerPickupLocation();
                         getAssignedCustomerDestination_and_offers();
@@ -536,6 +596,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                         Toast.makeText(context, "Assigned  Customer  ...." , Toast.LENGTH_LONG).show();
                     }else{
                         endRide();
+                        status = 2 ;
+                        RiderStatus_check();
                     }
 
                 }catch(Exception ex){
@@ -827,8 +889,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             mCustomerName.setText("");
             // mCustomerPhone.setText("");
             mCustomerDestination.setText("Destination: --");
+            mRideStatus.setBackgroundColor(mRideStatus.getContext().getResources().getColor(R.color.white));
+            mRideStatus.setText("");
             mCustomerProfileImage.setImageResource(R.mipmap.ic_default_user);
-
 
 
         }catch (Exception ex){
@@ -838,26 +901,36 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     private void recordRide(){
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(userId).child("history");
-        DatabaseReference customerRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerId).child("history");
-        DatabaseReference historyRef = FirebaseDatabase.getInstance().getReference().child("history");
-        String requestId = historyRef.push().getKey();
-        driverRef.child(requestId).setValue(true);
-        customerRef.child(requestId).setValue(true);
 
-        HashMap map = new HashMap();
-        map.put("driver", userId);
-        map.put("customer", customerId);
-        map.put("rating", 0);
-        map.put("timestamp", getCurrentTimestamp());
-        map.put("destination", destination);
-        map.put("location/from/lat", pickupLatLng.latitude);
-        map.put("location/from/lng", pickupLatLng.longitude);
-        map.put("location/to/lat", destinationLatLng.latitude);
-        map.put("location/to/lng", destinationLatLng.longitude);
-        map.put("distance", rideDistance);
-        historyRef.child(requestId).updateChildren(map);
+        try{
+
+
+            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(userId).child("history");
+            DatabaseReference customerRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerId).child("history");
+            DatabaseReference historyRef = FirebaseDatabase.getInstance().getReference().child("history");
+            String requestId = historyRef.push().getKey();
+            driverRef.child(requestId).setValue(true);
+            customerRef.child(requestId).setValue(true);
+
+            HashMap map = new HashMap();
+            map.put("driver", userId);
+            map.put("customer", customerId);
+            map.put("rating", 0);
+            map.put("timestamp", getCurrentTimestamp());
+            map.put("destination", destination);
+            map.put("location/from/lat", pickupLatLng.latitude);
+            map.put("location/from/lng", pickupLatLng.longitude);
+            map.put("location/to/lat", destinationLatLng.latitude);
+            map.put("location/to/lng", destinationLatLng.longitude);
+            map.put("distance", rideDistance);
+            historyRef.child(requestId).updateChildren(map);
+
+
+        }catch(Exception ex){
+
+            ex.printStackTrace();
+        }
     }
 
     private Long getCurrentTimestamp() {

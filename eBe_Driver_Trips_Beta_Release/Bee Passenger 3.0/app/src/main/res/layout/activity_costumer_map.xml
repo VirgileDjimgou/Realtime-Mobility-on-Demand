@@ -675,7 +675,7 @@
             fab:menu_labels_colorNormal="#333"
             fab:menu_labels_colorPressed="#444"
             fab:menu_labels_colorRipple="#66efecec"
-            fab:menu_labels_cornerRadius="5dp"
+            fab:menu_labels_cornerRadius="1dp"
             fab:menu_labels_ellipsize="none"
             fab:menu_labels_hideAnimation="@anim/fab_slide_out_to_right"
             fab:menu_labels_margin="5dp"
@@ -691,7 +691,7 @@
             fab:menu_shadowColor="#f2f1f1"
             fab:menu_shadowRadius="1dp"
             fab:menu_shadowXOffset="1dp"
-            fab:menu_shadowYOffset="5dp"
+            fab:menu_shadowYOffset="1dp"
             fab:menu_showShadow="true">
 
             <com.github.clans.fab.FloatingActionButton
@@ -699,7 +699,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@mipmap/ic_car"
-                fab:fab_label="Request Status"
+                fab:fab_label="See/Mask Dasboard"
                 fab:fab_size="mini" />
 
 
