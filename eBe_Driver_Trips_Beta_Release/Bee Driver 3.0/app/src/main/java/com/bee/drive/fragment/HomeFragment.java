@@ -27,6 +27,7 @@ import com.bee.drive.HistoryActivity;
 import com.bee.drive.Utility.ImageUtils;
 import com.bee.drive.activity.MainActivity;
 import com.bee.drive.airbnbmapexample.ui.activity.MovingMarkerActivity;
+import com.bee.drive.cardview.MainActivity_CardView;
 import com.bee.drive.data.SharedPreferenceHelper;
 import com.bee.drive.data.StaticConfig;
 import com.bee.drive.fcm.CustomFcm_Util;
@@ -102,7 +103,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     LocationRequest mLocationRequest;
 
     FloatingActionMenu materialDesignFAM;
-    FloatingActionButton Dasboard , History , Adv_Settings, Road_Simulation, About, logout_disconnect;
+    FloatingActionButton Dasboard , History , Adv_Settings, Road_Simulation, Promo_Notifications, logout_disconnect;
 
     private Button mRideStatus;
     private Switch mWorkingSwitch;
@@ -312,7 +313,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         Road_Simulation = (FloatingActionButton) rootView.findViewById(R.id.menu_road_simulation);
         Adv_Settings = (FloatingActionButton) rootView.findViewById(R.id.menu_item_settings);
         logout_disconnect = (FloatingActionButton) rootView.findViewById(R.id.menu_item_logout);
-        About = (FloatingActionButton) rootView.findViewById(R.id.menu_item_about);
+        Promo_Notifications = (FloatingActionButton) rootView.findViewById(R.id.menu_item_promotions);
 
 
         Dasboard.setOnClickListener(new View.OnClickListener() {
@@ -340,7 +341,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         History.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                Intent intent = new Intent(getActivity(), HistoryActivity.class);
+                Intent intent = new Intent(getActivity(), MainActivity_CardView .class);
                 intent.putExtra("customerOrDriver", "Drivers");
                 startActivity(intent);
                 return;
@@ -399,12 +400,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             }
         });
 
-        About.setOnClickListener(new View.OnClickListener() {
+        Promo_Notifications.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu second item clicked
                 // start Rider Status Activity ...
                 //
-                startActivity(new Intent(getActivity(), AboutUsActivity.class));
+                startActivity(new Intent(getActivity(), MainActivity_CardView.class));
 
             }
         });

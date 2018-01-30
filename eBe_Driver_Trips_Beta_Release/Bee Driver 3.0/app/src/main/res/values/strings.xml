@@ -4,6 +4,11 @@
 
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBb7F-tT5vbdBNFsUdrr8kwPJh6SkEeUiI</string>
 
+    <string name="action_add_favourite">Add to Favourites</string>
+    <string name="action_play_next">Play Next</string>
+    <string name="backdrop_title">LOVE MUSIC</string>
+    <string name="backdrop_subtitle">This season top 20 albums</string>
+
 
 
     <string name="action_settings">Settings</string>

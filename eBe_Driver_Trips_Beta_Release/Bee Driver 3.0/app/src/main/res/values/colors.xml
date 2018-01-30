@@ -49,6 +49,9 @@
     <color name="purple">#8e76c6</color>
 
 
+    <color name="viewBg">#f1f5f8</color>
+    <color name="album_title">#4c4c4c</color>
+
     <color name="primary">#00BCD4</color>
     <color name="primary_dark">#0097A7</color>
     <color name="primary_light">#B2EBF2</color>
