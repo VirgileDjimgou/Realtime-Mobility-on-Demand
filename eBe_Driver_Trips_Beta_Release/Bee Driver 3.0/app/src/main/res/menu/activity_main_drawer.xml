@@ -13,11 +13,6 @@
             android:title="@string/nav_profil" />
 
         <item
-            android:id="@+id/nav_history"
-            android:icon="@drawable/ic_notifications_black_24dp"
-            android:title="@string/nav_history" />
-
-        <item
             android:id="@+id/nav_notifications"
             android:icon="@drawable/ic_notifications_black_24dp"
             android:title="@string/nav_notifications" />

@@ -3,7 +3,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">#212121</item>
+        <item name="colorPrimary">@color/colorAccent</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
@@ -50,8 +50,8 @@
     </style>
 
     <style name="AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorPrimary">#212121</item>
-        <item name="colorPrimaryDark">#212121</item>
+        <item name="colorPrimary">@color/colorAccent</item>
+        <item name="colorPrimaryDark">@color/colorAccent</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
@@ -131,8 +131,8 @@
 
     <style name="Translucent" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="windowNoTitle">true</item>
-        <item name="colorPrimary">#212121</item>
-        <item name="colorPrimaryDark">#212121</item>
+        <item name="colorPrimary">@color/colorAccent</item>
+        <item name="colorPrimaryDark">@color/colorAccent</item>
         <item name="colorAccent">#4fa881</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
@@ -140,8 +140,8 @@
 
     <style name="TranslucentBackground" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="windowNoTitle">true</item>
-        <item name="colorPrimary">#212121</item>
-        <item name="colorPrimaryDark">#212121</item>
+        <item name="colorPrimary">@color/colorAccent</item>
+        <item name="colorPrimaryDark">@color/colorAccent</item>
         <item name="colorAccent">#4fa881</item>
         <item name="android:windowBackground">@drawable/white_background</item>
     </style>

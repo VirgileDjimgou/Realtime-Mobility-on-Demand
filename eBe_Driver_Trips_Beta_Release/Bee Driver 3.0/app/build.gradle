@@ -144,6 +144,16 @@ dependencies {
     compile 'com.github.joielechong:countrycodepicker:2.1.5'
     // compile 'com.hbb20:ccp:1.7.1'
 
+
+    compile 'com.android.support:recyclerview-v7:26.0.2'
+
+    // retrofit, gson
+    compile 'com.google.code.gson:gson:2.6.2'
+    compile 'com.squareup.retrofit2:retrofit:2.0.2'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
+    // glide
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -49,7 +49,6 @@ import com.bee.drive.R;
 
 import com.bee.drive.data.SharedPreferenceHelper;
 import com.bee.drive.data.StaticConfig;
-import com.bee.drive.fragment.HistoryFragment;
 import com.bee.drive.fragment.HomeFragment;
 import com.bee.drive.fragment.NotificationsFragment;
 import com.bee.drive.fragment.PromotionsFragment;
@@ -110,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
     // private HomeFragment homeFragment = new HomeFragment();
     private HomeFragment homeFragment = new HomeFragment();
     private UserProfileFragment profilFragment = new UserProfileFragment();
-    private HistoryFragment historyFragment = new HistoryFragment();
     private NotificationsFragment notificationsFragment = new NotificationsFragment();
     private PromotionsFragment promotionsFragment = new PromotionsFragment();
     private ShareFragment shareFragement = new ShareFragment();
@@ -334,26 +332,21 @@ public class MainActivity extends AppCompatActivity {
                 return profilFragment;
 
             case 2:
-                // photos
-                // HistoryFragment historyFragment = new HistoryFragment();
-                return historyFragment;
-
-            case 3:
                 // notifications fragment
                 // NotificationsFragment notificationsFragment = new NotificationsFragment();
                 return notificationsFragment;
 
-            case 4:
+            case 3:
                 // notifications fragment
                 // PromotionsFragment promotionsFragment = new PromotionsFragment();
                 return promotionsFragment;
 
-            case 5:
+            case 4:
                 // notifications fragment
                 // ShareFragment shareFragement = new ShareFragment();
                 return shareFragement;
 
-            case 6:
+            case 5:
                 // Friend Chat  fragment
                 // FriendsFragment FriendChatFragment = new FriendsFragment();
                 return FriendChatFragment;
@@ -389,20 +382,16 @@ public class MainActivity extends AppCompatActivity {
                         navItemIndex = 1;
                         CURRENT_TAG = TAG_PROFIL;
                         break;
-                    case R.id.nav_history:
-                        navItemIndex = 2;
-                        CURRENT_TAG = TAG_HISTORY;
-                        break;
                     case R.id.nav_notifications:
-                        navItemIndex = 3;
+                        navItemIndex = 2;
                         CURRENT_TAG = TAG_NOTIFICATIONS;
                         break;
                     case R.id.nav_share:
-                        navItemIndex = 4;
+                        navItemIndex = 3;
                         CURRENT_TAG = TAG_SHARE;
                         break;
                     case R.id.nav_chat:
-                        navItemIndex = 5;
+                        navItemIndex = 4;
                         CURRENT_TAG = TAG_CHAT;
                         break;
 

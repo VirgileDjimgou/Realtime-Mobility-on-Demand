@@ -9,6 +9,18 @@
     <color name="grey_800">#212121</color>
 
 
+    <color name="from">#000000</color>
+    <color name="subject">#111111</color>
+    <color name="timestamp">#4285f4</color>
+    <color name="message">#7a7a7a</color>
+    <color name="icon_tint_normal">#7a7a7a</color>
+    <color name="icon_tint_selected">#fed776</color>
+    <color name="row_activated">#e0e0e0</color>
+    <color name="bg_action_mode">#757575</color>
+    <color name="bg_circle_default">#666666</color>
+
+
+
     <color name="gomalan_bule_bg">#00b1c7</color>
     <color name="gomalan_green_bg">#19c594</color>
     <color name="gomalon_dark_blue">#0097a9</color>
@@ -47,8 +59,8 @@
     <color name="divider">#B6B6B6</color>
 
 
-    <color name="colorPrimary">#212121</color>
-    <color name="colorPrimaryDark">#212121</color>
+    <color name="colorPrimary">#7a7a7a</color>
+    <color name="colorPrimaryDark">#7a7a7a</color>
 
     <color name="colorAccent">#535353</color><!-- -->
     <color name="colorAccent2">#9cacbf</color>
