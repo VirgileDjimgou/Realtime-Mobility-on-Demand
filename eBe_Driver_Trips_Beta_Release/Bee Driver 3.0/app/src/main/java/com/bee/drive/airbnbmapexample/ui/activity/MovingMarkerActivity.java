@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
@@ -104,10 +105,9 @@ public class MovingMarkerActivity extends AppCompatActivity implements OnMapRead
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_moving_marker);
-
         ButterKnife.inject(this);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("Moving Marker Example");
+        getSupportActionBar().setTitle("Bee Road Simulation");
 
         polylines = new ArrayList<>();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -317,6 +317,23 @@ public class MovingMarkerActivity extends AppCompatActivity implements OnMapRead
         });
 
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == android.R.id.home) {
+            // finish the activity
+            onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private Animator animator = new Animator();

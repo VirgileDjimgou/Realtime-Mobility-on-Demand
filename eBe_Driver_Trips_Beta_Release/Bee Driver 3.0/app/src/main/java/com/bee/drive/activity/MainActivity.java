@@ -29,6 +29,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bee.drive.DriverSettingsActivity;
+import com.bee.drive.Utility.UiUtils;
+import com.bee.drive.promotions_swipe.PromotionsActivity;
 import com.bee.drive.share_invitations.ShareActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -51,8 +53,6 @@ import com.bee.drive.R;
 import com.bee.drive.data.SharedPreferenceHelper;
 import com.bee.drive.data.StaticConfig;
 import com.bee.drive.fragment.HomeFragment;
-import com.bee.drive.fragment.NotificationsFragment;
-import com.bee.drive.fragment.PromotionsFragment;
 import com.bee.drive.ui.FriendsFragment;
 
 import com.google.firebase.database.DataSnapshot;
@@ -61,8 +61,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-
-
+import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -70,9 +69,13 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private DrawerLayout drawer;
     private View navHeader;
-    private ImageView imgNavHeaderBg, imgProfile;
-    private TextView txtName, txtWebsite;
+    private ImageView imgNavHeaderBg;
+    private TextView txtName, infos_id;
     private Toolbar toolbar;
+    private ImageView mProfileImage;
+    private String mProfileImageUrl;
+    private Context mContext;
+
 
     // urls to load navigation header background image
     // and profile image
@@ -84,8 +87,6 @@ public class MainActivity extends AppCompatActivity {
     // tags used to attach the fragments
     private static final String TAG_HOME = "home";
     private static final String TAG_PROFIL = "profil";
-    private static final String TAG_HISTORY = "history";
-    private static final String TAG_NOTIFICATIONS = "notifications";
     private static final String TAG_SHARE = "share";
     private static final String TAG_CHAT = "chat";
     public static String CURRENT_TAG = TAG_HOME;
@@ -101,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser user;
 
+
     private User myAccount;
     private Context context;
     private List<Configuration> listConfig = new ArrayList<>();
@@ -110,9 +112,6 @@ public class MainActivity extends AppCompatActivity {
     // private HomeFragment homeFragment = new HomeFragment();
     private HomeFragment homeFragment = new HomeFragment();
     private UserProfileFragment profilFragment = new UserProfileFragment();
-    private NotificationsFragment notificationsFragment = new NotificationsFragment();
-    private PromotionsFragment promotionsFragment = new PromotionsFragment();
-    private ShareFragment shareFragement = new ShareFragment();
     private FriendsFragment FriendChatFragment = new FriendsFragment();
 
 
@@ -123,18 +122,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(getString(R.string.app_name));
 
         mHandler = new Handler();
 
+        mContext = this;
         // Init Firebase
         initFirebase();
-
-
-        // print  KeyHashes
-        // printhashkey();
-
-
-
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -142,9 +136,9 @@ public class MainActivity extends AppCompatActivity {
         // Navigation view header
         navHeader = navigationView.getHeaderView(0);
         txtName = (TextView) navHeader.findViewById(R.id.name);
-        txtWebsite = (TextView) navHeader.findViewById(R.id.website);
+        infos_id = (TextView) navHeader.findViewById(R.id.id_or_phone);
         imgNavHeaderBg = (ImageView) navHeader.findViewById(R.id.img_header_bg);
-        imgProfile = (ImageView) navHeader.findViewById(R.id.img_profile);
+        mProfileImage = (ImageView) navHeader.findViewById(R.id.img_profile);
 
         // load toolbar titles from string resources
         activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
@@ -152,9 +146,9 @@ public class MainActivity extends AppCompatActivity {
 
         // load nav menu header data
         // loadNavHeader();
-        setImageAvatar(context, myAccount.avata);
+        // setImageAvatar(context, myAccount.avata);
         txtName.setText(myAccount.name);
-        txtWebsite.setText(myAccount.email);
+        infos_id.setText(myAccount.email);
 
         Toast.makeText(this, myAccount.name +"  Email : " + myAccount.email, 8000).show();
 
@@ -166,6 +160,8 @@ public class MainActivity extends AppCompatActivity {
             CURRENT_TAG = TAG_HOME;
             loadHomeFragment();
         }
+
+        getUserInfo();
     }
 
     /***
@@ -209,23 +205,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void setImageAvatar(Context context, String imgBase64){
-        try {
-            Resources res = getResources();
-
-            Bitmap src;
-            if (imgBase64.equals("default")) {
-                src = BitmapFactory.decodeResource(res, R.drawable.default_avata);
-            } else {
-                byte[] decodedString = Base64.decode(imgBase64, Base64.DEFAULT);
-                src = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            }
-
-            imgProfile.setImageDrawable(ImageUtils.roundedImage(context, src));
-        }catch (Exception e){
-        }
-    }
-
     private ValueEventListener userListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -240,8 +219,6 @@ public class MainActivity extends AppCompatActivity {
                     txtName.setText(myAccount.name);
                 }
 
-
-                setImageAvatar(context, myAccount.avata);
                 SharedPreferenceHelper preferenceHelper = SharedPreferenceHelper.getInstance(context);
                 preferenceHelper.saveUserInfo(myAccount);
 
@@ -259,18 +236,81 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+
+
+    private void getUserInfo(){
+        userDB.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
+
+                    try{
+
+                        Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                        if(map.get("name")!=null){
+                            txtName.setText(map.get("name").toString());
+                        }
+                        if(map.get("phone")!=null){
+                            infos_id.setText(map.get("phone").toString());
+                        }
+
+                        if(map.get("profileImageUrl")!=null){
+
+                            try{
+
+                                mProfileImageUrl = map.get("profileImageUrl").toString();
+
+                                // Glide.with(getApplication()).load(mProfileImageUrl).into(mProfileImage);
+
+                                // Glide.with(getApplication()).load(mProfileImageUrl).into(mProfileImage);
+                                // Loading profile image
+
+                                Glide.with(getApplicationContext()).load(mProfileImageUrl)
+                                        .crossFade()
+                                        .thumbnail(0.5f)
+                                        .bitmapTransform(new CircleTransform(getApplicationContext()))
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                        .into(mProfileImage);
+
+
+
+                                // showing dot next to notifications label
+                                navigationView.getMenu().getItem(3).setActionView(R.layout.menu_dot);
+
+
+                            }catch (Exception ex ){
+                                ex.printStackTrace();
+                            }
+                        }
+
+                    }catch(Exception ex){
+                        Toast.makeText(MainActivity.this, ex.toString() , Toast.LENGTH_LONG).show();
+                        ex.printStackTrace();
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+                Toast.makeText(MainActivity.this, databaseError.toString() , Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+
+
     private void loadNavHeader() {
         // name, website
-        txtName.setText("User : Lambda ");
-        txtWebsite.setText("UserId : 0001111000");
-
         // Loading profile image
         Glide.with(this).load(urlProfileImg)
                 .crossFade()
                 .thumbnail(0.5f)
                 .bitmapTransform(new CircleTransform(this))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(imgProfile);
+                .into(mProfileImage);
 
         // showing dot next to notifications label
         navigationView.getMenu().getItem(3).setActionView(R.layout.menu_dot);
@@ -332,25 +372,11 @@ public class MainActivity extends AppCompatActivity {
                 // UserProfileFragment profilFragment = new UserProfileFragment();
                 return profilFragment;
 
+
             case 2:
-                // notifications fragment
-                // NotificationsFragment notificationsFragment = new NotificationsFragment();
-                return notificationsFragment;
-
-            case 3:
-                // share fragments fragment
-                // PromotionsFragment promotionsFragment = new PromotionsFragment();
-                startActivity(new Intent(MainActivity.this, ShareActivity.class));
-                //return promotionsFragment;
-
-            case 4:
                 // Friend Fragments ...
                 return FriendChatFragment;
 
-            case 5:
-                // Friend Chat  fragment
-                // FriendsFragment FriendChatFragment = new FriendsFragment();
-                return FriendChatFragment;
             default:
                 return new HomeFragment();
         }
@@ -383,18 +409,17 @@ public class MainActivity extends AppCompatActivity {
                         navItemIndex = 1;
                         CURRENT_TAG = TAG_PROFIL;
                         break;
-                    case R.id.nav_notifications:
-                        navItemIndex = 2;
-                        CURRENT_TAG = TAG_NOTIFICATIONS;
-                        break;
-                    case R.id.nav_share:
-                        navItemIndex = 3;
-                        CURRENT_TAG = TAG_SHARE;
-                        break;
+
                     case R.id.nav_chat:
-                        navItemIndex = 4;
+                        navItemIndex = 2;
                         CURRENT_TAG = TAG_CHAT;
                         break;
+
+                    case R.id.nav_notifications:  // launch new intent instead of loading fragment
+                        startActivity(new Intent(MainActivity.this, PromotionsActivity.class));
+                        drawer.closeDrawers();
+                        return true;
+
 
                     case R.id.nav_settings:
                         // launch new intent instead of loading fragment
@@ -402,15 +427,30 @@ public class MainActivity extends AppCompatActivity {
                         drawer.closeDrawers();
                         return true;
 
-                    case R.id.nav_about_us:
-                        // launch new intent instead of loading fragment
-                        startActivity(new Intent(MainActivity.this, AboutUsActivity.class));
+                    case R.id.nav_share:
+                        startActivity(new Intent(MainActivity.this, ShareActivity.class));
                         drawer.closeDrawers();
                         return true;
-                    case R.id.nav_privacy_policy:
+
+                    case R.id.nav_about_us:
                         // launch new intent instead of loading fragment
-                        startActivity(new Intent(MainActivity.this, PrivacyPolicyActivity.class));
-                        drawer.closeDrawers();
+                        // startActivity(new Intent(MainActivity.this, Template_Return.class));
+                        // drawer.closeDrawers();
+
+
+                        if (mContext != null) {
+                            try{
+
+                                UiUtils.showMaterialAboutDialog(mContext, getResources().getString(R.string.action_about));
+
+                            }catch (Exception ex){
+                                ex.printStackTrace();
+                            }
+                        }
+                        return true;
+                    case R.id.nav_rate_app:
+                        // launch new intent instead of loading fragment
+                        UiUtils.rateApp(mContext, true);
                         return true;
 
                     default:

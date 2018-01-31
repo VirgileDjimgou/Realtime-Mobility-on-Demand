@@ -8,7 +8,9 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -20,23 +22,30 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bee.drive.R;
 import com.bee.drive.Utility.ImageUtils;
+import com.bee.drive.activity.MainActivity;
 import com.bee.drive.data.FriendDB;
 import com.bee.drive.data.GroupDB;
 import com.bee.drive.data.SharedPreferenceHelper;
 import com.bee.drive.data.StaticConfig;
 import com.bee.drive.model.Configuration;
 import com.bee.drive.model.User;
+import com.bee.drive.other.CircleTransform;
 import com.bee.drive.service.ServiceUtils;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -44,18 +53,25 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.yarolegovich.lovelydialog.LovelyInfoDialog;
 import com.yarolegovich.lovelydialog.LovelyProgressDialog;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class UserProfileFragment extends Fragment {
     TextView tvUserName;
-    ImageView avatar;
+    ImageView ImageProfil;
 
     private List<Configuration> listConfig = new ArrayList<>();
     private RecyclerView recyclerView;
@@ -63,6 +79,7 @@ public class UserProfileFragment extends Fragment {
 
     private static final String USERNAME_LABEL = "Username";
     private static final String EMAIL_LABEL = "Email";
+    private static final String PHONE_LABEL = "Phone ";
     private static final String SIGNOUT_LABEL = "Sign out";
     private static final String RESETPASS_LABEL = "Change Password";
 
@@ -70,9 +87,28 @@ public class UserProfileFragment extends Fragment {
     private LovelyProgressDialog waitingDialog;
 
     private DatabaseReference userDB;
-    private FirebaseAuth mAuth;
     private User myAccount;
     private Context context;
+
+    private EditText mNameField, mPhoneField, mCarField;
+
+    private Button mBack, mConfirm;
+
+
+    private FirebaseAuth mAuth;
+    private DatabaseReference mDriverDatabase;
+
+    private String userID;
+    private String mName;
+    private String mPhone;
+    private String mCar;
+    private String mService;
+    private String mProfileImageUrl;
+
+    private Uri resultUri;
+
+    private RadioGroup mRadioGroup;
+
 
     public UserProfileFragment() {
         // Required empty public constructor
@@ -80,7 +116,12 @@ public class UserProfileFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
+        mAuth = FirebaseAuth.getInstance();
+        userID = mAuth.getCurrentUser().getUid();
+        mDriverDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(userID);
     }
 
     private ValueEventListener userListener = new ValueEventListener() {
@@ -99,7 +140,8 @@ public class UserProfileFragment extends Fragment {
                 tvUserName.setText(myAccount.name);
             }
 
-            setImageAvatar(context, myAccount.avata);
+            // setImageAvatar(context, myAccount.avata);
+            // SetImgesProfil();
             SharedPreferenceHelper preferenceHelper = SharedPreferenceHelper.getInstance(context);
             preferenceHelper.saveUserInfo(myAccount);
         }
@@ -124,14 +166,15 @@ public class UserProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_info, container, false);
         context = view.getContext();
-        avatar = (ImageView) view.findViewById(R.id.img_avatar);
-        avatar.setOnClickListener(onAvatarClick);
+        ImageProfil = (ImageView) view.findViewById(R.id.img_avatar);
+        ImageProfil.setOnClickListener(onAvatarClick);
         tvUserName = (TextView)view.findViewById(R.id.tv_username);
 
         SharedPreferenceHelper prefHelper = SharedPreferenceHelper.getInstance(context);
         myAccount = prefHelper.getUserInfo();
         setupArrayListInfo(myAccount);
-        setImageAvatar(context, myAccount.avata);
+        // setImageAvatar(context, myAccount.avata);
+        // SetImgesProfil();
         tvUserName.setText(myAccount.name);
 
         recyclerView = (RecyclerView)view.findViewById(R.id.info_recycler_view);
@@ -142,6 +185,7 @@ public class UserProfileFragment extends Fragment {
         recyclerView.setAdapter(infoAdapter);
 
         waitingDialog = new LovelyProgressDialog(context);
+        getUserInfo();
         return view;
     }
 
@@ -156,10 +200,11 @@ public class UserProfileFragment extends Fragment {
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            Intent intent = new Intent();
+
+                            Intent intent = new Intent(Intent.ACTION_PICK);
                             intent.setType("image/*");
-                            intent.setAction(Intent.ACTION_PICK);
-                            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+                            startActivityForResult(intent, 1);
+
                             dialogInterface.dismiss();
                         }
                     })
@@ -172,67 +217,106 @@ public class UserProfileFragment extends Fragment {
         }
     };
 
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
-            if (data == null) {
-                Toast.makeText(context, "Có lỗi xảy ra, vui lòng thử lại", Toast.LENGTH_LONG).show();
-                return;
-            }
-            try {
-                InputStream inputStream = context.getContentResolver().openInputStream(data.getData());
+        if(requestCode == 1 && resultCode == Activity.RESULT_OK){
+            final Uri imageUri = data.getData();
+            resultUri = imageUri;
+            ImageProfil.setImageURI(resultUri);
 
-                Bitmap imgBitmap = BitmapFactory.decodeStream(inputStream);
-                imgBitmap = ImageUtils.cropToSquare(imgBitmap);
-                InputStream is = ImageUtils.convertBitmapToInputStream(imgBitmap);
-                final Bitmap liteImage = ImageUtils.makeImageLite(is,
-                        imgBitmap.getWidth(), imgBitmap.getHeight(),
-                        ImageUtils.AVATAR_WIDTH, ImageUtils.AVATAR_HEIGHT);
+            Glide.with(getContext()).load(resultUri)
+                    .crossFade()
+                    .thumbnail(0.5f)
+                    .bitmapTransform(new CircleTransform(getContext()))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(ImageProfil);
 
-                String imageBase64 = ImageUtils.encodeBase64(liteImage);
-                myAccount.avata = imageBase64;
+        }
+
+
+        // after that we muss update the profil
+        updateProfilImge();
+    }
+
+
+    public void updateProfilImge(){
+
+        try{
+
+            if(resultUri != null) {
 
                 waitingDialog.setCancelable(false)
                         .setTitle("Avatar updating....")
                         .setTopColorRes(R.color.colorPrimary)
                         .show();
 
-                userDB.child("avata").setValue(imageBase64)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if(task.isSuccessful()){
 
-                                    waitingDialog.dismiss();
-                                    SharedPreferenceHelper preferenceHelper = SharedPreferenceHelper.getInstance(context);
-                                    preferenceHelper.saveUserInfo(myAccount);
-                                    avatar.setImageDrawable(ImageUtils.roundedImage(context, liteImage));
+                StorageReference filePath = FirebaseStorage.getInstance().getReference().child("profile_images").child(userID);
+                Bitmap bitmap = null;
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), resultUri);
+                } catch (IOException e) {
+                    waitingDialog.dismiss();
+                    e.printStackTrace();
+                }
 
-                                    new LovelyInfoDialog(context)
-                                            .setTopColorRes(R.color.colorPrimary)
-                                            .setTitle("Success")
-                                            .setMessage("Update avatar successfully!")
-                                            .show();
-                                }
-                            }
-                         })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                waitingDialog.dismiss();
-                                Log.d("Update Avatar", "failed");
-                                new LovelyInfoDialog(context)
-                                        .setTopColorRes(R.color.colorAccent)
-                                        .setTitle("False")
-                                        .setMessage("False to update avatar")
-                                        .show();
-                            }
-                        });
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
+                byte[] data = baos.toByteArray();
+                UploadTask uploadTask = filePath.putBytes(data);
+
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // getActivity().finish();
+
+                        waitingDialog.dismiss();
+
+                        Log.d("Update Avatar", "failed");
+                        new LovelyInfoDialog(context)
+                                .setTopColorRes(R.color.colorAccent)
+                                .setTitle("Failed")
+                                .setMessage("Failed to update Profil Image")
+                                .show();
+
+                        return;
+                    }
+                });
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        waitingDialog.dismiss();
+                        Map newImage = new HashMap();
+                        newImage.put("profileImageUrl", downloadUrl.toString());
+                        mDriverDatabase.updateChildren(newImage);
+
+                        new LovelyInfoDialog(context)
+                                .setTopColorRes(R.color.colorPrimary)
+                                .setTitle("Success")
+                                .setMessage("Update avatar successfully!")
+                                .show();
+
+                    }
+                });
+            }else{
+                waitingDialog.dismiss();
+
+                new LovelyInfoDialog(context)
+                        .setTopColorRes(R.color.colorAccent)
+                        .setTitle("Failed")
+                        .setMessage("Please Select a valid Image !")
+                        .show();
             }
+
+        }catch(Exception ex){
+            waitingDialog.dismiss();
+            ex.printStackTrace();
         }
+        waitingDialog.dismiss();
+
     }
 
     public void setupArrayListInfo(User myAccount){
@@ -243,6 +327,9 @@ public class UserProfileFragment extends Fragment {
         Configuration emailConfig = new Configuration(EMAIL_LABEL, myAccount.email, R.drawable.ic_email);
         listConfig.add(emailConfig);
 
+        Configuration PhoneConfig = new Configuration(PHONE_LABEL, myAccount.phone, R.drawable.ic_phone);
+        listConfig.add(PhoneConfig);
+
         Configuration resetPass = new Configuration(RESETPASS_LABEL, "", R.drawable.ic_restore);
         listConfig.add(resetPass);
 
@@ -250,22 +337,55 @@ public class UserProfileFragment extends Fragment {
         listConfig.add(signout);
     }
 
-    private void setImageAvatar(Context context, String imgBase64){
-        try {
-            Resources res = getResources();
-            //Nếu chưa có avatar thì để hình mặc định
-            Bitmap src;
-            if (imgBase64.equals("default")) {
-                src = BitmapFactory.decodeResource(res, R.drawable.default_avata);
-            } else {
-                byte[] decodedString = Base64.decode(imgBase64, Base64.DEFAULT);
-                src = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+    private void getUserInfo(){
+        userDB.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
+
+                    try{
+
+                        Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+
+                        if(map.get("profileImageUrl")!=null){
+
+                            try{
+
+                                mProfileImageUrl = map.get("profileImageUrl").toString();
+
+                                // Glide.with(getContext()).load(mProfileImageUrl).into(ImageProfil);
+
+                                Glide.with(getContext()).load(mProfileImageUrl)
+                                        .crossFade()
+                                        .thumbnail(0.5f)
+                                        .bitmapTransform(new CircleTransform(getActivity()))
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                        .into(ImageProfil);
+
+
+
+
+                            }catch (Exception ex ){
+                                ex.printStackTrace();
+                            }
+                        }
+
+                    }catch(Exception ex){
+                        ex.printStackTrace();
+
+                    }
+
+                }
             }
 
-            avatar.setImageDrawable(ImageUtils.roundedImage(context, src));
-        }catch (Exception e){
-        }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+                Toast.makeText(getContext(), databaseError.toString() , Toast.LENGTH_LONG).show();
+            }
+        });
     }
+
 
     @Override
     public void onDestroyView (){
@@ -344,6 +464,42 @@ public class UserProfileFragment extends Fragment {
                                 }).show();
                     }
 
+                    if(config.getLabel().equals(PHONE_LABEL)){
+                        View vewInflater = LayoutInflater.from(context)
+                                .inflate(R.layout.dialog_edit_phone_number,  (ViewGroup) getView(), false);
+                        final EditText input = (EditText)vewInflater.findViewById(R.id.edit_phone);
+                        input.setText(myAccount.phone);
+                        // Alert Builder to save the new Profil User .....
+                        new AlertDialog.Builder(context)
+                                .setTitle("Edit Phone Number")
+                                .setView(vewInflater)
+                                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                                    @SuppressLint("WrongConstant")
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                                        if(input.getText().toString().isEmpty()){
+                                            Toast.makeText(getContext(), "you to enter a valid phone number .... " , 4000).show();
+
+                                        }else{
+                                            String newPhone = input.getText().toString();
+                                            if(!myAccount.phone.equals(newPhone)){
+                                                changePhoneNumber(newPhone);
+                                            }
+
+                                        }
+                                        dialogInterface.dismiss();
+                                    }
+                                })
+                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.dismiss();
+                                    }
+                                }).show();
+                    }
+
+
                     if(config.getLabel().equals(RESETPASS_LABEL)){
                         new AlertDialog.Builder(context)
                                 .setTitle("Password")
@@ -366,6 +522,18 @@ public class UserProfileFragment extends Fragment {
             });
         }
 
+        private void changePhoneNumber(String newPhone){
+
+            userDB.child("phone").setValue(newPhone);
+
+
+            myAccount.phone = newPhone;
+            SharedPreferenceHelper prefHelper = SharedPreferenceHelper.getInstance(context);
+            prefHelper.saveUserInfo(myAccount);
+
+            setupArrayListInfo(myAccount);
+
+        }
 
         private void changeUserName(String newName){
             userDB.child("name").setValue(newName);
@@ -378,6 +546,7 @@ public class UserProfileFragment extends Fragment {
             tvUserName.setText(newName);
             setupArrayListInfo(myAccount);
         }
+
 
         void resetPassword(final String email) {
             mAuth.sendPasswordResetEmail(email)

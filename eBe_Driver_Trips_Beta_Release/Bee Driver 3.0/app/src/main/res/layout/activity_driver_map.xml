@@ -444,14 +444,6 @@
                 fab:fab_size="mini" />
 
 
-
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/menu_item_promotions"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/my_favourites_icon_active"
-                fab:fab_label="Promo/Notifications"
-                fab:fab_size="mini" />
         </com.github.clans.fab.FloatingActionMenu>
 
     </RelativeLayout>

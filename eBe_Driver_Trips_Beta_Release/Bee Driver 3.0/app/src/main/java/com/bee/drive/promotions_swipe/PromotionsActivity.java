@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -46,8 +47,9 @@ public class PromotionsActivity extends AppCompatActivity implements RecyclerIte
         setContentView(R.layout.promotions_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getString(R.string.my_cart));
+        getSupportActionBar().setTitle(getString(R.string.promo_titel));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         recyclerView = findViewById(R.id.recycler_view);
         coordinatorLayout = findViewById(R.id.coordinator_layout);
@@ -167,5 +169,22 @@ public class PromotionsActivity extends AppCompatActivity implements RecyclerIte
         // Inflate the menu; this adds cartList to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main_promotions, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == android.R.id.home) {
+            // finish the activity
+            onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

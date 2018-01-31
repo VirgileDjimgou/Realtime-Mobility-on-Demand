@@ -6,7 +6,7 @@ import android.view.MenuItem;
 
 import com.bee.drive.R;
 
-public class AboutUsActivity extends AppCompatActivity {
+public class Template_Return extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

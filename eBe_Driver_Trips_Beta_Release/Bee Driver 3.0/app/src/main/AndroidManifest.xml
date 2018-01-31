@@ -180,22 +180,11 @@
             android:theme="@style/Translucent" />
 
         <activity
-            android:name="com.bee.drive.activity.AboutUsActivity"
+            android:name="com.bee.drive.activity.Template_Return"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:label="@string/nav_about" />
-        <activity
-            android:name="com.bee.drive.activity.PrivacyPolicyActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:label="@string/activity_title_privacy_policy" />
 
-
-
-        <activity android:name="com.bee.drive.activity.Settings_Activity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:label="@string/nav_settings" />
 
         <activity android:name="com.bee.drive.activity.Facebook_Activity"
             android:launchMode="singleTop"

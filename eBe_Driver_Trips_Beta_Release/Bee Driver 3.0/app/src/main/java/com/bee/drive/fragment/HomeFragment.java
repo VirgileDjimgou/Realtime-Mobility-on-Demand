@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bee.drive.airbnbmapexample.ui.activity.MovingMarkerActivity;
 import com.bee.drive.cardview.History_CardView;
 import com.bee.drive.data.SharedPreferenceHelper;
 import com.bee.drive.data.StaticConfig;
@@ -95,7 +96,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     LocationRequest mLocationRequest;
 
     FloatingActionMenu materialDesignFAM;
-    FloatingActionButton Dasboard , History , Adv_Settings, Road_Simulation, Promo_Notifications, logout_disconnect;
+    FloatingActionButton Dasboard , History , Adv_Settings, Road_Simulation, logout_disconnect;
 
     private Button mRideStatus;
     private Switch mWorkingSwitch;
@@ -237,7 +238,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         });
 
 
-
         mCustomerProfileImage = (ImageView) rootView.findViewById(R.id.profil_img_customer);
 
         mCustomerName = (TextView) rootView .findViewById(R.id.name_customer);
@@ -305,7 +305,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         Road_Simulation = (FloatingActionButton) rootView.findViewById(R.id.menu_road_simulation);
         Adv_Settings = (FloatingActionButton) rootView.findViewById(R.id.menu_item_settings);
         logout_disconnect = (FloatingActionButton) rootView.findViewById(R.id.menu_item_logout);
-        Promo_Notifications = (FloatingActionButton) rootView.findViewById(R.id.menu_item_promotions);
 
 
         Dasboard.setOnClickListener(new View.OnClickListener() {
@@ -346,7 +345,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 //TODO something when floating action menu first item clicked
 
                 // launch new intent instead of loading fragment
-                // startActivity(new Intent(getActivity(), MovingMarkerActivity.class));
+                startActivity(new Intent(getActivity(), MovingMarkerActivity.class));
                 ActivateTimerProgressbar(true);
 
 
@@ -392,15 +391,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             }
         });
 
-        Promo_Notifications.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                //TODO something when floating action menu second item clicked
-                // start Rider Status Activity ...
-                //
-                startActivity(new Intent(getActivity(), PromotionsActivity.class));
-
-            }
-        });
 
 
         onTokenRefresh();

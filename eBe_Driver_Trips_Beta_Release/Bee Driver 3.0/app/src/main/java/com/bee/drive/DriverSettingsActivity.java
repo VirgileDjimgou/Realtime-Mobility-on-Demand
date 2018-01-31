@@ -38,21 +38,17 @@ import com.bee.drive.R;
 
 public class DriverSettingsActivity extends AppCompatActivity {
 
-    private EditText mNameField, mPhoneField, mCarField;
+    private EditText  mCarField;
 
     private Button mBack, mConfirm;
 
-    private ImageView mProfileImage;
 
     private FirebaseAuth mAuth;
     private DatabaseReference mDriverDatabase;
 
     private String userID;
-    private String mName;
-    private String mPhone;
     private String mCar;
     private String mService;
-    private String mProfileImageUrl;
 
     private Uri resultUri;
 
@@ -67,11 +63,8 @@ public class DriverSettingsActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mNameField = findViewById(R.id.name);
-        mPhoneField = findViewById(R.id.phone);
-        mCarField = findViewById(R.id.car);
 
-        mProfileImage = findViewById(R.id.profileImage);
+        mCarField = findViewById(R.id.car);
 
         mRadioGroup = findViewById(R.id.radioGroup);
 
@@ -84,14 +77,6 @@ public class DriverSettingsActivity extends AppCompatActivity {
 
         getUserInfo();
 
-        mProfileImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                startActivityForResult(intent, 1);
-            }
-        });
 
         mConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,14 +121,8 @@ public class DriverSettingsActivity extends AppCompatActivity {
                     try{
 
                         Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                        if(map.get("name")!=null){
-                            mName = map.get("name").toString();
-                            mNameField.setText(mName);
-                        }
-                        if(map.get("phone")!=null){
-                            mPhone = map.get("phone").toString();
-                            mPhoneField.setText(mPhone);
-                        }
+
+
                         if(map.get("car")!=null){
                             mCar = map.get("car").toString();
                             mCarField.setText(mCar);
@@ -158,10 +137,6 @@ public class DriverSettingsActivity extends AppCompatActivity {
                                     mRadioGroup.check(R.id.BeeTaxi);
                                     break;
                             }
-                        }
-                        if(map.get("profileImageUrl")!=null){
-                            mProfileImageUrl = map.get("profileImageUrl").toString();
-                            Glide.with(getApplication()).load(mProfileImageUrl).into(mProfileImage);
                         }
 
 
@@ -186,8 +161,7 @@ public class DriverSettingsActivity extends AppCompatActivity {
 
 
     private void saveUserInformation() {
-        mName = mNameField.getText().toString();
-        mPhone = mPhoneField.getText().toString();
+
         mCar = mCarField.getText().toString();
 
         int selectId = mRadioGroup.getCheckedRadioButtonId();
@@ -201,50 +175,10 @@ public class DriverSettingsActivity extends AppCompatActivity {
         mService = radioButton.getText().toString();
 
         Map userInfo = new HashMap();
-        userInfo.put("name", mName);
-        userInfo.put("phone", mPhone);
         userInfo.put("car", mCar);
         userInfo.put("service", mService);
         mDriverDatabase.updateChildren(userInfo);
 
-        if(resultUri != null) {
-
-            StorageReference filePath = FirebaseStorage.getInstance().getReference().child("profile_images").child(userID);
-            Bitmap bitmap = null;
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(getApplication().getContentResolver(), resultUri);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
-            byte[] data = baos.toByteArray();
-            UploadTask uploadTask = filePath.putBytes(data);
-
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    finish();
-                    return;
-                }
-            });
-            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
-
-                    Map newImage = new HashMap();
-                    newImage.put("profileImageUrl", downloadUrl.toString());
-                    mDriverDatabase.updateChildren(newImage);
-
-                    finish();
-                    return;
-                }
-            });
-        }else{
-            finish();
-        }
 
     }
 
@@ -254,7 +188,6 @@ public class DriverSettingsActivity extends AppCompatActivity {
         if(requestCode == 1 && resultCode == Activity.RESULT_OK){
             final Uri imageUri = data.getData();
             resultUri = imageUri;
-            mProfileImage.setImageURI(resultUri);
         }
     }
 }
