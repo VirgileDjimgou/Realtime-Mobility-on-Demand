@@ -4,9 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
@@ -17,17 +14,12 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bee.drive.HistoryActivity;
-import com.bee.drive.Utility.ImageUtils;
-import com.bee.drive.activity.MainActivity;
-import com.bee.drive.airbnbmapexample.ui.activity.MovingMarkerActivity;
-import com.bee.drive.cardview.MainActivity_CardView;
+import com.bee.drive.cardview.History_CardView;
 import com.bee.drive.data.SharedPreferenceHelper;
 import com.bee.drive.data.StaticConfig;
 import com.bee.drive.fcm.CustomFcm_Util;
@@ -87,7 +79,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.bee.drive.activity.AboutUsActivity;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -341,7 +332,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         History.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                Intent intent = new Intent(getActivity(), MainActivity_CardView .class);
+                Intent intent = new Intent(getActivity(), History_CardView.class);
                 intent.putExtra("customerOrDriver", "Drivers");
                 startActivity(intent);
                 return;
@@ -405,7 +396,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 //TODO something when floating action menu second item clicked
                 // start Rider Status Activity ...
                 //
-                startActivity(new Intent(getActivity(), MainActivity_CardView.class));
+                startActivity(new Intent(getActivity(), History_CardView.class));
 
             }
         });

@@ -33,7 +33,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class MainActivity_CardView extends AppCompatActivity {
+public class History_CardView extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private AlbumsAdapter adapter;
@@ -127,25 +127,6 @@ public class MainActivity_CardView extends AppCompatActivity {
 
     /**
      * Adding few albums for testing
-     */
-    private void prepareAlbums() {
-        int[] covers = new int[]{
-                R.drawable.default_avata,
-                R.drawable.default_avata,
-                R.drawable.default_avata};
-
-        Album a = new Album("Passenger 1", "infos 2", covers[0]);
-        albumList.add(a);
-
-        a = new Album("Passenger 2", "infos", covers[1]);
-        albumList.add(a);
-
-        a = new Album("Passenger 4", "infosjhgvjh", covers[2]);
-        albumList.add(a);
-
-
-        adapter.notifyDataSetChanged();
-    }
 
     /**
      * RecyclerView item decoration - give equal margin around grid item
@@ -237,9 +218,6 @@ public class MainActivity_CardView extends AppCompatActivity {
                             mBalance.setText("Balance: " + String.valueOf(Balance) + " $");
                         }
                     }
-
-
-
 
                     Album a = new Album(rideId.toString(), timestamp.toString(), R.drawable.default_avata);
                     albumList.add(a);

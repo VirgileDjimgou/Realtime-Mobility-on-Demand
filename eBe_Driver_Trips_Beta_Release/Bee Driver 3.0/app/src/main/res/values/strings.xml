@@ -10,6 +10,16 @@
     <string name="backdrop_subtitle">This season top 20 albums</string>
 
 
+    <string name="pick_contacts">Pick contact(s)</string>
+    <string name="picked_contacts">Picked contact(s)</string>
+
+    <string name="permission_denied">Permission denied</string>
+    <string name="permission_denied_contacts">The contact picker won\'t work without this permission. Are you sure you want to deny this permission?</string>
+    <string name="permission_deny">Deny</string>
+    <string name="permission_retry">Re-try</string>
+
+    <string name="light_theme">Light Theme</string>
+    <string name="dark_theme">Dark Theme</string>
 
     <string name="action_settings">Settings</string>
     <string name="action_search">Search</string>

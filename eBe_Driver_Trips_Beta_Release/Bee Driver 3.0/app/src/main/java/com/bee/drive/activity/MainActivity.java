@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bee.drive.DriverSettingsActivity;
+import com.bee.drive.share_invitations.ShareActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bee.drive.Utility.ImageUtils;
@@ -337,14 +338,14 @@ public class MainActivity extends AppCompatActivity {
                 return notificationsFragment;
 
             case 3:
-                // notifications fragment
+                // share fragments fragment
                 // PromotionsFragment promotionsFragment = new PromotionsFragment();
-                return promotionsFragment;
+                startActivity(new Intent(MainActivity.this, ShareActivity.class));
+                //return promotionsFragment;
 
             case 4:
-                // notifications fragment
-                // ShareFragment shareFragement = new ShareFragment();
-                return shareFragement;
+                // Friend Fragments ...
+                return FriendChatFragment;
 
             case 5:
                 // Friend Chat  fragment
