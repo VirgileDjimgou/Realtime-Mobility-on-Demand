@@ -47,6 +47,7 @@
     <supports-screens android:anyDensity="true" />
 
     <application
+        android:name="com.bee.drive.promotions_swipe.MyApplication"
         android:allowBackup="true"
         android:label="@string/app_name"
         android:icon="@mipmap/ic_bee"
@@ -114,7 +115,6 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
-
 
 
 
@@ -231,6 +231,12 @@
         <activity android:name="com.bee.drive.share_invitations.ShareActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
+
+
+
+
+        <activity android:name="com.bee.drive.promotions_swipe.PromotionsActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
 
 

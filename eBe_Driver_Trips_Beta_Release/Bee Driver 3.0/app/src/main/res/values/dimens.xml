@@ -28,6 +28,11 @@
     <dimen name="field_width_standard">160dp</dimen>
 
 
+    <dimen name="activity_padding_horizontal">16dp</dimen>
+    <dimen name="padd_10">10dp</dimen>
+    <dimen name="ic_delete">30dp</dimen>
+    <dimen name="thumbnail">90dp</dimen>
+
     <!-- Add Maps Layout   -->
     <dimen name="gastro_activity_backdrop_height">232dp</dimen>
 

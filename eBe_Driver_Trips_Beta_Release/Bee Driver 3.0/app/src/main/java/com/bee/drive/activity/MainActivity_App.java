@@ -61,11 +61,6 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class MainActivity_App extends AppCompatActivity {
 
-    public static final String VIDEO_NAME = "welcome_video.mp4";
-
-    public static final String AppTypeDriver_or_Rider = "Driver";
-
-    private VideoView mVideoView;
 
     private Button Email_login, facebook_butt , phone_butt;
 
@@ -93,17 +88,6 @@ public class MainActivity_App extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            Window window = getWindow();
-            window.setFlags(
-                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
-                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//            window.setFlags(
-//                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
-//                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        }
-
 
 
         // control if Gps activated  ...

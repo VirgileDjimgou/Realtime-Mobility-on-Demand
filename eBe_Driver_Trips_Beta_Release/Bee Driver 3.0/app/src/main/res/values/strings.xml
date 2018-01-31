@@ -9,6 +9,9 @@
     <string name="backdrop_title">LOVE MUSIC</string>
     <string name="backdrop_subtitle">This season top 20 albums</string>
 
+    <string name="my_cart">My Cart</string>
+    <string name="delete">DELETE</string>
+
 
     <string name="pick_contacts">Pick contact(s)</string>
     <string name="picked_contacts">Picked contact(s)</string>

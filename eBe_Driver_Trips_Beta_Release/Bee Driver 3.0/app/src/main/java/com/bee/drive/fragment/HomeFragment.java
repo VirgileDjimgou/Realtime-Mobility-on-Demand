@@ -25,6 +25,7 @@ import com.bee.drive.data.StaticConfig;
 import com.bee.drive.fcm.CustomFcm_Util;
 import com.bee.drive.fcm.MainActivity_fcm;
 import com.bee.drive.model.User;
+import com.bee.drive.promotions_swipe.PromotionsActivity;
 import com.bumptech.glide.Glide;
 import com.bee.drive.data.FriendDB;
 import com.bee.drive.data.GroupDB;
@@ -396,7 +397,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 //TODO something when floating action menu second item clicked
                 // start Rider Status Activity ...
                 //
-                startActivity(new Intent(getActivity(), History_CardView.class));
+                startActivity(new Intent(getActivity(), PromotionsActivity.class));
 
             }
         });
