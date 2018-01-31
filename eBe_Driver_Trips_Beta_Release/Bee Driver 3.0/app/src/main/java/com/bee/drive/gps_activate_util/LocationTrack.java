@@ -1,4 +1,4 @@
-package com.bee.drive.gpslocationtracking;
+package com.bee.drive.gps_activate_util;
 
 import android.Manifest;
 import android.app.Service;
