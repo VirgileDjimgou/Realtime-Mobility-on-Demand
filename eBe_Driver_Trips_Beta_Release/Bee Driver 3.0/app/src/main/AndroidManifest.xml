@@ -168,12 +168,6 @@
             android:theme="@style/Translucent" />
 
         <activity
-            android:name="com.bee.drive.activity.MainActivityPhone"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/Translucent" />
-
-        <activity
             android:name="com.bee.drive.activity.RegisterActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"

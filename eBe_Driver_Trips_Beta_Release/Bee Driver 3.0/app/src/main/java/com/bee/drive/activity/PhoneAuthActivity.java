@@ -1,5 +1,7 @@
 package com.bee.drive.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +15,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.bee.drive.data.FriendDB;
+import com.bee.drive.data.GroupDB;
+import com.bee.drive.data.StaticConfig;
+import com.bee.drive.service.ServiceUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -171,8 +177,44 @@ public class PhoneAuthActivity extends AppCompatActivity implements
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            startActivity(new Intent(PhoneAuthActivity.this, SplaschScreen.class));
-            finish();
+
+            new AlertDialog.Builder(PhoneAuthActivity.this)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle("connected user ID ist "+currentUser.getUid().toString())
+                    .setMessage("Are you sure you want to continue as User "+currentUser.getEmail().toString()+ "  ?")
+                    .setNegativeButton("No", new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            try{
+                                FirebaseAuth.getInstance().signOut();
+                                FriendDB.getInstance(getApplicationContext()).dropDB();
+                                GroupDB.getInstance(getApplicationContext()).dropDB();
+                                ServiceUtils.stopServiceFriendChat(getApplicationContext(), true);
+                                // EmailLoginActivity.this.finish();
+                                // finish();
+                            }catch(Exception ex){
+                                ex.printStackTrace();
+                            }
+                        }
+
+                    })
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            // User is signed in
+
+                            startActivity(new Intent(PhoneAuthActivity.this, SplaschScreen.class));
+                            finish();
+
+                        }
+
+                    })
+                    .show();
+
         }
     }
 

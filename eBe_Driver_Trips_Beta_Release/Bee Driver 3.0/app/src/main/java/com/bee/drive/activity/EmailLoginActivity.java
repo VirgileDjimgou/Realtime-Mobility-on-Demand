@@ -2,6 +2,8 @@ package com.bee.drive.activity;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,7 +16,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.bee.drive.data.FriendDB;
+import com.bee.drive.data.GroupDB;
 import com.bee.drive.model.User;
+import com.bee.drive.service.ServiceUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -65,9 +70,10 @@ public class EmailLoginActivity extends AppCompatActivity {
         fab = (FloatingActionButton) findViewById(R.id.fab);
         editTextUsername = (EditText) findViewById(R.id.et_username);
         editTextPassword = (EditText) findViewById(R.id.et_password);
-
-
         firstTimeAccess = true;
+
+
+
         initFirebase();
 
     }
@@ -77,23 +83,61 @@ public class EmailLoginActivity extends AppCompatActivity {
         //Khoi tao thanh phan de dang nhap, dang ky
         mAuth = FirebaseAuth.getInstance();
         authUtils = new AuthUtils();
+
+
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // User is signed in
-                    StaticConfig.UID = user.getUid();
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    if (firstTimeAccess) {
-                        authUtils.saveUserInfo();
-                        startActivity(new Intent(EmailLoginActivity.this, MainActivity.class));
-                        // startActivity(new Intent(EmailLoginActivity.this, MapsActivity.class));
 
-                        // startActivity(new Intent(EmailLoginActivity.this, LocationsOverviewActivity.class));
 
-                        EmailLoginActivity.this.finish();
-                    }
+                    new AlertDialog.Builder(EmailLoginActivity.this)
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setTitle("connected user ID ist "+user.getUid().toString())
+                            .setMessage("Are you sure you want to continue as User "+user.getEmail().toString()+ "  ?")
+                            .setNegativeButton("No", new DialogInterface.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    try{
+                                        FirebaseAuth.getInstance().signOut();
+                                        FriendDB.getInstance(getApplicationContext()).dropDB();
+                                        GroupDB.getInstance(getApplicationContext()).dropDB();
+                                        ServiceUtils.stopServiceFriendChat(getApplicationContext(), true);
+                                        // EmailLoginActivity.this.finish();
+                                        // finish();
+                                    }catch(Exception ex){
+                                        ex.printStackTrace();
+                                    }
+                                }
+
+                            })
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    // User is signed in
+                                    StaticConfig.UID = user.getUid();
+                                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                                    if (firstTimeAccess) {
+                                        authUtils.saveUserInfo();
+                                        // get actual User  ....
+                                        startActivity(new Intent(EmailLoginActivity.this, MainActivity.class));
+                                        EmailLoginActivity.this.finish();
+                                    }
+                                    authUtils.saveUserInfo();
+                                    startActivity(new Intent(EmailLoginActivity.this, MainActivity.class));
+                                    EmailLoginActivity.this.finish();
+                                    finish();
+                                }
+
+                            })
+                            .show();
+
+
                 } else {
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
@@ -103,6 +147,12 @@ public class EmailLoginActivity extends AppCompatActivity {
 
         //Khoi tao dialog waiting khi dang nhap
         waitingDialog = new LovelyProgressDialog(this).setCancelable(false);
+    }
+
+
+    private void  UserSessionContinueDialog(){
+
+
     }
 
 
@@ -289,6 +339,7 @@ public class EmailLoginActivity extends AppCompatActivity {
                                         .setConfirmButtonText("Ok")
                                         .show();
                             } else {
+                                StaticConfig.UID = user.getUid();
                                 saveUserInfo();
                                 startActivity(new Intent(EmailLoginActivity.this, SplaschScreen.class));
                                 // startActivity(new Intent(EmailLoginActivity.this, MapsActivity.class));
