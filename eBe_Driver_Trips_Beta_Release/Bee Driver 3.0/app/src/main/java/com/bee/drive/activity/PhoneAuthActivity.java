@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bee.drive.data.FriendDB;
@@ -49,8 +50,12 @@ public class PhoneAuthActivity extends AppCompatActivity implements
     Button mStartButton, mVerifyButton, mResendButton;
     private String phoneNumber;
 
-    private CountryCodePicker ccp;
+    private EditText PhoneNumberRegistration , UserNameRegistration  , RegistrationCodeSMS;
+    private Spinner DriverType;
+    private Button  Registrationlidate;
 
+
+    private CountryCodePicker ccp;
     public static FirebaseAuth mAuth;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
