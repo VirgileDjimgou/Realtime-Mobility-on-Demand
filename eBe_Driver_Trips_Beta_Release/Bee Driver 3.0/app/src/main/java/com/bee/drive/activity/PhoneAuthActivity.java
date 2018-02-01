@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -50,9 +51,10 @@ public class PhoneAuthActivity extends AppCompatActivity implements
     Button mStartButton, mVerifyButton, mResendButton;
     private String phoneNumber;
 
-    private EditText PhoneNumberRegistration , UserNameRegistration  , RegistrationCodeSMS;
+    private EditText PhoneNumberRegistration ,
+            email_user , UserNameRegistration  , RegistrationCodeSMS;
     private Spinner DriverType;
-    private Button  Registrationlidate;
+    private Button  RegistrationButton;
 
 
     private CountryCodePicker ccp;
@@ -74,6 +76,31 @@ public class PhoneAuthActivity extends AppCompatActivity implements
         mStartButton = (Button) findViewById(R.id.button_start_verification);
         mVerifyButton = (Button) findViewById(R.id.button_verify_phone);
         mResendButton = (Button) findViewById(R.id.button_resend);
+
+        // Registration ...
+        PhoneNumberRegistration = (EditText) findViewById(R.id.field_phone_number_registration);
+        UserNameRegistration = (EditText) findViewById(R.id.username);
+        email_user = (EditText) findViewById(R.id.email_user);
+        RegistrationCodeSMS = (EditText) findViewById(R.id.erification_code);
+        DriverType = (Spinner)findViewById(R.id.spinner);
+        RegistrationButton = (Button) findViewById(R.id.bt_go);
+        RegistrationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // call the methode to process Phone Registration .... ...
+                RegistrationPhone_Prozess();
+                String UserName = UserNameRegistration.getText().toString();
+                String Phone = PhoneNumberRegistration.getText().toString();
+                String email = email_user.getText().toString();
+                String DriverT = DriverType.getSelectedItem().toString().trim();
+
+                if()
+
+            }
+        });
+
+
+
 
         ccp = (CountryCodePicker) findViewById(R.id.ccp);
         ccp.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
@@ -134,6 +161,12 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                         }
                     }
                 });
+    }
+
+
+    public void RegistrationPhone_Prozess (){
+
+
     }
 
 
