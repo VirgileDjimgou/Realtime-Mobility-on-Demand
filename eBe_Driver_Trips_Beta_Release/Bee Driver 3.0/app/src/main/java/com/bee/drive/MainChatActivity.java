@@ -52,7 +52,7 @@ public class MainChatActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if(toolbar != null) {
             setSupportActionBar(toolbar);
-            getSupportActionBar().setTitle("RivChat");
+            getSupportActionBar().setTitle("Bee~#> Chat");
         }
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -62,7 +62,7 @@ public class MainChatActivity extends AppCompatActivity {
     }
 
     private void initFirebase() {
-        //Khoi tao thanh phan de dang nhap, dang ky
+
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -180,7 +180,7 @@ public class MainChatActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.about) {
-            Toast.makeText(this, "Rivchat version 1.0", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Bee~#> Chat version 1.0", Toast.LENGTH_LONG).show();
             return true;
         }
 

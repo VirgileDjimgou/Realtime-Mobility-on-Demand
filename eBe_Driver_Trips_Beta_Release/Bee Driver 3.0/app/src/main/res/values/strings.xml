@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">eBe Dri-#>_ver</string>
+    <string name="app_name">Bee~#> Driver</string>
 
 
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBb7F-tT5vbdBNFsUdrr8kwPJh6SkEeUiI</string>
@@ -9,7 +9,7 @@
     <string name="backdrop_title">LOVE MUSIC</string>
     <string name="backdrop_subtitle">This season top 20 albums</string>
 
-    <string name="promo_titel">eBe Promotions</string>
+    <string name="promo_titel">Bee~#> Promotions</string>
     <string name="delete">DELETE</string>
 
 
@@ -121,7 +121,7 @@
 
 
 
-    <string name="app_intro_text">Welcome to Bee Wallet Mananger -Before starting, please take some time to read through our terms of service.</string>
+    <string name="app_intro_text">Welcome to Bee~#> Wallet Mananger -Before starting, please take some time to read through our terms of service.</string>
     <string name="app_intro_title">Bee Wallet Manager</string>
     <string name="app_intro_please_agree">Please read and agree to the terms of service before proceeding</string>
     <string name="app_intro_iagree">I agree to terms of service</string>

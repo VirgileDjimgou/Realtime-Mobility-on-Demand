@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bee.drive.DriverSettingsActivity;
+import com.bee.drive.MainChatActivity;
 import com.bee.drive.Utility.UiUtils;
 import com.bee.drive.promotions_swipe.PromotionsActivity;
 import com.bee.drive.share_invitations.ShareActivity;
@@ -138,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
         txtName = (TextView) navHeader.findViewById(R.id.name);
         infos_id = (TextView) navHeader.findViewById(R.id.id_or_phone);
         imgNavHeaderBg = (ImageView) navHeader.findViewById(R.id.img_header_bg);
-        mProfileImage = (ImageView) navHeader.findViewById(R.id.img_profile);
+         mProfileImage = (ImageView) navHeader.findViewById(R.id.img_profile);
 
         // load toolbar titles from string resources
         activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
@@ -450,7 +451,10 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     case R.id.nav_rate_app:
                         // launch new intent instead of loading fragment
-                        UiUtils.rateApp(mContext, true);
+                        // UiUtils.rateApp(mContext, true);
+
+                        startActivity(new Intent(MainActivity.this, MainChatActivity.class));
+
                         return true;
 
                     default:

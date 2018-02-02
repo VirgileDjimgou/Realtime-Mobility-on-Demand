@@ -1,6 +1,7 @@
 package com.bee.drive.activity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,8 +22,13 @@ import android.widget.Toast;
 
 import com.bee.drive.data.FriendDB;
 import com.bee.drive.data.GroupDB;
+import com.bee.drive.data.SharedPreferenceHelper;
 import com.bee.drive.data.StaticConfig;
+import com.bee.drive.model.User;
+import com.bee.drive.other.CircleTransform;
 import com.bee.drive.service.ServiceUtils;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -34,11 +40,20 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 
+import java.io.Console;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import com.bee.drive.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.rilixtech.Country;
 import com.rilixtech.CountryCodePicker;
+import com.yarolegovich.lovelydialog.LovelyInfoDialog;
 
 
 /**
@@ -53,12 +68,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements
     Button mStartButton, mVerifyButton, mResendButton;
     private String phoneNumber;
 
-    private EditText PhoneNumberRegistration ,
-            email_user , UserNameRegistration  , RegistrationCodeSMS;
-    private Spinner DriverType;
-    private Button  RegistrationButton;
-    private FloatingActionButton CloseRegisterCarte;
-    private FrameLayout RgistrationPanel;
+
     private Button Registration_Phone;
 
 
@@ -70,6 +80,13 @@ public class PhoneAuthActivity extends AppCompatActivity implements
 
     private static final String TAG = "PhoneAuthActivity";
 
+    // firebase ...
+    private DatabaseReference userDB;
+    public static  FirebaseUser user_Global;
+    private Context context;
+
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +94,6 @@ public class PhoneAuthActivity extends AppCompatActivity implements
 
         mPhoneNumberField = (EditText) findViewById(R.id.field_phone_number);
         mVerificationField = (EditText) findViewById(R.id.field_verification_code);
-
         mStartButton = (Button) findViewById(R.id.button_start_verification);
         mVerifyButton = (Button) findViewById(R.id.button_verify_phone);
         mResendButton = (Button) findViewById(R.id.button_resend);
@@ -85,47 +101,11 @@ public class PhoneAuthActivity extends AppCompatActivity implements
         Registration_Phone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RgistrationPanel.setVisibility(View.VISIBLE);
-
+                Intent intent = new Intent(PhoneAuthActivity.this, PhoneRegistrationActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
-
-        // Registration ...
-        CloseRegisterCarte = (FloatingActionButton) findViewById(R.id.fab_close);
-        CloseRegisterCarte.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RgistrationPanel.setVisibility(View.GONE);
-
-            }
-        });
-
-
-
-        RgistrationPanel = (FrameLayout) findViewById(R.id.regis_card);
-        RgistrationPanel.setVisibility(View.GONE);
-        PhoneNumberRegistration = (EditText) findViewById(R.id.field_phone_number_registration);
-        UserNameRegistration = (EditText) findViewById(R.id.username);
-        email_user = (EditText) findViewById(R.id.email_user);
-        RegistrationCodeSMS = (EditText) findViewById(R.id.erification_code);
-        DriverType = (Spinner)findViewById(R.id.spinner);
-        RegistrationButton = (Button) findViewById(R.id.bt_go);
-        RegistrationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // call the methode to process Phone Registration .... ...
-                RegistrationPhone_Prozess();
-                String UserName = UserNameRegistration.getText().toString();
-                String Phone = PhoneNumberRegistration.getText().toString();
-                String email = email_user.getText().toString();
-                String DriverT = DriverType.getSelectedItem().toString().trim();
-
-
-
-            }
-        });
-
-
 
 
         ccp = (CountryCodePicker) findViewById(R.id.ccp);
@@ -167,6 +147,8 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                 mResendToken = token;
             }
         };
+
+        context = this.getApplicationContext();
     }
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
@@ -176,9 +158,74 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = task.getResult().getUser();
-                            startActivity(new Intent(PhoneAuthActivity.this, SplaschScreen.class));
-                            finish();
+                            user_Global = task.getResult().getUser();
+
+                            // check if User ist already registered  ...
+
+                            userDB = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(user_Global.getUid());
+                            // Set the  Driver Response to true ...
+                            HashMap map = new HashMap();
+                            map.put("Authentified" , "await");
+                            userDB.updateChildren(map);
+                            userDB.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                    Log.d("Verification" , "passed");
+
+                                    if(dataSnapshot.exists()){
+
+                                        Log.d("Verification" , "passed");
+
+                                        try{
+
+                                            Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                                            // test if the recors Phone already exist  ...if not than
+                                            // than you are a new user   ...
+                                            if(map.get("phone")!=null){
+                                                String Phone = map.get("phone").toString();
+                                            }else{
+
+                                                // start with the registration prozess...
+                                                Toast.makeText(context , "Start Registration ... " ,Toast.LENGTH_LONG ).show();
+
+                                                new LovelyInfoDialog(context)
+                                                        .setTopColorRes(R.color.colorPrimary)
+                                                        .setTitle("Phone Authentification successfully!")
+                                                        .setMessage(" click on OK to Continue with the Registration Process ")
+                                                        .show();
+
+                                                Intent intent = new Intent(PhoneAuthActivity.this, PhoneRegistrationActivity.class);
+                                                startActivity(intent);
+                                                finish();
+
+                                            }
+
+                                            // save User Info and continue  normaly  ... user is already registerd
+                                            StaticConfig.UID = user_Global.getUid();
+                                            saveUserInfo();
+
+                                        }catch(Exception ex){
+                                            Toast.makeText(PhoneAuthActivity.this, ex.toString() , Toast.LENGTH_LONG).show();
+                                            ex.printStackTrace();
+                                        }
+
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                    Toast.makeText(PhoneAuthActivity.this, databaseError.toString() , Toast.LENGTH_LONG).show();
+                                }
+                            });
+
+
+
+
+
+                            // startActivity(new Intent(PhoneAuthActivity.this, SplaschScreen.class));
+                            // finish();
                         } else {
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
@@ -190,11 +237,38 @@ public class PhoneAuthActivity extends AppCompatActivity implements
     }
 
 
-    public void RegistrationPhone_Prozess (){
 
+    /**
+     * Save User Info  and SnapShoot  ...
+     */
+    void saveUserInfo() {
+
+        try{
+            // FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child("Driver/"+ user.getUid()).setValue(newUser);
+
+            FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers/" + user_Global.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    HashMap hashUser = (HashMap) dataSnapshot.getValue();
+                    User userInfo = new User();
+                    userInfo.name = (String) hashUser.get("name");
+                    userInfo.email = (String) hashUser.get("email");
+                    userInfo.phone = (String) hashUser.get("phone");
+                    userInfo.avata = (String) hashUser.get("avata");
+                    SharedPreferenceHelper.getInstance(PhoneAuthActivity.this).saveUserInfo(userInfo);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
 
     }
-
 
 
     private void startPhoneNumberVerification(String phoneNumber) {
@@ -245,7 +319,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements
             new AlertDialog.Builder(PhoneAuthActivity.this)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setTitle("connected user ID ist "+currentUser.getUid().toString())
-                    .setMessage("Are you sure you want to continue as User "+currentUser.getEmail().toString()+ "  ?")
+                    .setMessage("Are you sure you want to continue as User "+currentUser.getPhoneNumber().toString()+ "  ?")
                     .setNegativeButton("No", new DialogInterface.OnClickListener()
                     {
                         @Override
