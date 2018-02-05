@@ -57,7 +57,7 @@
                     android:background="@color/white"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    app:ccp_defaultNameCode="CM" />
+                    app:ccp_defaultNameCode="DE" />
 
 
                 <EditText

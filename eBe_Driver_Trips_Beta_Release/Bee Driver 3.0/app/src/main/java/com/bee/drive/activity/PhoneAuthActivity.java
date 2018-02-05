@@ -184,26 +184,23 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                                             // than you are a new user   ...
                                             if(map.get("phone")!=null){
                                                 String Phone = map.get("phone").toString();
+                                                // save User Info and continue  normaly  ... user is already registerd
+                                                StaticConfig.UID = user_Global.getUid();
+                                                saveUserInfo();
+                                                Intent intent = new Intent(PhoneAuthActivity.this, SplaschScreen.class);
+                                                startActivity(intent);
+                                                PhoneAuthActivity.this.finish();
                                             }else{
 
                                                 // start with the registration prozess...
                                                 Toast.makeText(context , "Start Registration ... " ,Toast.LENGTH_LONG ).show();
-
-                                                new LovelyInfoDialog(context)
-                                                        .setTopColorRes(R.color.colorPrimary)
-                                                        .setTitle("Phone Authentification successfully!")
-                                                        .setMessage(" click on OK to Continue with the Registration Process ")
-                                                        .show();
-
                                                 Intent intent = new Intent(PhoneAuthActivity.this, PhoneRegistrationActivity.class);
                                                 startActivity(intent);
-                                                finish();
+                                                PhoneAuthActivity.this.finish();
 
                                             }
 
-                                            // save User Info and continue  normaly  ... user is already registerd
-                                            StaticConfig.UID = user_Global.getUid();
-                                            saveUserInfo();
+
 
                                         }catch(Exception ex){
                                             Toast.makeText(PhoneAuthActivity.this, ex.toString() , Toast.LENGTH_LONG).show();

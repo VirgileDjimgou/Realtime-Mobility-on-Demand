@@ -376,6 +376,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                                 GroupDB.getInstance(getApplicationContext()).dropDB();
                                 ServiceUtils.stopServiceFriendChat(getApplicationContext(), true);
                                 getActivity().finish();
+                                quit();
                             }
 
                         })
@@ -391,6 +392,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         onTokenRefresh();
         getCustomerProposition();
         return rootView;
+    }
+
+    public void quit() {
+        Intent startMain = new Intent(Intent.ACTION_MAIN);
+        startMain.addCategory(Intent.CATEGORY_HOME);
+        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(startMain);
     }
 
 

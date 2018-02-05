@@ -45,10 +45,10 @@ public class PromotionsActivity extends AppCompatActivity implements RecyclerIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.promotions_main);
-        //Toolbar toolbar = findViewById(R.id.toolbar);
-        // setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getString(R.string.promo_titel));
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getString(R.string.promo_titel));
 
         recyclerView = findViewById(R.id.recycler_view);
         coordinatorLayout = findViewById(R.id.coordinator_layout);

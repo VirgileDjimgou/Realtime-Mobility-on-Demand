@@ -22,6 +22,7 @@ import com.bee.drive.MainChatActivity;
 import com.bee.drive.R;
 import com.bee.drive.data.FriendDB;
 import com.bee.drive.data.GroupDB;
+import com.bee.drive.data.SharedPreferenceHelper;
 import com.bee.drive.data.StaticConfig;
 import com.bee.drive.model.User;
 import com.bee.drive.service.ServiceUtils;
@@ -35,10 +36,14 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.rilixtech.Country;
 import com.rilixtech.CountryCodePicker;
 
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 
@@ -55,18 +60,12 @@ public class PhoneRegistrationActivity extends AppCompatActivity {
     private Spinner DriverType;
     private FloatingActionButton CloseRegisterCarte;
 
-
-
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
-    private FirebaseUser user;
     private static final String TAG = "PhoneAuthActivity";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_registration);
-
 
         mStartButton = (Button) findViewById(R.id.bt_go);
         mStartButton.setOnClickListener(new View.OnClickListener() {
@@ -83,12 +82,17 @@ public class PhoneRegistrationActivity extends AppCompatActivity {
                     User newUser = new User();
                     newUser.DriverType = Driver_Type;
                     newUser.email = "no_email@no_email.com";
-                    newUser.phone = user.getPhoneNumber();
+                    newUser.phone = PhoneAuthActivity.user_Global.getPhoneNumber();
                     newUser.name = Name;
                     newUser.avata = StaticConfig.STR_DEFAULT_BASE64;
                     // FirebaseDatabase.getInstance().getReference().child("Driver/"+ user.getUid()).setValue(newUser);
 
-                    FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers/"+ StaticConfig.UID).setValue(newUser);
+                    FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers/"+ PhoneAuthActivity.user_Global.getUid()).setValue(newUser);
+                    // save User Info and continue  normaly  ... user is already registerd
+                    StaticConfig.UID = PhoneAuthActivity.user_Global.getUid();
+                    Intent intent = new Intent(PhoneRegistrationActivity.this, SplaschScreen.class);
+                    startActivity(intent);
+                    PhoneRegistrationActivity.this.finish();
 
                 }
 
@@ -127,7 +131,7 @@ public class PhoneRegistrationActivity extends AppCompatActivity {
                         })
                         .setNegativeButton("No", null)
                         .show();
-                finish();
+                PhoneRegistrationActivity.this.finish();
             }
         });
 
@@ -136,27 +140,9 @@ public class PhoneRegistrationActivity extends AppCompatActivity {
         email_user = (EditText) findViewById(R.id.email_user);
         DriverType = (Spinner)findViewById(R.id.spinner);
 
-        mAuth = FirebaseAuth.getInstance();
-        initFirebase();
 
     }
 
-    private void initFirebase() {
-
-        mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    StaticConfig.UID = user.getUid();
-                } else {
-                    PhoneRegistrationActivity.this.finish();
-
-                }
-            }
-        };
-    }
 
 
 
@@ -178,7 +164,7 @@ public class PhoneRegistrationActivity extends AppCompatActivity {
                             FriendDB.getInstance(getApplicationContext()).dropDB();
                             GroupDB.getInstance(getApplicationContext()).dropDB();
                             ServiceUtils.stopServiceFriendChat(getApplicationContext(), true);
-                            finish();
+                            PhoneRegistrationActivity.this.finish();
 
                         }catch (Exception ex){
                             ex.printStackTrace();
