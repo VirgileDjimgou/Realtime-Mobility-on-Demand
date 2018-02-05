@@ -1,4 +1,8 @@
-### Get the entire project [HERE](https://market.ionicframework.com/starters/taxi-booking-app-similar-to-uber-and-taxify-contains-user-app-driver-app-and-a-web-admin-) . This includes passenger app, driver app and web admin dashboard.
+
+The purpose of this project is to specify software requirements of the Real-time and Autonome Online Moto-Taxi / Taxi Booking in specifically Region (Sud-Asia, 
+Africa or Sud-America). It is intended to be a complete specification of what functionality the system provides. 
+
+### . This includes passenger app, driver app and web admin dashboard.
 
 ### *With Firebase serveless cloud realtime database.
 ### *Stripe Payment included.
