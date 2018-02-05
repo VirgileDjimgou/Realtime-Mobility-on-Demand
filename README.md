@@ -59,6 +59,8 @@ Africa or Sud-America). It is intended to be a complete specification of what fu
 7. Compute Engine .
 8. Google Cloud SQL
 9. Firestore
+10.Node.js
+11.
 
 ## How It Works
 
