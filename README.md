@@ -18,8 +18,6 @@ Africa or Sud-America). It is intended to be a complete specification of what fu
 
 ### Sample Video [HERE](https://www.youtube.com/watch?v=LFlCkfhgfSFw)
 
-### Contact Me To Set It Up or Include a missing feature [HERE](https://chinedu-website.firebaseapp.com/#/contact)
-
 ![](http://virgiledjimgou.esy.es/)
 
 
