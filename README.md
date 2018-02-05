@@ -33,8 +33,11 @@ Africa or Sud-America). It is intended to be a complete specification of what fu
 
 
 ### Passenger App
-![layer_5](https://user-images.githubusercontent.com/7928001/35234159-73efa874-ffa0-11e7-9a06-22f8ae442092.png)
-![layer_6](https://user-images.githubusercontent.com/7928001/35234160-743aa7f2-ffa0-11e7-91ee-94671afeff7e.png)
+![layer_6](https://github.com/chichikolon/Bee_Realtime_Vehicle_Booking_System/blob/master/Ressource/markdown/Untitled%20collage.png)
+![layer_7](https://github.com/chichikolon/Bee_Realtime_Vehicle_Booking_System/blob/master/Ressource/markdown/Untitled%20collage-8.png)
+![layer_8](https://github.com/chichikolon/Bee_Realtime_Vehicle_Booking_System/blob/master/Ressource/markdown/Untitled%20collage-9.png)
+
+
 
 
 ### Web Admin
@@ -108,3 +111,16 @@ View all Driver’s .. View all User’s .. View Flagged Driver and Option to bl
 View Flagged User and Option to block users.. 
 Option to view all users.. Set Prices for Car types .. 
 Set Currencies .. And much more …
+
+
+## Thanks
+
+  * [Firebase](https://github.com/firebase/quickstart-android)
+  * [Volley](https://github.com/google/volley)
+  * [Picasso](https://github.com/square/picasso)
+  * [Sweet Alert](https://github.com/pedant/sweet-alert-dialog)
+  * [FlatUI](https://github.com/eluleci/FlatUI)
+
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
+
