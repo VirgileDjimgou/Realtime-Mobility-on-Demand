@@ -1,200 +1,82 @@
-# IoT_SmartHome_Cloud
-(FH Pforzheim) Cloud-IoT Projekt : Entwicklung einer Android App zur Visualisierung von emulierten Sensordaten durch einen cloud Environenment..
+### Get the entire project [HERE](https://market.ionicframework.com/starters/taxi-booking-app-similar-to-uber-and-taxify-contains-user-app-driver-app-and-a-web-admin-) . This includes passenger app, driver app and web admin dashboard.
 
-<span id="result_box" class="anchor"></span>Dieser Dokumentation
-beschreibt eine Fallstudie zum Erstellen eines Smart Home mit Raspberry
-Pi-Gerät und die in einen Cloud Umgebung integriet ist . Wir haben
-AndroidThings als Betriebssystem auf dem Raspberry-Gerät und Firebase
-eine bekannte Service von Cloud Anbieter Google Cloud Platform (GCP) als
-Backend-Dienst zum Speichern der Daten verwendet (der in Echtzeit mit
-allen authentifizierten Geräten synchronisiert wird). Der Projekt gibt
-eine kurze Beschreibung des aktuellen Trends bei IoT-Geräten (populäre
-IoT-Plattformen wie Raspberry Pi, Arduino usw.). Der Artikel erwähnt
-auch eine kurze Einführung in AndroidThings OS (von Google
-bereitgestellt), das für IoT-Geräte entwickelt wurde und das
-Java-Framework für Anwendungsentwickler unterstützt, um IoT-Anwendungen
-mit Java zu entwickeln. Wir sprechen auch über Firebase von GCP , das
-als Backend zum Speichern von Daten verwendet wurde.
+### *With Firebase serveless cloud realtime database.
+### *Stripe Payment included.
+### *Neat App Design.
+### *Excellent Notification System.
+### *Driver Tracking. etc.
 
--   AndroidThings
-    -------------
 
-<span id="result_box1" class="anchor"></span>AndroidThings bringt jetzt
-die gesamte Android-Plattform auf Geräte, auf denen Sie Java-basierte
-IoT-Anwendungen erstellen können. Es hat das Potenzial, das Spiel für
-IoT zu verändern, wie es Android für Geräte getan hat.\
-Das Problem, mit dem wir die meisten IoT-Entwickler konfrontiert haben,
-ist das Sammeln von Sensordaten, den Transport und das Speichern dieser
-Daten im Backend. Und der wahre Wert liegt in der Analyse dieser Daten
-für Alerts, Visualisierung usw. Und genau hier sehen wir viele Menschen,
-die die Werte von Firebase, Google Cloud Services, besser verstehen.
-AndroidThings, entwickelt von Google, fügt all diese Teile zu einer
-überzeugenden IoT-Plattform zusammen.\
-Eines der interessanten Dinge, die als Stärke von Android Things genannt
-werden, ist, dass OS-Updates von Google selbst verteilt werden.
+[![Dockbit](https://img.shields.io/dockbit/DockbitStatus/health.svg?token=TvavttxFHJ4qhnKstDxrvBXM)]()
+[![npm (scoped)](https://img.shields.io/npm/v/@cycle/core.svg)]()
 
--   **Firebase Backend as a Service von Google Cloud Platform (GCP)**
+### Sample Android [HERE](https://play.google.com/store/apps/details?id=com.taxihubnigeria.android)
 
-<span id="result_box2" class="anchor"></span>Firebase bietet eine
-schnelle Möglichkeit, sensorische Daten, die auf Geräteebene gesammelt
-wurden, dauerhaft zu speichern, und es funktioniert hervorragend mit den
-Android-APIs, die von Android Things unterstützt werden. Viele
-Programmierer von Mobilgeräten und Geräten, mit denen ich konfrontiert
-bin, haben Probleme mit der serverseitigen Programmierung. Firebase kann
-wirklich helfen, diese Lücke zu überbrücken und es einfacher zu machen.\
-Es wird interessant sein zu sehen, wie Entwickler ihre
-Offline-Funktionen nutzen. Wenn Sie neu bei IoT sind oder allgemein
-jedes Gerät, das Daten sammelt und es über Netzwerke übertragen muss,
-ist die goldene Regel, dass keine Netzwerkverbindung angenommen werden
-kann. Daher müssen Sie die Daten offline sammeln und wenn das Netzwerk
-verfügbar ist, übertragen Sie dies auf Ihren Server. Firebase mit seiner
-Offline-Funktion kann das für viele Entwickler wirklich vereinfachen.\
-Firebase hat eine Menge Funktionen wie Real-Time-Datenbank,
-Authentifizierung, Cloud Messaging, Storage, Hosting, Testlabor und
-Analytics, aber ich werde nur Authentifizierung, Real-Time-Datenbank
-verwenden.
+### Sample Video [HERE](https://www.youtube.com/watch?v=LFlCkfd9SFw)
 
--   **Authentifizierung**
+### Contact Me To Set It Up or Include a missing feature [HERE](https://chinedu-website.firebaseapp.com/#/contact)
 
-<span id="result_box3" class="anchor"></span>Jede geeignete App hat
-irgendeine Form von Sicherheit. Die Firebase-Authentifizierung bietet
-diese Form der Sicherheit, indem sie eine OAuth-Plattform bereitstellt,
-die gängige OAuth-Anbieter wie Facebook, Google+ und Twitter integriert.
+![](https://static-2.gumroad.com/res/gumroad/6181776888084/asset_previews/f8174fd18d62903aad2d0b147c16164a/retina/Untitled.jpeg)
 
--   <span id="result_box4" class="anchor"></span>**Echtzeitdatenbank**
 
-<span id="result_box6" class="anchor"></span>Dies ist eine
-NoSQL-Cloud-Datenbank. Okay, das bedeutet, dass alle Daten in Ihrer
-Anwendung online in der Cloud gespeichert werden und ein zusätzlicher
-Vorteil ist, dass es in Echtzeit (wie es sich ändert) über alle
-verbundenen Clients synchronisiert wird.
 
--   <span id="result_box7" class="anchor"></span>**Umsetzung: Smart Home
-    mit RaspberryPi.**\
-    \
-    Diese Implementierung erfordert Folgendes:\
-    \
-    **Software:**\
-    \
-    1. Java.\
-    2.Android Anwendungsentwicklung.\
-    \
-    **Hardware:**\
-    \
-    1. HimbeerePi 3\
-    2. Ethernet-Kabel\
-    Birne 3.LED\
-    4,1 KΩ Widerstand\
-    5.Female zu männlichen Überbrückungsdrähten\
-    6.Bretbrett\
-    7.Power Versorgung für Raspberry Pi\
-    8. SD-Karte (8 GB oder höher)
+### User App
+![layer_1](https://user-images.githubusercontent.com/7928001/35234092-417b1aae-ffa0-11e7-801c-d3417551362b.png)
+![layer_2](https://user-images.githubusercontent.com/7928001/35234161-748fb7c4-ffa0-11e7-8328-aabf77b94b88.png)
+![layer_3](https://user-images.githubusercontent.com/7928001/35234162-74ccd118-ffa0-11e7-841a-74cd2ba3ac4f.png)
+![layer_4](https://user-images.githubusercontent.com/7928001/35234158-73a9073e-ffa0-11e7-9e08-9438615bfe21.png)
 
-<!-- -->
+### Driver App
+![layer_5](https://user-images.githubusercontent.com/7928001/35234159-73efa874-ffa0-11e7-9a06-22f8ae442092.png)
+![layer_6](https://user-images.githubusercontent.com/7928001/35234160-743aa7f2-ffa0-11e7-91ee-94671afeff7e.png)
 
--   <span id="result_box8"
-    class="anchor"></span>**Software-Implementierung**\
-    \
-    1.Android Client App - spricht mit Firebase, aktualisiert Wert
-    in Firebase.
 
-    2.Android Things App - liest Wert von Firebase und sendet
-    Anweisungen an die Led-Lampe (durch Raspberry Pi-Gerät)
+### Web Admin
+![download 2](https://user-images.githubusercontent.com/7928001/35230751-38c625ec-ff97-11e7-865e-236aa0ee8723.png)
+![download 1](https://user-images.githubusercontent.com/7928001/35230783-561d37a2-ff97-11e7-9335-fe5e7f843407.png)
+![download](https://user-images.githubusercontent.com/7928001/35230798-5f3003a6-ff97-11e7-86b9-673cabb63873.png)
 
-**Workflow :**
 
-![](media/image1.png){width="6.925in" height="4.644444444444445in"}
 
--   <span id="result_box9" class="anchor"></span>Jedes internetfähige
-    Android-Handy mit Android-App verbindet sich über die
-    OAuth-Authentifizierung mit Firebase.
+## Features
+1. Google Maps SDK Cordova 
+2. Firebase Realtime DB
+3. Onesignal(Google Cloud Messaging)
+4. Paystack
 
--   Nach erfolgreicher Authentifizierung wird der Wert von Firebase
-    aktualisiert / gelesen.
 
--   Firebase aktualisiert die Werte auf IoT-Geräten mit AndroidThings OS
-    und Android IoT-App.
+## How It Works
 
--   IoT-Gerät steuert alle angeschlossenen elektronischen Geräte.
 
-        
+### Start The App
 
-<!-- -->
+For This Project, I created Two Different Apps. The Client App and The Driver App. After creating An Account, Adding A Phone Number, Your Location Is Automatically detected via the google maps geolocation, But You Could Point The Marker Elsewhere To Choose Another Location.
 
--   <span id="result_box10" class="anchor"></span>**IoT-Gerät in
-    Cloud verbinden.**
+### Request A Taxi
 
-<span id="result_box13" class="anchor"></span>1. Laden Sie die
-Developer-Vorschau von der Android Things-Website herunter.\
-https://developer.android.com/things/preview/download.html\
-\
-2. Laden Sie Android Thing OS für Raspberry Pi herunter\
-\
-3. Nach dem Formatieren Ihrer SD-Karte müssen wir das Betriebssystem
-installieren.\
-\
-4. Nach dem Hochfahren stellt RaspberryPi eine Verbindung zu Ihrem
-Netzwerk über Ethernet her.\
-\
-5. Sobald es erfolgreich verbunden ist, sehen Sie die folgende
-Nachricht\
-verbunden mit &lt;deviceip-adresse&gt;: 5555
+When A User Books A ride, Then User's Details Are Sent To The Database With The Notification Id Of The First Driver Available, Then After 60 seconds And No reply, Then it is shifted To Another driver.
 
-6\. LED positive Pin zu 7 (BCM4) und Negativ zu 9 (Ground)\
-\
-7. Erstellen Sie ein Firebase-Projekt unter
-https://firebase.google.com/.
+### Get Accepted By A Driver
 
-8\. Gehen Sie zum Abschnitt Regeln und ändern Sie die Regeln wie folgt
+Once You Get A Driver Then Your Phone Vibrates And The Credentials Of The Driver Appears on Your Screen, As well as The Distance Between You And Your Driver Are Displayed As well.
 
-"rules": {
+### Get To Your Destination And Pay Up
 
- 
+On Completion Of the ride your payment reciept is shown to you, then you can check out and rate your ride and then, you are ready for another booking.
 
-".read": "true",
 
- 
+## This project is a complete clone of Uber , which is a taxi booking App . This sale comes with 100% Source code for User app , Driver App.
 
-".write": "true"
+## Features in this app
 
- 
+Intro splash screen to give appealing look to the app. Google api integration for autocomplete. Plotting of places to google map with distance and minutes calculation between routes. One step and easy booking process. Integration with Stripe Payment gateway. Option to set cab types with rates from backend Firebase . Stylish animation between views with Facebook style slide menu. Display all booking with scroll to load and clean UI. Enable Auto refresh when driver accept job on driver arrival, journey begin , journey completed / dropped etc. Support Push messages for all the status as well. Live tracking Driver who are assigned for your booking. Option to Cancel the Job till driver is not assigned. Rate card screen. User can rate driver after completion of Ride , ALSO driver can rate user as well. 100% ionic 3 Project and shipped with full source code.
 
-}
+## Driver App Feature 
 
- 
+3 Step registration form with all required field capture and validation done to make app ready to go live .. Facebook style sliding menu .. Option to set status available and unavailable ... Support Firebase Realtime for tracking Driver . Support FCM notification Interface when new booking is arrived and Phone will start beeping . Node.js Auto assigning of Driver for Jobs on the basis of availability of Driver avaibality , car type and nearest available driver using Robust Spatial GEO Queries .. Support Push messages to driver if app is in background. .. Calculating Tariff on the basis of Miles + Minutes require to travel . .
 
-}
+## Features in Web admin: 
 
-![](media/image2.png){width="6.925in" height="4.776388888888889in"}
+Clean and Easy to understand Dashboard which display all relevant statistics.
 
--   <span id="result_box14" class="anchor"></span> Führen Sie nach der
-    erfolgreichen Kompilierung Ihr erstes Android Things-Projekt aus,
-    das mit Firebase konfiguriert ist.
-
--   Klicken Sie im Android Studio auf die Schaltfläche "Ausführen" und
-    wählen Sie Ihr Gerät aus.
-
--   Nun wird Ihre Anwendung auf Ihrem Gerät laufen und Sie werden sehen,
-    dass die Glühbirne blinkt.
-
-Aktivirien E-Mail, Google, Facebook Login im Bereich Authentifizierung.
-
-![](media/image3.png){width="6.925in" height="1.8138888888888889in"}
-
-<span id="result_box16" class="anchor"></span>Fazit\
-\
-Das Internet der Dinge in Cloud Umgebung ist einfacher zu implementieren
-als der durchschnittliche Mensch denken würde. Wir haben großes
-Potenzial im IoT. Dies war nur eine einfache Projekt für IoT. Von
-Sicherheitssystemen bis zum Gesundheitswesen; Von Transportunternehmen
-bis zur Lagerverwaltung sind die Möglichkeiten in IoT einfach endlos.
-Mit dem Aufkommen von mobilen Apps wie IFTTT hat die Kommunikation die
-nächste Stufe erreicht. Wir können getrost sagen, dass die Zukunft dem
-IoT und Cloud Computing gehört.
-
-<span id="result_box17" class="anchor"></span>**Verweise:**
-
-[***https://developer.android.com/things/index.html***](https://developer.android.com/things/index.html)**\
-**[***https://developer.android.com/things/hardware/raspberrypi.html***](https://developer.android.com/things/hardware/raspberrypi.html)**\
-**[***http://fritzing.org/ (Electrical layout diagram
-tool)***](http://fritzing.org/)
+View Realtime driver and passenger activity on map. View all Driver’s .. View all User’s .. View Flagged Driver and Option to block them.. View Flagged User and Option to block users.. Option to view all users.. Set Prices for Car types .. Set Currencies .. And much more …
