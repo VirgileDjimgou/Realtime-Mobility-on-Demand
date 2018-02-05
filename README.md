@@ -44,6 +44,8 @@ Africa or Sud-America). It is intended to be a complete specification of what fu
 ![download 2](https://user-images.githubusercontent.com/7928001/35230751-38c625ec-ff97-11e7-865e-236aa0ee8723.png)
 ![download 1](https://user-images.githubusercontent.com/7928001/35230783-561d37a2-ff97-11e7-9335-fe5e7f843407.png)
 ![download](https://user-images.githubusercontent.com/7928001/35230798-5f3003a6-ff97-11e7-86b9-673cabb63873.png)
+![download](https://user-images.githubusercontent.com/7928001/35230798-5f3003a6-ff97-11e7-86b9-673cabb63873.png)
+![download](https://user-images.githubusercontent.com/7928001/35230798-5f3003a6-ff97-11e7-86b9-673cabb63873.png)
 
 
 
