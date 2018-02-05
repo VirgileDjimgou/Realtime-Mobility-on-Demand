@@ -161,11 +161,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         }
 
         // add old Activity
-
         //counter to take  a decisions ...
         progressBar = (ProgressBar) rootView.findViewById(R.id.CounterDriver);
-
-
         mCustomerInfo = (LinearLayout) rootView .findViewById(R.id.PassengerInfoCustom);
         // always mask this Layout  after the creation ....
         mCustomerInfo.setVisibility(View.GONE);
@@ -174,8 +171,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         mcustomer_Service = (TextView) rootView.findViewById(R.id.customer_Service);
         mnbOfPassengers = (TextView) rootView.findViewById(R.id.nbOfPassengers);
         mServicesOptions = (TextView) rootView.findViewById(R.id.ServicesOptions);
-
-
         mButtonDeclineDrive  = (Button) rootView.findViewById(R.id.btn_decline_drive) ;
         mButtonDeclineDrive.setOnClickListener(new View.OnClickListener() {
             @Override

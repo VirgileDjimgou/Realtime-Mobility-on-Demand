@@ -74,7 +74,7 @@ public class UserAlteProfileFragment extends Fragment {
     private Context context;
 
     public UserAlteProfileFragment() {
-        // Required empty public constructor
+
     }
 
     @Override
@@ -85,7 +85,6 @@ public class UserAlteProfileFragment extends Fragment {
     private ValueEventListener userListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-            //Lấy thông tin của user về và cập nhật lên giao diện
             listConfig.clear();
             myAccount = dataSnapshot.getValue(User.class);
 
@@ -105,7 +104,6 @@ public class UserAlteProfileFragment extends Fragment {
 
         @Override
         public void onCancelled(DatabaseError databaseError) {
-            //Có lỗi xảy ra, không lấy đc dữ liệu
             Log.e(UserAlteProfileFragment.class.getName(), "loadPost:onCancelled", databaseError.toException());
         }
     };
@@ -175,7 +173,6 @@ public class UserAlteProfileFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
             if (data == null) {
-                Toast.makeText(context, "Có lỗi xảy ra, vui lòng thử lại", Toast.LENGTH_LONG).show();
                 return;
             }
             try {
@@ -233,23 +230,28 @@ public class UserAlteProfileFragment extends Fragment {
         }
     }
 
-    /**
-     * Xóa list cũ và cập nhật lại list data mới
-     * @param myAccount
-     */
+
     public void setupArrayListInfo(User myAccount){
-        listConfig.clear();
-        Configuration userNameConfig = new Configuration(USERNAME_LABEL, myAccount.name, R.mipmap.ic_account_box);
-        listConfig.add(userNameConfig);
+        try{
 
-        Configuration emailConfig = new Configuration(EMAIL_LABEL, myAccount.email, R.mipmap.ic_email);
-        listConfig.add(emailConfig);
+            listConfig.clear();
+            Configuration userNameConfig = new Configuration(USERNAME_LABEL, myAccount.name, R.mipmap.ic_account_box);
 
-        Configuration resetPass = new Configuration(RESETPASS_LABEL, "", R.mipmap.ic_restore);
-        listConfig.add(resetPass);
 
-        Configuration signout = new Configuration(SIGNOUT_LABEL, "", R.mipmap.ic_power_settings);
-        listConfig.add(signout);
+            listConfig.add(userNameConfig);
+
+            Configuration emailConfig = new Configuration(EMAIL_LABEL, myAccount.email, R.mipmap.ic_email);
+            listConfig.add(emailConfig);
+
+            Configuration resetPass = new Configuration(RESETPASS_LABEL, "", R.mipmap.ic_restore);
+            listConfig.add(resetPass);
+
+            Configuration signout = new Configuration(SIGNOUT_LABEL, "", R.mipmap.ic_power_settings);
+            listConfig.add(signout);
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
     }
 
     private void setImageAvatar(Context context, String imgBase64){
