@@ -11,10 +11,13 @@
     <string name="nav_history">History</string>
     <string name="nav_notifications">Notifications/Promo</string>
     <string name="nav_share">Share</string>
+    <string name="nav_rate">Rate this App</string>
     <string name="nav_settings">Adv. Settings</string>
     <string name="nav_chat">Zone Chat</string>
     <string name="nav_about">About Us</string>
     <string name="nav_sign_out">logout</string>
+    <string name="share_intent_title">Share Whatsapp</string>
+    <string name="share_whatsapp_not_instaled">whatsapp not installed</string>
 
 
 

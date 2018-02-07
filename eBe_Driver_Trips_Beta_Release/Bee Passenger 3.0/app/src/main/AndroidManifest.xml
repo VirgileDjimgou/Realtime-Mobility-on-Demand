@@ -155,19 +155,6 @@
 
 
         <activity
-            android:name="com.bee.passenger.activity.PhoneAuthActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:supportsRtl="true"
-            android:theme="@style/Translucent" />
-
-        <activity
-            android:name="com.bee.passenger.activity.MainActivityPhone"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/Translucent" />
-
-        <activity
             android:name="com.bee.passenger.activity.RegisterActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -178,6 +165,25 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:label="@string/nav_about" />
+
+        <activity
+            android:name="com.bee.passenger.activity.EmailLoginActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
+
+        <activity
+            android:name="com.bee.passenger.activity.PhoneAuthActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.bee.passenger.activity.PhoneRegistrationActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
+
+
         <activity
             android:name="com.bee.passenger.activity.PrivacyPolicyActivity"
             android:launchMode="singleTop"
@@ -197,13 +203,6 @@
         <activity android:name="com.bee.passenger.CustomerSettingsActivity"/>
         <activity android:name="com.bee.passenger.HistorySingleActivity"/>
         <activity android:name="com.bee.passenger.HistoryActivity"/>
-
-
-
-
-        <activity android:name="com.bee.passenger.activity.EmailLoginActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
 
 
         <activity android:name="com.facebook.FacebookActivity"

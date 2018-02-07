@@ -322,30 +322,6 @@ public class MainActivity extends AppCompatActivity {
                 UserProfileFragment profilFragment = new UserProfileFragment();
                 return profilFragment;
 
-            case 2:
-                // History
-                HistoryFragment historyFragment = new HistoryFragment();
-                return historyFragment;
-
-            case 3:
-                // notifications fragment
-                NotificationsFragment notificationsFragment = new NotificationsFragment();
-                return notificationsFragment;
-
-            case 4:
-                // Promotions fragment
-                PromotionsFragment promotionsFragment = new PromotionsFragment();
-                return promotionsFragment;
-
-            case 5:
-                // share  fragment
-                ShareFragment shareFragement = new ShareFragment();
-                return shareFragement;
-
-            case 6:
-                // Friend Chat  fragment
-                FriendsFragment FriendChatFragment = new FriendsFragment();
-                return FriendChatFragment;
             default:
                 return new PassengerMapFragment();
         }
@@ -378,22 +354,13 @@ public class MainActivity extends AppCompatActivity {
                         navItemIndex = 1;
                         CURRENT_TAG = TAG_PROFIL;
                         break;
-                    case R.id.nav_history:
-                        navItemIndex = 2;
-                        CURRENT_TAG = TAG_HISTORY;
-                        break;
+
+
                     case R.id.nav_notifications:
-                        navItemIndex = 3;
-                        CURRENT_TAG = TAG_NOTIFICATIONS;
-                        break;
-                    case R.id.nav_share:
-                        navItemIndex = 4;
-                        CURRENT_TAG = TAG_SHARE;
-                        break;
-                    case R.id.nav_chat:
-                        navItemIndex = 5;
-                        CURRENT_TAG = TAG_CHAT;
-                        break;
+                        // launch new intent instead of loading fragment//
+                        startActivity(new Intent(MainActivity.this, CustomerSettingsActivity.class));
+                        // drawer.closeDrawers();
+                        return true;
 
                     case R.id.nav_settings:
                         // launch new intent instead of loading fragment//
@@ -402,15 +369,20 @@ public class MainActivity extends AppCompatActivity {
                         // drawer.closeDrawers();
                         return true;
 
+                    case R.id.nav_rate:
+                        // launch new intent instead of loading fragment//
+                        startActivity(new Intent(MainActivity.this, CustomerSettingsActivity.class));
+                        // drawer.closeDrawers();
+                        return true;
+
                     case R.id.nav_about_us:
                         // launch new intent instead of loading fragment
                         startActivity(new Intent(MainActivity.this, AboutUsActivity.class));
                         drawer.closeDrawers();
                         return true;
-                    case R.id.nav_privacy_policy:
+                    case R.id.nav_share:
                         // launch new intent instead of loading fragment
-                        startActivity(new Intent(MainActivity.this, PrivacyPolicyActivity.class));
-                        drawer.closeDrawers();
+                        shareIt();
                         return true;
 
                     default:
@@ -452,6 +424,16 @@ public class MainActivity extends AppCompatActivity {
 
         //calling sync state is necessary or else your hamburger icon wont show up
         actionBarDrawerToggle.syncState();
+    }
+
+
+    private void shareIt() {
+//sharing implementation here
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "SingleCore");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, " App Passenger ");
+        startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 
     @Override

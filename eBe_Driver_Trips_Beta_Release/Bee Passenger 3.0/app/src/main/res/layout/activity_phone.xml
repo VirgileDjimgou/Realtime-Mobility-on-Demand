@@ -57,7 +57,7 @@
                     android:background="@color/white"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    app:ccp_defaultNameCode="CM" />
+                    app:ccp_defaultNameCode="DE" />
 
 
                 <EditText
@@ -107,6 +107,9 @@
                 android:textColor="@color/button_text" />
 
 
+
+
+
             <EditText
                 android:id="@+id/field_verification_code"
                 android:layout_width="210dp"
@@ -122,11 +125,26 @@
                 android:textColorHighlight="@color/black"
                 android:textColorHint="@color/black" />
 
+            <Button
+                android:id="@+id/button_register_with_phone"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/button"
+                android:text="not a registered user ? "
+                android:textStyle="bold"
+                android:textSize="20dp"
+                android:textColor="@color/button_text" />
+
 
 
         </LinearLayout>
 
     </LinearLayout>
+
+
+
 
 
 

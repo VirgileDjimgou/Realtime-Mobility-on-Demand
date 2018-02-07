@@ -1,5 +1,8 @@
 package com.bee.passenger.activity;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +16,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.bee.passenger.R;
+import com.bee.passenger.data.FriendDB;
+import com.bee.passenger.data.GroupDB;
+import com.bee.passenger.data.SharedPreferenceHelper;
+import com.bee.passenger.data.StaticConfig;
+import com.bee.passenger.model.User;
+import com.bee.passenger.service.ServiceUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -23,12 +33,17 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
-
-import java.util.concurrent.TimeUnit;
-
-import com.bee.passenger.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.rilixtech.Country;
 import com.rilixtech.CountryCodePicker;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -41,17 +56,26 @@ public class PhoneAuthActivity extends AppCompatActivity implements
 
     EditText mPhoneNumberField, mVerificationField;
     Button mStartButton, mVerifyButton, mResendButton;
+    private String phoneNumber;
 
+
+    private Button Registration_Phone;
+
+
+    private CountryCodePicker ccp;
     public static FirebaseAuth mAuth;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     String mVerificationId;
 
-    private CountryCodePicker ccp;
-    private String phoneNumber;
-
-
     private static final String TAG = "PhoneAuthActivity";
+
+    // firebase ...
+    private DatabaseReference userDB;
+    public static  FirebaseUser user_Global;
+    private Context context;
+
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,10 +84,19 @@ public class PhoneAuthActivity extends AppCompatActivity implements
 
         mPhoneNumberField = (EditText) findViewById(R.id.field_phone_number);
         mVerificationField = (EditText) findViewById(R.id.field_verification_code);
-
         mStartButton = (Button) findViewById(R.id.button_start_verification);
         mVerifyButton = (Button) findViewById(R.id.button_verify_phone);
         mResendButton = (Button) findViewById(R.id.button_resend);
+        Registration_Phone = (Button) findViewById(R.id.button_register_with_phone);
+        Registration_Phone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PhoneAuthActivity.this, PhoneRegistrationActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
 
         ccp = (CountryCodePicker) findViewById(R.id.ccp);
         ccp.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
@@ -104,6 +137,8 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                 mResendToken = token;
             }
         };
+
+        context = this.getApplicationContext();
     }
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
@@ -113,9 +148,71 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = task.getResult().getUser();
-                            startActivity(new Intent(PhoneAuthActivity.this, SplaschScreen.class));
-                            finish();
+                            user_Global = task.getResult().getUser();
+
+                            // check if User ist already registered  ...
+
+                            userDB = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(user_Global.getUid());
+                            // Set the  Driver Response to true ...
+                            HashMap map = new HashMap();
+                            map.put("Authentified" , "await");
+                            userDB.updateChildren(map);
+                            userDB.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                    Log.d("Verification" , "passed");
+
+                                    if(dataSnapshot.exists()){
+
+                                        Log.d("Verification" , "passed");
+
+                                        try{
+
+                                            Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                                            // test if the recors Phone already exist  ...if not than
+                                            // than you are a new user   ...
+                                            if(map.get("phone")!=null){
+                                                String Phone = map.get("phone").toString();
+                                                // save User Info and continue  normaly  ... user is already registerd
+                                                StaticConfig.UID = user_Global.getUid();
+                                                saveUserInfo();
+                                                Intent intent = new Intent(PhoneAuthActivity.this, SplaschScreen.class);
+                                                startActivity(intent);
+                                                PhoneAuthActivity.this.finish();
+                                            }else{
+
+                                                // start with the registration prozess...
+                                                Toast.makeText(context , "Start Registration ... " ,Toast.LENGTH_LONG ).show();
+                                                Intent intent = new Intent(PhoneAuthActivity.this, PhoneRegistrationActivity.class);
+                                                startActivity(intent);
+                                                PhoneAuthActivity.this.finish();
+
+                                            }
+
+
+
+                                        }catch(Exception ex){
+                                            Toast.makeText(PhoneAuthActivity.this, ex.toString() , Toast.LENGTH_LONG).show();
+                                            ex.printStackTrace();
+                                        }
+
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                    Toast.makeText(PhoneAuthActivity.this, databaseError.toString() , Toast.LENGTH_LONG).show();
+                                }
+                            });
+
+
+
+
+
+                            // startActivity(new Intent(PhoneAuthActivity.this, SplaschScreen.class));
+                            // finish();
                         } else {
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
@@ -126,6 +223,39 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                 });
     }
 
+
+
+    /**
+     * Save User Info  and SnapShoot  ...
+     */
+    void saveUserInfo() {
+
+        try{
+            // FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child("Driver/"+ user.getUid()).setValue(newUser);
+
+            FirebaseDatabase.getInstance().getReference().child("Users").child("Customers/" + user_Global.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    HashMap hashUser = (HashMap) dataSnapshot.getValue();
+                    User userInfo = new User();
+                    userInfo.name = (String) hashUser.get("name");
+                    userInfo.email = (String) hashUser.get("email");
+                    userInfo.phone = (String) hashUser.get("phone");
+                    userInfo.avata = (String) hashUser.get("avata");
+                    SharedPreferenceHelper.getInstance(PhoneAuthActivity.this).saveUserInfo(userInfo);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+    }
 
 
     private void startPhoneNumberVerification(String phoneNumber) {
@@ -156,7 +286,6 @@ public class PhoneAuthActivity extends AppCompatActivity implements
     }
 
     private boolean validatePhoneNumber() {
-
         String ContryCode  = ccp.getSelectedCountryCode().toString();
         this.phoneNumber = mPhoneNumberField.getText().toString();
 
@@ -165,23 +294,54 @@ public class PhoneAuthActivity extends AppCompatActivity implements
             mPhoneNumberField.setError("Invalid phone number.");
             return false;
         }
-        this.phoneNumber = ContryCode+this.phoneNumber;
+        this.phoneNumber = ContryCode+phoneNumber;
         return true;
     }
-
-
-
     @Override
     public void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            startActivity(new Intent(PhoneAuthActivity.this, SplaschScreen.class));
-            finish();
+
+            new AlertDialog.Builder(PhoneAuthActivity.this)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle("connected user ID ist "+currentUser.getUid().toString())
+                    .setMessage("Are you sure you want to continue as User "+currentUser.getPhoneNumber().toString()+ "  ?")
+                    .setNegativeButton("No", new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            try{
+                                FirebaseAuth.getInstance().signOut();
+                                FriendDB.getInstance(getApplicationContext()).dropDB();
+                                GroupDB.getInstance(getApplicationContext()).dropDB();
+                                ServiceUtils.stopServiceFriendChat(getApplicationContext(), true);
+                                // EmailLoginActivity.this.finish();
+                                // finish();
+                            }catch(Exception ex){
+                                ex.printStackTrace();
+                            }
+                        }
+
+                    })
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            // User is signed in
+
+                            startActivity(new Intent(PhoneAuthActivity.this, SplaschScreen.class));
+                            finish();
+
+                        }
+
+                    })
+                    .show();
+
         }
     }
-
-
 
 
     @Override
@@ -193,8 +353,6 @@ public class PhoneAuthActivity extends AppCompatActivity implements
     }
 
 
-
-
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -202,9 +360,12 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                 if (!validatePhoneNumber()) {
                     return;
                 }
-                startPhoneNumberVerification(this.phoneNumber);
+                startPhoneNumberVerification(phoneNumber);
                 break;
             case R.id.button_verify_phone:
+                if (!validatePhoneNumber()) {
+                    return;
+                }
                 String code = mVerificationField.getText().toString();
                 if (TextUtils.isEmpty(code)) {
                     mVerificationField.setError("Cannot be empty.");
@@ -217,12 +378,10 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                 if (!validatePhoneNumber()) {
                     return;
                 }
-                resendVerificationCode(this.phoneNumber, mResendToken);
+                resendVerificationCode(phoneNumber, mResendToken);
                 break;
         }
 
     }
-
-
 
 }

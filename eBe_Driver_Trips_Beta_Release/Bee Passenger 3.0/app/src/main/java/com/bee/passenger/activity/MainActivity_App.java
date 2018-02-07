@@ -10,19 +10,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.VideoView;
 
 import com.bee.passenger.R;
 
@@ -32,9 +25,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.yarolegovich.lovelydialog.LovelyProgressDialog;
 
 import java.util.ArrayList;
-import java.util.regex.Pattern;
-
-
 
 
 import android.content.pm.PackageInfo;
@@ -47,23 +37,8 @@ import java.security.NoSuchAlgorithmException;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-import android.annotation.TargetApi;
-import android.content.DialogInterface;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
+
 import android.widget.Toast;
-
-import java.util.ArrayList;
-
-import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-
 
 
 public class MainActivity_App extends AppCompatActivity {
