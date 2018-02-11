@@ -94,7 +94,6 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
 
 
-
     // google animations
 
     compile 'com.github.aarsy.googlemapsanimations:googlemapsanimations:1.0.5'

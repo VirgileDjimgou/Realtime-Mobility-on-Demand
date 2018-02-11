@@ -85,8 +85,6 @@ Once You Get A Driver Then Your Phone Vibrates And The Credentials Of The Driver
 On Completion Of the ride your payment reciept is shown to you, then you can check out and rate your ride and then, you are ready for another booking.
 
 
-## This project is a complete clone of Uber , which is a taxi booking App .
-
 ## Features in this app
 
 Intro splash screen to give appealing look to the app. Google api integration for autocomplete. 
@@ -97,7 +95,7 @@ Plotting of places to google map with distance and minutes calculation between r
  journey completed / dropped etc. Support Push messages for all the status as well. 
  Live tracking Driver who are assigned for your booking. 
  Option to Cancel the Job till driver is not assigned. Rate card screen. 
- User can rate driver after completion of Ride , ALSO driver can rate user as well. 100% ionic 3 Project and shipped with full source code.
+ User can rate driver after completion of Ride , ALSO driver can rate user as well. 100% Java native Project.
 
 ## Driver App Feature 
 
