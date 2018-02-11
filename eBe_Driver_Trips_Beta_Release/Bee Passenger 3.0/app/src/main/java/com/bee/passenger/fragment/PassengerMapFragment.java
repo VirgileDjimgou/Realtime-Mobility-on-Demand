@@ -464,21 +464,9 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
         DriverInfosDashbord = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item_request_status);
         Settings = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item_settings);
         float_logout_disconnect = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item_logout);
-        Promotions =  (FloatingActionButton) rootView.findViewById(R.id.menu_item_notifications);
         History =  (FloatingActionButton) rootView.findViewById(R.id.History);
 
 
-        Promotions.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                //TODO something when floating action menu second item clicked
-
-                Intent intent = new Intent(getActivity(), PromotionsActivity.class);
-                intent.putExtra("customerOrDriver", "Customers");
-                startActivity(intent);
-                return;
-
-            }
-        });
 
 
         DriverInfosDashbord.setOnClickListener(new View.OnClickListener() {

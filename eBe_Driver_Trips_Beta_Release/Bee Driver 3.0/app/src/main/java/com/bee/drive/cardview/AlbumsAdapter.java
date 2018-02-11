@@ -58,7 +58,7 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.MyViewHold
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         Album album = albumList.get(position);
         holder.title.setText(album.getName());
-        holder.count.setText(album.getNumOfSongs() + " songs");
+        holder.count.setText(album.getNumOfSongs() + " phone");
 
         // loading album cover using Glide library
         Glide.with(mContext).load(album.getThumbnail()).into(holder.thumbnail);
@@ -113,7 +113,7 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.MyViewHold
                     Toast.makeText(mContext, "Add to favourite", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.action_play_next:
-                    Toast.makeText(mContext, "Play next", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Delete", Toast.LENGTH_SHORT).show();
                     return true;
                 default:
             }
