@@ -465,10 +465,6 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
         Settings = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item_settings);
         float_logout_disconnect = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item_logout);
         History =  (FloatingActionButton) rootView.findViewById(R.id.History);
-
-
-
-
         DriverInfosDashbord.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu second item clicked

@@ -311,7 +311,6 @@
 
 
             <Button
-
                 android:id="@+id/request"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="390dp"
@@ -362,7 +361,7 @@
             android:id="@+id/driverInfoCustom"
             android:layout_gravity="bottom"
             android:orientation="horizontal"
-            android:visibility="gone"
+            android:visibility="visible"
             android:background="@drawable/ebe_main_screen">
 
 
@@ -404,9 +403,9 @@
 
                     <ImageView
                         android:id="@+id/profil_img_driver"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_marginLeft="100dp"
+                        android:layout_width="95dp"
+                        android:layout_height="95dp"
+                        android:layout_marginLeft="1dp"
                         android:layout_marginTop="2dp"
                         android:src="@drawable/default_avata" />
 
@@ -417,7 +416,7 @@
                         android:layout_height="50dp"
                         android:layout_marginLeft="2dp"
                         android:text="distance location ... "
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="112dp"
                         android:src="@drawable/location_distance" />
 
                     <TextView
@@ -426,7 +425,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="left|top"
                         android:layout_marginLeft="2dp"
-                        android:layout_marginTop="7dp"
+                        android:layout_marginTop="117dp"
                         android:gravity="center"
                         android:lines="1"
                         android:maxLines="1"
@@ -442,51 +441,11 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="left|top"
                         android:layout_marginLeft="10dp"
-                        android:layout_marginTop="25dp"
+                        android:layout_marginTop="135dp"
                         android:text="Kms"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="#ffffff"
                         android:textStyle="bold" />
-
-
-
-                    <ImageView
-                        android:id="@+id/trip_distance"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginLeft="2dp"
-                        android:layout_marginTop="70dp"
-                        android:src="@drawable/location_distance"
-                        />
-
-                    <TextView
-                        android:id="@+id/trip_distanceinkm"
-                        android:layout_width="40dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="left|top"
-                        android:layout_marginLeft="2dp"
-                        android:layout_marginTop="75dp"
-                        android:gravity="center"
-                        android:lines="1"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:text="9000"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="#ffffff"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/trip_kms"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="left|top"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="95dp"
-                        android:text="Kms"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="#ffffff"
-                        android:textStyle="bold" />
-
 
 
                     <TextView
@@ -511,7 +470,7 @@
                         style="@style/Widget.AppCompat.RatingBar"
                         android:layout_width="250dp"
                         android:layout_height="40dp"
-                        android:layout_marginLeft="152dp"
+                        android:layout_marginLeft="112dp"
                         android:layout_marginTop="110dp"
                         android:isIndicator="false"
                         android:numStars="5"
@@ -603,7 +562,7 @@
                             android:alpha="1"
                             android:background="@drawable/blue_rounded_corners_bg"
                             android:clickable="false"
-                            android:text="Accept this Driver."
+                            android:text="Accept"
                             android:textColor="@color/white"
                             android:textStyle="bold" />
 
@@ -619,7 +578,7 @@
                             android:layout_marginTop="12dp"
                             android:layout_weight="1"
                             android:background="@drawable/blue_border_button"
-                            android:text="Decline this Offer"
+                            android:text="Decline"
                             android:textColor="@color/gomalan_bule_bg"
                             android:textStyle="bold" />
 
