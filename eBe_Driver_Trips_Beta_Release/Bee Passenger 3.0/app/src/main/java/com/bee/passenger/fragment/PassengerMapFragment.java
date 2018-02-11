@@ -17,10 +17,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bee.passenger.HistoryActivity;
+import com.bee.passenger.cardview.History_CardView;
 import com.bee.passenger.data.FriendDB;
 import com.bee.passenger.data.GroupDB;
 import com.bee.passenger.fcm.CustomFcm_Util;
 import com.bee.passenger.fcm.MainActivity_fcm;
+import com.bee.passenger.promotions_swipe.PromotionsActivity;
 import com.bee.passenger.service.ServiceUtils;
 import com.bumptech.glide.Glide;
 import com.firebase.geofire.GeoFire;
@@ -470,7 +472,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
             public void onClick(View v) {
                 //TODO something when floating action menu second item clicked
 
-                Intent intent = new Intent(getActivity(), MainActivity_fcm.class);
+                Intent intent = new Intent(getActivity(), PromotionsActivity.class);
                 intent.putExtra("customerOrDriver", "Customers");
                 startActivity(intent);
                 return;
@@ -504,7 +506,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                 //TODO something when floating action menu second item clicked
                 // start Rider Status Activity ...
                 //
-                Intent intent = new Intent(getActivity(), CustomerSettingsActivity.class);
+                Intent intent = new Intent(getActivity(), MainActivity_fcm.class);
                 startActivity(intent);
                 return;
 
@@ -517,7 +519,8 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                 // start Rider Status Activity ...
                 //
 
-                Intent intent = new Intent(getActivity(), HistoryActivity.class);
+                // Intent intent = new Intent(getActivity(), HistoryActivity.class);
+                Intent intent = new Intent(getActivity(), History_CardView.class);
                 intent.putExtra("customerOrDriver", "Customers");
                 startActivity(intent);
                 return;
@@ -560,8 +563,6 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
 
             }
         });
-
-
 
         // Init Request settings
         onTokenRefresh();

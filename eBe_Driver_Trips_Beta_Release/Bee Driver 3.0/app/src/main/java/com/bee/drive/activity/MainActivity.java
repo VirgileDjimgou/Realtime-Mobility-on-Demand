@@ -429,8 +429,9 @@ public class MainActivity extends AppCompatActivity {
                         return true;
 
                     case R.id.nav_share:
-                        startActivity(new Intent(MainActivity.this, ShareActivity.class));
-                        drawer.closeDrawers();
+                        // startActivity(new Intent(MainActivity.this, ShareActivity.class));
+                        // drawer.closeDrawers();
+                        shareIt();
                         return true;
 
                     case R.id.nav_about_us:
@@ -451,9 +452,8 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     case R.id.nav_rate_app:
                         // launch new intent instead of loading fragment
-                        // UiUtils.rateApp(mContext, true);
-
-                        startActivity(new Intent(MainActivity.this, MainChatActivity.class));
+                        UiUtils.rateApp(mContext, true);
+                        // startActivity(new Intent(MainActivity.this, MainChatActivity.class));
 
                         return true;
 
@@ -497,6 +497,18 @@ public class MainActivity extends AppCompatActivity {
         //calling sync state is necessary or else your hamburger icon wont show up
         actionBarDrawerToggle.syncState();
     }
+
+
+
+    private void shareIt() {
+//sharing implementation here
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "xchaka");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, " App Driver");
+        startActivity(Intent.createChooser(sharingIntent, "Share via"));
+    }
+
 
     @Override
     public void onBackPressed() {

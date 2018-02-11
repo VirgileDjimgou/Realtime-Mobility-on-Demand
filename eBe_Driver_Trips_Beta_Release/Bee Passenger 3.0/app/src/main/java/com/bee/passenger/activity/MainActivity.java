@@ -29,12 +29,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bee.passenger.CustomerSettingsActivity;
+import com.bee.passenger.Utility.UiUtils;
+import com.bee.passenger.promotions_swipe.PromotionsActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bee.passenger.data.SharedPreferenceHelper;
-import com.bee.passenger.fragment.PromotionsFragment;
 import com.bee.passenger.service.ServiceUtils;
-import com.bee.passenger.ui.FriendsFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -45,10 +45,7 @@ import com.bee.passenger.Utility.ImageUtils;
 import com.bee.passenger.data.FriendDB;
 import com.bee.passenger.data.GroupDB;
 import com.bee.passenger.data.StaticConfig;
-import com.bee.passenger.fragment.HistoryFragment;
 import com.bee.passenger.fragment.PassengerMapFragment;
-import com.bee.passenger.fragment.NotificationsFragment;
-import com.bee.passenger.fragment.ShareFragment;
 import com.bee.passenger.fragment.UserProfileFragment;
 import com.bee.passenger.model.Configuration;
 import com.bee.passenger.model.User;
@@ -105,8 +102,7 @@ public class MainActivity extends AppCompatActivity {
     private Context context;
     private List<Configuration> listConfig = new ArrayList<>();
     private FirebaseAuth.AuthStateListener mAuthListener;
-
-
+    private Context mContext;
 
 
     @SuppressLint("WrongConstant")
@@ -115,18 +111,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
-
         mHandler = new Handler();
-
+        mContext = this;
         // Init Firebase
         initFirebase();
-
-
-        // Init KeyHashes ...
-        // printhashkey();
-
-
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
 
@@ -139,16 +129,12 @@ public class MainActivity extends AppCompatActivity {
 
         // load toolbar titles from string resources
         activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
-
-
         // load nav menu header data
         // loadNavHeader();
         setImageAvatar(context, myAccount.avata);
         txtName.setText(myAccount.name);
         txtWebsite.setText(myAccount.email);
-
         Toast.makeText(this, myAccount.name + myAccount.email, 4000).show();
-
         // initializing navigation menu
         setUpNavigationView();
 
@@ -164,13 +150,7 @@ public class MainActivity extends AppCompatActivity {
      * like background image, profile image
      * name, website, notifications action view (dot)
      */
-
-
-
-
-
     private void initFirebase(){
-
 
         // get Data of Aktual USer
         userDB = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(StaticConfig.UID);
@@ -195,7 +175,6 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferenceHelper prefHelper = SharedPreferenceHelper.getInstance(this);
         myAccount = prefHelper.getUserInfo();
-
 
     }
 
@@ -358,7 +337,7 @@ public class MainActivity extends AppCompatActivity {
 
                     case R.id.nav_notifications:
                         // launch new intent instead of loading fragment//
-                        startActivity(new Intent(MainActivity.this, CustomerSettingsActivity.class));
+                        startActivity(new Intent(MainActivity.this, PromotionsActivity.class));
                         // drawer.closeDrawers();
                         return true;
 
@@ -370,15 +349,21 @@ public class MainActivity extends AppCompatActivity {
                         return true;
 
                     case R.id.nav_rate:
-                        // launch new intent instead of loading fragment//
-                        startActivity(new Intent(MainActivity.this, CustomerSettingsActivity.class));
-                        // drawer.closeDrawers();
+                        UiUtils.rateApp(mContext, true);
+
                         return true;
 
                     case R.id.nav_about_us:
-                        // launch new intent instead of loading fragment
-                        startActivity(new Intent(MainActivity.this, AboutUsActivity.class));
-                        drawer.closeDrawers();
+
+                        if (mContext != null) {
+                            try{
+
+                                UiUtils.showMaterialAboutDialog(mContext, getResources().getString(R.string.action_about));
+
+                            }catch (Exception ex){
+                                ex.printStackTrace();
+                            }
+                        }
                         return true;
                     case R.id.nav_share:
                         // launch new intent instead of loading fragment
@@ -431,7 +416,7 @@ public class MainActivity extends AppCompatActivity {
 //sharing implementation here
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "SingleCore");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "xchaka");
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, " App Passenger ");
         startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }

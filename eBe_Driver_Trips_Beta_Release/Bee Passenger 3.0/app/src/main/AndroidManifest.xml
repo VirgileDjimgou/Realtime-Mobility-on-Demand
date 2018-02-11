@@ -183,6 +183,16 @@
             android:screenOrientation="portrait"/>
 
 
+        <activity android:name="com.bee.passenger.promotions_swipe.PromotionsActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+
+        <activity
+            android:name="com.bee.passenger.cardview.History_CardView"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
+
 
         <activity
             android:name="com.bee.passenger.activity.PrivacyPolicyActivity"

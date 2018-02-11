@@ -13,7 +13,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
-import com.bee.drive.R;
+import com.bee.passenger.R;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
