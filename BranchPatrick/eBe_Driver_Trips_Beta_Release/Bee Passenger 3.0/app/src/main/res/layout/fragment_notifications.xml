@@ -1,0 +1,53 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="beetech.com.wallet.com.com.wallet.fragment.NotificationsFragment">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:paddingEnd="30dp"
+        android:paddingStart="50dp">
+
+
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CheckBox" />
+
+
+        <SeekBar
+            android:id="@+id/seekBar"
+            android:layout_width="156dp"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:paddingEnd="30dp"
+        android:paddingStart="50dp">
+
+
+            <EditText
+                android:id="@+id/first_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_bg_edit_2"
+                android:hint="First Name"
+                android:inputType="textEmailAddress"
+                android:paddingBottom="2dp"
+                android:textColor="#f0f7f4"
+                android:textCursorDrawable="@drawable/bg_input_cursor_2"
+                android:textSize="13sp" />
+    </LinearLayout>
+
+
+</RelativeLayout>

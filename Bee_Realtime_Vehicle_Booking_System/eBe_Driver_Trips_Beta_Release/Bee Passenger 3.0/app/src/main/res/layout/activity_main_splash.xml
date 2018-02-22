@@ -1,0 +1,99 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:background="@drawable/ebe_main_screen"
+    android:layout_height="match_parent">
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="66dp"
+            android:text="@string/app_name"
+            android:textColor="@color/button_text"
+            android:textStyle="bold"
+            android:textSize="32dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"/>
+
+        <Button
+            android:id="@+id/email_connect"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="106dp"
+            android:background="@drawable/button"
+            android:text="sign in / Sign Up with Email"
+            android:textColor="@color/button_text"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginRight="1dp"/>
+
+
+
+        <Button
+            android:id="@+id/phone_connect"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:text="sign in / Sign Up with Phone"
+            android:textColor="@color/button_text" />
+
+
+        <Button
+            android:id="@+id/facebook_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:background="@drawable/fb_loginv2"/>
+
+
+
+
+
+        <TextView
+            android:id="@+id/firma"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="40dp"
+            android:text="Developed by eBe Techno-#*%>_logy GmbH"
+            android:textColor="@color/button_text"
+            android:layout_marginTop="60dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:textStyle="bold"
+            android:textSize="15dp" />
+
+        <TextView
+            android:id="@+id/hoster"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="13dp"
+            android:text="proudly hosted by Google Cloud Platform and FireBase"
+            android:textColor="@color/button_text"
+            android:textStyle="italic"
+            android:layout_gravity="bottom|center_horizontal"
+            android:textSize="15dp" />
+
+
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>

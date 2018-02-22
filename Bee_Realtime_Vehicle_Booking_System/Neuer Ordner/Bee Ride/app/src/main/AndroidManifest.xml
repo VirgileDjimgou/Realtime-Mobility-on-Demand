@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.Bee.Booking">
+
+    <!--
+         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
+         Google Maps Android API v2, but you must specify either coarse or fine
+         location permissions for the 'MyLocation' functionality. 
+    -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <service android:name="com.Bee.Booking.onAppKilled" android:stopWithTask="false"/>
+        <activity android:name="com.Bee.Booking.ubersplash.MainActivity_App">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+aq
+
+        <activity android:name="com.Bee.Booking.DriverLoginActivity" />
+        <activity android:name="com.Bee.Booking.CustomerLoginActivity" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <activity
+            android:name="com.Bee.Booking.DriverMapActivity"
+            android:label="@string/title_activity_driver_map" />
+        <activity android:name="com.Bee.Booking.CustomerMapActivity" />
+        <activity android:name="com.Bee.Booking.CustomerSettingsActivity" />
+        <activity android:name="com.Bee.Booking.DriverSettingsActivity" />
+        <activity android:name="com.Bee.Booking.HistoryActivity" />
+        <activity android:name="com.Bee.Booking.MainActivity" />
+        <activity android:name="com.Bee.Booking.HistorySingleActivity"></activity>
+        <activity
+            android:name="com.Bee.Booking.start_classe.MainActivity_profile"
+            android:label="@string/title_activity_profile"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.Bee.Booking.start_classe.SignupActivity"
+            android:label="@string/title_activity_login"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.Bee.Booking.start_classe.ResetPasswordActivity"
+            android:label="@string/title_activity_reset_password"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+    </application>
+
+</manifest>

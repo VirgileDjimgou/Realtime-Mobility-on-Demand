@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/book_taxi"
+            android:title="Request Ride"
+            android:icon="@drawable/ic_taxi_button"/>
+        <item android:id="@+id/taxi_history"
+            android:title="History"
+            android:icon="@drawable/ic_clock"/>
+    </group>
+
+    <group android:id="@+id/nav_split">
+        <item android:id="@+id/about"
+            android:title="About"
+            android:icon="@drawable/ic_info"/>
+        <item android:id="@+id/settings"
+            android:title="Settings"
+            android:icon="@drawable/ic_setting_dark"/>
+        <item android:id="@+id/logout"
+            android:title="Logout"
+            android:icon="@drawable/ic_logout"/>
+    </group>
+</menu>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ebe_main_screen">
+
+
+    <TextView
+        android:id="@+id/titel_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="196dp"
+        android:text="@string/app_name"
+        android:textColor="@color/button_text"
+        android:textStyle="bold"
+        android:textSize="32dp" />
+
+
+
+    <ProgressBar
+        android:id="@+id/progressBarSearchDriver"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="400dp"
+        android:tooltipText="request progression"
+        android:indeterminateDrawable="@android:drawable/progress_indeterminate_horizontal"
+        android:indeterminate="true" />
+
+    <TextView
+        android:id="@+id/init_connection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="430dp"
+        android:text="Init connection with Cloud Backend .... "
+        android:textColor="@color/button_text"
+        android:textStyle="bold"
+        android:textSize="12dp" />
+
+
+    ProgressBar
+</RelativeLayout>

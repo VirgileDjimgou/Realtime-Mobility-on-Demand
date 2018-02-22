@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Bee Passenger 3.0.iml" filepath="$PROJECT_DIR$/Bee Passenger 3.0.iml" />
+      <module fileurl="file://C:\Users\Patrick Timani\Desktop\Bee\Dev\Bee_Realtime_Vehicle_Booking_System\eBe_Driver_Trips_Beta_Release\Bee Passenger 3.0\Bee Passenger 3.0.iml" filepath="C:\Users\Patrick Timani\Desktop\Bee\Dev\Bee_Realtime_Vehicle_Booking_System\eBe_Driver_Trips_Beta_Release\Bee Passenger 3.0\Bee Passenger 3.0.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://C:\Users\Patrick Timani\Desktop\Bee\Dev\Bee_Realtime_Vehicle_Booking_System\eBe_Driver_Trips_Beta_Release\Bee Passenger 3.0\app\app.iml" filepath="C:\Users\Patrick Timani\Desktop\Bee\Dev\Bee_Realtime_Vehicle_Booking_System\eBe_Driver_Trips_Beta_Release\Bee Passenger 3.0\app\app.iml" />
+    </modules>
+  </component>
+</project>
