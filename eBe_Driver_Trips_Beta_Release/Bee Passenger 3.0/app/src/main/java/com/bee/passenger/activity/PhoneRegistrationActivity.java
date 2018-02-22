@@ -47,7 +47,7 @@ public class PhoneRegistrationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String Driver_Type = DriverType.getSelectedItem().toString().trim();
+                // String Driver_Type = DriverType.getSelectedItem().toString().trim();
                 String Name = UserNameRegistration.getText().toString().trim();
                 if(Name.length() < 3 ){
                     Toast.makeText(getApplicationContext(), "invalid Name  !" , Toast.LENGTH_LONG).show();
