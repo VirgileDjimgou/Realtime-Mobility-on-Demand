@@ -55,8 +55,6 @@ public class MainActivity_App extends AppCompatActivity {
     Animation uptodown;
     RelativeLayout layoutAnimation;
 
-
-
     private ArrayList<String> permissionsToRequest;
     private ArrayList<String> permissionsRejected = new ArrayList<>();
     private ArrayList<String> permissions = new ArrayList<>();
@@ -83,9 +81,6 @@ public class MainActivity_App extends AppCompatActivity {
 //                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         }
 
-
-
-
         // control if Gps activated  ...
         permissions.add(ACCESS_FINE_LOCATION);
         permissions.add(ACCESS_COARSE_LOCATION);
@@ -104,7 +99,6 @@ public class MainActivity_App extends AppCompatActivity {
 
         locationTrack = new LocationTrack(MainActivity_App.this);
 
-
         if (locationTrack.canGetLocation()) {
 
 
@@ -119,8 +113,6 @@ public class MainActivity_App extends AppCompatActivity {
 
             locationTrack.showSettingsAlert();
         }
-
-
 
         setContentView(R.layout.activity_main_splash);
         getSupportActionBar().hide();
@@ -175,7 +167,6 @@ public class MainActivity_App extends AppCompatActivity {
     }
 
     // print Keyhashes ...
-
     // print KeyHashes
     public void printhashkey(){
 
