@@ -1,18 +1,14 @@
 <resources>
-    <string name="app_name">Bee~#> Driver</string>
+    <string name="app_name">Bee Driver</string>
 
 
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBb7F-tT5vbdBNFsUdrr8kwPJh6SkEeUiI</string>
-
     <string name="action_add_favourite">Add to Favourites</string>
     <string name="action_play_next">Play Next</string>
     <string name="backdrop_title">LOVE MUSIC</string>
     <string name="backdrop_subtitle">This season top 20 albums</string>
-
     <string name="promo_titel">Bee~#> Promotions</string>
     <string name="delete">DELETE</string>
-
-
     <string name="pick_contacts">Pick contact(s)</string>
     <string name="picked_contacts">Picked contact(s)</string>
 
