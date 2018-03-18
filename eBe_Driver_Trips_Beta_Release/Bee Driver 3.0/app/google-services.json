@@ -46,6 +46,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "594753687386-asjc1g4h5tbl0gfp4rf57hvckbmtpuc7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.beewallet.phone",
+            "certificate_hash": "028a1e51ce357ebbdaddd99d98438586e76fed2f"
+          }
+        },
+        {
           "client_id": "594753687386-0b879rgu9maitle43qafe3lmfu139mvu.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -89,6 +97,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "594753687386-skf23sk8ovsj62i6d9gfhn2tufmk3t88.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "beetech.com.wallet",
+            "certificate_hash": "028a1e51ce357ebbdaddd99d98438586e76fed2f"
+          }
+        },
         {
           "client_id": "594753687386-fnuf88bkllbe810ek3rmr3m5oq4up81u.apps.googleusercontent.com",
           "client_type": 1,
@@ -134,6 +150,110 @@
       },
       "oauth_client": [
         {
+          "client_id": "594753687386-73u7bvr4iujhd9emoah3tv6vb03ecgci.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bee.passenger",
+            "certificate_hash": "34ed574fd74584c15c8f722b74274cb111f72ea8"
+          }
+        },
+        {
+          "client_id": "594753687386-5c4i2s7o04l34555f3f26q1co5hms8ff.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bee.passenger",
+            "certificate_hash": "028a1e51ce357ebbdaddd99d98438586e76fed2f"
+          }
+        },
+        {
+          "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBAxOoUN1spN7YEnSSwaFU6x3vRP1EkHI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594753687386:android:137f9e6b9f71ec3f",
+        "android_client_info": {
+          "package_name": "com.bee.drive"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "594753687386-a89rcgeur38s4ot7u48n613vvt8rn986.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bee.drive",
+            "certificate_hash": "34ed574fd74584c15c8f722b74274cb111f72ea8"
+          }
+        },
+        {
+          "client_id": "594753687386-efg65t6q70rcde701r3kttl4n7li1i24.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bee.drive",
+            "certificate_hash": "028a1e51ce357ebbdaddd99d98438586e76fed2f"
+          }
+        },
+        {
+          "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBAxOoUN1spN7YEnSSwaFU6x3vRP1EkHI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594753687386:android:33b9e80cd414036e",
+        "android_client_info": {
+          "package_name": "com.bee.fcm"
+        }
+      },
+      "oauth_client": [
+        {
           "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -158,9 +278,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:594753687386:android:137f9e6b9f71ec3f",
+        "mobilesdk_app_id": "1:594753687386:android:95dece61bbfae3d1",
         "android_client_info": {
-          "package_name": "com.bee.drive"
+          "package_name": "com.Bee.firebasecloudmessaging"
         }
       },
       "oauth_client": [
@@ -181,6 +301,200 @@
         "appinvite_service": {
           "status": 1,
           "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594753687386:android:0eeb0a1e84ed30e7",
+        "android_client_info": {
+          "package_name": "com.base.fire"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBAxOoUN1spN7YEnSSwaFU6x3vRP1EkHI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594753687386:android:2847553b4abe847e",
+        "android_client_info": {
+          "package_name": "chat.pat.recordaudio"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBAxOoUN1spN7YEnSSwaFU6x3vRP1EkHI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594753687386:android:60392446fad27332",
+        "android_client_info": {
+          "package_name": "com.moonlight.cartographe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "594753687386-38qemqh14qvqf9gao6nttohoa43g1hlj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.moonlight.cartographe",
+            "certificate_hash": "028a1e51ce357ebbdaddd99d98438586e76fed2f"
+          }
+        },
+        {
+          "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBAxOoUN1spN7YEnSSwaFU6x3vRP1EkHI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594753687386:android:695828d6e835ad57",
+        "android_client_info": {
+          "package_name": "com.DriverTracking.client"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "594753687386-lel3r378ov40tc2ged64tciqa7247515.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.DriverTracking.client",
+            "certificate_hash": "028a1e51ce357ebbdaddd99d98438586e76fed2f"
+          }
+        },
+        {
+          "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBAxOoUN1spN7YEnSSwaFU6x3vRP1EkHI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594753687386:android:a610824ab3685ccc",
+        "android_client_info": {
+          "package_name": "tech.ioengine.Login"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "594753687386-85kehnr58l75ggcdfdmuu37abmo0ide9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "tech.ioengine.Login",
+            "certificate_hash": "028a1e51ce357ebbdaddd99d98438586e76fed2f"
+          }
+        },
+        {
+          "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBAxOoUN1spN7YEnSSwaFU6x3vRP1EkHI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2
