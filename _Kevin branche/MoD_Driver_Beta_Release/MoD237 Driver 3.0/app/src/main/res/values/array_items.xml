@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="spinnerItems">
+        <item>Taxi Driver</item>
+        <item>Ben-Skin Driver</item>
+    </string-array>
+</resources>
