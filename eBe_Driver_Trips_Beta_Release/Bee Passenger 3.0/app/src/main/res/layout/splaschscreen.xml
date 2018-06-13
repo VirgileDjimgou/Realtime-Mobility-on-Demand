@@ -36,7 +36,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="430dp"
-        android:text="Init connection with Cloud Backend .... "
+        android:text="@string/init_connection"
         android:textColor="@color/button_text"
         android:textStyle="bold"
         android:textSize="12dp" />

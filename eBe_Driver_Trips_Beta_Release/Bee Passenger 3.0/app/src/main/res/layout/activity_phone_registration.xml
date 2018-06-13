@@ -32,7 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dp"
-                android:text="Registration with Phone"
+                android:text="@string/phone_registration"
                 android:textColor="@color/grey_100"
                 android:textColorHint="@color/grey_100"
                 android:layout_gravity="top|center_horizontal"
@@ -134,7 +134,7 @@
                             android:inputType="textEmailAddress"
                             android:paddingBottom="2dp"
                             android:textColor="#f0f7f4"
-                            android:text="no_emai@no_email.com"
+                            android:text="@string/email_no"
                             android:enabled="false"
                             android:textCursorDrawable="@drawable/bg_input_cursor_2"
                             android:textSize="13sp" />

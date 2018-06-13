@@ -1,9 +1,8 @@
 <resources>
-    <string name="app_name">Bee Passenger</string>
+    <string name="app_name">MoD237 Passenger</string>
 
 
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBb7F-tT5vbdBNFsUdrr8kwPJh6SkEeUiI</string>
-
 
     <!-- Navigation Drawer menu labels -->
     <string name="nav_home">Home</string>
@@ -39,7 +38,7 @@
 
 
     <string name="action_settings">Settings</string>
-    <string name="promo_titel">Bee~#> Promotions</string>
+    <string name="promo_titel">MoD~#> Promotions</string>
     <string name="delete">DELETE</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -103,8 +102,8 @@
 
 
 
-    <string name="app_intro_text">Welcome to Bee Wallet Mananger -Before starting, please take some time to read through our terms of service.</string>
-    <string name="app_intro_title">Bee Wallet Manager</string>
+    <string name="app_intro_text">Welcome to MoD Wallet Mananger -Before starting, please take some time to read through our terms of service.</string>
+    <string name="app_intro_title">MoD Manager</string>
     <string name="app_intro_please_agree">Please read and agree to the terms of service before proceeding</string>
     <string name="app_intro_iagree">I agree to terms of service</string>
     <string name="fragment_send_ether_amount">Amount</string>
@@ -163,17 +162,16 @@
     <string name="main_grant_permission_import">Please grant read permission to import Wallets</string>
     <string name="dialog_watch_only_title">Lookup Address</string>
     <string name="dialog_importing_wallets_title">Importing Wallets?</string>
-    <string name="dialog_importing_wallets_text">We have detected %1$d new wallet%2$s in our Bee Wallet folder. Would you like to import: %3$s</string>
+    <string name="dialog_importing_wallets_text">We have detected %1$d new wallet%2$s in our MoD Wallet folder. Would you like to import: %3$s</string>
     <string name="dialog_ex_nofull_title">No Full Wallet</string>
     <string name="dialog_ex_nofull_text">Watch only wallets can not be exported.</string>
     <string name="dialog_exporting_title">Exporting your Wallet</string>
-    <string name="dialog_exporting_text">A copy of your  wallet Information will be placed inside the folder \"BeeWallet\" in the root directory of your Android phone. Please note that other applications that run on your device can technically access any wallets that you have exported. Due to this, we highly recommend erasing all exported wallets from the Bee Wallet manager folder as soon as you have finished backing them up.</string>
     <string name="dialog_nofullwallet">No Full Wallet</string>
     <string name="dialog_nofullwallet_text">In order to send funds you need a full wallet with a private key. Please generate or import one first.</string>
     <string name="dialog_no_wallets">No Wallets</string>
     <string name="dialog_no_wallets_text">In order to request funds you need a wallet or a watch only address.</string>
     <string name="dialog_no_wallets_found">No Wallets Found</string>
-    <string name="dialog_no_wallets_found_text">Please place the wallet you want to import inside the Bee Wallet folder and make sure it is correctly named. When importing from Mist or other desktop client you don\'t have to rename your wallet.</string>
+    <string name="dialog_no_wallets_found_text">Please place the wallet you want to import inside the MoD Wallet folder and make sure it is correctly named. When importing from Mist or other desktop client you don\'t have to rename your wallet.</string>
     <string name="notification_ticker">Incoming  Transaction…</string>
     <string name="notification_transfersuc">Transfer successful</string>
     <string name="notification_transferfail">Transfer Failed</string>
@@ -188,7 +186,7 @@
     <string name="notification_click_to_view">Click to view</string>
     <string name="ether_and_token"> Token</string>
     <string name="prefs_lock_with_pw">Lock with Password</string>
-    <string name="prefs_lock_with_pw_sum">If enabled Bee Wallet will ask you for a password before launching the app</string>
+    <string name="prefs_lock_with_pw_sum">If enabled MoD Passenger Wallet will ask you for a password before launching the app</string>
     <string name="prefs_set_pw">Set Password</string>
     <string name="prefs_set_pw_sum">Specify your login pattern</string>
     <string name="prefs_cat_security">Security</string>
@@ -216,7 +214,7 @@
     <string name="send_expert_warning">You can add extra data to send along with your transaction. If you don\'t know what this is then don\'t touch it or bad things may happen!</string>
     <string name="expert_mode_optional">Expert Mode (Optional)</string>
     <string name="transaction_failed">Transaction failed</string>
-    <string name="reddit">Bee Wallet  Subreddit</string>
+    <string name="reddit">MoD Passenger  Wallet  Subreddit</string>
     <string name="add">Add</string>
     <string name="show">Show</string>
     <string name="setting_erc_qr_encoding">Use ERC-67 QR Encoding</string>
@@ -327,4 +325,17 @@
     <string name="result">Something will happen here&#8230;</string>
     <string name="subscribed">Subscribed to news topic</string>
     <string name="unsubscribed">Unsubscribed from news topic</string>
+    <string name="by">\"Developed by MoD237 Technology\"</string>
+    <string name="connect_phone">connect  with Phone</string>
+    <string name="email_connect">connect  with Email</string>
+    <string name="dev_under">proudly hosted by Google Cloud Platform and FireBase</string>
+    <string name="email_interface">Email Login Interface</string>
+    <string name="phone_authentification">Phone Authentification</string>
+    <string name="phone_registration">Registration with Phone</string>
+    <string name="email_no">no_emai@no_email.com</string>
+    <string name="history">History</string>
+    <string name="init_connection">Init connection with Cloud Backend ....</string>
+    <string name="reset_your_password">reset your password</string>
+    <string name="profil_settings">update your Profil Settings</string>
+    <string name="back_menu">back in Main Menu</string>
 </resources>

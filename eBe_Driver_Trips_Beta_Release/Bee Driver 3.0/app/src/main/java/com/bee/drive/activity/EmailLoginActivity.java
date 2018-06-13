@@ -271,7 +271,6 @@ public class EmailLoginActivity extends AppCompatActivity {
                                         .show();
                             } else {
                                 User newUser = new User();
-
                                 newUser.phone = Phone_numb;
                                 newUser.DriverType = Driver_Type;
                                 newUser.email = user.getEmail();

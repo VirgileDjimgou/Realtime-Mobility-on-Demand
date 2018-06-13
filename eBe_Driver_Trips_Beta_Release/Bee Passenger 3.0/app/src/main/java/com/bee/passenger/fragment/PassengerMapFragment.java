@@ -647,35 +647,43 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                                     return;
                                 }
 
-                                if(driverMap.get("service").equals(requestService)){
-                                    driverFound = true;
-                                    driverFoundID = dataSnapshot.getKey();
-                                    DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
-                                    String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                    HashMap map = new HashMap();
-                                    map.put("customerRideId", customerId);
-                                    map.put("destination", destination);
-                                    map.put("destinationLat", destinationLatLng.latitude);
-                                    map.put("destinationLng", destinationLatLng.longitude);
-                                    map.put("CustomerPrice" , TripCost.getText().toString());
-                                    map.put("NumPassenger", NumOfPassenger.getText().toString());
-                                    map.put("OptionsType", requestOptions);
-                                    map.put("Service" , requestService);
-                                    map.put("ResponsePassenger" , "");
-                                    map.put("ResponseDriver" , "");
-                                    map.put("IdFcm" , onTokenRefresh());
+                                try {
 
-                                    driverRef.updateChildren(map);
 
-                                    getDriverLocation();
-                                    getDriverInfo();
-                                    getHasRideEnded();
+                                    if(driverMap.get("service").equals(requestService)){
+                                        driverFound = true;
+                                        driverFoundID = dataSnapshot.getKey();
+                                        DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
+                                        String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                        HashMap map = new HashMap();
+                                        map.put("customerRideId", customerId);
+                                        map.put("destination", destination);
+                                        map.put("destinationLat", destinationLatLng.latitude);
+                                        map.put("destinationLng", destinationLatLng.longitude);
+                                        map.put("CustomerPrice" , TripCost.getText().toString());
+                                        map.put("NumPassenger", NumOfPassenger.getText().toString());
+                                        map.put("OptionsType", requestOptions);
+                                        map.put("Service" , requestService);
+                                        map.put("ResponsePassenger" , "");
+                                        map.put("ResponseDriver" , "");
+                                        map.put("IdFcm" , onTokenRefresh());
 
-                                    // Listener Driver and Customer Response
-                                    getResponseDriver();
-                                    mRequest.setText("Waiting for Driver Response ....");
-                                    // progressBar_Search.setIndeterminate(false);
-                                    // RequestSettingsInit();
+                                        driverRef.updateChildren(map);
+
+                                        getDriverLocation();
+                                        getDriverInfo();
+                                        getHasRideEnded();
+
+                                        // Listener Driver and Customer Response
+                                        getResponseDriver();
+                                        mRequest.setText("Waiting for Driver Response ....");
+                                        // progressBar_Search.setIndeterminate(false);
+                                        // RequestSettingsInit();
+                                    }
+
+                                }catch(Exception ex){
+                                    ex.printStackTrace();
+
                                 }
                             }
                         }
@@ -800,39 +808,51 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
-                    if(dataSnapshot.child("name")!=null){
-                        mDriverName.setText(dataSnapshot.child("name").getValue().toString());
-                    }
-                    if(dataSnapshot.child("phone")!=null){
-                        mDriverPhone.setText(dataSnapshot.child("phone").getValue().toString());
-                    }
-                    if(dataSnapshot.child("car")!=null){
-                        mDriverCar.setText(dataSnapshot.child("car").getValue().toString());
-                    }
-                    if(dataSnapshot.child("profileImageUrl")!=null){
-                        Glide.with(getActivity()).load(dataSnapshot.child("profileImageUrl").getValue().toString()).into(mDriverProfileImage);
+
+                    try{
+
+
+                        if(dataSnapshot.child("name")!=null){
+                            mDriverName.setText(dataSnapshot.child("name").getValue().toString());
+                        }
+                        if(dataSnapshot.child("phone")!=null){
+                            mDriverPhone.setText(dataSnapshot.child("phone").getValue().toString());
+                        }
+                        if(dataSnapshot.child("car")!=null){
+                            mDriverCar.setText(dataSnapshot.child("car").getValue().toString());
+                        }
+                        if(dataSnapshot.child("profileImageUrl")!=null){
+                            Glide.with(getActivity()).load(dataSnapshot.child("profileImageUrl").getValue().toString()).into(mDriverProfileImage);
+                        }
+
+                        if(dataSnapshot.child("IdFcm")!=null){
+                            String IdfcmUser = dataSnapshot.child("IdFcm").getValue().toString();
+                            DriverID_Fcm = IdfcmUser;
+                            FCM_Message_Sender.sendWithOtherThread("token" ,
+                                    IdfcmUser ,
+                                    "eBe Realtime Mobility on Demand 2018" ,
+                                    "Request Passenger Notification ...");
+                        }
+
+                        int ratingSum = 0;
+                        float ratingsTotal = 0;
+                        float ratingsAvg = 0;
+                        for (DataSnapshot child : dataSnapshot.child("rating").getChildren()){
+                            ratingSum = ratingSum + Integer.valueOf(child.getValue().toString());
+                            ratingsTotal++;
+                        }
+                        if(ratingsTotal!= 0){
+                            ratingsAvg = ratingSum/ratingsTotal;
+                            mRatingBar.setRating(ratingsAvg);
+                        }
+
+
+                    }catch(Exception ex){
+                        ex.printStackTrace();
                     }
 
-                    if(dataSnapshot.child("IdFcm")!=null){
-                        String IdfcmUser = dataSnapshot.child("IdFcm").getValue().toString();
-                        DriverID_Fcm = IdfcmUser;
-                        FCM_Message_Sender.sendWithOtherThread("token" ,
-                                IdfcmUser ,
-                                "eBe Realtime Mobility on Demand 2018" ,
-                                "Request Passenger Notification ...");
-                    }
+                    //  marie  ...
 
-                    int ratingSum = 0;
-                    float ratingsTotal = 0;
-                    float ratingsAvg = 0;
-                    for (DataSnapshot child : dataSnapshot.child("rating").getChildren()){
-                        ratingSum = ratingSum + Integer.valueOf(child.getValue().toString());
-                        ratingsTotal++;
-                    }
-                    if(ratingsTotal!= 0){
-                        ratingsAvg = ratingSum/ratingsTotal;
-                        mRatingBar.setRating(ratingsAvg);
-                    }
                 }
             }
             @Override
