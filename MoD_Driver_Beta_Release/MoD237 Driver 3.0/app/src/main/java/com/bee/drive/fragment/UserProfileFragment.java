@@ -137,7 +137,7 @@ public class UserProfileFragment extends Fragment {
             }
 
             if(tvUserName != null){
-                tvUserName.setText(myAccount.name);
+                tvUserName.setText(StaticConfig.STR_EXTRA_USERNAME);
             }
 
             // setImageAvatar(context, myAccount.avata);
@@ -175,7 +175,7 @@ public class UserProfileFragment extends Fragment {
         setupArrayListInfo(myAccount);
         // setImageAvatar(context, myAccount.avata);
         // SetImgesProfil();
-        tvUserName.setText(myAccount.name);
+        tvUserName.setText(StaticConfig.STR_EXTRA_USERNAME);
 
         recyclerView = (RecyclerView)view.findViewById(R.id.info_recycler_view);
         infoAdapter = new UserInfoAdapter(listConfig);
@@ -413,189 +413,218 @@ public class UserProfileFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            final Configuration config = profileConfig.get(position);
-            holder.label.setText(config.getLabel());
-            holder.value.setText(config.getValue());
-            holder.icon.setImageResource(config.getIcon());
-            ((RelativeLayout)holder.label.getParent()).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(config.getLabel().equals(SIGNOUT_LABEL)){
-                        FirebaseAuth.getInstance().signOut();
-                        FriendDB.getInstance(getContext()).dropDB();
-                        GroupDB.getInstance(getContext()).dropDB();
-                        ServiceUtils.stopServiceFriendChat(getContext().getApplicationContext(), true);
-                        getActivity().finish();
-                    }
 
-                    if(config.getLabel().equals(USERNAME_LABEL)){
-                        View vewInflater = LayoutInflater.from(context)
-                                .inflate(R.layout.dialog_edit_username,  (ViewGroup) getView(), false);
-                        final EditText input = (EditText)vewInflater.findViewById(R.id.edit_username);
-                        input.setText(myAccount.name);
-                        // Alert Builder to save the new Profil User .....
-                        new AlertDialog.Builder(context)
-                                .setTitle("Edit username")
-                                .setView(vewInflater)
-                                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                                    @SuppressLint("WrongConstant")
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
+            try{
 
-                                        if(input.getText().toString().isEmpty()){
-                                            Toast.makeText(getContext(), "you to enter a valid Username .... " , 4000).show();
+                final Configuration config = profileConfig.get(position);
+                holder.label.setText(config.getLabel());
+                holder.value.setText(config.getValue());
+                holder.icon.setImageResource(config.getIcon());
+                ((RelativeLayout)holder.label.getParent()).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(config.getLabel().equals(SIGNOUT_LABEL)){
+                            FirebaseAuth.getInstance().signOut();
+                            FriendDB.getInstance(getContext()).dropDB();
+                            GroupDB.getInstance(getContext()).dropDB();
+                            ServiceUtils.stopServiceFriendChat(getContext().getApplicationContext(), true);
+                            getActivity().finish();
+                        }
 
-                                        }else{
-                                            String newName = input.getText().toString();
-                                            if(!myAccount.name.equals(newName)){
-                                                changeUserName(newName);
+                        if(config.getLabel().equals(USERNAME_LABEL)){
+                            View vewInflater = LayoutInflater.from(context)
+                                    .inflate(R.layout.dialog_edit_username,  (ViewGroup) getView(), false);
+                            final EditText input = (EditText)vewInflater.findViewById(R.id.edit_username);
+                            input.setText(StaticConfig.STR_EXTRA_USERNAME);
+                            // Alert Builder to save the new Profil User .....
+                            new AlertDialog.Builder(context)
+                                    .setTitle("Edit username")
+                                    .setView(vewInflater)
+                                    .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                                        @SuppressLint("WrongConstant")
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                                            if(input.getText().toString().isEmpty()){
+                                                Toast.makeText(getContext(), "you to enter a valid Username .... " , 4000).show();
+
+                                            }else{
+                                                String newName = input.getText().toString();
+                                                if(!StaticConfig.STR_EXTRA_USERNAME.equals(newName)){
+                                                    changeUserName(newName);
+                                                }
+
                                             }
 
+                                            dialogInterface.dismiss();
                                         }
+                                    })
+                                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            dialogInterface.dismiss();
+                                        }
+                                    }).show();
+                        }
 
-                                        dialogInterface.dismiss();
-                                    }
-                                })
-                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        dialogInterface.dismiss();
-                                    }
-                                }).show();
-                    }
+                        if(config.getLabel().equals(PHONE_LABEL)){
+                            View vewInflater = LayoutInflater.from(context)
+                                    .inflate(R.layout.dialog_edit_phone_number,  (ViewGroup) getView(), false);
+                            final EditText input = (EditText)vewInflater.findViewById(R.id.edit_phone);
+                            input.setText(StaticConfig.STR_EXTRA_PHONE_NUMBER);
+                            // Alert Builder to save the new Profil User .....
+                            new AlertDialog.Builder(context)
+                                    .setTitle("Edit Phone Number")
+                                    .setView(vewInflater)
+                                    .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                                        @SuppressLint("WrongConstant")
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
 
-                    if(config.getLabel().equals(PHONE_LABEL)){
-                        View vewInflater = LayoutInflater.from(context)
-                                .inflate(R.layout.dialog_edit_phone_number,  (ViewGroup) getView(), false);
-                        final EditText input = (EditText)vewInflater.findViewById(R.id.edit_phone);
-                        input.setText(myAccount.phone);
-                        // Alert Builder to save the new Profil User .....
-                        new AlertDialog.Builder(context)
-                                .setTitle("Edit Phone Number")
-                                .setView(vewInflater)
-                                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                                    @SuppressLint("WrongConstant")
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                            if(input.getText().toString().isEmpty()){
+                                                Toast.makeText(getContext(), "you to enter a valid phone number .... " , 4000).show();
 
-                                        if(input.getText().toString().isEmpty()){
-                                            Toast.makeText(getContext(), "you to enter a valid phone number .... " , 4000).show();
+                                            }else{
+                                                String newPhone = input.getText().toString();
+                                                if(!StaticConfig.STR_EXTRA_USERNAME.equals(newPhone)){
+                                                    changePhoneNumber(newPhone);
+                                                }
 
-                                        }else{
-                                            String newPhone = input.getText().toString();
-                                            if(!myAccount.phone.equals(newPhone)){
-                                                changePhoneNumber(newPhone);
                                             }
-
+                                            dialogInterface.dismiss();
                                         }
-                                        dialogInterface.dismiss();
-                                    }
-                                })
-                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        dialogInterface.dismiss();
-                                    }
-                                }).show();
-                    }
+                                    })
+                                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            dialogInterface.dismiss();
+                                        }
+                                    }).show();
+                        }
 
 
-                    if(config.getLabel().equals(RESETPASS_LABEL)){
-                        new AlertDialog.Builder(context)
-                                .setTitle("Password")
-                                .setMessage("Are you sure want to reset password?")
-                                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        resetPassword(myAccount.email);
-                                        dialogInterface.dismiss();
-                                    }
-                                })
-                                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        dialogInterface.dismiss();
-                                    }
-                                }).show();
+                        if(config.getLabel().equals(RESETPASS_LABEL)){
+                            new AlertDialog.Builder(context)
+                                    .setTitle("Password")
+                                    .setMessage("Are you sure want to reset password?")
+                                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            resetPassword(StaticConfig.STR_EXTRA_EMAIL);
+                                            dialogInterface.dismiss();
+                                        }
+                                    })
+                                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            dialogInterface.dismiss();
+                                        }
+                                    }).show();
+                        }
                     }
-                }
-            });
+                });
+
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
         }
 
         private void changePhoneNumber(String newPhone){
 
-            userDB.child("phone").setValue(newPhone);
+            try{
 
+                userDB.child("phone").setValue(newPhone);
+                myAccount.phone = newPhone;
+                SharedPreferenceHelper prefHelper = SharedPreferenceHelper.getInstance(context);
+                prefHelper.saveUserInfo(myAccount);
 
-            myAccount.phone = newPhone;
-            SharedPreferenceHelper prefHelper = SharedPreferenceHelper.getInstance(context);
-            prefHelper.saveUserInfo(myAccount);
+                setupArrayListInfo(myAccount);
 
-            setupArrayListInfo(myAccount);
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
+
 
         }
 
         private void changeUserName(String newName){
-            userDB.child("name").setValue(newName);
+
+            try{
+
+                userDB.child("name").setValue(newName);
 
 
-            myAccount.name = newName;
-            SharedPreferenceHelper prefHelper = SharedPreferenceHelper.getInstance(context);
-            prefHelper.saveUserInfo(myAccount);
+                myAccount.name = newName;
+                SharedPreferenceHelper prefHelper = SharedPreferenceHelper.getInstance(context);
+                prefHelper.saveUserInfo(myAccount);
 
-            tvUserName.setText(newName);
-            setupArrayListInfo(myAccount);
+                tvUserName.setText(newName);
+                setupArrayListInfo(myAccount);
+
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
+
         }
 
 
         void resetPassword(final String email) {
-            mAuth.sendPasswordResetEmail(email)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            new LovelyInfoDialog(context) {
-                                @Override
-                                public LovelyInfoDialog setConfirmButtonText(String text) {
-                                    findView(com.yarolegovich.lovelydialog.R.id.ld_btn_confirm).setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            dismiss();
-                                        }
-                                    });
-                                    return super.setConfirmButtonText(text);
+
+            try{
+
+
+                mAuth.sendPasswordResetEmail(email)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                new LovelyInfoDialog(context) {
+                                    @Override
+                                    public LovelyInfoDialog setConfirmButtonText(String text) {
+                                        findView(com.yarolegovich.lovelydialog.R.id.ld_btn_confirm).setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                dismiss();
+                                            }
+                                        });
+                                        return super.setConfirmButtonText(text);
+                                    }
                                 }
+                                        .setTopColorRes(R.color.colorPrimary)
+                                        .setIcon(R.drawable.ic_pass_reset)
+                                        .setTitle("Password Recovery")
+                                        .setMessage("Sent email to " + email)
+                                        .setConfirmButtonText("Ok")
+                                        .show();
                             }
-                                    .setTopColorRes(R.color.colorPrimary)
-                                    .setIcon(R.drawable.ic_pass_reset)
-                                    .setTitle("Password Recovery")
-                                    .setMessage("Sent email to " + email)
-                                    .setConfirmButtonText("Ok")
-                                    .show();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            new LovelyInfoDialog(context) {
-                                @Override
-                                public LovelyInfoDialog setConfirmButtonText(String text) {
-                                    findView(com.yarolegovich.lovelydialog.R.id.ld_btn_confirm).setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            dismiss();
-                                        }
-                                    });
-                                    return super.setConfirmButtonText(text);
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                new LovelyInfoDialog(context) {
+                                    @Override
+                                    public LovelyInfoDialog setConfirmButtonText(String text) {
+                                        findView(com.yarolegovich.lovelydialog.R.id.ld_btn_confirm).setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                dismiss();
+                                            }
+                                        });
+                                        return super.setConfirmButtonText(text);
+                                    }
                                 }
+                                        .setTopColorRes(R.color.colorAccent)
+                                        .setIcon(R.drawable.ic_pass_reset)
+                                        .setTitle("False")
+                                        .setMessage("False to sent email to " + email)
+                                        .setConfirmButtonText("Ok")
+                                        .show();
                             }
-                                    .setTopColorRes(R.color.colorAccent)
-                                    .setIcon(R.drawable.ic_pass_reset)
-                                    .setTitle("False")
-                                    .setMessage("False to sent email to " + email)
-                                    .setConfirmButtonText("Ok")
-                                    .show();
-                        }
-                    });
+                        });
+
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
+
         }
 
         @Override

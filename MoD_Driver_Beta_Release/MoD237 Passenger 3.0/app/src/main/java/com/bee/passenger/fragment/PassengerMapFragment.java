@@ -81,7 +81,10 @@ import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 
-public class PassengerMapFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
+public class PassengerMapFragment extends Fragment implements OnMapReadyCallback,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        com.google.android.gms.location.LocationListener {
 
     MapView mMapView;
 
@@ -417,12 +420,19 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                     GeoFire geoFire = new GeoFire(ref);
                     geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
 
-                    pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                    pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Pickup Here").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_pickup)));
-                    mRequest.setText("the system find your Driver...please wait !");
-                    progressBar_Search.setIndeterminate(true);
-                    mRequest.setEnabled(false);
-                    getClosestDriver();
+                    try{
+
+                        pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                        pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Pickup Here").icon(BitmapDescriptorFactory.fromResource(R.mipmap.pick_up_location)));
+                        mRequest.setText("the system find your Driver...please wait !");
+                        progressBar_Search.setIndeterminate(true);
+                        mRequest.setEnabled(false);
+                        getClosestDriver();
+
+                    }catch(Exception ex){
+                        ex.printStackTrace();
+                    }
+
                 }
             }
         });
@@ -984,11 +994,17 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
         mRequest.setText("Find Driver");
         progressBar_Search.setIndeterminate(false);
 
-        mDriverInfo.setVisibility(View.GONE);
-        mDriverName.setText("");
-        mDriverPhone.setText("");
-        mDriverCar.setText("Destination: --");
-        mDriverProfileImage.setImageResource(R.mipmap.ic_default_user);
+        try{
+
+            mDriverInfo.setVisibility(View.GONE);
+            mDriverName.setText("");
+            mDriverPhone.setText("");
+            mDriverCar.setText("Destination: --");
+            mDriverProfileImage.setImageResource(R.drawable.default_user);
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
     }
 
     /*-------------------------------------------- Map specific functions -----

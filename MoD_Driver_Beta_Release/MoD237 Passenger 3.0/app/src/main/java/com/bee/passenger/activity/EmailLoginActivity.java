@@ -330,6 +330,7 @@ public class EmailLoginActivity extends AppCompatActivity {
                                         .setTitle("Login false")
                                         .setMessage("Email not exist or wrong password!")
                                         .setCancelable(false)
+                                        .setConfirmButtonColor(R.color.com_facebook_button_background_color)
                                         .setConfirmButtonText("Ok")
                                         .show();
                             } else {

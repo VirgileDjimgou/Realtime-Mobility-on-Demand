@@ -9,6 +9,7 @@ android {
             storePassword 'BeeCelebat'
         }
     }
+
     compileSdkVersion 26
     buildToolsVersion '25.0.2'
     defaultConfig {
