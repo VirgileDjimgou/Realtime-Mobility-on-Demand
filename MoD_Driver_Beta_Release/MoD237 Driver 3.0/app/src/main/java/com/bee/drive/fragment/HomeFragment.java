@@ -187,7 +187,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 mCustomerInfo.setVisibility(View.GONE);
                     FCM_Util.sendWithOtherThread("token" ,
                             Customer_ID_FCM ,
-                            "Kekko Realtime Mobility on Demand 2018" ,
+                            "GuDana  Mobility on Demand 2018" ,
                             "Driver rejected your proposition (notification) ...");
                     endRide();
                 }catch(Exception ex){
@@ -218,7 +218,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
                     FCM_Util.sendWithOtherThread("token" ,
                             Customer_ID_FCM ,
-                            "ModMob Realtime Mobility on Demand 2018" ,
+                            "GuDana  Mobility on Demand 2018" ,
                             "Driver accepted your proposition (notification) ...");
 
                 }catch(Exception ex){
@@ -521,7 +521,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                         customerId = map.get("customerRideId").toString();
                         mCustomerInfo.setVisibility(View.VISIBLE);
                         getProfil_Proposed_Customers();
-                        ActivateTimerProgressbar(true);
+                       // tivateTimerProgressbar(true);
                     }
 
                     if(map.get("idFcm") !=null){

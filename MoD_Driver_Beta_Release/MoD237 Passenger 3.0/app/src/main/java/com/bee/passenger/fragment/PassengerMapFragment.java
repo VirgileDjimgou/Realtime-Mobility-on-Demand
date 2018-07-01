@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -36,7 +37,9 @@ import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -284,7 +287,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                                 RequestSettingsInit();
                                 mfind_a_rider.setEnabled(true);
                                 mRequest.setEnabled(true);
-                                endRide();
+                                endRide(); // request and ride reset on firebase
                                 mRequest.setText("Find a Driver");
                                 progressBar_Search.setIndeterminate(false);
                                 requestBol = false;
@@ -299,6 +302,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
             }
         });
 
+        //  action to start  a  configuration (price , personne , ...etc )
         mfind_a_rider = (Button) rootView.findViewById(R.id.find_a_rider);
         mfind_a_rider.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -320,6 +324,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
 
 
 
+        // action accept driver   ....  now you must wait the response of Passenger
         mAcceptDriver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -697,7 +702,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                                         driverRef.updateChildren(map);
 
                                         getDriverLocation();
-                                        getDriverInfo();
+                                        getDriverInfo();  // ... we must show the driver info after
                                         getHasRideEnded();
 
                                         // Listener Driver and Customer Response
@@ -750,6 +755,8 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
             }
         });
     }
+
+
 
     /*-------------------------------------------- Map specific functions -----
     |  Function(s) getDriverLocation
@@ -913,8 +920,6 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                             mDriverInfo.setVisibility(View.GONE);
                             RequestSettingsInit();
 
-
-
                         }
 
                     }
@@ -934,15 +939,14 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                         // Start with the trip
 
                         Toast.makeText(getApplicationContext(), "positive Response for a Driver and Customer " , Toast.LENGTH_LONG).show();
+                        // wait for Drivers ....
                         //getAssignedCustomer();
                         // mRideStatus.setBackgroundColor(mRideStatus.getContext().getResources().getColor(R.color.green));
                     }else{
                         // find the Next Available Driver ...
-                        Toast.makeText(getApplicationContext(), "Negative Response of the  Driver or Customer ", Toast.LENGTH_LONG).show();
+                        // Toast.makeText(getApplicationContext(), "Negative Response of the  Driver or Customer ", Toast.LENGTH_LONG).show();
                         // DeleteProposition
-
                     }
-
                 }
             }
             @Override
@@ -1039,8 +1043,12 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
             ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
         }
         buildGoogleApiClient();
+
+        // mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
         mMap.setMyLocationEnabled(true);
     }
+
+
 
     protected synchronized void buildGoogleApiClient(){
         mGoogleApiClient = new GoogleApiClient.Builder(getContext())

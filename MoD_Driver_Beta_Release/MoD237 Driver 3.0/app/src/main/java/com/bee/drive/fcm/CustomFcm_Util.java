@@ -70,7 +70,7 @@ public class CustomFcm_Util {
                     jNotification.put("sound", "default");
                     jNotification.put("badge", "1");
                     jNotification.put("click_action", "Start_Main");
-                    jNotification.put("icon", "ic_bee");
+                    jNotification.put("icon", "ic_gudana");
 
                     // https://firebasestorage.googleapis.com/v0/b/beewallet-114e7.appspot.com/o/logo_message_2.jpg?alt=media&token=655833c9-3073-4792-9a8a-e68246e80c0b
                     jData.put("picture", "https://firebasestorage.googleapis.com/v0/b/beewallet-114e7.appspot.com/o/logo_message_2.jpg?alt=media&token=655833c9-3073-4792-9a8a-e68246e80c0b");
