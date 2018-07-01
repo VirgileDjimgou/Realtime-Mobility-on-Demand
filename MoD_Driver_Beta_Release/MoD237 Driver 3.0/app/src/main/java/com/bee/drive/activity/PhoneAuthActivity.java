@@ -130,13 +130,21 @@ public class PhoneAuthActivity extends AppCompatActivity implements
 
             @Override
             public void onVerificationFailed(FirebaseException e) {
-                Log.w(TAG, "onVerificationFailed", e);
-                if (e instanceof FirebaseAuthInvalidCredentialsException) {
-                    mPhoneNumberField.setError("Invalid phone number.");
-                } else if (e instanceof FirebaseTooManyRequestsException) {
-                    Snackbar.make(findViewById(android.R.id.content), "Quota exceeded.",
-                            Snackbar.LENGTH_SHORT).show();
+
+                try{
+
+                    Log.w(TAG, "onVerificationFailed", e);
+                    if (e instanceof FirebaseAuthInvalidCredentialsException) {
+                        mPhoneNumberField.setError("Invalid phone number.");
+                    } else if (e instanceof FirebaseTooManyRequestsException) {
+                        Snackbar.make(findViewById(android.R.id.content), "Quota exceeded.",
+                                Snackbar.LENGTH_SHORT).show();
+                    }
+
+                }catch(Exception ex){
+                    ex.printStackTrace();
                 }
+
             }
 
             @Override

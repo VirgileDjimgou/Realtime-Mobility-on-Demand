@@ -234,18 +234,25 @@ public class UserProfileFragment extends Fragment {
     }
 
     public void setupArrayListInfo(User myAccount){
-        listConfig.clear();
-        Configuration userNameConfig = new Configuration(USERNAME_LABEL, myAccount.name, R.drawable.ic_account_box);
-        listConfig.add(userNameConfig);
 
-        Configuration emailConfig = new Configuration(EMAIL_LABEL, myAccount.email, R.drawable.ic_email);
-        listConfig.add(emailConfig);
+        try{
 
-        Configuration resetPass = new Configuration(RESETPASS_LABEL, "", R.drawable.ic_restore);
-        listConfig.add(resetPass);
+            listConfig.clear();
+            Configuration userNameConfig = new Configuration(USERNAME_LABEL, myAccount.name, R.drawable.ic_account_box);
+            listConfig.add(userNameConfig);
 
-        Configuration signout = new Configuration(SIGNOUT_LABEL, "", R.drawable.ic_power_settings);
-        listConfig.add(signout);
+            Configuration emailConfig = new Configuration(EMAIL_LABEL, myAccount.email, R.drawable.ic_email);
+            listConfig.add(emailConfig);
+
+            Configuration resetPass = new Configuration(RESETPASS_LABEL, "", R.drawable.ic_restore);
+            listConfig.add(resetPass);
+
+            Configuration signout = new Configuration(SIGNOUT_LABEL, "", R.drawable.ic_power_settings);
+            listConfig.add(signout);
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 
     private void setImageAvatar(Context context, String imgBase64){

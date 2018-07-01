@@ -187,7 +187,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 mCustomerInfo.setVisibility(View.GONE);
                     FCM_Util.sendWithOtherThread("token" ,
                             Customer_ID_FCM ,
-                            "eBe Realtime Mobility on Demand 2018" ,
+                            "Kekko Realtime Mobility on Demand 2018" ,
                             "Driver rejected your proposition (notification) ...");
                     endRide();
                 }catch(Exception ex){
@@ -218,7 +218,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
                     FCM_Util.sendWithOtherThread("token" ,
                             Customer_ID_FCM ,
-                            "eBe Realtime Mobility on Demand 2018" ,
+                            "ModMob Realtime Mobility on Demand 2018" ,
                             "Driver accepted your proposition (notification) ...");
 
                 }catch(Exception ex){
@@ -632,7 +632,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-
                 try{
 
                     if(dataSnapshot.exists()){
@@ -859,7 +858,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
                     }
 
-                    // set info about the propositions of the Customers  ..
+                    // set info about the propositions of the Customers
 
                 }
             }
@@ -1083,7 +1082,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-        Toast.makeText(this.getContext(), "Driver connected with Firebase db  ...." , Toast.LENGTH_LONG).show();
+        Toast.makeText(this.getContext(), "Driver connected with  our Server  ...." , Toast.LENGTH_LONG).show();
     }
 
     private void disconnectDriver(){

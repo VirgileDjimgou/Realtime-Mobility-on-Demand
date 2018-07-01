@@ -8,89 +8,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:594753687386:android:00fe69b002d074ee",
-        "android_client_info": {
-          "package_name": "com.android.beewallet"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCBAxOoUN1spN7YEnSSwaFU6x3vRP1EkHI"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:594753687386:android:6f51d0b2dfdfc91a",
-        "android_client_info": {
-          "package_name": "com.beewallet.phone"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "594753687386-asjc1g4h5tbl0gfp4rf57hvckbmtpuc7.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.beewallet.phone",
-            "certificate_hash": "028a1e51ce357ebbdaddd99d98438586e76fed2f"
-          }
-        },
-        {
-          "client_id": "594753687386-0b879rgu9maitle43qafe3lmfu139mvu.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.beewallet.phone",
-            "certificate_hash": "d5f3bd5337e60087c7ebc9ab26b1c288a81ce048"
-          }
-        },
-        {
-          "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCBAxOoUN1spN7YEnSSwaFU6x3vRP1EkHI"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:594753687386:android:9490184d3bb2daab",
         "android_client_info": {
           "package_name": "beetech.com.wallet"
@@ -143,25 +60,79 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:594753687386:android:40c04e1184fd92ec",
+        "mobilesdk_app_id": "1:594753687386:android:2847553b4abe847e",
         "android_client_info": {
-          "package_name": "com.bee.passenger"
+          "package_name": "chat.pat.recordaudio"
         }
       },
       "oauth_client": [
         {
-          "client_id": "594753687386-73u7bvr4iujhd9emoah3tv6vb03ecgci.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.bee.passenger",
-            "certificate_hash": "34ed574fd74584c15c8f722b74274cb111f72ea8"
-          }
-        },
+          "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
         {
-          "client_id": "594753687386-5c4i2s7o04l34555f3f26q1co5hms8ff.apps.googleusercontent.com",
+          "current_key": "AIzaSyCBAxOoUN1spN7YEnSSwaFU6x3vRP1EkHI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594753687386:android:95dece61bbfae3d1",
+        "android_client_info": {
+          "package_name": "com.Bee.firebasecloudmessaging"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBAxOoUN1spN7YEnSSwaFU6x3vRP1EkHI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594753687386:android:695828d6e835ad57",
+        "android_client_info": {
+          "package_name": "com.DriverTracking.client"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "594753687386-lel3r378ov40tc2ged64tciqa7247515.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.bee.passenger",
+            "package_name": "com.DriverTracking.client",
             "certificate_hash": "028a1e51ce357ebbdaddd99d98438586e76fed2f"
           }
         },
@@ -195,6 +166,68 @@
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:594753687386:android:00fe69b002d074ee",
+        "android_client_info": {
+          "package_name": "com.android.beewallet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBAxOoUN1spN7YEnSSwaFU6x3vRP1EkHI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594753687386:android:0eeb0a1e84ed30e7",
+        "android_client_info": {
+          "package_name": "com.base.fire"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBAxOoUN1spN7YEnSSwaFU6x3vRP1EkHI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:594753687386:android:137f9e6b9f71ec3f",
         "android_client_info": {
           "package_name": "com.bee.drive"
@@ -202,19 +235,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "594753687386-a89rcgeur38s4ot7u48n613vvt8rn986.apps.googleusercontent.com",
+          "client_id": "594753687386-ip23m72au3ske0cp5jpsqkeo0k04968j.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.bee.drive",
-            "certificate_hash": "34ed574fd74584c15c8f722b74274cb111f72ea8"
-          }
-        },
-        {
-          "client_id": "594753687386-efg65t6q70rcde701r3kttl4n7li1i24.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.bee.drive",
-            "certificate_hash": "028a1e51ce357ebbdaddd99d98438586e76fed2f"
+            "certificate_hash": "a29bdf36185c0241e1f8dc89e4f228e8cd00b4a1"
           }
         },
         {
@@ -278,12 +303,20 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:594753687386:android:95dece61bbfae3d1",
+        "mobilesdk_app_id": "1:594753687386:android:40c04e1184fd92ec",
         "android_client_info": {
-          "package_name": "com.Bee.firebasecloudmessaging"
+          "package_name": "com.bee.passenger"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "594753687386-q910pakba67e3cmvp5loo44agp8jr8f5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bee.passenger",
+            "certificate_hash": "a29bdf36185c0241e1f8dc89e4f228e8cd00b4a1"
+          }
+        },
         {
           "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
           "client_type": 3
@@ -299,8 +332,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2
@@ -309,12 +347,28 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:594753687386:android:0eeb0a1e84ed30e7",
+        "mobilesdk_app_id": "1:594753687386:android:6f51d0b2dfdfc91a",
         "android_client_info": {
-          "package_name": "com.base.fire"
+          "package_name": "com.beewallet.phone"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "594753687386-asjc1g4h5tbl0gfp4rf57hvckbmtpuc7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.beewallet.phone",
+            "certificate_hash": "028a1e51ce357ebbdaddd99d98438586e76fed2f"
+          }
+        },
+        {
+          "client_id": "594753687386-0b879rgu9maitle43qafe3lmfu139mvu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.beewallet.phone",
+            "certificate_hash": "d5f3bd5337e60087c7ebc9ab26b1c288a81ce048"
+          }
+        },
         {
           "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
           "client_type": 3
@@ -330,39 +384,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:594753687386:android:2847553b4abe847e",
-        "android_client_info": {
-          "package_name": "chat.pat.recordaudio"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCBAxOoUN1spN7YEnSSwaFU6x3vRP1EkHI"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2
@@ -377,6 +405,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "594753687386-g132kshuajpi97ofp7ohfgjerfrrlhf3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.moonlight.cartographe",
+            "certificate_hash": "ea86ba20ad5de4501479d5f9b284ea605d789ca1"
+          }
+        },
         {
           "client_id": "594753687386-38qemqh14qvqf9gao6nttohoa43g1hlj.apps.googleusercontent.com",
           "client_type": 1,
@@ -415,20 +451,12 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:594753687386:android:695828d6e835ad57",
+        "mobilesdk_app_id": "1:594753687386:android:d6e575059fd5069e",
         "android_client_info": {
-          "package_name": "com.DriverTracking.client"
+          "package_name": "org.beetrack.manager"
         }
       },
       "oauth_client": [
-        {
-          "client_id": "594753687386-lel3r378ov40tc2ged64tciqa7247515.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.DriverTracking.client",
-            "certificate_hash": "028a1e51ce357ebbdaddd99d98438586e76fed2f"
-          }
-        },
         {
           "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
           "client_type": 3
@@ -444,13 +472,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "594753687386-ru7k4i8cclk44ebf8gjleu4776lr4moe.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2

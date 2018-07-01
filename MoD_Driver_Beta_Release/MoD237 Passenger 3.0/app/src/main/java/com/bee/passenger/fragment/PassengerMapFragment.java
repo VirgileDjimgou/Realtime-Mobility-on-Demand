@@ -132,7 +132,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
 
     CustomFcm_Util FCM_Message_Sender ;
     PlaceAutocompleteFragment Destination_autocompleteFragment;
-    PlaceAutocompleteFragment Depart_autocompleteFragment;
+    // PlaceAutocompleteFragment Depart_autocompleteFragment;
     String DriverID_Fcm = "";
 
 
@@ -386,41 +386,44 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
 
-                if (requestBol){
-                    endRide();
-                    progressBar_Search.setIndeterminate(false);
+                try{
 
-                }else{
-                    int selectIdServicesType = mRadioGroupService.getCheckedRadioButtonId();
 
-                    final RadioButton radioButtonServices = (RadioButton) rootView.findViewById(selectIdServicesType);
+                    if (requestBol){
+                        endRide();
+                        progressBar_Search.setIndeterminate(false);
 
-                    if (radioButtonServices.getText() == null){
-                        return;
-                    }
+                    }else{
+                        int selectIdServicesType = mRadioGroupService.getCheckedRadioButtonId();
 
-                    // get Options of Services ... Smart ... Deluxe and so on ...
-                    int selectId_Options = mRadioGroup_Option.getCheckedRadioButtonId();
+                        final RadioButton radioButtonServices = (RadioButton) rootView.findViewById(selectIdServicesType);
 
-                    final RadioButton radioButtonOptions = (RadioButton) rootView.findViewById(selectId_Options);
+                        if (radioButtonServices.getText() == null){
+                            return;
+                        }
 
-                    if (radioButtonOptions.getText() == null){
-                        return;
-                    }
+                        // get Options of Services ... Smart ... Deluxe and so on ...
+                        int selectId_Options = mRadioGroup_Option.getCheckedRadioButtonId();
 
-                    requestService = radioButtonServices.getText().toString();
-                    requestOptions = radioButtonOptions.getText().toString();
-                    //  get Price that the Client are proposed ...
-                    TripCost.getText().toString();
-                    // get number of passenger ...
-                    NumOfPassenger.getText().toString();
-                    requestBol = true;
-                    String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
-                    GeoFire geoFire = new GeoFire(ref);
-                    geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
+                        final RadioButton radioButtonOptions = (RadioButton) rootView.findViewById(selectId_Options);
 
-                    try{
+                        if (radioButtonOptions.getText() == null){
+                            return;
+                        }
+
+                        requestService = radioButtonServices.getText().toString();
+                        requestOptions = radioButtonOptions.getText().toString();
+                        //  get Price that the Client are proposed ...
+                        TripCost.getText().toString();
+                        // get number of passenger ...
+                        NumOfPassenger.getText().toString();
+                        requestBol = true;
+                        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
+                        GeoFire geoFire = new GeoFire(ref);
+                        geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
+
+
 
                         pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
                         pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Pickup Here").icon(BitmapDescriptorFactory.fromResource(R.mipmap.pick_up_location)));
@@ -429,14 +432,17 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                         mRequest.setEnabled(false);
                         getClosestDriver();
 
-                    }catch(Exception ex){
-                        ex.printStackTrace();
                     }
 
+                }catch(Exception  ex){
+                    ex.printStackTrace();
+
                 }
+
             }
         });
 
+        /*
         Depart_autocompleteFragment = (PlaceAutocompleteFragment)
                getActivity().getFragmentManager().findFragmentById(R.id.place_depart);
         Depart_autocompleteFragment.setHint("Start point ...");
@@ -453,6 +459,9 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                 // TODO: Handle the error.
             }
         });
+
+        */
+
         Destination_autocompleteFragment = (PlaceAutocompleteFragment)
                 getActivity().getFragmentManager().findFragmentById(R.id.fragment_destination);
         Destination_autocompleteFragment.setHint("Destination ...");
@@ -489,7 +498,6 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                     mDriverInfo.setActivated(true);
                     mDriverInfo.setVisibility(View.VISIBLE);
                 }
-
 
             }
         });
@@ -583,7 +591,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
         progressBar_Search.setIndeterminate(false);
         RequestSettingsLinearLayout.setVisibility(View.GONE);
         Destination_autocompleteFragment.setText("");
-        Depart_autocompleteFragment.setText("");
+        // Depart_autocompleteFragment.setText("");
         mfind_a_rider.setEnabled(true);
         mRequest.setEnabled(true);
         mAcceptDriver.setEnabled(true);
@@ -922,13 +930,10 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                         // mRideStatus.setBackgroundColor(mRideStatus.getContext().getResources().getColor(R.color.green));
                     }else{
                         // find the Next Available Driver ...
-
                         Toast.makeText(getApplicationContext(), "Negative Response of the  Driver or Customer ", Toast.LENGTH_LONG).show();
-
                         // DeleteProposition
 
                     }
-
 
                 }
             }
