@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -33,6 +35,7 @@ import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -94,6 +97,8 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     LocationRequest mLocationRequest;
+    private FusedLocationProviderClient mFusedLocationClient;
+
     private Button mAcceptDriver , mDeclineDriver, mRequest;
     private Boolean requestBol = false;
     private SupportMapFragment mapFragment;
@@ -182,6 +187,9 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
 
             ex.printStackTrace();
         }
+
+
+        // location startegies  ...
 
 
                 mMapView = (MapView) rootView.findViewById(R.id.mapView);
@@ -421,11 +429,11 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
                         GeoFire geoFire = new GeoFire(ref);
-                        geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
+                        geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude() , mLastLocation.getLongitude()));
 
 
 
-                        pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                        pickupLocation = new LatLng(mLastLocation.getLatitude() , mLastLocation.getLongitude());
                         pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Pickup Here").icon(BitmapDescriptorFactory.fromResource(R.mipmap.pick_up_location)));
                         mRequest.setText("the system find your Driver...please wait !");
                         progressBar_Search.setIndeterminate(true);
