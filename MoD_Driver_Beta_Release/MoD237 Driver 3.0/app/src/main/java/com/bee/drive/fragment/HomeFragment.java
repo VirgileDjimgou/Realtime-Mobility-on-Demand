@@ -127,6 +127,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     private String ID_FCM ="";
     private CustomFcm_Util FCM_Util;
     private String Customer_ID_FCM ="";
+    private boolean ShowOneTimePassengerProfil = true;
 
 
     @Override
@@ -467,7 +468,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 if(dataSnapshot.exists()) {
 
                     // customerId = dataSnapshot.getValue().toString();
-                    mCustomerInfo.setVisibility(View.GONE);
+                    // mCustomerInfo.setVisibility(View.GONE);
                     Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
                     if(map.get("destination")!=null){
                         destination = map.get("destination").toString();
@@ -516,16 +517,20 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
                     // set info about the propositions of the Customers  ..
 
+                    // create variaable to  start this point one time
                     if(map.get("customerRideId") != null){
-
                         customerId = map.get("customerRideId").toString();
-                        mCustomerInfo.setVisibility(View.VISIBLE);
-                        getProfil_Proposed_Customers();
+
+                        if(ShowOneTimePassengerProfil == true){
+                            ShowOneTimePassengerProfil = false;
+                            mCustomerInfo.setVisibility(View.VISIBLE);
+                            getProfil_Proposed_Customers();
+                        }
+
                        // tivateTimerProgressbar(true);
                     }
 
                     if(map.get("idFcm") !=null){
-
 
 
                     }
@@ -539,6 +544,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                         Res_Driver = map.get("ResponseDriver").toString();
                         Toast.makeText(getApplicationContext(), map.get("ResponseDriver").toString() , Toast.LENGTH_LONG).show();
                         if(Res_Driver.equalsIgnoreCase("false")){
+                            ShowOneTimePassengerProfil = true;
                             mCustomerInfo.setVisibility(View.GONE);
                             InitViewDashboard();
                             try{
@@ -560,6 +566,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                         Toast.makeText(getApplicationContext(), map.get("ResponsePassenger").toString() , Toast.LENGTH_LONG).show();
                         if(Res_Customer.equalsIgnoreCase("false")){
                             mCustomerInfo.setVisibility(View.GONE);
+                            ShowOneTimePassengerProfil = true;
                             try{
                                 endRide();
                                 InitViewDashboard();
@@ -567,19 +574,20 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                                 RiderStatus_check();
                             }catch(Exception ex){
                                 ex.printStackTrace();
-                            }                        }
+                            }
+                        }
 
                     }
 
                     if(Res_Customer.equalsIgnoreCase("true") && (Res_Driver.equalsIgnoreCase("true"))){
                         // Start with the trip
 
+                        ShowOneTimePassengerProfil = true;
                         Toast.makeText(getApplicationContext(), "positive Response for a Driver and Customer " , Toast.LENGTH_LONG).show();
                         getAssignedCustomer();
                         mRideStatus.setBackgroundColor(mRideStatus.getContext().getResources().getColor(R.color.green));
                         mRideStatus.setText("Terminate your Ride here !");
                     }
-
 
                 }
 

@@ -102,7 +102,7 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
     LocationRequest mLocationRequest;
     private FusedLocationProviderClient mFusedLocationClient;
 
-    private Button mAcceptDriver , mDeclineDriver, mRequest;
+    private Button mAcceptDriver , mDeclineDriver, mRequest , passenger_response , driver_response;
     private Boolean requestBol = false;
     private SupportMapFragment mapFragment;
     private String destination = "", position_depart = "",  requestService ="" , requestOptions="" ;
@@ -227,7 +227,9 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        //
+        passenger_response = (Button) rootView.findViewById(R.id.passenger_response);
+        driver_response  = (Button)  rootView.findViewById(R.id.driver_response);
 
 
         // init FCM Sender  ....
@@ -609,6 +611,12 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
         mRequest.setEnabled(true);
         mAcceptDriver.setEnabled(true);
         mDeclineDriver.setEnabled(true);
+
+        passenger_response.setBackgroundColor(getResources().getColor(R.color.accent));
+        passenger_response.setText(R.string.wait_your_response);
+
+        driver_response.setBackgroundColor(getResources().getColor(R.color.accent));
+        driver_response.setText(R.string.wait_driver_response);
     }
 
     @Override
@@ -922,6 +930,12 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
 
                         }
 
+                        if(Res_Driver.equalsIgnoreCase("true")){
+                            driver_response.setBackgroundColor(getResources().getColor(R.color.green));
+                            driver_response.setText("driver accepted your proposition ! ");
+
+                        }
+
                     }
 
                     if(map.get("ResponsePassenger") != null){
@@ -931,6 +945,11 @@ public class PassengerMapFragment extends Fragment implements OnMapReadyCallback
                         if(Res_Customer.equalsIgnoreCase("false")){
                             mDriverInfo.setVisibility(View.GONE);
                             RequestSettingsInit();
+                        }
+
+                        if(Res_Customer.equalsIgnoreCase("true")){
+                            passenger_response.setBackgroundColor(getResources().getColor(R.color.green));
+                            passenger_response.setText("you are accepted this driver ! ");
                         }
 
                     }

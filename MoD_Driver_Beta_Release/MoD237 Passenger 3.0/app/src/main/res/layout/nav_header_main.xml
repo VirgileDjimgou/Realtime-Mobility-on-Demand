@@ -6,7 +6,7 @@
     android:layout_height="@dimen/nav_header_height"
     android:gravity="bottom"
     android:orientation="vertical"
-    android:background="@drawable/ebe_main_screen"
+    android:background="@color/violet"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
-        android:src="@drawable/ebe_main_screen" />
+        android:background="@color/violet"/>
 
     <LinearLayout
         android:layout_width="wrap_content"

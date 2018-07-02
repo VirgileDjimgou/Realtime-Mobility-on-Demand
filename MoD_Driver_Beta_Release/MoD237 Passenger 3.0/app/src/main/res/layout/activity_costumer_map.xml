@@ -5,7 +5,6 @@
     xmlns:fab="http://schemas.android.com/apk/res-auto">
 
 
-
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
@@ -32,10 +31,35 @@
                 android:layout_height="wrap_content"
                 android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
                 />
+
+
+
         </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.LinearLayoutCompat
+            android:layout_width="300dp"
+            android:layout_marginLeft="55dp"
+            android:layout_marginTop="60dp"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+
+
+            <Button
+                android:layout_gravity="center"
+                android:background="@drawable/rounded_edittext"
+                android:layout_width="280dp"
+                android:layout_height="40dp"
+                android:text="Find a Driver."
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:id="@+id/find_a_rider"/>
+
+
+        </android.support.v7.widget.LinearLayoutCompat>
 
 
     </RelativeLayout>
+
 
 
     <LinearLayout
@@ -43,7 +67,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:id="@+id/RequestCustomizer"
-        android:background="@android:color/holo_blue_light"
+        android:visibility="gone"
+        android:background="@color/purple"
         android:layout_gravity="center">
 
         <RelativeLayout
@@ -51,7 +76,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal|center_vertical"
             android:orientation="horizontal"
-            android:background="@android:color/holo_blue_light">
+            android:background="@color/purple"
+            >
 
 
             <android.support.v7.widget.CardView
@@ -70,7 +96,7 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@android:color/holo_blue_light"
+                    android:background="@color/violet"
                     android:orientation="vertical">
 
                     <Button
@@ -152,7 +178,7 @@
                         android:text="Trip Cost : "
                         android:textStyle="bold"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/black"
+                        android:textColor="@color/white_opaque"
                         android:textSize="20dp" />
 
 
@@ -164,7 +190,7 @@
                         android:layout_marginTop="160dp"
                         android:hint="enter"
                         android:inputType="number"
-                        android:textColor="@color/black"
+                        android:textColor="@color/white"
                         android:textColorHint="@color/grey_100" />
 
                     <TextView
@@ -177,12 +203,8 @@
                         android:text="Euro/Dollar/Fcfa"
                         android:textStyle="bold"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/black"
+                        android:textColor="@color/white_opaque"
                         android:textSize="20dp" />
-
-
-
-
 
 
                 </FrameLayout>
@@ -270,6 +292,7 @@
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
+                android:background="@color/violet"
                 android:tooltipText="request progression"
                 android:indeterminateDrawable="@android:drawable/progress_indeterminate_horizontal"
                 android:indeterminate="true" />
@@ -329,6 +352,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:visibility="gone"
         android:layout_gravity="bottom">
 
         <LinearLayout
@@ -337,15 +361,14 @@
             android:id="@+id/driverInfoCustom"
             android:layout_gravity="bottom"
             android:orientation="horizontal"
-            android:visibility="visible"
-            android:background="@drawable/ebe_main_screen">
+            android:visibility="visible">
 
 
             <android.support.v7.widget.CardView
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/card_view_driver_notification"
                 android:layout_width="wrap_content"
-                android:layout_height="200dp"
+                android:layout_height="280dp"
                 android:layout_gravity="top|left|center_horizontal|right"
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="8dp"
@@ -371,10 +394,10 @@
 
                     <ImageView
                         android:layout_width="405dp"
-                        android:layout_height="205dp"
+                        android:layout_height="405dp"
                         android:layout_marginBottom="50dp"
-                        android:background="@drawable/ebe_main_screen"
-                        android:src="@drawable/ebe_main_screen"/>
+                        android:background="@color/colorAccent"
+                        android:src="@color/violet"/>
 
 
                     <ImageView
@@ -385,6 +408,36 @@
                         android:layout_marginTop="2dp"
                         android:src="@drawable/default_avata" />
 
+                    <Button
+                        android:id="@+id/passenger_response"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:layout_width="350dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginTop="180dp"
+                        android:layout_weight="1"
+                        android:alpha="1"
+                        android:background="@color/colorAccent"
+                        android:clickable="false"
+                        android:text="@string/wait_your_response"
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/driver_response"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:layout_width="350dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginTop="210dp"
+                        android:layout_weight="1"
+                        android:alpha="1"
+                        android:background="@color/colorAccent"
+                        android:clickable="false"
+                        android:text="@string/wait_driver_response"
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
+
 
                     <ImageView
                         android:id="@+id/location_distance"
@@ -394,6 +447,8 @@
                         android:text="distance location ... "
                         android:layout_marginTop="112dp"
                         android:src="@drawable/location_distance" />
+
+
 
                     <TextView
                         android:id="@+id/tv_distanceinkm"
@@ -504,25 +559,10 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="56dp"
+                        android:layout_height="40dp"
                         android:layout_gravity="bottom"
+                        android:layout_marginBottom="5dp"
                         android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/driver_actual_location"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center|center_horizontal"
-                            android:layout_marginBottom="12dp"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginTop="20dp"
-                            android:textStyle="bold"
-                            android:layout_weight="1"
-                            android:paddingBottom="4dp"
-                            android:drawablePadding="6dp"
-                            android:text="Driver actual location"
-                            android:textColor="@color/white"
-                            android:textSize="14sp" />
 
                         <Button
 
@@ -568,24 +608,7 @@
 
         </LinearLayout>
 
-
-        <LinearLayout
-            android:background="@android:color/white"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-
-            <Button
-                android:layout_gravity="bottom"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Find a Rider."
-                android:id="@+id/find_a_rider"/>
-
-        </LinearLayout>
     </LinearLayout>
-
 
 
     <RelativeLayout
@@ -606,7 +629,7 @@
             fab:menu_colorRipple="#66efecec"
             fab:menu_fab_label="Menu"
             fab:menu_fab_size="normal"
-            fab:menu_icon="@mipmap/ic_bee_round"
+            fab:menu_icon="@mipmap/ic_gudana_round"
             fab:menu_labels_colorNormal="#333"
             fab:menu_labels_colorPressed="#444"
             fab:menu_labels_colorRipple="#66efecec"

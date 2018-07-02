@@ -2,12 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bee_black_1">
+    android:background="@color/violet">
 
     <Button
         android:id="@+id/logout_button"
+        style="?android:attr/borderlessButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/white_opaque"
+        android:layout_gravity="center"
         android:layout_weight="1"
+        android:textStyle="bold"
         android:text="click here to logout !" />
 </LinearLayout>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MoD237 Passenger</string>
+    <string name="app_name">GuDana</string>
 
 
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBb7F-tT5vbdBNFsUdrr8kwPJh6SkEeUiI</string>
@@ -325,10 +325,10 @@
     <string name="result">Something will happen here&#8230;</string>
     <string name="subscribed">Subscribed to news topic</string>
     <string name="unsubscribed">Unsubscribed from news topic</string>
-    <string name="by">\"Developed by MoD237 Technology\"</string>
-    <string name="connect_phone">connect  with Phone</string>
+    <string name="by">\"Developed by GuDana Technology\"</string>
+    <string name="connect_phone">Start</string>
     <string name="email_connect">connect  with Email</string>
-    <string name="dev_under">proudly hosted by Google Cloud Platform and FireBase</string>
+    <string name="dev_under">backed by Google Cloud Platform and FireBase</string>
     <string name="email_interface">Email Login Interface</string>
     <string name="phone_authentification">Phone Authentification</string>
     <string name="phone_registration">Registration with Phone</string>
@@ -338,4 +338,6 @@
     <string name="reset_your_password">reset your password</string>
     <string name="profil_settings">update your Profil Settings</string>
     <string name="back_menu">back in Main Menu</string>
+    <string name="wait_driver_response">waiting driver response .....</string>
+    <string name="wait_your_response">waiting your response ....</string>
 </resources>

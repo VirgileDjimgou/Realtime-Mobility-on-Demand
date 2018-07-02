@@ -121,6 +121,8 @@ public class MainActivity_App extends AppCompatActivity {
         // auth = FirebaseAuth.getInstance();
         waitingDialog = new LovelyProgressDialog(this).setCancelable(false);
 
+        /*
+
         Email_login = (Button) findViewById(R.id.email_connect);
         // call Facebook Login...
         Email_login.setOnClickListener(new View.OnClickListener() {
@@ -142,6 +144,8 @@ public class MainActivity_App extends AppCompatActivity {
                 finish();
             }
         });
+
+        */
 
         // Call Phone Login
         phone_butt = (Button) findViewById(R.id.phone_connect);

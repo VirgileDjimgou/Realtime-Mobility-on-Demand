@@ -3,9 +3,9 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">#212121</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/violet</item>
+        <item name="colorPrimaryDark">@color/violet</item>
+        <item name="colorAccent">@color/purple</item>
 
         <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
         <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
@@ -43,9 +43,9 @@
     </style>
 
     <style name="AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorPrimary">@color/colorPrimaryDark</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/violet</item>
+        <item name="colorPrimaryDark">@color/violet</item>
+        <item name="colorAccent">@color/purple</item>
     </style>
 
     <style name="WhiteCheck">
@@ -74,7 +74,7 @@
     <!-- new add authentification -->
     <!-- Dark Buttons -->
     <style name="ThemeOverlay.MyDarkButton" parent="ThemeOverlay.AppCompat.Dark">
-        <item name="colorButtonNormal">@color/colorAccent</item>
+        <item name="colorButtonNormal">@color/violet</item>
         <item name="android:layout_marginRight">4dp</item>
         <item name="android:layout_marginLeft">4dp</item>
         <item name="android:textColor">@android:color/white</item>
@@ -124,18 +124,18 @@
 
     <style name="Translucent" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="windowNoTitle">true</item>
-        <item name="colorPrimary">@color/colorPrimaryDark</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">#4fa881</item>
+        <item name="colorPrimary">@color/violet</item>
+        <item name="colorPrimaryDark">@color/violet</item>
+        <item name="colorAccent">@color/purple</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <style name="TranslucentBackground" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="windowNoTitle">true</item>
-        <item name="colorPrimary">@color/colorPrimaryDark</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">#4fa881</item>
+        <item name="colorPrimary">@color/violet</item>
+        <item name="colorPrimaryDark">@color/violet</item>
+        <item name="colorAccent">@color/purple</item>
         <item name="android:windowBackground">@drawable/white_background</item>
     </style>
 

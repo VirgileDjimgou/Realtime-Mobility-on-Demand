@@ -44,7 +44,7 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="outputName" value="default_user" />
+                                      <entry key="outputName" value="ic_gudana" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -60,7 +60,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="color" value="a63731" />
+                                                <entry key="color" value="f7f7f7" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -71,7 +71,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="jar:file:/C:/Program%20Files/Android2/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/social/ic_person_black_24dp.xml" />
+                                                <entry key="url" value="jar:file:/C:/Program%20Files/Android2/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/navigation/ic_last_page_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -81,10 +81,12 @@
                                   </option>
                                   <option name="values">
                                     <map>
+                                      <entry key="backgroundAssetType" value="COLOR" />
+                                      <entry key="backgroundColor" value="7b28a6" />
                                       <entry key="backgroundLayerName" value="ic_launcher_background" />
                                       <entry key="foregroundAssetType" value="CLIP_ART" />
                                       <entry key="foregroundLayerName" value="ic_launcher_foreground" />
-                                      <entry key="outputName" value="pick_up_location" />
+                                      <entry key="outputName" value="ic_gudana" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -128,11 +130,6 @@
                                 </PersistentState>
                               </value>
                             </entry>
-                          </map>
-                        </option>
-                        <option name="values">
-                          <map>
-                            <entry key="outputIconType" value="ACTIONBAR" />
                           </map>
                         </option>
                       </PersistentState>
