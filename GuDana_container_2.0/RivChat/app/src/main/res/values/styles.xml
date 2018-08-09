@@ -1,0 +1,260 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="actionBarStyle">@style/AppBarOverlay</item>
+        <!-- set Can use Activity transitions -->
+        <item name="android:windowContentTransitions">true</item>
+    </style>
+
+    <style name="ButtonStyle" parent="Base.Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar.NoTranslucent" />
+    <style name="AppTheme.NoActionBar.NoTranslucent2" />
+
+    <style name="MyThemeNoActionbar" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    </style>
+
+    <style name="EditTextTintTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorPrimaryDark">#0288D1</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="TextLabel" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorControlActivated">#FFCC00</item>
+    </style>
+
+    <style name="Translucent" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">#03A9F4</item>
+        <item name="colorPrimaryDark">#FFCC00</item>
+        <item name="colorAccent">#4fa881</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="TranslucentBackground" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">#03A9F4</item>
+        <item name="colorPrimaryDark">#FFCC00</item>
+        <item name="colorAccent">#4fa881</item>
+        <item name="android:windowBackground">@drawable/bg</item>
+    </style>
+
+
+    <style name="AppThemeFullScreenImage" parent="Theme.Design.Light.NoActionBar">
+        <item name="colorPrimary">@color/violet</item>
+        <item name="colorPrimaryDark">@color/violet</item>
+        <item name="colorAccent">@color/purple</item>
+    </style>
+
+    <style name="FullScreen.TextAppearance.Title" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="FullScreen.TextAppearance.Title.Inverse" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+
+    <style name="tab_item">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="AppBarOverlay" parent="Widget.AppCompat.Light.ActionBar.Solid">
+        <item name="elevation">0dp</item>
+    </style>
+
+
+
+    <!-- LIGHT Theme -->
+    <style name="Theme_Light_Base" parent="@style/ContactPicker_Theme_Light">
+        <!-- ActionBarCompat -->
+        <item name="colorPrimary">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent_light</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+
+        <item name="backgroundColor">@color/background_light</item>
+        <item name="icTheme">@drawable/ic_palette_black_36dp</item>
+        <item name="icPickContact">@drawable/ic_person_add_black_36dp</item>
+    </style>
+
+    <style name="Theme_Light" parent="@style/Theme_Light_Base"/>
+
+    <!-- DARK Theme -->
+    <style name="Theme_Dark_Base" parent="@style/ContactPicker_Theme_Dark">
+        <!-- ActionBarCompat -->
+        <item name="colorPrimary">@color/colorPrimary_dark</item>
+        <item name="colorAccent">@color/colorAccent_dark</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark_dark</item>
+
+        <item name="backgroundColor">@color/background_dark</item>
+        <item name="icTheme">@drawable/ic_palette_white_36dp</item>
+        <item name="icPickContact">@drawable/ic_person_add_white_36dp</item>
+    </style>
+
+    <style name="Theme_Dark" parent="@style/Theme_Dark_Base"/>
+
+
+    <style name="Default" parent="android:Theme.Holo.Light">
+        <item name="android:fastScrollThumbDrawable">@drawable/fast_scroll</item>
+        <item name="android:fastScrollTextColor">@android:color/white</item>
+        <item name="android:fastScrollPreviewBackgroundRight">@drawable/fast_scroll_preview</item>
+    </style>
+    <style name="NoTitle" parent="android:Theme.Holo.Light.NoActionBar">
+        <item name="android:fastScrollThumbDrawable">@drawable/fast_scroll</item>
+        <item name="android:fastScrollTextColor">@android:color/white</item>
+        <item name="android:fastScrollPreviewBackgroundRight">@drawable/fast_scroll_preview</item>
+    </style>
+    <style name="FullScreen" parent="android:Theme.Holo.Light.NoActionBar.Fullscreen">
+        <item name="android:fastScrollThumbDrawable">@drawable/fast_scroll</item>
+        <item name="android:fastScrollTextColor">@android:color/white</item>
+        <item name="android:fastScrollPreviewBackgroundRight">@drawable/fast_scroll_preview</item>
+    </style>
+
+    <style name="font1" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="font2" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="font3" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="font4" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/colorB</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">21sp</item>
+    </style>
+
+    <style name="font5" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/colorC</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+
+    <style name="font6" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/colorC</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="font7" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/colorC</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="font8" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/colorC</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="font9" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/colorC</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="font10" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/colorD</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="font11" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/colorD</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="font12" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/colorE</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="font13" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/colorE</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="font14" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/colorH</item>
+        <item name="android:textSize">21sp</item>
+    </style>
+
+    <style name="font15" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/colorH</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="font16" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/colorH</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="font17" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/colorH</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="font18" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/colorH</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="font19" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/colorD</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="font20" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/colorI</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="font21" parent="@android:style/TextAppearance.Large">
+        <item name="android:textColor">@color/colorH</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">50sp</item>
+    </style>
+
+    <style name="font22" parent="@android:style/TextAppearance.Large">
+        <item name="android:textColor">@color/colorH</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">25sp</item>
+    </style>
+
+    <style name="font23" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/colorD</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">italic</item>
+    </style>
+
+
+</resources>

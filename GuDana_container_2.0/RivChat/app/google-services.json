@@ -1,0 +1,81 @@
+{
+  "project_info": {
+    "project_number": "746958603124",
+    "firebase_url": "https://projekt35-5f54c.firebaseio.com",
+    "project_id": "projekt35-5f54c",
+    "storage_bucket": "projekt35-5f54c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:746958603124:android:cb56a7d056ba4167",
+        "android_client_info": {
+          "package_name": "alessandro.firebaseandroid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "746958603124-qr4cce8074lb66c1ep6f8d094rt5sim3.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "746958603124-qr4cce8074lb66c1ep6f8d094rt5sim3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYTTfsqoRZ7haJzJ-txL8phIwV2wd9ihw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:746958603124:android:1244c56be0518ae9",
+        "android_client_info": {
+          "package_name": "com.android.rivchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "746958603124-qr4cce8074lb66c1ep6f8d094rt5sim3.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "746958603124-qr4cce8074lb66c1ep6f8d094rt5sim3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYTTfsqoRZ7haJzJ-txL8phIwV2wd9ihw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

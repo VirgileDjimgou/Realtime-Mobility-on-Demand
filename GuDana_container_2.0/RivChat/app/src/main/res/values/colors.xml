@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorIndivateTab">#FFFFFF</color>
+    <color name="transparent">#00000000</color>
+    <color name="colorCardView">#f7f7f7</color>
+    <color name="grey_200">#EEEEEE</color>
+    <color name="grey_500">#a4a4a4</color>
+    <color name="grey_100">#F5F5F5</color>
+    <color name="grey_800">#212121</color>
+    <color name="tabIndicator">#d2d7de</color>
+    <color name="purple">#8e76c6</color>
+    <color name="violet">#551a8b</color>
+
+    <color name="viewBg">#f1f5f8</color>
+    <color name="album_title">#4c4c4c</color>
+
+
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorButton">#991041</color>
+
+    <color name="colorTextPrimary">#FFFFFF</color>
+    <color name="colorTextDisable">#66FFFFFF</color>
+
+    <color name="sinch_purple">#ff63029d</color>
+    <color name="off_white">#fffafafa</color>
+    <color name="dark_gray">#ffb3b3b3</color>
+    <color name="very_dark_gray">#636363</color>
+
+    <color name="background">#e9e3dd</color>
+
+    <!-- Light colors -->
+    <color name="colorPrimary_light">#FFE0B2</color>
+    <color name="colorPrimaryDark_light">#FFA726</color>
+    <color name="colorAccent_light">#424242</color>
+    <color name="background_light">#FFF3E0</color>
+
+    <!-- Dark colors -->
+    <color name="colorPrimary_dark">#2E7D32</color>
+    <color name="colorPrimaryDark_dark">#1B5E20</color>
+    <color name="colorAccent_dark">#FAFAFA</color>
+    <color name="background_dark">#263238</color>
+
+
+    <color name="backgroundcolor">#fcfcfc</color>
+    <color name="lightgray">#ededed</color>
+    <color name="deeppurple">#7c4dff</color>
+    <color name="yello">#ffb300</color>
+    <color name="green">#00bfa5</color>
+    <color name="darkblue">#23283a</color>
+    <color name="testcolorblue">#152b38</color>
+    <color name="pink">#fe104d</color>
+
+    <color name="black_overlay">#66000000</color>
+
+
+</resources>
