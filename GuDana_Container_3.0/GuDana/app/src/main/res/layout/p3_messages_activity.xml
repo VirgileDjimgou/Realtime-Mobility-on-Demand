@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    android:id="@+id/chat_root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:background="#e0e0e0"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:emojicon="http://schemas.android.com/apk/res-auto"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/contentRootchat"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
@@ -38,16 +41,14 @@
         tools:context="cs656.com.firebasemessengerapp.ui.ChatMessagesActivity"
         tools:showIn="@layout/p3_activity_main">
 
-        <ListView
-            android:id="@+id/messageListView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:stackFromBottom="true"
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/chat_recycler"
             android:layout_above="@+id/linearLayout"
-            android:divider="@android:color/transparent"
-            android:transcriptMode="alwaysScroll"
-            android:background="@color/colorE"
-            tools:listitem="@layout/p3_message_item" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </android.support.v7.widget.RecyclerView>
 
 
         <LinearLayout
@@ -87,13 +88,13 @@
                 emojicon:emojiconSize="28sp"/>
 
 
-            <ImageButton
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:onClick="sendMessage"
-                android:layout_marginTop="5dp"
-                android:id="@+id/sendButton"
-                android:background="@android:drawable/ic_menu_send"/>
+            <Button
+                android:id="@+id/chat_send"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/ic_send_black_24dp" />
 
 
             <ImageButton
@@ -103,15 +104,15 @@
                 android:layout_marginTop="5dp"
                 android:background="@mipmap/ic_mic_round" />
 
-            <ImageButton
-                android:id="@+id/recordVoiceButton_2"
+
+            <ImageView
+                android:id="@+id/chat_send_picture"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_marginTop="5dp"
-                android:background="@mipmap/ic_mic_round" />
-
-
-
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/ic_picture"/>
 
         </LinearLayout>
 
@@ -136,5 +137,4 @@
         </RelativeLayout>
 
     </RelativeLayout>
-</android.support.design.widget.CoordinatorLayout>
-
+</RelativeLayout>

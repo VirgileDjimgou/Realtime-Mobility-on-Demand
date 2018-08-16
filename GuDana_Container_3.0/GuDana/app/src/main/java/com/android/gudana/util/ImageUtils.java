@@ -77,13 +77,7 @@ public class ImageUtils {
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
 
-    /**
-     * Làm giảm số điểm ảnh xuống để tránh lỗi Firebase Database OutOfMemory
-     * @param is anh dau vao
-     * @param reqWidth kích thước chiều rộng sau khi giảm
-     * @param reqHeight kích thước chiều cao sau khi giảm
-     * @return
-     */
+
     public static Bitmap makeImageLite(InputStream is, int width, int height,
                                        int reqWidth, int reqHeight) {
         int inSampleSize = 1;

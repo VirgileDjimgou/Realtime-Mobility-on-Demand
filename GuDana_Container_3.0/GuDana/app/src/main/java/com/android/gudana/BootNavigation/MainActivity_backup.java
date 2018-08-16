@@ -26,7 +26,6 @@ import com.android.gudana.R;
 // import com.android.rivchat.linphone.LinphoneActivity;
 import com.android.gudana.cardview.Card_Home_fragment;
 import com.android.gudana.linphone.assistant.AssistantActivity;
-import com.android.gudana.ui.UserProfileFragment;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -433,7 +432,6 @@ public class MainActivity_backup extends BaseActivity implements BottomNavigatio
 
                 case 4:
                     // user profil fragment
-                    return  new UserProfileFragment();
 
             }
 

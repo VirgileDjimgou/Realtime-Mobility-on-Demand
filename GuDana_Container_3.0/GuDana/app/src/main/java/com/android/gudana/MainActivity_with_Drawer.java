@@ -414,35 +414,39 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
         result.getActionBarDrawerToggle().setDrawerIndicatorEnabled(true);
 
 
-        /*
+
         // ------------------------------------------------------------------------
 
         coord = findViewById(R.id.main_content);
         appbar = findViewById(R.id.appbar);
         checkAndRequestReadContactsPermission();
 
-        fragments = new Fragment[4];
+        fragments = new Fragment[6];
         fragments[0] = new Card_Home_fragment();
-        fragments[1] = new DialerFragment();
+        fragments[1] = new RequestsFragment();
         fragments[2] = new HistoryListFragment();
-        fragments[3] = new DialerFragment();
+        fragments[3] = new ChatFragment();
+        fragments[4] = new FriendsFragment();
+        fragments[5] = new DialerFragment();
 
 
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        mViewPager = findViewById(R.id.container);
+        mViewPager = findViewById(R.id.viewpager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_signup);
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_tab_group);
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_play_icon);
-        tabLayout.getTabAt(3).setIcon(R.drawable.ic_tab_group);
-        mViewPager.setOffscreenPageLimit(4);
+        tabLayout.getTabAt(0).setIcon(R.mipmap.ic_home);
+        tabLayout.getTabAt(1).setIcon(R.mipmap.ic_requests);
+        tabLayout.getTabAt(2).setIcon(R.mipmap.ic_history);
+        tabLayout.getTabAt(3).setIcon(R.mipmap.ic_chat);
+        tabLayout.getTabAt(4).setIcon(R.mipmap.ic_friend);
+        tabLayout.getTabAt(5).setIcon(R.mipmap.ic_dialer);
+        mViewPager.setOffscreenPageLimit(6);
 
 
-         */
+        /*
 
 
         // Action bar related
@@ -466,10 +470,13 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
 
         ViewPager viewPager = findViewById(R.id.viewpager);
         viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(1);
+        viewPager.setCurrentItem(0);
 
         SmartTabLayout viewPagerTab = findViewById(R.id.viewpagertab);
+        viewPagerTab.set
         viewPagerTab.setViewPager(viewPager);
+
+        */
 
     }
 
