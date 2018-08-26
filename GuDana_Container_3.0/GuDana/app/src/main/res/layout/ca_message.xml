@@ -1,18 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!---
- * This is a part of ChatApp Project (https://github.com/h01d/ChatApp)
- * Licensed under Apache License 2.0
- *
- * @author  Raf (https://github.com/h01d)
- * @version 1.1
- * @since   27/02/2018
--->
-
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="#e0e0e0">
 
@@ -36,13 +27,14 @@
             android:elevation="3dp"
             android:layout_toEndOf="@+id/message_image_left"
             android:orientation="vertical"
-            android:background="@drawable/message_background"
+            android:background="@drawable/message_background_link"
             android:layout_centerVertical="true"
             android:layout_marginTop="2dp"
             android:layout_marginBottom="2dp"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="80dp"
             android:paddingTop="4dp"
+            android:id="@+id/linearcontent_left"
             android:paddingBottom="4dp"
             android:paddingStart="6dp"
             android:paddingEnd="6dp">
@@ -52,8 +44,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-condensed"
-                android:text="asdasdasdasdasssssssss"
-                android:textColor="#000"
+                android:text=" unknown file "
+                android:textColor="@color/colorWhite"
                 android:textSize="16sp"
                 android:visibility="visible"/>
 
@@ -73,6 +65,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="TEST"
+                    android:textColor="@color/colorWhite"
                     android:layout_centerInParent="true"
                     android:visibility="gone"/>
             </RelativeLayout>
@@ -82,10 +75,46 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
+                android:textColor="@color/colorWhite"
                 android:fontFamily="sans-serif-condensed"
                 android:text="time"
                 android:textStyle="italic" />
+
+
         </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/bmb_left_mask"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="35dp"
+            android:layout_toStartOf="@+id/linearcontent_left"
+            >
+
+
+            <com.nightonke.boommenu.BoomMenuButton
+                android:id="@+id/bmb_left"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="1dp"
+                app:bmb_buttonEnum="textOutsideCircle"
+                app:bmb_buttonRadius="17dp"
+                app:bmb_highlightedColor="@color/purple"
+                app:bmb_normalColor="@color/colorPrimary"
+
+                />
+
+        </RelativeLayout>
+
+
 
     </RelativeLayout>
 
@@ -106,6 +135,7 @@
             android:src="@drawable/user" />
 
         <LinearLayout
+            android:id="@+id/linear_content_right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:elevation="3dp"
@@ -113,7 +143,6 @@
             android:orientation="vertical"
             android:layout_centerVertical="true"
             android:background="@drawable/message_background"
-            android:backgroundTint="@color/colorWhite"
             android:layout_marginEnd="4dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
@@ -128,8 +157,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-condensed"
-                android:text="asdasdasda"
-                android:textColor="#000"
+                android:textColor="@color/colorWhite"
+                android:text=" unknown file "
                 android:textSize="16sp" />
 
             <RelativeLayout
@@ -147,6 +176,7 @@
                     android:id="@+id/message_loading_right"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorWhite"
                     android:text="TEST"
                     android:layout_centerInParent="true"
                     android:visibility="gone"/>
@@ -157,10 +187,55 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
+                android:textColor="@color/colorWhite"
                 android:fontFamily="sans-serif-condensed"
                 android:text="time"
                 android:textStyle="italic" />
+
+
+            <ProgressBar
+                android:id="@+id/progress_load"
+                android:indeterminateDrawable="@android:drawable/progress_indeterminate_horizontal"
+                android:minHeight="5dip"
+                android:layout_marginTop="10dip"
+                android:indeterminate="true"
+                android:maxHeight="5dip"
+                android:layout_width="fill_parent"
+                android:layout_height="5dp"/>
+
         </LinearLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/bmb_right_mask"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="-80dp"
+            android:layout_toStartOf="@+id/linear_content_right">
+
+
+            <com.nightonke.boommenu.BoomMenuButton
+                android:id="@+id/bmb_right"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="1dp"
+                app:bmb_buttonEnum="textOutsideCircle"
+                app:bmb_buttonRadius="17dp"
+                app:bmb_highlightedColor="@color/purple"
+                app:bmb_normalColor="@color/colorPrimary"
+
+                />
+
+
+        </RelativeLayout>
+
 
     </RelativeLayout>
 

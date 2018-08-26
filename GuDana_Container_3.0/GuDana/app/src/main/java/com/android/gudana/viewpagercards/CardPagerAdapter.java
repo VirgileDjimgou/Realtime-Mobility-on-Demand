@@ -81,7 +81,7 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
             @Override
             public void onClick(View view) {
                 //container.setVisibility(View.GONE);
-                Toast.makeText(mContext, "Card " + index + " is pressed.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "CardCustom " + index + " is pressed.", Toast.LENGTH_SHORT).show();
 
                 animHide.reset();
                 animHide = AnimationUtils.loadAnimation(mContext, R.anim.view_validate);

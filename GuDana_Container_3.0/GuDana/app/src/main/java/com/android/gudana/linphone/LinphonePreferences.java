@@ -779,13 +779,13 @@ public class LinphonePreferences {
 		}
 	}
 
-	public void deleteAccount(int n) {
-		LinphoneAuthInfo authInfo = getAuthInfo(n);
+	public void deleteAccount(int AccountNumber) {
+		LinphoneAuthInfo authInfo = getAuthInfo(AccountNumber);
 		if (authInfo != null) {
 			getLc().removeAuthInfo(authInfo);
 		}
 
-		LinphoneProxyConfig proxyCfg = getProxyConfig(n);
+		LinphoneProxyConfig proxyCfg = getProxyConfig(AccountNumber);
 		if (proxyCfg != null)
 			getLc().removeProxyConfig(proxyCfg);
 		if (getLc().getProxyConfigList().length != 0) {

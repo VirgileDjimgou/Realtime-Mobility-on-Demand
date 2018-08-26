@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!---
- * This is a part of ChatApp Project (https://github.com/h01d/ChatApp)
- * Licensed under Apache License 2.0
- *
- * @author  Raf (https://github.com/h01d)
- * @version 1.1
- * @since   27/02/2018
--->
-
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -35,8 +26,8 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:background="@color/colorBlueDark">
+                android:layout_height="120dp"
+                android:background="@color/colorPrimary">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -45,7 +36,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_marginBottom="2dp"
                     android:fontFamily="sans-serif-condensed"
-                    android:text="ChatApp"
+                    android:text="@string/app_name"
                     android:textAlignment="center"
                     android:textColor="#fff"
                     android:textSize="30sp"
@@ -58,7 +49,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:fontFamily="sans-serif-condensed"
-                    android:text="v1.1"
+                    android:text="Beta v12.1"
                     android:textAlignment="center"
                     android:textColor="#fff"
                     android:textSize="20sp"
@@ -71,7 +62,7 @@
                     android:layout_below="@+id/textView"
                     android:layout_marginTop="8dp"
                     android:fontFamily="sans-serif-condensed"
-                    android:text="Open-source Android Chat Application"
+                    android:text="@string/slogan"
                     android:textAlignment="center"
                     android:textAllCaps="false"
                     android:textColor="#fff"
@@ -89,10 +80,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="12dp"
-                    android:text="LOGIN"
+                    android:text="LOGIN WITH EMAIL"
                     android:textColor="#999"
                     android:textAlignment="center"
-                    android:textSize="18sp"
+                    android:textSize="10sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -108,7 +99,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="35dp"
                     android:layout_marginEnd="35dp"
-                    android:padding="6dp"
+                    android:padding="1dp"
                     android:background="#eee">
 
                     <ImageView
@@ -148,7 +139,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="35dp"
                     android:layout_marginEnd="35dp"
-                    android:padding="6dp"
+                    android:padding="1dp"
                     android:background="#eee">
 
                     <ImageView
@@ -176,16 +167,35 @@
                 <com.dd.processbutton.iml.ActionProcessButton
                     android:id="@+id/login_button"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginStart="35dp"
                     android:layout_marginEnd="35dp"
                     android:layout_marginBottom="12dp"
-                    android:text="Click here to Log in"
+                    android:text="Click here to Log in with Email"
                     android:textColor="#fff"
                     app:pb_colorComplete="@color/colorGreen"
-                    app:pb_colorNormal="@color/colorBlue"
-                    app:pb_colorPressed="@color/colorBlueDark"
+                    app:pb_colorNormal="@color/colorPrimary"
+                    app:pb_colorPressed="@color/purple"
+                    app:pb_colorProgress="@color/colorWhite"
+                    app:pb_colorError="@color/colorRed"
+                    app:pb_textComplete="Success"
+                    app:pb_textProgress="Please wait..."
+                    app:pb_textError="Error" />
+
+                <com.dd.processbutton.iml.ActionProcessButton
+                    android:id="@+id/login_with_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="35dp"
+                    android:layout_marginEnd="35dp"
+                    android:layout_marginBottom="12dp"
+                    android:text="Log in with your Phone number"
+                    android:textColor="#fff"
+                    app:pb_colorComplete="@color/colorGreen"
+                    app:pb_colorNormal="@color/colorBlueDark"
+                    app:pb_colorPressed="@color/purple"
                     app:pb_colorProgress="@color/colorWhite"
                     app:pb_colorError="@color/colorRed"
                     app:pb_textComplete="Success"
@@ -193,6 +203,7 @@
                     app:pb_textError="Error" />
 
             </LinearLayout>
+
 
         </LinearLayout>
 
@@ -220,7 +231,7 @@
                 android:layout_marginEnd="35dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="4dp"
-                android:text="Name"/>
+                android:text="@string/name"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"

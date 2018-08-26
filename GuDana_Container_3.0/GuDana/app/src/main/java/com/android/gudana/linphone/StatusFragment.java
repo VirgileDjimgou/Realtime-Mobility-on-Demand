@@ -65,7 +65,7 @@ import java.util.TimerTask;
 public class StatusFragment extends Fragment {
 	private Handler mHandler = new Handler();
 	private Handler refreshHandler = new Handler();
-	private TextView statusText, voicemailCount;
+	private TextView  voicemailCount;
 	private ImageView statusLed, callQuality, encryption,  voicemail;
 	private Runnable mCallQualityUpdater;
 	private boolean isInCall, isAttached = false;
@@ -80,7 +80,7 @@ public class StatusFragment extends Fragment {
                              Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.lin_status, container, false);
 
-		statusText = (TextView) view.findViewById(R.id.status_text);
+		//statusText = (TextView) view.findViewById(R.id.status_text);
 		statusLed = (ImageView) view.findViewById(R.id.status_led);
 		callQuality = (ImageView) view.findViewById(R.id.call_quality);
 		encryption = (ImageView) view.findViewById(R.id.encryption);
@@ -100,27 +100,27 @@ public class StatusFragment extends Fragment {
 
 				if(lc.getProxyConfigList() == null){
 					statusLed.setImageResource(R.drawable.led_disconnected);
-					statusText.setText(getString(R.string.no_account));
+					//statusText.setText(getString(R.string.no_account));
 				} else {
 					statusLed.setVisibility(View.VISIBLE);
 				}
 
 				if (lc.getDefaultProxyConfig() != null && lc.getDefaultProxyConfig().equals(proxy)) {
 					statusLed.setImageResource(getStatusIconResource(state, true));
-					statusText.setText(getStatusIconText(state));
+					//statusText.setText(getStatusIconText(state));
 				} else if(lc.getDefaultProxyConfig() == null) {
 					statusLed.setImageResource(getStatusIconResource(state, true));
-					statusText.setText(getStatusIconText(state));
+					//statusText.setText(getStatusIconText(state));
 				}
 
 				try {
-					statusText.setOnClickListener(new OnClickListener() {
+					statusLed.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
 							lc.refreshRegisters();
 						}
 					});
-				} catch (IllegalStateException ise) {}
+				} catch (Exception ise) {ise.printStackTrace();}
 			}
 
 			@Override
@@ -199,7 +199,7 @@ public class StatusFragment extends Fragment {
 
 			if(LinphoneManager.getLc().getProxyConfigList().length == 0){
 				statusLed.setImageResource(R.drawable.led_disconnected);
-				statusText.setText(getString(R.string.no_account));
+				//statusText.setText(getString(R.string.no_account));
 			}
 		}
 	}
@@ -207,7 +207,7 @@ public class StatusFragment extends Fragment {
 	public void resetAccountStatus(){
 		if(LinphoneManager.getLc().getProxyConfigList().length == 0){
 			statusLed.setImageResource(R.drawable.led_disconnected);
-			statusText.setText(getString(R.string.no_account));
+			//statusText.setText(getString(R.string.no_account));
 		}
 	}
 
@@ -335,14 +335,14 @@ public class StatusFragment extends Fragment {
 				// We are obviously connected
 				if(lc.getDefaultProxyConfig() == null){
 					statusLed.setImageResource(R.drawable.led_disconnected);
-					statusText.setText(getString(R.string.no_account));
+					//statusText.setText(getString(R.string.no_account));
 				} else {
 					statusLed.setImageResource(getStatusIconResource(lc.getDefaultProxyConfig().getState(),true));
-					statusText.setText(getStatusIconText(lc.getDefaultProxyConfig().getState()));
+					//statusText.setText(getStatusIconText(lc.getDefaultProxyConfig().getState()));
 				}
 			}
 		} else {
-			statusText.setVisibility(View.VISIBLE);
+			//statusText.setVisibility(View.VISIBLE);
 			encryption.setVisibility(View.GONE);
 		}
 	}

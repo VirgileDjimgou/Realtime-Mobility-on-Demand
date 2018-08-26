@@ -1,11 +1,19 @@
 package com.android.gudana.chatapp.activities;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v13.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -16,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.gudana.MainActivity_with_Drawer;
+import com.android.gudana.gpslocationtracking.LocationTrack;
 import com.dd.processbutton.iml.ActionProcessButton;
 import com.android.gudana.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,15 +37,27 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import top.wefor.circularanim.CircularAnim;
 
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+
 
 public class WelcomeActivity extends AppCompatActivity
 {
     private final String TAG = "CA/WelcomeActivity";
+    LocationTrack locationTrack;
+    private ArrayList<String> permissions = new ArrayList<>();
+
+    private ArrayList<String> permissionsToRequest;
+    private ArrayList<String> permissionsRejected = new ArrayList<>();
+    private final static int ALL_PERMISSIONS_RESULT = 101;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -52,6 +73,50 @@ public class WelcomeActivity extends AppCompatActivity
         final EditText registerName = findViewById(R.id.register_name_text);
         final EditText registerEmail = findViewById(R.id.register_email_text);
         final EditText registerPassword = findViewById(R.id.register_password_text);
+
+
+        // settings gps
+
+        // control if Gps activated  ...
+        permissions.add(ACCESS_FINE_LOCATION);
+        permissions.add(ACCESS_COARSE_LOCATION);
+
+        permissionsToRequest = findUnAskedPermissions(permissions);
+        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        //get the permissions we have asked for before but are not granted..
+        //we will store this in a global list to access later.
+        locationTrack = new LocationTrack(WelcomeActivity.this);
+
+        if (locationTrack.canGetLocation()) {
+
+
+            double longitude = locationTrack.getLongitude();
+            double latitude = locationTrack.getLatitude();
+
+            // Toast.makeText(getApplicationContext(), "Longitude:" + Double.toString(longitude) + "\nLatitude:" + Double.toString(latitude), Toast.LENGTH_SHORT).show();
+        } else {
+
+            //  you must activated settings
+            // locationTrack.showSettingsAlert();
+
+            locationTrack.showSettingsAlert();
+        }
+
+        // start action lgin with phone
+        final ActionProcessButton loginPhone = findViewById(R.id.login_with_phone);
+        loginPhone.setProgress(0);
+        loginPhone.setMode(ActionProcessButton.Mode.ENDLESS);
+        loginPhone.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                startActivity(new Intent(WelcomeActivity.this, PhoneAuthActivity.class));
+                // finish();
+
+            }
+        });
+
 
         // Setting up login button work
 
@@ -76,6 +141,8 @@ public class WelcomeActivity extends AppCompatActivity
                 if(loginEmail.getText().length() == 0 || loginPassword.getText().length() == 0)
                 {
                     Toast.makeText(getApplicationContext(), "Fields cannot be empty.", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Fields cannot be empty.",
+                            Snackbar.LENGTH_SHORT).show();
 
                     loginButton.setProgress(-1);
                     loginButton.setClickable(true);
@@ -117,7 +184,7 @@ public class WelcomeActivity extends AppCompatActivity
                                                     public void run()
                                                     {
                                                         CircularAnim.fullActivity(WelcomeActivity.this, loginButton)
-                                                                .colorOrImageRes(R.color.colorGreen)
+                                                                .colorOrImageRes(R.color.colorPrimary)
                                                                 .go(new CircularAnim.OnAnimationEndListener()
                                                                 {
                                                                     @Override
@@ -132,6 +199,9 @@ public class WelcomeActivity extends AppCompatActivity
                                             }
                                             else
                                             {
+                                                Snackbar.make(findViewById(android.R.id.content), "Your email is not verified, we have sent you a new one.",
+                                                        Snackbar.LENGTH_SHORT).show();
+
                                                 Toast.makeText(getApplicationContext(), "Your email is not verified, we have sent you a new one.", Toast.LENGTH_LONG).show();
                                                 FirebaseAuth.getInstance().signOut();
 
@@ -307,6 +377,106 @@ public class WelcomeActivity extends AppCompatActivity
             }
         });
     }
+
+    public boolean checkLocationPermission()
+    {
+        String permission = "android.permission.ACCESS_FINE_LOCATION";
+        int res = this.checkCallingOrSelfPermission(permission);
+        return (res == PackageManager.PERMISSION_GRANTED);
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+
+        switch (requestCode) {
+
+            case ALL_PERMISSIONS_RESULT:
+                for (String perms : permissionsToRequest) {
+                    if (!hasPermission(perms)) {
+                        permissionsRejected.add(perms);
+                    }
+                }
+
+                if (permissionsRejected.size() > 0) {
+
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        if (shouldShowRequestPermissionRationale(permissionsRejected.get(0))) {
+                            showMessageOKCancel("These permissions are mandatory for the application. Please allow access.",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                                requestPermissions(permissionsRejected.toArray(new String[permissionsRejected.size()]), ALL_PERMISSIONS_RESULT);
+                                            }
+                                        }
+                                    });
+                            return;
+                        }
+                    }
+
+                }
+
+                break;
+
+
+            case 1: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+        }
+
+    }
+
+
+    private ArrayList<String> findUnAskedPermissions(ArrayList<String> wanted) {
+        ArrayList<String> result = new ArrayList<String>();
+
+        for (String perm : wanted) {
+            if (!hasPermission(perm)) {
+                result.add(perm);
+            }
+        }
+
+        return result;
+    }
+
+    private boolean hasPermission(String permission) {
+        if (canMakeSmores()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                return (checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED);
+            }
+        }
+        return true;
+    }
+
+    private boolean canMakeSmores() {
+        return (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1);
+    }
+
+    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
+        new AlertDialog.Builder(WelcomeActivity.this)
+                .setMessage(message)
+                .setPositiveButton("OK", okListener)
+                .setNegativeButton("Cancel", null)
+                .create()
+                .show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        locationTrack.stopListener();
+    }
+
 
     @Override
     public void onBackPressed()

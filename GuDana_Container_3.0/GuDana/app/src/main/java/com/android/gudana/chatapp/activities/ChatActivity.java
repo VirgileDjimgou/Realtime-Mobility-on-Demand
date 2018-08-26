@@ -1,24 +1,31 @@
 package com.android.gudana.chatapp.activities;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
@@ -26,18 +33,24 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.gudana.BuildConfig;
+import com.android.gudana.MainActivity_with_Drawer;
 import com.android.gudana.R;
 import com.android.gudana.chatapp.adapters.MessageAdapter;
 import com.android.gudana.chatapp.models.Message;
 import com.android.gudana.project_3.model.MapModel;
 import com.android.gudana.project_3.model.User;
+import com.android.gudana.project_3.ui.ChatMessagesActivity;
 import com.android.gudana.project_3.utils.Constants;
 import com.android.gudana.project_3.utils.EmailEncoding;
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.features.ReturnMode;
+import com.esafirm.imagepicker.model.Image;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -51,6 +64,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnPausedListener;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.nightonke.boommenu.BoomMenuButton;
@@ -63,6 +78,8 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import droidninja.filepicker.FilePickerBuilder;
+import droidninja.filepicker.FilePickerConst;
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 
@@ -136,18 +153,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import cafe.adriel.androidaudiorecorder.AndroidAudioRecorder;
-import cafe.adriel.androidaudiorecorder.model.AudioChannel;
-import cafe.adriel.androidaudiorecorder.model.AudioSampleRate;
-import cafe.adriel.androidaudiorecorder.model.AudioSource;
-import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
-import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
-import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 
 import com.github.clans.fab.FloatingActionMenu;
@@ -170,112 +175,9 @@ import com.onegravity.contactpicker.picture.ContactPictureType;
 import com.wafflecopter.multicontactpicker.ContactResult;
 import com.wafflecopter.multicontactpicker.MultiContactPicker;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.MediaRecorder;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Environment;
-import android.provider.ContactsContract;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.SpannableStringBuilder;
-import android.text.TextWatcher;
-import android.text.format.DateFormat;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-
-import com.bumptech.glide.Glide;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.firebase.ui.database.FirebaseListAdapter;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 
 
-import cafe.adriel.androidaudiorecorder.AndroidAudioRecorder;
-import cafe.adriel.androidaudiorecorder.model.AudioChannel;
-import cafe.adriel.androidaudiorecorder.model.AudioSampleRate;
-import cafe.adriel.androidaudiorecorder.model.AudioSource;
-import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
-import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
-import jp.wasabeef.glide.transformations.CropCircleTransformation;
-
-
-import com.github.clans.fab.FloatingActionMenu;
-import com.nightonke.boommenu.Animation.BoomEnum;
-import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
-import com.nightonke.boommenu.BoomButtons.HamButton;
-import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
-import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
-import com.nightonke.boommenu.BoomButtons.TextOutsideCircleButton;
-import com.nightonke.boommenu.BoomMenuButton;
-import com.nightonke.boommenu.ButtonEnum;
-import com.nightonke.boommenu.Piece.PiecePlaceEnum;
-import com.onegravity.contactpicker.ContactElement;
-import com.onegravity.contactpicker.contact.Contact;
-import com.onegravity.contactpicker.contact.ContactDescription;
-import com.onegravity.contactpicker.contact.ContactSortOrder;
-import com.onegravity.contactpicker.core.ContactPickerActivity;
-import com.onegravity.contactpicker.group.Group;
-import com.onegravity.contactpicker.picture.ContactPictureType;
-import com.wafflecopter.multicontactpicker.ContactResult;
-import com.wafflecopter.multicontactpicker.MultiContactPicker;
 
 public class ChatActivity extends AppCompatActivity  implements  View.OnClickListener
 {
@@ -353,28 +255,49 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     private static final int IMAGE_GALLERY_REQUEST = 1;
     private static final int IMAGE_CAMERA_REQUEST = 2;
     private static final int PLACE_PICKER_REQUEST = 3;
+    private static final int VOICE_PICKER_REQUEST = 4;
+
     static final String CHAT_REFERENCE = "chatmodel";
 
     //Views UI
     private ListView rvListMessage;
     private LinearLayoutManager mLinearLayoutManager;
     private ImageView btEmoji;
-    private EmojiconEditText edMessage;
+    //private EmojiconEditText edMessage;
     private View contentRoot;
     private EmojIconActions emojIcon;
     private ImageButton recordVoiceButton_2;
+    private ProgressBar uploadProgress;
+
+    private int progressStatus = 0;
+    private int number_of_files_to_send = 0;
+    private Handler handler = new Handler();
+    private ProgressBar progress_bar;
+    private RelativeLayout infos_progress_layout;
+    private RelativeLayout  voice_recording_ui;
+    private TextView infos_progress_files;
+    private TextView infos_progress_stop;
 
 
     // record audio
     // String filePath = Environment.getExternalStorageDirectory() + "/recorded_audio.wav";
-    int requestCode_record = 0;
+    int requestCode_record = 200;
 
+    private static final int CAMERA_REQUEST = 1888;
+    private ImageView imageView;
+    private static final int MY_CAMERA_PERMISSION_CODE = 100;
 
     // boom menu
-    private BoomMenuButton bmb , bmb_ham;
+    private BoomMenuButton bmb ;
 
     //File
     private File filePathImageCamera;
+
+    String filePath = Environment.getExternalStorageDirectory() + "/recorded_audio.wav";
+    //String filePaths_doc =  Environment.getExternalStorageDirectory().getPath();
+    private ArrayList<String> docPaths = new ArrayList<>();
+    private ArrayList<String> photoPaths = new ArrayList<>();
+    int requestCode = 0;
 
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -383,10 +306,21 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
+    private Context mContext=ChatActivity.this;
+    private static final int REQUEST = 112;
+    private static final int EX_FILE_PICKER_RESULT = 55;
+
+
+    public static  RelativeLayout data_processing = null;
+
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+
+
         switch (requestCode){
             case 200:
                 permissionToRecordAccepted  = grantResults[0] == PackageManager.PERMISSION_GRANTED;
@@ -395,6 +329,20 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         }
         if (!permissionToRecordAccepted ) ChatActivity.super.finish();
         if (!permissionToWriteAccepted ) ChatActivity.super.finish();
+
+
+        if (requestCode == MY_CAMERA_PERMISSION_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
+                Intent cameraIntent = new
+                        Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            } else {
+                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+            }
+
+        }
+
 
     }
 
@@ -443,37 +391,203 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
         // Will handle the send button to send a message
 
+        // Get the widgets reference from XML layout
+        infos_progress_layout = (RelativeLayout) findViewById(R.id.infos_progress);
+        infos_progress_layout.setVisibility(View.GONE);
+        infos_progress_files = (TextView) findViewById(R.id.infos_uploading_);
+        infos_progress_stop = (TextView) findViewById(R.id.textViewToday);
+        progress_bar =(ProgressBar) findViewById(R.id.progressbar_timerview);
+        progress_bar.setMax(100);
+        // progress_bar.setMax(200);
 
-        //Check Permissions at runtime
-        int requestCode = 200;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(permissions, requestCode);
+
+        // init layout voice recording
+        voice_recording_ui = (RelativeLayout) findViewById(R.id.voice_recording);
+        voice_recording_ui.setVisibility(View.GONE);
+
+
+        // init dadata processing
+        data_processing = (RelativeLayout) findViewById(R.id.data_processing);
+        data_processing.setVisibility(View.GONE);
+
+
+
+        // init path audio media
+        mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
+        mFileName += "/recorded_audio.3gp";
+
+
+        if (Build.VERSION.SDK_INT >= 23) {
+            String[] PERMISSIONS = {android.Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            if (!hasPermissions(mContext, PERMISSIONS)) {
+                ActivityCompat.requestPermissions((Activity) mContext, PERMISSIONS, REQUEST );
+            } else {
+                //do here
+            }
+        } else {
+            //do here
         }
 
 
-        ImageButton button = findViewById(R.id.recordVoiceButton);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // Code here executes on main thread after user presses button
 
-                AndroidAudioRecorder.with(ChatActivity.this)
-                        // Required
-                        .setFilePath(mFileName)
-                        .setColor( getResources().getColor(R.color.colorPrimaryDark))
-                        .setRequestCode(requestCode_record)
+        try{
 
-                        // Optional
-                        .setSource(AudioSource.MIC)
-                        .setChannel(AudioChannel.STEREO)
-                        .setSampleRate(AudioSampleRate.HZ_48000)
-                        .setAutoStart(true)
-                        .setKeepDisplayOn(true)
+            //bmb.setDraggable(true);
 
-                        // Start recording
-                        .record();
 
-            }
-        });
+            // boom menu    ...
+            bmb = (BoomMenuButton) findViewById(R.id.bmb);
+            assert bmb != null;
+            bmb.setButtonEnum(ButtonEnum.TextOutsideCircle);
+            bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_6_4);
+            bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_6_4);
+            bmb.setBoomEnum(BoomEnum.values()[6]); // random  boom
+            bmb.setUse3DTransformAnimation(true);
+            bmb.setDuration(500);
+
+
+            Log.e("test" , "test");
+
+            bmb.clearBuilders();
+
+            // first
+            TextOutsideCircleButton.Builder builder_0_doc = new TextOutsideCircleButton.Builder()
+                    .normalImageRes(R.mipmap.ic_doc_round)
+                    .normalText("document")
+                    .listener(new OnBMClickListener() {
+                        @Override
+                        public void onBoomButtonClick(int index) {
+
+                            AudioManager audioManager =
+                                    (AudioManager) ChatActivity.this.getSystemService(Context.AUDIO_SERVICE);
+                            audioManager.playSoundEffect(SoundEffectConstants.CLICK);
+
+                            // Toast.makeText(ChatActivity.this, "Button " + index + " is pressed.", Toast.LENGTH_SHORT).show();
+                            //FilePickerBuilder.getInstance().set
+                            FilePickerBuilder.getInstance().setMaxCount(99)
+                                    .setSelectedFiles(docPaths)
+                                    .enableVideoPicker(true)
+                                    .enableDocSupport(true)
+                                    .showGifs(true)
+                                    .enableSelectAll(true)
+                                    .showFolderView(true)
+                                    .setActivityTheme(R.style.LibAppTheme)
+                                    .pickFile(ChatActivity.this);
+                        }
+                    });
+
+            bmb.addBuilder(builder_0_doc);
+
+
+            // first
+            TextOutsideCircleButton.Builder builder_0_video = new TextOutsideCircleButton.Builder()
+                    .normalImageRes(R.mipmap.ic_doc_round)
+                    .normalText("video share")
+                    .listener(new OnBMClickListener() {
+                        @Override
+                        public void onBoomButtonClick(int index) {
+
+                            AudioManager audioManager =
+                                    (AudioManager) ChatActivity.this.getSystemService(Context.AUDIO_SERVICE);
+                            audioManager.playSoundEffect(SoundEffectConstants.CLICK);
+
+                            // Toast.makeText(ChatActivity.this, "Button " + index + " is pressed.", Toast.LENGTH_SHORT).show();
+                            //FilePickerBuilder.getInstance().set
+                            FilePickerBuilder.getInstance().setMaxCount(99)
+                                    .setSelectedFiles(docPaths)
+                                    .enableVideoPicker(true)
+                                    .enableDocSupport(true)
+                                    .showGifs(true)
+                                    .enableSelectAll(true)
+                                    .showFolderView(true)
+                                    .setActivityTheme(R.style.LibAppTheme)
+                                    .pickPhoto(ChatActivity.this);
+                        }
+                    });
+
+            bmb.addBuilder(builder_0_video);
+
+
+
+
+            // second
+            TextOutsideCircleButton.Builder builder_1_Camera = new TextOutsideCircleButton.Builder()
+                    .normalImageRes(R.mipmap.ic_camera_rec_round)
+                    .normalText("Camera")
+                    .listener(new OnBMClickListener() {
+                        @Override
+                        public void onBoomButtonClick(int index) {
+
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if (checkSelfPermission(Manifest.permission.CAMERA)
+                                        != PackageManager.PERMISSION_GRANTED) {
+                                    requestPermissions(new String[]{Manifest.permission.CAMERA},
+                                            MY_CAMERA_PERMISSION_CODE);
+                                } else {
+                                    //Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                    //startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                                    ImagePicker.cameraOnly().start(ChatActivity.this); // Could be Activity, Fragment, Support Fragment
+                                }
+                            }
+                        }
+                    });
+
+            bmb.addBuilder(builder_1_Camera);
+
+
+            // third
+            TextOutsideCircleButton.Builder builder_2_Gallery = new TextOutsideCircleButton.Builder()
+                    .normalImageRes(R.mipmap.ic_gallery_round)
+                    .normalText("Gallery")
+                    .listener(new OnBMClickListener() {
+                        @Override
+                        public void onBoomButtonClick(int index) {
+
+
+                            ImagePicker.create(ChatActivity.this)
+                                    .theme(R.style.AppThemeFullScreenImage) // must inherit ef_BaseTheme. please refer to sample
+                                    .start(); // start image picker activity with request code
+                        }
+                    });
+
+            bmb.addBuilder(builder_2_Gallery);
+
+            //five
+            TextOutsideCircleButton.Builder builder_4_contact = new TextOutsideCircleButton.Builder()
+                    .normalImageRes(R.mipmap.ic_contact_round)
+                    .normalText("Contact")
+                    .listener(new OnBMClickListener() {
+                        @Override
+                        public void onBoomButtonClick(int index) {
+                            pickContact();
+                            // Toast.makeText(ChatMessagesActivity.this, "Button " + index + " is pressed.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+            bmb.addBuilder(builder_4_contact);
+
+
+            //five
+            TextOutsideCircleButton.Builder builder_5_location = new TextOutsideCircleButton.Builder()
+                    .normalImageRes(R.mipmap.ic_location_round)
+                    .normalText("Location")
+                    .listener(new OnBMClickListener() {
+                        @Override
+                        public void onBoomButtonClick(int index) {
+                            locationPlacesIntent();
+
+                            // Toast.makeText(ChatMessagesActivity.this, "Button " + index + " is pressed.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+            bmb.addBuilder(builder_5_location);
+
+        }catch(Exception ex){
+
+            ex.printStackTrace();
+        }
+
+        // ######################### /// ###########
 
         sendButton = findViewById(R.id.chat_send);
         sendButton.setOnClickListener(new View.OnClickListener()
@@ -481,23 +595,17 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
             @Override
             public void onClick(View view)
             {
-                sendMessage();
+                sendMessage("text");
+
+
+                AudioManager audioManager =
+                        (AudioManager) ChatActivity.this.getSystemService(Context.AUDIO_SERVICE);
+                audioManager.playSoundEffect(SoundEffectConstants.CLICK);
+                view.playSoundEffect(SoundEffectConstants.CLICK);
+
             }
         });
 
-        sendPictureButton = findViewById(R.id.chat_send_picture);
-        sendPictureButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                Intent galleryIntent = new Intent();
-                galleryIntent.setType("image/*");
-                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-
-                startActivityForResult(Intent.createChooser(galleryIntent, "Select Image"), 1);
-            }
-        });
 
 
         // Will handle typing feature, 0 means no typing, 1 typing, 2 deleting and 3 thinking (5+ sec delay)
@@ -589,7 +697,40 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                 }
             }
         });
+
+
+        btEmoji = (ImageView)findViewById(R.id.buttonEmoji);
+        btEmoji = (ImageView)findViewById(R.id.buttonEmoji);
+        emojIcon = new EmojIconActions(this,root, messageEditText,btEmoji);
+        emojIcon.ShowEmojIcon();
+
+
+        //Check Permissions at runtime
+        int requestCode = 200;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(permissions, requestCode);
+        }
+
+
+        //initializeScreen();
+        // mToolBar.setTitle(chatName);
+        //showMessages();
+        //addListeners();
+        openVoiceRecorder();
+
     }
+
+    private static boolean hasPermissions(Context context, String... permissions) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 
     @Override
     protected void onResume()
@@ -624,6 +765,8 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     @Override
     public void onBackPressed()
     {
+        MainActivity_with_Drawer.tabLayout.getTabAt(3);
+        MainActivity_with_Drawer.mViewPager.setCurrentItem(3);
         NavUtils.navigateUpFromSameTask(this);
     }
 
@@ -633,7 +776,21 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         switch(item.getItemId())
         {
             case android.R.id.home:
+
+                MainActivity_with_Drawer.tabLayout.getTabAt(3);
+                MainActivity_with_Drawer.mViewPager.setCurrentItem(3);
+                play_sound();
                 NavUtils.navigateUpFromSameTask(this);
+                break;
+            case R.id.action_search:
+                Toast.makeText(getApplicationContext(), R.string.not_implemented, Toast.LENGTH_SHORT).show();
+                break;
+
+            case R.id.action_call_audio:
+                Toast.makeText(getApplicationContext(), R.string.not_implemented, Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.action_call_video:
+                Toast.makeText(getApplicationContext(), R.string.not_implemented, Toast.LENGTH_SHORT).show();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -642,148 +799,465 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        super.onActivityResult(requestCode, resultCode, data);
 
 
-        if(requestCode == CONTACT_PICKER_REQUEST){
-            if(resultCode == RESULT_OK) {
-                List<ContactResult> results = MultiContactPicker.obtainResult(data);
-                Log.d("MyTag", results.get(0).getDisplayName());
-                int i = 0;
-                do{
+        Log.e("jhkhj", "jhkjh");
 
-                    edMessage.setText(results.get(i).getDisplayName()+ " : " + results.get(i).getPhoneNumbers());
-                    sendMessage(contentRoot);
-                    ContactResult element = results.get(i);
-                    i++;
+        switch (requestCode) {
+
+            case FilePickerConst.REQUEST_CODE_DOC:
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    docPaths = new ArrayList<>();
+                    docPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS));
+
+
+                    number_of_files_to_send = docPaths.size();
+                    //progress_bar.setMax(number_of_files_to_send);
+                    infos_progress_layout.setVisibility(View.VISIBLE);
+                    progress_bar.setProgress(0);
+                    infos_progress_files.setText(String.valueOf(progressStatus) +"/"+String.valueOf(number_of_files_to_send) + " files");
+                    for (String object: docPaths) {
+                        System.out.println(object);
+                        String[] split = object.split("\\.");
+                        String ext = split[split.length - 1];
+                        File file =new File(object);
+                        String filename=file.getName();
+
+                        doc_file__upload_images_to_firebase(Uri.fromFile(new File(object.toString())), ext , filename);
+
+                    }
+
+                    Log.e("jhkhj", "jhkjh");
+
                 }
-                while (i < results.size());
-            } else if(resultCode == RESULT_CANCELED){
-                System.out.println("User closed the picker without selecting items.");
-            }
-        }
+                break;
 
 
 
-
-        mStorage = FirebaseStorage.getInstance().getReference(); //make global
-        super.onActivityResult(requestCode, requestCode, data);
-
-        if(requestCode ==GALLERY_INTENT && resultCode == RESULT_OK){
-
-            mProgress.setMessage("Sending the image...");
-            mProgress.show();
-
-            Uri uri = data.getData();
-            //Keep all images for a specific chat grouped together
-            final String imageLocation = "Photos" + "/" + messageId;
-            final String imageLocationId = imageLocation + "/" + uri.getLastPathSegment();
-            final String uniqueId = UUID.randomUUID().toString();
-            final StorageReference filepath = mStorage.child(imageLocation).child(uniqueId + "/image_message");
-            final String downloadURl = filepath.getPath();
-            filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    //create a new message containing this image
-                    addImageToMessages(downloadURl);
-                    mProgress.dismiss();
-                }
-            });
-        }
-
-        else if (requestCode == PLACE_PICKER_REQUEST){
-            if (resultCode == RESULT_OK) {
-                Place place = PlacePicker.getPlace(this, data);
-                if (place!=null){
-                    LatLng latLng = place.getLatLng();
-                    MapModel mapModel = new MapModel(latLng.latitude+"",latLng.longitude+"");
-                    // ChatModel chatModel = new ChatModel(userModel, Calendar.getInstance().getTime().getTime()+"",mapModel);
-                    //mFirebaseDatabaseReference.child(CHAT_REFERENCE).push().setValue(chatModel);
-                }else{
-                    //PLACE IS NULL
-                    Log.e("no place", "not place");
-                }
-            }
-        }
-
-
-        if (requestCode == 0) {
-            if (resultCode == RESULT_OK) {
-                // Great! User has recorded and saved the audio file
-                Log.e("jhkhj", "jhkjh");
-                uploadAudio_v2();
-            } else if (resultCode == RESULT_CANCELED) {
-                // Oops! User has canceled the recording
-                Log.e("jhkhj", "jhkjh");
-            }
-        }
-
-
-
-        if(requestCode == 1 && resultCode == RESULT_OK)
-        {
-            Uri url = data.getData();
-
-            DatabaseReference messageRef = FirebaseDatabase.getInstance().getReference().child("Messages").child(currentUserId).child(otherUserId).push();
-            final String messageId = messageRef.getKey();
-
-            DatabaseReference notificationRef = FirebaseDatabase.getInstance().getReference().child("Notifications").child(otherUserId).push();
-            final String notificationId = notificationRef.getKey();
-
-            StorageReference file = FirebaseStorage.getInstance().getReference().child("message_images").child(messageId + ".jpg");
-
-            file.putFile(url).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>()
-            {
-                @Override
-                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task)
+            case FilePickerConst.REQUEST_CODE_PHOTO:
+                if(resultCode== Activity.RESULT_OK && data!=null)
                 {
-                    if(task.isSuccessful())
-                    {
-                        String imageUrl = task.getResult().getDownloadUrl().toString();
+                    photoPaths = new ArrayList<>();
+                    photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA));
 
-                        Map messageMap = new HashMap();
-                        messageMap.put("message", imageUrl);
-                        messageMap.put("type", "image");
-                        messageMap.put("from", currentUserId);
-                        messageMap.put("to", otherUserId);
-                        messageMap.put("timestamp", ServerValue.TIMESTAMP);
 
-                        HashMap<String, String> notificationData = new HashMap<>();
-                        notificationData.put("from", currentUserId);
-                        notificationData.put("type", "message");
+                    number_of_files_to_send = photoPaths.size();
+                    //progress_bar.setMax(number_of_files_to_send);
+                    infos_progress_layout.setVisibility(View.VISIBLE);
+                    progress_bar.setProgress(0);
+                    infos_progress_files.setText(String.valueOf(progressStatus) +"/"+String.valueOf(number_of_files_to_send) + " files");
+                    for (String object: photoPaths) {
+                        System.out.println(object);
+                        String[] split = object.split("\\.");
+                        String ext = split[split.length - 1];
+                        File file =new File(object);
+                        String filename=file.getName();
 
-                        Map userMap = new HashMap();
-                        userMap.put("Messages/" + currentUserId + "/" + otherUserId + "/" + messageId, messageMap);
-                        userMap.put("Messages/" + otherUserId + "/" + currentUserId + "/" + messageId, messageMap);
+                        doc_file__upload_images_to_firebase(Uri.fromFile(new File(object.toString())), ext , filename);
 
-                        userMap.put("Chat/" + currentUserId + "/" + otherUserId + "/message", "You have sent a picture.");
-                        userMap.put("Chat/" + currentUserId + "/" + otherUserId + "/timestamp", ServerValue.TIMESTAMP);
-                        userMap.put("Chat/" + currentUserId + "/" + otherUserId + "/seen", ServerValue.TIMESTAMP);
+                    }
 
-                        userMap.put("Chat/" + otherUserId + "/" + currentUserId + "/message", "Has send you a picture.");
-                        userMap.put("Chat/" + otherUserId + "/" + currentUserId + "/timestamp", ServerValue.TIMESTAMP);
-                        userMap.put("Chat/" + otherUserId + "/" + currentUserId + "/seen", 0);
+                    Log.e("jhkhj", "jhkjh");
+                }
+                break;
+        }
 
-                        userMap.put("Notifications/" + otherUserId + "/" + notificationId, notificationData);
+        // Images intent
+        try{
 
-                        FirebaseDatabase.getInstance().getReference().updateChildren(userMap, new DatabaseReference.CompletionListener()
-                        {
-                            @Override
-                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference)
-                            {
-                                sendButton.setEnabled(true);
+            super.onActivityResult(requestCode, resultCode, data);
 
-                                if(databaseError != null)
-                                {
-                                    Log.d(TAG, "sendMessage(): updateChildren failed: " + databaseError.getMessage());
-                                }
-                            }
-                        });
+
+
+            if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
+            // Get a list of picked images
+
+            List<Image> images = ImagePicker.getImages(data);
+            // progressStatus =+1;
+            number_of_files_to_send = images.size();
+            //progress_bar.setMax(number_of_files_to_send);
+            infos_progress_layout.setVisibility(View.VISIBLE);
+            progress_bar.setProgress(0);
+            infos_progress_files.setText(String.valueOf(progressStatus) +"/"+String.valueOf(number_of_files_to_send) + " files");
+
+            for (Image uri_img : images) {
+                Uri uri_file = Uri.fromFile(new File(uri_img.getPath()));
+                images_upload_images_to_firebase(uri_file);
+            }
+
+
+
+        }
+
+            // contact  Upload
+
+            if(requestCode == CONTACT_PICKER_REQUEST){
+                if(resultCode == RESULT_OK) {
+                    List<ContactResult> results = MultiContactPicker.obtainResult(data);
+                    Log.d("MyTag", results.get(0).getDisplayName());
+                    int i = 0;
+                    do{
+
+                        //messageEditText.setText(results.get(i).getDisplayName()+ " : " + results.get(i).getPhoneNumbers());
+                        //sendMessage("text");
+                        sendMessage_location_contact("text" , results.get(i).getDisplayName()+ " : " + results.get(i).getPhoneNumbers());
+                        ContactResult element = results.get(i);
+                        i++;
+                    }
+                    while (i < results.size());
+                } else if(resultCode == RESULT_CANCELED){
+                    System.out.println("User closed the picker without selecting items.");
+                }
+            }
+
+
+            // Place upload  .....
+
+            else if (requestCode == PLACE_PICKER_REQUEST){
+                if (resultCode == RESULT_OK) {
+                    Place place = PlacePicker.getPlace(this, data);
+                    if (place!=null){
+                        LatLng latLng = place.getLatLng();
+                        MapModel mapModel = new MapModel(latLng.latitude+"",latLng.longitude+"");
+                        sendMessage("location");
+                        sendMessage_location_contact("location" , latLng.latitude+":"+latLng.longitude);
+                        // ChatModel chatModel = new ChatModel(userModel, Calendar.getInstance().getTime().getTime()+"",mapModel);
+                        //mFirebaseDatabaseReference.child(CHAT_REFERENCE).push().setValue(chatModel);
+                    }else{
+                        //PLACE IS NULL
+                        Log.e("no place", "not place");
                     }
                 }
-            });
+            }
+
+        }catch(Exception ex){
+            ex.printStackTrace();
         }
+
     }
+
+
+    private void images_upload_images_to_firebase(Uri Url_media ){
+
+        Uri url = Url_media;
+
+        DatabaseReference messageRef = FirebaseDatabase.getInstance().getReference().child("Messages").child(currentUserId).child(otherUserId).push();
+        final String messageId = messageRef.getKey();
+
+        DatabaseReference notificationRef = FirebaseDatabase.getInstance().getReference().child("Notifications").child(otherUserId).push();
+        final String notificationId = notificationRef.getKey();
+
+        StorageReference file = FirebaseStorage.getInstance().getReference().child("message_images").child(messageId + ".jpg");
+
+
+        file.putFile(url).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task)
+            {
+                Log.d("warnin", "waring task upload");
+
+                if(task.isSuccessful())
+                {
+                    String imageUrl = task.getResult().getDownloadUrl().toString();
+
+                    Map messageMap = new HashMap();
+                    messageMap.put("message", imageUrl);
+                    messageMap.put("type", "image");
+                    messageMap.put("from", currentUserId);
+                    messageMap.put("to", otherUserId);
+                    messageMap.put("timestamp", ServerValue.TIMESTAMP);
+
+                    HashMap<String, String> notificationData = new HashMap<>();
+                    notificationData.put("from", currentUserId);
+                    notificationData.put("type", "message");
+
+                    Map userMap = new HashMap();
+                    userMap.put("Messages/" + currentUserId + "/" + otherUserId + "/" + messageId, messageMap);
+                    userMap.put("Messages/" + otherUserId + "/" + currentUserId + "/" + messageId, messageMap);
+
+                    userMap.put("Chat/" + currentUserId + "/" + otherUserId + "/message", "You have sent a picture.");
+                    userMap.put("Chat/" + currentUserId + "/" + otherUserId + "/timestamp", ServerValue.TIMESTAMP);
+                    userMap.put("Chat/" + currentUserId + "/" + otherUserId + "/seen", ServerValue.TIMESTAMP);
+
+                    userMap.put("Chat/" + otherUserId + "/" + currentUserId + "/message", "Has send you a picture.");
+                    userMap.put("Chat/" + otherUserId + "/" + currentUserId + "/timestamp", ServerValue.TIMESTAMP);
+                    userMap.put("Chat/" + otherUserId + "/" + currentUserId + "/seen", 0);
+
+                    userMap.put("Notifications/" + otherUserId + "/" + notificationId, notificationData);
+
+                    play_sound();
+                    // update   ...  progression UI
+                    progressStatus = progressStatus +1;
+                    infos_progress_files.setText(String.valueOf(progressStatus) +"/"+String.valueOf(number_of_files_to_send) + " files");
+                    // progress_bar.setProgress(progressStatus);
+
+                    // stop the  disapear the animation  ...
+                    if(progressStatus >= number_of_files_to_send){
+
+                        infos_progress_layout.setVisibility(View.GONE);
+                        progressStatus = 0;
+                        number_of_files_to_send = 0;
+
+                      }
+
+
+                    FirebaseDatabase.getInstance().getReference().updateChildren(userMap, new DatabaseReference.CompletionListener()
+                    {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference)
+                        {
+                            sendButton.setEnabled(true);
+
+                            if(databaseError != null)
+                            {
+                                Log.d(TAG, "sendMessage(): updateChildren failed: " + databaseError.getMessage());
+                                infos_progress_layout.setVisibility(View.GONE);
+                                progressStatus = 0;
+                                number_of_files_to_send = 0;
+                                progress_bar.setProgress(0);
+
+                            }
+                        }
+                    });
+                }else {
+                    Toast.makeText(getApplicationContext(), "upload failed  ", Toast.LENGTH_SHORT).show();
+                    infos_progress_layout.setVisibility(View.GONE);
+                    progressStatus = 0;
+                    number_of_files_to_send = 0;
+                    progress_bar.setProgress(0);
+                }
+            }
+        });
+
+
+        // Observe state change events such as progress, pause, and resume
+        file.putFile(url).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                System.out.println("Upload is " + progress + "% done");
+                // Toast.makeText(getApplicationContext(), "Upload is " + progress + "% done", Toast.LENGTH_SHORT).show();
+                progress_bar.setProgress((int) Math.floor(progress + 0.5d));
+
+            }
+        }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(getApplicationContext(), "upload is paused ! ", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+
+
+    private void voice_upload_images_to_firebase(Uri Url_media ){
+
+
+        mStorage = FirebaseStorage.getInstance().getReference();
+
+        Uri uri = Uri.fromFile(new File(mFileName));
+
+        DatabaseReference messageRef = FirebaseDatabase.getInstance().getReference().child("Messages").child(currentUserId).child(otherUserId).push();
+        final String messageId = messageRef.getKey();
+
+        DatabaseReference notificationRef = FirebaseDatabase.getInstance().getReference().child("Notifications").child(otherUserId).push();
+        final String notificationId = notificationRef.getKey();
+
+        StorageReference file = FirebaseStorage.getInstance().getReference().child("message_voices").child(messageId + ".3gp");
+        file.putFile(uri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task)
+            {
+                Log.d("warnin", "waring task upload");
+
+                if(task.isSuccessful())
+                {
+                    String imageUrl = task.getResult().getDownloadUrl().toString();
+
+                    Map messageMap = new HashMap();
+                    messageMap.put("message", imageUrl);
+                    messageMap.put("type", "voice");
+                    messageMap.put("from", currentUserId);
+                    messageMap.put("to", otherUserId);
+                    messageMap.put("timestamp", ServerValue.TIMESTAMP);
+
+                    HashMap<String, String> notificationData = new HashMap<>();
+                    notificationData.put("from", currentUserId);
+                    notificationData.put("type", "message");
+
+                    Map userMap = new HashMap();
+                    userMap.put("Messages/" + currentUserId + "/" + otherUserId + "/" + messageId, messageMap);
+                    userMap.put("Messages/" + otherUserId + "/" + currentUserId + "/" + messageId, messageMap);
+
+                    userMap.put("Chat/" + currentUserId + "/" + otherUserId + "/message", "You have sent a voice message.");
+                    userMap.put("Chat/" + currentUserId + "/" + otherUserId + "/timestamp", ServerValue.TIMESTAMP);
+                    userMap.put("Chat/" + currentUserId + "/" + otherUserId + "/seen", ServerValue.TIMESTAMP);
+
+                    userMap.put("Chat/" + otherUserId + "/" + currentUserId + "/message", "Has send you a voice message.");
+                    userMap.put("Chat/" + otherUserId + "/" + currentUserId + "/timestamp", ServerValue.TIMESTAMP);
+                    userMap.put("Chat/" + otherUserId + "/" + currentUserId + "/seen", 0);
+
+                    userMap.put("Notifications/" + otherUserId + "/" + notificationId, notificationData);
+
+                    play_sound();
+
+                    // update   ...  progression UI
+                    progressStatus = progressStatus +1;
+                    infos_progress_files.setText(String.valueOf(progressStatus) +"/"+String.valueOf(number_of_files_to_send) + " files");
+                    progress_bar.setProgress(progressStatus);
+
+                    // stop the  disapear the animation  ...
+                    if(progressStatus >= number_of_files_to_send){
+
+                        infos_progress_layout.setVisibility(View.GONE);
+                        progressStatus = 0;
+                        number_of_files_to_send = 0;
+
+                    }
+
+
+                    FirebaseDatabase.getInstance().getReference().updateChildren(userMap, new DatabaseReference.CompletionListener()
+                    {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference)
+                        {
+                            sendButton.setEnabled(true);
+
+                            if(databaseError != null)
+                            {
+                                Log.d(TAG, "sendMessage(): updateChildren failed: " + databaseError.getMessage());
+                            }
+                        }
+                    });
+                }else {
+                    Toast.makeText(getApplicationContext(), "upload failed  ", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+        // Observe state change events such as progress, pause, and resume
+        file.putFile(uri).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                System.out.println("Upload is " + progress + "% done");
+                // Toast.makeText(getApplicationContext(), "Upload is " + progress + "% done", Toast.LENGTH_SHORT).show();
+                progress_bar.setProgress((int) Math.floor(progress + 0.5d));
+
+            }
+        }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(getApplicationContext(), "upload is paused ! ", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+
+    public void play_sound(){
+        AudioManager audioManager =
+                (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+        audioManager.playSoundEffect(SoundEffectConstants.CLICK);
+
+        //playSoundEffect(SoundEffectConstants.CLICK);
+    }
+
+    private void doc_file__upload_images_to_firebase(Uri Url_media , final String ext , final String filename){
+
+        Uri url = Url_media;
+
+        DatabaseReference messageRef = FirebaseDatabase.getInstance().getReference().child("Messages").child(currentUserId).child(otherUserId).push();
+        final String messageId = messageRef.getKey();
+
+        DatabaseReference notificationRef = FirebaseDatabase.getInstance().getReference().child("Notifications").child(otherUserId).push();
+        final String notificationId = notificationRef.getKey();
+
+
+        StorageReference file = FirebaseStorage.getInstance().getReference().child("message_doc").child(messageId +"#"+filename+"."+ ext);
+
+
+        file.putFile(url).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task)
+            {
+                Log.d("warnin", "waring task upload");
+
+                if(task.isSuccessful())
+                {
+                    String imageUrl = task.getResult().getDownloadUrl().toString();
+
+                    Map messageMap = new HashMap();
+                    messageMap.put("message", imageUrl);
+                    messageMap.put("type", "doc");
+                    messageMap.put("from", currentUserId);
+                    messageMap.put("to", otherUserId);
+                    messageMap.put("filename", filename);
+                    messageMap.put("timestamp", ServerValue.TIMESTAMP);
+
+                    HashMap<String, String> notificationData = new HashMap<>();
+                    notificationData.put("from", currentUserId);
+                    notificationData.put("type", "message");
+
+                    Map userMap = new HashMap();
+                    userMap.put("Messages/" + currentUserId + "/" + otherUserId + "/" + messageId, messageMap);
+                    userMap.put("Messages/" + otherUserId + "/" + currentUserId + "/" + messageId, messageMap);
+
+                    userMap.put("Chat/" + currentUserId + "/" + otherUserId + "/message", "You have sent a document.");
+                    userMap.put("Chat/" + currentUserId + "/" + otherUserId + "/timestamp", ServerValue.TIMESTAMP);
+                    userMap.put("Chat/" + currentUserId + "/" + otherUserId + "/seen", ServerValue.TIMESTAMP);
+
+                    userMap.put("Chat/" + otherUserId + "/" + currentUserId + "/message", "Has send you a document.");
+                    userMap.put("Chat/" + otherUserId + "/" + currentUserId + "/timestamp", ServerValue.TIMESTAMP);
+                    userMap.put("Chat/" + otherUserId + "/" + currentUserId + "/seen", 0);
+
+                    userMap.put("Notifications/" + otherUserId + "/" + notificationId, notificationData);
+
+                    play_sound();
+
+                    // update   ...  progression UI
+                    progressStatus = progressStatus +1;
+                    infos_progress_files.setText(String.valueOf(progressStatus) +"/"+String.valueOf(number_of_files_to_send) + " files");
+                    progress_bar.setProgress(progressStatus);
+
+                    // stop the  disapear the animation  ...
+                    if(progressStatus >= number_of_files_to_send){
+
+                        infos_progress_layout.setVisibility(View.GONE);
+                        progressStatus = 0;
+                        number_of_files_to_send = 0;
+
+                    }
+
+
+                    FirebaseDatabase.getInstance().getReference().updateChildren(userMap, new DatabaseReference.CompletionListener()
+                    {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference)
+                        {
+                            sendButton.setEnabled(true);
+
+                            if(databaseError != null)
+                            {
+                                Log.d(TAG, "sendMessage(): updateChildren failed: " + databaseError.getMessage());
+                            }
+                        }
+                    });
+                }else {
+                    Toast.makeText(getApplicationContext(), "upload failed  ", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+    }
+
+
+
 
     private void initDatabases()
     {
@@ -946,6 +1420,8 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         messagesDatabase.addChildEventListener(messagesListener);
     }
 
+
+
     private void removeListeners()
     {
         try
@@ -966,7 +1442,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         }
     }
 
-    private void sendMessage()
+    private void sendMessage(String type)
     {
         sendButton.setEnabled(false);
 
@@ -994,7 +1470,77 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
             Map messageMap = new HashMap();
             messageMap.put("message", message);
-            messageMap.put("type", "text");
+            messageMap.put("type", type);
+            messageMap.put("from", currentUserId);
+            messageMap.put("to", otherUserId);
+            messageMap.put("timestamp", ServerValue.TIMESTAMP);
+
+            HashMap<String, String> notificationData = new HashMap<>();
+            notificationData.put("from", currentUserId);
+            notificationData.put("type", "message");
+
+            Map userMap = new HashMap();
+            userMap.put("Messages/" + currentUserId + "/" + otherUserId + "/" + pushId, messageMap);
+            userMap.put("Messages/" + otherUserId + "/" + currentUserId + "/" + pushId, messageMap);
+
+            userMap.put("Chat/" + currentUserId + "/" + otherUserId + "/message", message);
+            userMap.put("Chat/" + currentUserId + "/" + otherUserId + "/timestamp", ServerValue.TIMESTAMP);
+            userMap.put("Chat/" + currentUserId + "/" + otherUserId + "/seen", ServerValue.TIMESTAMP);
+
+            userMap.put("Chat/" + otherUserId + "/" + currentUserId + "/message", message);
+            userMap.put("Chat/" + otherUserId + "/" + currentUserId + "/timestamp", ServerValue.TIMESTAMP);
+            userMap.put("Chat/" + otherUserId + "/" + currentUserId + "/seen", 0);
+
+            userMap.put("Notifications/" + otherUserId + "/" + notificationId, notificationData);
+
+            play_sound();
+
+            // Updating database with the new data including message, chat and notification
+
+            FirebaseDatabase.getInstance().getReference().updateChildren(userMap, new DatabaseReference.CompletionListener()
+            {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference)
+                {
+                    sendButton.setEnabled(true);
+
+                    if(databaseError != null)
+                    {
+                        Log.d(TAG, "sendMessage(): updateChildren failed: " + databaseError.getMessage());
+                    }
+                }
+            });
+        }
+    }
+
+
+    private void sendMessage_location_contact(String type , String message)
+    {
+        sendButton.setEnabled(false);
+
+
+        if(message.length() == 0)
+        {
+            Toast.makeText(getApplicationContext(), "invalid message !", Toast.LENGTH_SHORT).show();
+
+            sendButton.setEnabled(true);
+        }
+        else
+        {
+
+            // Pushing message/notification so we can get keyIds
+
+            DatabaseReference userMessage = FirebaseDatabase.getInstance().getReference().child("Messages").child(currentUserId).child(otherUserId).push();
+            String pushId = userMessage.getKey();
+
+            DatabaseReference notificationRef = FirebaseDatabase.getInstance().getReference().child("Notifications").child(otherUserId).push();
+            String notificationId = notificationRef.getKey();
+
+            // "Packing" message
+
+            Map messageMap = new HashMap();
+            messageMap.put("message", message);
+            messageMap.put("type", type);
             messageMap.put("from", currentUserId);
             messageMap.put("to", otherUserId);
             messageMap.put("timestamp", ServerValue.TIMESTAMP);
@@ -1018,6 +1564,8 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
             userMap.put("Notifications/" + otherUserId + "/" + notificationId, notificationData);
 
             // Updating database with the new data including message, chat and notification
+
+            play_sound();
 
             FirebaseDatabase.getInstance().getReference().updateChildren(userMap, new DatabaseReference.CompletionListener()
             {
@@ -1090,7 +1638,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     }
 
 
-
     // ######################################//// #######################################
 
     private void pickContact(){
@@ -1107,22 +1654,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                 .showPickerForResult(CONTACT_PICKER_REQUEST);
     }
 
-
-    /*
-    private void bindViews(){
-        contentRoot = findViewById(R.id.contentRootchat);
-        edMessage = (EmojiconEditText)findViewById(R.id.editTextMessage);
-        recordVoiceButton_2 = (ImageButton) findViewById(R.id.recordVoiceButton_2);
-
-        btEmoji = (ImageView)findViewById(R.id.buttonEmoji);
-        emojIcon = new EmojIconActions(this,contentRoot,edMessage,btEmoji);
-        emojIcon.ShowEmojIcon();
-        rvListMessage = (ListView) findViewById(R.id.messageListView);
-        mLinearLayoutManager = new LinearLayoutManager(this);
-        mLinearLayoutManager.setStackFromEnd(true);
-    }
-
-*/
 
     @Override
     public void onClick(View view) {
@@ -1142,22 +1673,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     }
 
 
-    public void verifyStoragePermissions() {
-        // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(ChatActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(
-                    ChatActivity.this,
-                    PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE
-            );
-        }else{
-            // we already have permission, lets go ahead and call camera intent
-            photoCameraIntent();
-        }
-    }
 
     /**
      * location places picker
@@ -1186,13 +1701,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     }
 
 
-    private void photoGalleryIntent(){
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture_title)), IMAGE_GALLERY_REQUEST);
-    }
-
 
 
     public void openVoiceRecorder(){
@@ -1207,11 +1715,13 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
                 if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
 
+                    Toast.makeText(ChatActivity.this, "Start recording  ", Toast.LENGTH_LONG).show();
                     startRecording();
-
                     //mRecordLable.setText("Recording started...");
                 }
                 else if (motionEvent.getAction() == MotionEvent.ACTION_UP){
+
+                    Toast.makeText(ChatActivity.this, "Stop recording  ", Toast.LENGTH_LONG).show();
 
                     stopRecording();
 
@@ -1227,6 +1737,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
     private void startRecording() {
 
+        voice_recording_ui.setVisibility(View.VISIBLE);
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
@@ -1246,237 +1757,12 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         mRecorder.stop();
         mRecorder.release();
         mRecorder = null;
-        uploadAudio();
-    }
-
-    private void uploadAudio_v2() {
-        mProgress = new ProgressDialog(ChatActivity.this);
-
-
-        try{
-
-            mStorage = FirebaseStorage.getInstance().getReference();
-            mProgress.setMessage("Sending the Audio...");
-            mProgress.show();
-
-            Uri uri = Uri.fromFile(new File(mFileName));
-            //Keep all voice for a specific chat grouped together
-            final String voiceLocation = "Voice" + "/" + messageId;
-            final String voiceLocationId = voiceLocation + "/" + uri.getLastPathSegment();
-            final String uniqueId = UUID.randomUUID().toString();
-            final StorageReference filepath = mStorage.child(voiceLocation).child(uniqueId + "/audio_message.3gp");
-            final String downloadURl = filepath.getPath();
-
-            filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    addVoiceToMessages(downloadURl);
-                    mProgress.dismiss();
-                    // mRecordLable.setText("Tap and Hold the Phone Button to Record");
-
-                }
-            });
-
-        }catch(Exception ex){
-            mProgress.dismiss();
-            ex.printStackTrace();
-        }
-
-
-    }
-
-
-    private void uploadAudio() {
-        mProgress = new ProgressDialog(ChatActivity.this);
-
-
-        try{
-
-            mStorage = FirebaseStorage.getInstance().getReference();
-            mProgress.setMessage("Sending the Audio...");
-            mProgress.show();
-
-            Uri uri = Uri.fromFile(new File(mFileName));
-            //Keep all voice for a specific chat grouped together
-            final String voiceLocation = "Voice" + "/" + messageId;
-            final String voiceLocationId = voiceLocation + "/" + uri.getLastPathSegment();
-            final String uniqueId = UUID.randomUUID().toString();
-            final StorageReference filepath = mStorage.child(voiceLocation).child(uniqueId + "/audio_message.3gp");
-            final String downloadURl = filepath.getPath();
-
-            filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    addVoiceToMessages(downloadURl);
-                    mProgress.dismiss();
-                    // mRecordLable.setText("Tap and Hold the Phone Button to Record");
-
-                }
-            });
-
-        }catch(Exception ex){
-            mProgress.dismiss();
-            ex.printStackTrace();
-        }
-
-
-    }
-
-
-    public void addListeners(){
-        edMessage.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (charSequence.toString().trim().length() > 0) {
-                    mSendButton.setEnabled(true);
-                } else {
-                    mSendButton.setEnabled(false);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-
-        });
-    }
-
-    //If voice message add them to Firebase.Storage
-    public void addVoiceToMessages(String voiceLocation){
-        final DatabaseReference pushRef = mMessageDatabaseReference.push();
-        final String pushKey = pushRef.getKey();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
-        Date date = new Date();
-        String timestamp = dateFormat.format(date);
-        //Create message object with text/voice etc
-        com.android.gudana.project_3.model.Message message = new com.android.gudana.project_3.model.Message(EmailEncoding.commaEncodePeriod(mFirebaseAuth.getCurrentUser().getEmail()), "Message: Voice Sent", "VOICE", voiceLocation, timestamp);
-        //Create HashMap for Pushing
-        HashMap<String, Object> messageItemMap = new HashMap<String, Object>();
-        HashMap<String,Object> messageObj = (HashMap<String, Object>) new ObjectMapper()
-                .convertValue(message, Map.class);
-        messageItemMap.put("/" + pushKey, messageObj);
-        mMessageDatabaseReference.updateChildren(messageItemMap)
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        edMessage.setText("");
-                    }
-                });
-    }
-
-
-    //Send image messages from here
-    public void addImageToMessages(String imageLocation){
-        final DatabaseReference pushRef = mMessageDatabaseReference.push();
-        final String pushKey = pushRef.getKey();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
-        Date date = new Date();
-        String timestamp = dateFormat.format(date);
-        //Create message object with text/voice etc
-        com.android.gudana.project_3.model.Message message =
-                new com.android.gudana.project_3.model.Message(EmailEncoding.commaEncodePeriod(mFirebaseAuth.getCurrentUser().getEmail()),
-                        "Message: Image Sent", "IMAGE", imageLocation, timestamp);
-        //Create HashMap for Pushing
-        HashMap<String, Object> messageItemMap = new HashMap<String, Object>();
-        HashMap<String,Object> messageObj = (HashMap<String, Object>) new ObjectMapper()
-                .convertValue(message, Map.class);
-        messageItemMap.put("/" + pushKey, messageObj);
-        mMessageDatabaseReference.updateChildren(messageItemMap)
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        edMessage.setText("");
-                    }
-                });
+        voice_recording_ui.setVisibility(View.GONE);
+        // uploadAudio();
+        voice_upload_images_to_firebase(Uri.fromFile(new File(mFileName)));
     }
 
 
 
-    public void sendMessage(View view){
-        //final DatabaseReference messageRef = mFirebaseDatabase.getReference(Constants.MESSAGE_LOCATION);
-        final DatabaseReference pushRef = mMessageDatabaseReference.push();
-        final String pushKey = pushRef.getKey();
 
-        String messageString = edMessage.getText().toString();
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
-        Date date = new Date();
-        String timestamp = dateFormat.format(date);
-        //Create message object with text/voice etc
-        com.android.gudana.project_3.model.Message message = new com.android.gudana.project_3.model.Message(EmailEncoding.commaEncodePeriod(mFirebaseAuth.getCurrentUser().getEmail()), messageString, timestamp);
-        //Create HashMap for Pushing
-        HashMap<String, Object> messageItemMap = new HashMap<String, Object>();
-        HashMap<String,Object> messageObj = (HashMap<String, Object>) new ObjectMapper()
-                .convertValue(message, Map.class);
-        messageItemMap.put("/" + pushKey, messageObj);
-        mMessageDatabaseReference.updateChildren(messageItemMap)
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        edMessage.setText("");
-                    }
-                });
-    }
-
-
-    private void playSound(Uri uri){
-        MediaPlayer mediaPlayer = new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        try {
-            mediaPlayer.setDataSource(uri.toString());
-        }catch(Exception e){
-
-        }
-        mediaPlayer.prepareAsync();
-        //You can show progress dialog here untill it prepared to play
-        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                //Now dismis progress dialog, Media palyer will start playing
-                mp.start();
-            }
-        });
-        mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-            @Override
-            public boolean onError(MediaPlayer mp, int what, int extra) {
-                // dissmiss progress bar here. It will come here when MediaPlayer
-                //  is not able to play file. You can show error message to user
-                return false;
-            }
-        });
-    }
-
-    /*
-    private void initializeScreen() {
-        mMessageList = (ListView) findViewById(R.id.messageListView);
-        mToolBar = (Toolbar) findViewById(R.id.toolbar);
-        mSendButton = (ImageButton)findViewById(R.id.sendButton);
-
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mFirebaseAuth = FirebaseAuth.getInstance();
-        currentUserEmail = EmailEncoding.commaEncodePeriod(mFirebaseAuth.getCurrentUser().getEmail());
-        mUsersDatabaseReference = mFirebaseDatabase.getReference().child(Constants.USERS_LOCATION);
-        mMessageDatabaseReference = mFirebaseDatabase.getReference().child(Constants.MESSAGE_LOCATION
-                + "/" + messageId);
-
-        mToolBar.setTitle(chatName);
-        setSupportActionBar(mToolBar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-
-        mToolBar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-
-    }
-    */
 }

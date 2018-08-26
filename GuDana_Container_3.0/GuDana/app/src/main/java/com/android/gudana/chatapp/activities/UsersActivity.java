@@ -3,14 +3,17 @@ package com.android.gudana.chatapp.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -42,6 +45,11 @@ public class UsersActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ca_activity_users);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setTitle(R.string.see_all_users);
 
         // RecyclerView related
 
@@ -95,6 +103,31 @@ public class UsersActivity extends AppCompatActivity
         recyclerView.setAdapter(adapter);
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_all_users, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch(item.getItemId())
+        {
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                break;
+            case R.id.action_call_map_users:
+                Toast.makeText(getApplicationContext(), R.string.not_implemented, Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.action_search_user:
+                Toast.makeText(getApplicationContext(), R.string.not_implemented, Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
     @Override
     protected void onStart()
     {
@@ -133,15 +166,5 @@ public class UsersActivity extends AppCompatActivity
         NavUtils.navigateUpFromSameTask(this);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch(item.getItemId())
-        {
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+
 }

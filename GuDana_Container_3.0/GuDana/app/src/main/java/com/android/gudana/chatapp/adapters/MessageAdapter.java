@@ -49,11 +49,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageHolder>
 
         if(c.getFrom().equals(currentUserId))
         {
-            holder.setRightMessage(c.getFrom(), c.getMessage(), c.getTimestamp(), c.getType());
+            holder.setRightMessage(c.getFrom(), c.getMessage(), c.getFilename(), c.getTimestamp(), c.getType());
         }
         else
         {
-            holder.setLeftMessage(c.getFrom(), c.getMessage(), c.getTimestamp(), c.getType());
+            holder.setLeftMessage(c.getFrom(), c.getMessage(), c.getFilename() , c.getTimestamp(), c.getType());
         }
     }
 

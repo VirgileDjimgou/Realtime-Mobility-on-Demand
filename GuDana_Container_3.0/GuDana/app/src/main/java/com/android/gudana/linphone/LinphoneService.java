@@ -107,7 +107,7 @@ public final class LinphoneService extends Service {
 	public static LinphoneService instance()  {
 		if (isReady()) return instance;
 
-		throw new RuntimeException("LinphoneService not instantiated yet");
+		throw new RuntimeException("GuDana Voice  not instantiated yet");
 	}
 
 	public Handler mHandler = new Handler();
@@ -321,10 +321,10 @@ public final class LinphoneService extends Service {
 
 		Bitmap bm = null;
 		try {
-			bm = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+			bm = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_round);
 		} catch (Exception e) {
 		}
-		mNotif = Compatibility.createNotification(this, mNotificationTitle, "", R.drawable.linphone_notification_icon, R.mipmap.ic_launcher, bm, mNotifContentIntent, true,notifcationsPriority);
+		mNotif = Compatibility.createNotification(this, mNotificationTitle, "", R.mipmap.ic_launcher, R.mipmap.ic_launcher, bm, mNotifContentIntent, true,notifcationsPriority);
 
 		LinphoneManager.createAndStart(LinphoneService.this);
 

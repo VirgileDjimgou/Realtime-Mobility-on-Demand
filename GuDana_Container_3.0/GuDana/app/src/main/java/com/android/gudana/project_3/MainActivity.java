@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.android.gudana.R;
+import com.android.gudana.chatapp.activities.ChatActivity;
 import com.android.gudana.project_3.ui.*;
 
 
@@ -14,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.p3_activity_main);
-        Intent intent = new Intent(this, ChatListActivity.class);
+        Intent intent = new Intent(this, ChatActivity.class);
         startActivity(intent);
     }
 }

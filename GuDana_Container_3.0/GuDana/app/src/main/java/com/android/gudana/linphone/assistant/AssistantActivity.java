@@ -275,7 +275,7 @@ private static AssistantActivity instance;
 			finish();
 		} else if (currentFragment == AssistantFragmentsEnum.COUNTRY_CHOOSER){
 			if(lastFragment.equals(AssistantFragmentsEnum.LINPHONE_LOGIN)){
-				displayLoginLinphone();
+				// displayLoginLinphone();
 			} else {
 				displayCreateAccount();
 			}
@@ -365,14 +365,14 @@ private static AssistantActivity instance;
 		}
 	}
 
+
+
 	private void display(AssistantFragmentsEnum fragment) {
 		switch (fragment) {
 			case WELCOME:
 				displayMenu();
 				break;
-			case LINPHONE_LOGIN:
-				displayLoginLinphone();
-				break;
+
 		default:
 			throw new IllegalStateException("Can't handle " + fragment);
 		}
@@ -393,16 +393,7 @@ private static AssistantActivity instance;
 		back.setVisibility(View.VISIBLE);
 	}
 
-	public void displayLoginLinphone() {
-		fragment = new LinphoneLoginFragment();
-		Bundle extras = new Bundle();
-		extras.putString("Phone", null);
-		extras.putString("Dialcode", null);
-		fragment.setArguments(extras);
-		changeFragment(fragment);
-		currentFragment = AssistantFragmentsEnum.LINPHONE_LOGIN;
-		back.setVisibility(View.VISIBLE);
-	}
+
 
 	public void displayCreateAccount() {
 		fragment = new CreateAccountFragment();
@@ -415,12 +406,6 @@ private static AssistantActivity instance;
 		back.setVisibility(View.VISIBLE);
 	}
 
-	public void displayRemoteProvisioning() {
-		fragment = new RemoteProvisioningFragment();
-		changeFragment(fragment);
-		currentFragment = AssistantFragmentsEnum.REMOTE_PROVISIONING;
-		back.setVisibility(View.VISIBLE);
-	}
 
 	public void displayCountryChooser() {
 		fragment = new CountryListFragment();
@@ -462,69 +447,77 @@ private static AssistantActivity instance;
 	}
 
 	public void saveCreatedAccount(String username, String password, String prefix, String ha1, String domain, TransportType transport) {
-		if (accountCreated)
-			return;
 
-		username = LinphoneUtils.getDisplayableUsernameFromAddress(username);
-		domain = LinphoneUtils.getDisplayableUsernameFromAddress(domain);
+		try{
 
-		String identity = "sip:" + username + "@" + domain;
-		try {
-			address = LinphoneCoreFactory.instance().createLinphoneAddress(identity);
-		} catch (LinphoneCoreException e) {
-			Log.e(e);
-		}
+			if (accountCreated)
+				return;
 
-		boolean isMainAccountLinphoneDotOrg = domain.equals(getString(R.string.default_domain));
-		AccountBuilder builder = new AccountBuilder(LinphoneManager.getLc())
-		.setUsername(username)
-		.setDomain(domain)
-		.setHa1(ha1)
-		.setPassword(password);
+			username = LinphoneUtils.getDisplayableUsernameFromAddress(username);
+			domain = LinphoneUtils.getDisplayableUsernameFromAddress(domain);
 
-		if(prefix != null){
-			builder.setPrefix(prefix);
-		}
-
-		if (isMainAccountLinphoneDotOrg) {
-			if (getResources().getBoolean(R.bool.disable_all_security_features_for_markets)) {
-				builder.setProxy(domain)
-				.setTransport(TransportType.LinphoneTransportTcp);
-			}
-			else {
-				builder.setProxy(domain)
-				.setTransport(TransportType.LinphoneTransportTls);
+			String identity = "sip:" + username + "@" + domain;
+			try {
+				address = LinphoneCoreFactory.instance().createLinphoneAddress(identity);
+			} catch (LinphoneCoreException e) {
+				Log.e(e);
 			}
 
-			builder.setExpires("604800")
-			.setAvpfEnabled(true)
-			.setAvpfRRInterval(3)
-			.setQualityReportingCollector("sip:voip-metrics@sip.linphone.org")
-			.setQualityReportingEnabled(true)
-			.setQualityReportingInterval(180)
-			.setRealm("sip.linphone.org")
-			.setNoDefault(false);
+			//boolean isMainAccountLinphoneDotOrg = domain.equals(getString(R.string.default_domain));
+			// added von djimgou patrick
+			boolean isMainAccountLinphoneDotOrg = false;
 
-			mPrefs.enabledFriendlistSubscription(getResources().getBoolean(R.bool.use_friendlist_subscription));
+			AccountBuilder builder = new AccountBuilder(LinphoneManager.getLc())
+					.setUsername(username)
+					.setDomain(domain)
+					.setHa1(ha1)
+					.setPassword(password);
 
-			mPrefs.setStunServer(getString(R.string.default_stun));
-			mPrefs.setIceEnabled(true);
-
-			accountCreator.setPassword(password);
-			accountCreator.setHa1(ha1);
-			accountCreator.setUsername(username);
-		} else {
-			String forcedProxy = "";
-			if (!TextUtils.isEmpty(forcedProxy)) {
-				builder.setProxy(forcedProxy)
-				.setOutboundProxyEnabled(true)
-				.setAvpfRRInterval(5);
+			if(prefix != null){
+				builder.setPrefix(prefix);
 			}
 
-			if(transport != null) {
-				builder.setTransport(transport);
+			if (isMainAccountLinphoneDotOrg) {
+				if (getResources().getBoolean(R.bool.disable_all_security_features_for_markets)) {
+					builder.setProxy(domain)
+							.setTransport(TransportType.LinphoneTransportTcp);
+				}
+				else {
+					builder.setProxy(domain)
+							.setTransport(TransportType.LinphoneTransportTls);
+				}
+
+				builder.setExpires("604800")
+						.setAvpfEnabled(true)
+						.setAvpfRRInterval(3)
+						.setQualityReportingCollector("sip:voip-metrics@sip.linphone.org")
+						.setQualityReportingEnabled(true)
+						.setQualityReportingInterval(180)
+						.setRealm("sip.linphone.org")
+						.setNoDefault(false);
+
+				mPrefs.enabledFriendlistSubscription(getResources().getBoolean(R.bool.use_friendlist_subscription));
+
+				mPrefs.setStunServer(getString(R.string.default_stun));
+				mPrefs.setIceEnabled(true);
+
+				accountCreator.setPassword(password);
+				accountCreator.setHa1(ha1);
+				accountCreator.setUsername(username);
+			} else {
+				String forcedProxy = "";
+				if (!TextUtils.isEmpty(forcedProxy)) {
+					builder.setProxy(forcedProxy)
+							.setOutboundProxyEnabled(true)
+							.setAvpfRRInterval(5);
+				}
+
+				if(transport != null) {
+					builder.setTransport(transport);
+				}
 			}
-		}
+
+		/*
 
 		if (getResources().getBoolean(R.bool.enable_push_id)) {
 			String regId = mPrefs.getPushNotificationRegistrationID();
@@ -534,28 +527,44 @@ private static AssistantActivity instance;
 				builder.setContactParameters(contactInfos);
 			}
 		}
+		*/
 
-		try {
-			builder.saveNewAccount();
-			if(!newAccount) {
-				displayRegistrationInProgressDialog();
+			try {
+				builder.saveNewAccount();
+				if(!newAccount) {
+					// displayRegistrationInProgressDialog();
+					Thread.sleep(2000);
+				}
+				Thread.sleep(2000);
+				accountCreated = true;
+			} catch (Exception e) {
+				e.printStackTrace();
+				Log.e(e);
 			}
-			accountCreated = true;
-		} catch (LinphoneCoreException e) {
-			Log.e(e);
+
+
+		}catch(Exception ex){
+			ex.printStackTrace();
 		}
+
 	}
 
  	public void displayRegistrationInProgressDialog() {
-		if(LinphoneManager.getLc().isNetworkReachable()) {
-			progress = ProgressDialog.show(this, null, null);
-			Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.colorE));
-			d.setAlpha(200);
-			progress.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-			progress.getWindow().setBackgroundDrawable(d);
-			progress.setContentView(R.layout.lin_progress_dialog);
-			progress.show();
+		try{
+			if(LinphoneManager.getLc().isNetworkReachable()) {
+				progress = ProgressDialog.show(this, null, null);
+				Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.colorE));
+				d.setAlpha(200);
+				progress.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+				progress.getWindow().setBackgroundDrawable(d);
+				progress.setContentView(R.layout.lin_progress_dialog);
+				progress.show();
+			}
+
+		}catch(Exception ex){
+			ex.printStackTrace();
 		}
+
 	}
 
  	public void displayRemoteProvisioningInProgressDialog() {

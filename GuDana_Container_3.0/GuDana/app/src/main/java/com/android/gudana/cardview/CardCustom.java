@@ -1,19 +1,15 @@
 package com.android.gudana.cardview;
 
-/**
- * Created by Lincoln on 18/05/16.
- */
-public class Album {
+
+public class CardCustom {
     private String name;
-    private int numOfSongs;
     private int thumbnail;
 
-    public Album() {
+    public CardCustom() {
     }
 
-    public Album(String name, int numOfSongs, int thumbnail) {
+    public CardCustom(String name,  int thumbnail) {
         this.name = name;
-        this.numOfSongs = numOfSongs;
         this.thumbnail = thumbnail;
     }
 
@@ -23,14 +19,6 @@ public class Album {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getNumOfSongs() {
-        return numOfSongs;
-    }
-
-    public void setNumOfSongs(int numOfSongs) {
-        this.numOfSongs = numOfSongs;
     }
 
     public int getThumbnail() {

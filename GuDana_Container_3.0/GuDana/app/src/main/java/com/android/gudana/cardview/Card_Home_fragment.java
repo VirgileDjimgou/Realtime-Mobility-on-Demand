@@ -32,7 +32,7 @@ public class Card_Home_fragment extends Fragment implements Card_Home_fragment_o
 
     private RecyclerView recyclerView;
     private AlbumsAdapter adapter;
-    private List<Album> albumList;
+    private List<CardCustom> albumList;
     private Context context;
     public static ViewPager mViewPager;
 
@@ -84,17 +84,14 @@ public class Card_Home_fragment extends Fragment implements Card_Home_fragment_o
             //mFragmentCardShadowTransformer = new ShadowTransformer(mViewPager, mFragmentCardAdapter);
             mViewPager.setAdapter(mCardAdapter);
             mViewPager.setPageTransformer(false, mCardShadowTransformer);
-            mViewPager.setOffscreenPageLimit(3);
+            mViewPager.setOffscreenPageLimit(4);
             mCardShadowTransformer.enableScaling(true);
-
 
 
             // init animation ...
 
             animShow = AnimationUtils.loadAnimation(context, R.anim.view_show);
             animHide = AnimationUtils.loadAnimation(context, R.anim.view_hide);
-
-
             floatButton = (FloatingActionButton) view_layout.findViewById(R.id.fab);
             floatButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -137,6 +134,8 @@ public class Card_Home_fragment extends Fragment implements Card_Home_fragment_o
                 }
             });
 
+
+            try {
             recyclerView = (RecyclerView) view_layout.findViewById(R.id.recycler_view);
 
             albumList = new ArrayList<>();
@@ -144,13 +143,12 @@ public class Card_Home_fragment extends Fragment implements Card_Home_fragment_o
 
             RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(context, 2);
             recyclerView.setLayoutManager(mLayoutManager);
-            recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
+            recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), false));
             recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.setAdapter(adapter);
 
             prepareCards();
 
-            try {
                 //Glide.with(this).load(R.drawable.cover).into((ImageView) view.findViewById(R.id.backdrop));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -166,17 +164,17 @@ public class Card_Home_fragment extends Fragment implements Card_Home_fragment_o
 
     public static void Driver_Card(){
         mCardAdapter = new CardPagerAdapter();
-        mCardAdapter.addCardItem(new CardItem(R.string.title_1, R.drawable.moto_driver));
-        mCardAdapter.addCardItem(new CardItem(R.string.title_2, R.drawable.taxi_us));
-        mCardAdapter.addCardItem(new CardItem(R.string.title_3, R.drawable.icon_transporte));
-        mCardAdapter.addCardItem(new CardItem(R.string.title_4, R.drawable.traffic));
+        mCardAdapter.addCardItem(new CardItem(R.string.moto_driver, R.drawable.moto_driver));
+        mCardAdapter.addCardItem(new CardItem(R.string.taxi_driver, R.drawable.taxi_us));
+        mCardAdapter.addCardItem(new CardItem(R.string.transporter, R.drawable.icon_transporte));
+        mCardAdapter.addCardItem(new CardItem(R.string.custom, R.drawable.traffic));
         //mFragmentCardAdapter = new CardFragmentPagerAdapter(getSupportFragmentManager(), dpToPixels(2, context));
 
         mCardShadowTransformer = new ShadowTransformer(mViewPager, mCardAdapter);
         //mFragmentCardShadowTransformer = new ShadowTransformer(mViewPager, mFragmentCardAdapter);
         mViewPager.setAdapter(mCardAdapter);
         mViewPager.setPageTransformer(false, mCardShadowTransformer);
-        mViewPager.setOffscreenPageLimit(3);
+        mViewPager.setOffscreenPageLimit(4);
         mCardShadowTransformer.enableScaling(true);
 
     }
@@ -210,25 +208,30 @@ public class Card_Home_fragment extends Fragment implements Card_Home_fragment_o
                 R.drawable.taxi_driver,
                 R.drawable.cab_passenger,
                 R.drawable.gud_delivery,
-                R.drawable.gudana_talk,
                 R.drawable.cash_back
             };
 
-        Album a = new Album("GuD Driver", 13, covers[0]);
-        albumList.add(a);
+        try{
 
-        a = new Album("GuD Passenger", 8, covers[1]);
-        albumList.add(a);
 
-        a = new Album("GuD Delivery", 11, covers[2]);
-        albumList.add(a);
+            CardCustom a = new CardCustom("GuD Driver", covers[0]);
+            albumList.add(a);
 
-        a = new Album("GuD Talk", 12, covers[3]);
-        albumList.add(a);
+            a = new CardCustom("GuD Passenger",  covers[1]);
+            albumList.add(a);
 
-        a = new Album("GuD Money", 12, covers[4]);
-        albumList.add(a);
+            a = new CardCustom("GuD Delivery",  covers[2]);
+            albumList.add(a);
 
+
+            a = new CardCustom("GuD Money",  covers[3]);
+            albumList.add(a);
+
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+
+        }
 
         adapter.notifyDataSetChanged();
     }

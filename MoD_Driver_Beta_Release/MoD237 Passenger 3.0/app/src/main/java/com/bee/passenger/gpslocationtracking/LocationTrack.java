@@ -18,9 +18,6 @@ import android.widget.Toast;
 
 import static java.lang.System.exit;
 
-/**
- * Created by anupamchugh on 28/11/16.
- */
 
 public class LocationTrack extends Service implements LocationListener {
 

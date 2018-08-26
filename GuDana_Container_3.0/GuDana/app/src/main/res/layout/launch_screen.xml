@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:background="@color/colorE"
+	android:background="@color/colorPrimary"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
@@ -11,9 +11,9 @@
 		android:orientation="vertical">
 
 		<ImageView
-			android:src="@drawable/gudana_talk"
-			android:layout_width="200dp"
-			android:layout_height="200dp"
+			android:src="@mipmap/ic_launcher"
+			android:layout_width="100dp"
+			android:layout_height="100dp"
 			android:layout_gravity="center"/>
 
 		<TextView
@@ -21,27 +21,27 @@
 			style="@style/font21"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="20dp"
+			android:layout_marginTop="10dp"
 			android:layout_gravity="center"/>
 
 		<TextView
-			android:text="@string/app_description"
+			android:text="@string/slogan"
 			android:textSize="28sp"
-			android:textColor="@color/colorA"
+			android:textColor="@color/colorWhite"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center"/>
 
 	</LinearLayout>
 
-    <ProgressBar 
-        android:layout_height="wrap_content" 
-        android:layout_width="wrap_content"
-		android:layout_marginBottom="20dp"
-        android:layout_gravity="center_horizontal|bottom" />
+	<ProgressBar
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center_horizontal|bottom"
+		android:layout_marginBottom="20dp" />
 
 	<View
-		android:background="@color/colorA"
+		android:background="@color/colorWhite"
 		android:layout_height="10dp"
 		android:layout_width="100dp"
 		android:layout_gravity="center_horizontal|bottom" />

@@ -37,10 +37,10 @@ import static com.android.gudana.cardview.Card_Home_fragment.layoutAnimation;
 public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.MyViewHolder> {
 
     private Context mContext;
-    private List<Album> albumList;
+    private List<CardCustom> CardList;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView title, count;
+        public TextView title;
         public ImageView thumbnail;
         public BoomMenuButton bmb1;
 
@@ -48,16 +48,15 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.MyViewHold
         public MyViewHolder(View view) {
             super(view);
             title = (TextView) view.findViewById(R.id.title);
-            count = (TextView) view.findViewById(R.id.count);
             thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
 
         }
     }
 
 
-    public AlbumsAdapter(Context mContext, List<Album> albumList) {
+    public AlbumsAdapter(Context mContext, List<CardCustom> albumList) {
         this.mContext = mContext;
-        this.albumList = albumList;
+        this.CardList = albumList;
     }
 
     @Override
@@ -70,9 +69,8 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        Album album = albumList.get(position);
+        CardCustom album = CardList.get(position);
         holder.title.setText(album.getName());
-        holder.count.setText(album.getNumOfSongs() + " songs");
 
 
         holder.thumbnail.setOnClickListener(new View.OnClickListener() {
@@ -109,8 +107,9 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.MyViewHold
 
                 if (position == 3){
 
-                    Intent phoneActivity = new Intent(mContext, LinphoneLauncherActivity.class);
-                    mContext.startActivity(phoneActivity);
+                    // GuD Transfert  ...
+                    // Intent phoneActivity = new Intent(mContext, LinphoneLauncherActivity.class);
+                    // mContext.startActivity(phoneActivity);
 
                 }
 
@@ -127,6 +126,6 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.MyViewHold
 
     @Override
     public int getItemCount() {
-        return albumList.size();
+        return CardList.size();
     }
 }

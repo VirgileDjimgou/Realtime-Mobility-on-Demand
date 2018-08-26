@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.main_app_bar);
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("ChatApp");
+        getSupportActionBar().setTitle(R.string.app_name);
 
         // Fragments handler using SmartTabLayout
 

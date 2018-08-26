@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -67,6 +69,11 @@ public class ProfileActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ca_activity_profile);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setTitle("Profile");
 
         name = findViewById(R.id.profile_name);
         status = findViewById(R.id.profile_status);
@@ -325,6 +332,8 @@ public class ProfileActivity extends AppCompatActivity
             });
         }
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)

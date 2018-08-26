@@ -14,13 +14,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="#fff">
+    android:background="@color/colorPrimary">
 
     <com.github.florent37.diagonallayout.DiagonalLayout
         android:id="@+id/profile_diagonal"
         android:layout_width="match_parent"
         android:layout_height="260dp"
-        app:diagonal_angle="15"
+        app:diagonal_angle="10"
         app:diagonal_direction="left"
         app:diagonal_position="bottom">
 
@@ -60,7 +60,8 @@
             android:layout_marginTop="4dp"
             android:layout_centerHorizontal="true"
             android:fontFamily="sans-serif-condensed"
-            android:text="User Name"
+            android:text="@string/Username_profil"
+            android:textColor="@android:color/white"
             android:textAlignment="center"
             android:textAllCaps="false"
             android:textSize="30sp"
@@ -74,7 +75,8 @@
             android:layout_below="@+id/profile_name"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:text="&quot;Welcome to my Profile!&quot;"
+            android:textColor="@android:color/white"
+            android:text="@string/profil_status"
             android:textAlignment="center"
             android:textSize="18sp"
             android:textStyle="italic" />

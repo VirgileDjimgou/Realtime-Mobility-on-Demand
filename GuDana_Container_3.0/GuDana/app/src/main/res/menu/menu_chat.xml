@@ -15,7 +15,7 @@
         app:showAsAction="always"/>
 
 
-    <item android:id="@+id/action_call_vi1eo"
+    <item android:id="@+id/action_call_video"
         android:icon="@mipmap/ic_video"
         android:title="@string/action_search"
         app:showAsAction="always"/>

@@ -35,7 +35,7 @@ import com.android.gudana.R;
 import org.linphone.core.LinphoneAddress.TransportType;
 
 /**
- * @author Sylvain Berfini
+ * @author Djimgou Patrick  virgile
  */
 public class LoginFragment extends Fragment implements OnClickListener, TextWatcher {
 	private EditText login, password, domain;

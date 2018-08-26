@@ -1460,42 +1460,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 	}
 
-	private void askLinkWithPhoneNumber(){
-		long now = new Timestamp(new Date().getTime()).getTime();
-		long future = new Timestamp(MainActivity_with_Drawer.instance().getResources().getInteger(R.integer.popup_time_interval)).getTime();
-		long newDate = now + future;
-
-		LinphonePreferences.instance().setLinkPopupTime(String.valueOf(newDate));
-
-		final Dialog dialog = MainActivity_with_Drawer.instance().displayDialog(String.format(getString(R.string.link_account_popup), LinphoneManager.getLc().getDefaultProxyConfig().getAddress().asStringUriOnly()));
-		Button delete = (Button) dialog.findViewById(R.id.delete_button);
-		delete.setText(getString(R.string.link));
-		Button cancel = (Button) dialog.findViewById(R.id.cancel);
-		cancel.setText(getString(R.string.maybe_later));
-
-		delete.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Intent assistant = new Intent();
-				assistant.setClass(MainActivity_with_Drawer.instance(), AssistantActivity.class);
-				assistant.putExtra("LinkPhoneNumber", true);
-				assistant.putExtra("LinkPhoneNumberAsk", true);
-				mServiceContext.startActivity(assistant);
-				dialog.dismiss();
-			}
-		});
-
-		LinphonePreferences.instance().setLinkPopupTime(String.valueOf(newDate));
-
-		cancel.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				dialog.dismiss();
-			}
-		});
-		dialog.show();
-	}
-
 	@SuppressWarnings("serial")
 	public static class LinphoneConfigException extends LinphoneException {
 
@@ -1646,7 +1610,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	@Override
 	public void onAccountCreatorAccountLinkedWithPhoneNumber(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
 		if (status.equals(LinphoneAccountCreator.Status.AccountNotLinked)) {
-			askLinkWithPhoneNumber();
+			// askLinkWithPhoneNumber();
 		}
 	}
 

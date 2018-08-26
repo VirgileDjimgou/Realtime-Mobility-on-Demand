@@ -9,11 +9,15 @@ package com.android.gudana.chatapp.activities;
  * @since   27/02/2018
  */
 
-import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.gudana.R;
 import com.squareup.picasso.Callback;
@@ -27,6 +31,11 @@ public class FullScreenActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ca_activity_full_screen);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setTitle(R.string.see_all_users);
 
         final String url = getIntent().getStringExtra("imageUrl");
 
@@ -70,5 +79,18 @@ public class FullScreenActivity extends AppCompatActivity
                     }
                 });
 
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch(item.getItemId())
+        {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -35,17 +35,6 @@
 			android:paddingLeft="5dp"
 			android:src="@drawable/led_disconnected" />
 
-		<TextView
-			android:id="@+id/status_text"
-			style="@style/font16"
-			android:layout_width="145dp"
-			android:layout_height="match_parent"
-			android:layout_alignParentEnd="true"
-			android:layout_alignParentTop="true"
-			android:layout_marginEnd="60dp"
-			android:gravity="center_vertical"
-			android:paddingLeft="35dp"
-			android:text="@string/status_not_connected" />
 
 		<ImageView
 			android:id="@+id/voicemail"

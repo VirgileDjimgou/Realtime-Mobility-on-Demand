@@ -9,6 +9,21 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+
+import android.os.StrictMode;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -85,6 +100,7 @@ import com.android.gudana.linphone.purchase.InAppPurchaseActivity;
 import com.android.gudana.linphone.ui.AddressText;
 import com.android.gudana.linphone.xmlrpc.XmlRpcHelper;
 import com.android.gudana.linphone.xmlrpc.XmlRpcListenerBase;
+import com.android.gudana.util.Client;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
@@ -143,7 +159,9 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
     private static final int PERMISSIONS_RECORD_AUDIO_ECHO_CANCELLER = 209;
     private static final int PERMISSIONS_READ_EXTERNAL_STORAGE_DEVICE_RINGTONE = 210;
     private static final int PERMISSIONS_RECORD_AUDIO_ECHO_TESTER = 211;
+    private LinphoneAddress.TransportType transport;
 
+    private LinphonePreferences mPrefs;
     private static MainActivity_with_Drawer instance;
 
     private StatusFragment statusFragment;
@@ -194,13 +212,16 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
 
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
-    private ViewPager mViewPager;
+    public static  ViewPager mViewPager;
     public  Fragment[] fragments;
-    private TabLayout tabLayout;
+    public static TabLayout tabLayout;
     private CoordinatorLayout coord;
     private SharedPreferences preferences;
     private AppBarLayout appbar;
     private int generateRefreshCount;
+    private Client myClient;
+
+    public static   AccountHeader headerResult = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,6 +232,12 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        if (android.os.Build.VERSION.SDK_INT > 9)
+        {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
 
 
         if (!LinphoneManager.isInstanciated()) {
@@ -351,13 +378,15 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
         // ------------------------- Material Drawer ---------------------------------
 
         // Create the AccountHeader
-        AccountHeader headerResult = new AccountHeaderBuilder()
+        headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(R.color.colorPrimaryDark)
                 .addProfiles(
                         new ProfileDrawerItem().
-                                withName("Gudana User").
+                                withName("Gudana Username").
                                 withEmail("gudana_user@gud.com").
+                                withTextColor( getResources().getColor(R.color.colorWhite)).
+                                withNameShown(true).
                                 withIcon(getResources().getDrawable(R.mipmap.ic_person_gud_round))
                 )
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
@@ -367,6 +396,11 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
                     }
                 })
                 .build();
+
+        //headerResult.setSelectionFirstLine("@string/app_name");
+        //headerResult.setSelectionFirstLineShown(true);
+        //headerResult.setSelectionSecondLine("@string/slogan");
+        //headerResult.setSelectionSecondLineShown(true);
 
 
 
@@ -439,11 +473,14 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
         tabLayout.setupWithViewPager(mViewPager);
         tabLayout.getTabAt(0).setIcon(R.mipmap.ic_home);
         tabLayout.getTabAt(1).setIcon(R.mipmap.ic_requests);
-        tabLayout.getTabAt(2).setIcon(R.mipmap.ic_history);
+        tabLayout.getTabAt(2).setIcon(R.mipmap.ic_call_history);
         tabLayout.getTabAt(3).setIcon(R.mipmap.ic_chat);
         tabLayout.getTabAt(4).setIcon(R.mipmap.ic_friend);
         tabLayout.getTabAt(5).setIcon(R.mipmap.ic_dialer);
+
         mViewPager.setOffscreenPageLimit(6);
+        //tabLayout.getTabAt(3);
+        //mViewPager.setCurrentItem(3);
 
 
         /*
@@ -477,6 +514,32 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
         viewPagerTab.setViewPager(viewPager);
 
         */
+
+
+        // Start registration     ...
+        // this.myClient = new Client(this.getApplicationContext(),"206.189.16.110", 12345, "IdUser6546ghujhg");
+        // myClient.execute();
+
+
+        try{
+
+            // send  credentials  to Asterisk  Server ...
+            String ServerAdr =  "206.189.16.110";
+            int  Port = 2004;
+            String IdUser= "45612";
+            this.myClient = null;
+            //AsteriskAuthentification( ServerAdr,Port,IdUser);
+            this.myClient = new Client(this.getApplicationContext(),ServerAdr, Port, IdUser);
+            myClient.execute();
+
+            //this.myClient.SendData("data connection ");
+            //this.myClient.SendData("hello world from  androdi " + "/n");
+            // MainActivity_with_Drawer.instance().displaySettings();
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+
 
     }
 
@@ -1169,12 +1232,12 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
                 logoutDialog.show();
                 return true;
             case R.id.menuChangelog:
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/h01d/ChatApp/blob/master/CHANGELOG.md")));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://gudana.com/master/CHANGELOG.md")));
                 return true;
             case R.id.menuAbout:
                 AlertDialog.Builder aboutBuilder = new AlertDialog.Builder(MainActivity_with_Drawer.this);
-                aboutBuilder.setTitle("ChatApp v1.1");
-                aboutBuilder.setMessage("Project is open source and released under Apache License 2.0.\n\nMake sure you read all Legal content.\n\nRaf, 2018. All Rights Reserved.");
+                aboutBuilder.setTitle("GuDana Beta v12.1");
+                aboutBuilder.setMessage("Project is closed  source and licensed under .... .\n\nMake sure you read all Legal content.\n\nRaf, 2018. All Rights Reserved.");
                 aboutBuilder.setNegativeButton("Close", new DialogInterface.OnClickListener()
                 {
                     public void onClick(DialogInterface dialog, int id)
@@ -1196,16 +1259,16 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
                         switch(position)
                         {
                             case 0:
-                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/h01d/ChatApp/blob/master/LICENSE")));
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://gudana.com/blob/master/LICENSE")));
                                 break;
                             case 1:
-                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/h01d/ChatApp/blob/master/PRIVACY_POLICY.md")));
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://gudana.com/master/PRIVACY_POLICY.md")));
                                 break;
                             case 2:
-                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/h01d/ChatApp/blob/master/TERMS_AND_CONDITIONS.md")));
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://gudana.com/master/TERMS_AND_CONDITIONS.md")));
                                 break;
                             case 3:
-                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/h01d/ChatApp/blob/master/THIRD_PARTY_NOTICES.md")));
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://gudana.com/master/THIRD_PARTY_NOTICES.md")));
                                 break;
                         }
                     }
@@ -1777,11 +1840,78 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
         snackError(s, Snackbar.LENGTH_SHORT);
     }
 
+    // socket tools
+    protected String AsteriskAuthentification( String addr, int port, String message) {
+
+        // Socket socket = null;
+        String dstAddress;
+        int dstPort;
+        String response = "";
+        String message_to_send;
+        Socket socket = null;
+        InputStream inputStream;
+        BufferedReader reader;
+        OutputStream DataOutput;
+        PrintWriter writer;
+        Context context;
+
+        try {
+            socket = new Socket(addr, port);
+            inputStream = socket.getInputStream();
+            reader = new BufferedReader(new InputStreamReader(inputStream));
+
+            DataOutput = socket.getOutputStream();
+            writer = new PrintWriter(DataOutput, true);
+
+            if(socket != null){
+
+                String ResponseServer = "";
+                writer.println("ID_AST#"+message.toString()+"#end");
+                ResponseServer = reader.readLine();
+                response = ResponseServer;
+                Toast.makeText(MainActivity_with_Drawer.this, ResponseServer.toString(), Toast.LENGTH_SHORT).show();
+
+                try {
+                    Thread.sleep(500);
+                    //Log.d(ResponseServer.toString(), ResponseServer.toString());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }else{
+                Toast.makeText(MainActivity_with_Drawer.this, "  error connection  with remote Server ", Toast.LENGTH_SHORT).show();
+
+            }
+
+
+        } catch (UnknownHostException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            response = "UnknownHostException: " + e.toString();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            response = "IOException: " + e.toString();
+        } finally {
+            if (socket != null) {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        }
+        return response;
+    }
+
+
+
     private void selectItem(int position) {
         switch (position) {
             case 1: {
 
-                MainActivity_with_Drawer.instance().displaySettings();
+
                 break;
             }
             case 2: {
@@ -1792,15 +1922,39 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
                 break;
             }
             case 3: {
-                MainActivity_with_Drawer.instance().quit();
+                displayCustomToast("registration voice server ", Toast.LENGTH_LONG);
+
+                try{
+
+                    // transport type always udp
+
+                    AssistantActivity assist = new AssistantActivity();
+                    transport = LinphoneAddress.TransportType.LinphoneTransportUdp;
+                    android.util.Log.e("","");
+                    assist.genericLogIn("7002", "1234", null, "206.189.16.110", transport);
+
+                }catch(Exception ex){
+                    ex.printStackTrace();
+                }
 
                 break;
             }
             case 4: {
+                displayCustomToast("disabled at the moment ", Toast.LENGTH_LONG);
+                mPrefs = LinphonePreferences.instance();
+                for (int x = 0; x <= 5; x++){
+                    try{
+                        mPrefs.deleteAccount(x);
+                        Thread.sleep(500);
+
+                    }catch(Exception ex){
+                        ex.printStackTrace();
+                    }
+
+                }
                 break;
             }
             case 5: {
-                MainActivity_with_Drawer.instance().quit();
 
                 break;
             }
