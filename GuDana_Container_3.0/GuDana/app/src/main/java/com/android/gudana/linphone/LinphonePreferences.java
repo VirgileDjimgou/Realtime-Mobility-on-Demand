@@ -165,7 +165,8 @@ public class LinphonePreferences {
 			LinphoneAddress addr = LinphoneCoreFactory.instance().createLinphoneAddress(prxCfg.getIdentity());
 			LinphoneAuthInfo authInfo = getLc().findAuthInfo(addr.getUserName(), null, addr.getDomain());
 			return authInfo;
-		} catch (LinphoneCoreException e) {
+		} catch (Exception e) {
+			e.printStackTrace();
 			Log.e(e);
 		}
 
@@ -328,67 +329,74 @@ public class LinphonePreferences {
 		 */
 		public void saveNewAccount() throws LinphoneCoreException {
 
-			if (tempUsername == null || tempUsername.length() < 1 || tempDomain == null || tempDomain.length() < 1) {
-				Log.w("Skipping account save: username or domain not provided");
-				return;
-			}
+			try{
 
-			String identity = "sip:" + tempUsername + "@" + tempDomain;
-			String proxy = "sip:";
-			if (tempProxy == null) {
-				proxy += tempDomain;
-			} else {
-				if (!tempProxy.startsWith("sip:") && !tempProxy.startsWith("<sip:")
-					&& !tempProxy.startsWith("sips:") && !tempProxy.startsWith("<sips:")) {
-					proxy += tempProxy;
-				} else {
-					proxy = tempProxy;
+
+				if (tempUsername == null || tempUsername.length() < 1 || tempDomain == null || tempDomain.length() < 1) {
+					Log.w("Skipping account save: username or domain not provided");
+					return;
 				}
+
+				String identity = "sip:" + tempUsername + "@" + tempDomain;
+				String proxy = "sip:";
+				if (tempProxy == null) {
+					proxy += tempDomain;
+				} else {
+					if (!tempProxy.startsWith("sip:") && !tempProxy.startsWith("<sip:")
+							&& !tempProxy.startsWith("sips:") && !tempProxy.startsWith("<sips:")) {
+						proxy += tempProxy;
+					} else {
+						proxy = tempProxy;
+					}
+				}
+				LinphoneAddress proxyAddr = LinphoneCoreFactory.instance().createLinphoneAddress(proxy);
+				LinphoneAddress identityAddr = LinphoneCoreFactory.instance().createLinphoneAddress(identity);
+
+				if (tempDisplayName != null) {
+					identityAddr.setDisplayName(tempDisplayName);
+				}
+
+				if (tempTransport != null) {
+					proxyAddr.setTransport(tempTransport);
+				}
+
+				String route = tempOutboundProxy ? proxyAddr.asStringUriOnly() : null;
+
+				LinphoneProxyConfig prxCfg = lc.createProxyConfig(identityAddr.asString(), proxyAddr.asStringUriOnly(), route, tempEnabled);
+
+				if (tempContactsParams != null)
+					prxCfg.setContactUriParameters(tempContactsParams);
+				if (tempExpire != null) {
+					try {
+						prxCfg.setExpires(Integer.parseInt(tempExpire));
+					} catch (NumberFormatException nfe) { }
+				}
+
+				prxCfg.enableAvpf(tempAvpfEnabled);
+				prxCfg.setAvpfRRInterval(tempAvpfRRInterval);
+				prxCfg.enableQualityReporting(tempQualityReportingEnabled);
+				prxCfg.setQualityReportingCollector(tempQualityReportingCollector);
+				prxCfg.setQualityReportingInterval(tempQualityReportingInterval);
+
+				if(tempPrefix != null){
+					prxCfg.setDialPrefix(tempPrefix);
+				}
+
+
+				if(tempRealm != null)
+					prxCfg.setRealm(tempRealm);
+
+				LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(tempUsername, tempUserId, tempPassword, tempHa1, tempRealm, tempDomain);
+
+				lc.addProxyConfig(prxCfg);
+				lc.addAuthInfo(authInfo);
+
+				if (!tempNoDefault)
+					lc.setDefaultProxyConfig(prxCfg);
+
+			}catch(Exception ex){
+
 			}
-			LinphoneAddress proxyAddr = LinphoneCoreFactory.instance().createLinphoneAddress(proxy);
-			LinphoneAddress identityAddr = LinphoneCoreFactory.instance().createLinphoneAddress(identity);
-
-			if (tempDisplayName != null) {
-				identityAddr.setDisplayName(tempDisplayName);
-			}
-
-			if (tempTransport != null) {
-				proxyAddr.setTransport(tempTransport);
-			}
-
-			String route = tempOutboundProxy ? proxyAddr.asStringUriOnly() : null;
-
-			LinphoneProxyConfig prxCfg = lc.createProxyConfig(identityAddr.asString(), proxyAddr.asStringUriOnly(), route, tempEnabled);
-
-			if (tempContactsParams != null)
-				prxCfg.setContactUriParameters(tempContactsParams);
-			if (tempExpire != null) {
-				try {
-					prxCfg.setExpires(Integer.parseInt(tempExpire));
-				} catch (NumberFormatException nfe) { }
-			}
-
-			prxCfg.enableAvpf(tempAvpfEnabled);
-			prxCfg.setAvpfRRInterval(tempAvpfRRInterval);
-			prxCfg.enableQualityReporting(tempQualityReportingEnabled);
-			prxCfg.setQualityReportingCollector(tempQualityReportingCollector);
-			prxCfg.setQualityReportingInterval(tempQualityReportingInterval);
-
-			if(tempPrefix != null){
-				prxCfg.setDialPrefix(tempPrefix);
-			}
-
-
-			if(tempRealm != null)
-				prxCfg.setRealm(tempRealm);
-
-			LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(tempUsername, tempUserId, tempPassword, tempHa1, tempRealm, tempDomain);
-
-			lc.addProxyConfig(prxCfg);
-			lc.addAuthInfo(authInfo);
-
-			if (!tempNoDefault)
-				lc.setDefaultProxyConfig(prxCfg);
 		}
 	}
 
@@ -780,21 +788,27 @@ public class LinphonePreferences {
 	}
 
 	public void deleteAccount(int AccountNumber) {
-		LinphoneAuthInfo authInfo = getAuthInfo(AccountNumber);
-		if (authInfo != null) {
-			getLc().removeAuthInfo(authInfo);
-		}
+		try{
 
-		LinphoneProxyConfig proxyCfg = getProxyConfig(AccountNumber);
-		if (proxyCfg != null)
-			getLc().removeProxyConfig(proxyCfg);
-		if (getLc().getProxyConfigList().length != 0) {
-			resetDefaultProxyConfig();
-		} else {
-			getLc().setDefaultProxyConfig(null);
-		}
+			LinphoneAuthInfo authInfo = getAuthInfo(AccountNumber);
+			if (authInfo != null) {
+				getLc().removeAuthInfo(authInfo);
+			}
 
-		getLc().refreshRegisters();
+			LinphoneProxyConfig proxyCfg = getProxyConfig(AccountNumber);
+			if (proxyCfg != null)
+				getLc().removeProxyConfig(proxyCfg);
+			if (getLc().getProxyConfigList().length != 0) {
+				resetDefaultProxyConfig();
+			} else {
+				getLc().setDefaultProxyConfig(null);
+			}
+
+			getLc().refreshRegisters();
+
+		}catch(Exception ex){
+
+		}
 	}
 	// End of accounts settings
 

@@ -444,7 +444,7 @@
     <string name="wait_your_response">waiting your response ....</string>
 
     <!-- Assistant -->
-    <string name="welcome">Welcome</string>
+    <string name="welcome">Welcome on GuDana</string>
     <string name="assistant">Assistant</string>
     <string name="assistant_create_account">Create account</string>
     <string name="assistant_link_account">Link account</string>
@@ -453,14 +453,14 @@
     <string name="assistant_finish">Finish configuration</string>
     <string name="assistant_validate_account_1">Your account is created. Please check your mails to validate your account:</string>
     <string name="assistant_validate_account_2">Once it is done, come back here and click on the button.</string>
-    <string name="assistant_welcome_desc">This assistant will help you configure and use your SIP account.</string>
+    <string name="assistant_welcome_desc">This assistant will help you register  and use your GuDana  account.</string>
     <string name="assistant_linphone_login_desc">Please enter your username and password of gudana account</string>
     <string name="assistant_login_desc">Please enter your username and password with your SIP domain</string>
     <string name="assistant_remote_provisioning_desc">Please provide your provisioning URL</string>
     <string name="transport">Transport</string>
     <string name="assistant_create_account_phone_number_address">Your SIP address is</string>
     <string name="assistant_login_linphone">Use GuDana account</string>
-    <string name="assistant_login_generic">Use SIP account</string>
+    <string name="assistant_login_generic">Continue on registration screen.</string>
     <string name="assistant_remote_provisioning">Fetch remote configuration</string>
     <string name="assistant_create_account_part_1">Please confirm your country code and enter your phone number</string>
     <string name="assistant_create_account_part_2">We have sent you a SMS with a validation code to your phone number:</string>

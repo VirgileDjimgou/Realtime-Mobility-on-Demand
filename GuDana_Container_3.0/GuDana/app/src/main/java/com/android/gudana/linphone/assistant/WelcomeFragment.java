@@ -2,6 +2,7 @@ package com.android.gudana.linphone.assistant;
 
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.android.gudana.R;
+import com.android.gudana.chatapp.activities.WelcomeActivity;
 
 /**
  * @author Sylvain Berfini
@@ -36,7 +38,11 @@ public class WelcomeFragment extends Fragment implements OnClickListener {
 	public void onClick(View v) {
 		int id = v.getId();
 		if (id == R.id.login_generic) {
-			AssistantActivity.instance().displayLoginGeneric();
+
+			Intent myIntent = new Intent(getActivity(), WelcomeActivity.class);
+			this.startActivity(myIntent);
+
+			// AssistantActivity.instance().displayLoginGeneric();
 		}
 	}
 }

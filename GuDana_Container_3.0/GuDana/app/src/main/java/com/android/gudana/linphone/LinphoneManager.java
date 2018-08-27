@@ -472,8 +472,11 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	public void newOutgoingCall(AddressType address) {
 		String to = address.getText().toString();
-		newOutgoingCall(to, address.getDisplayedName());
+		String name_to_display =  address.getDisplayedName().toString();
+		newOutgoingCall(to, name_to_display);
 	}
+
+	// public void newOutgoingCall(String to , Strin)
 
 	public void newOutgoingCall(String to, String displayName) {
 //		if (mLc.isIncall()) {

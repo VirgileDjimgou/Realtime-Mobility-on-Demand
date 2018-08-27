@@ -96,8 +96,8 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	private ImageView switchCamera;
 	private TextView missedChats;
 	private RelativeLayout mActiveCallHeader, sideMenuContent, avatar_layout;
-	private ImageView pause, hangUp, dialer, video, micro, speaker, options, addCall, transfer, conference, conferenceStatus, contactPicture;
-	private ImageView audioRoute, routeSpeaker, routeEarpiece, routeBluetooth, menu, chat;
+	private ImageView pause, hangUp, video, micro, speaker, options, addCall, transfer, conference, conferenceStatus, contactPicture;
+	private ImageView audioRoute, routeSpeaker, routeEarpiece, routeBluetooth, menu;
 	private LinearLayout mNoCurrentCall, callInfo, mCallPaused;
 	private ProgressBar videoProgress;
 	private StatusFragment status;
@@ -354,14 +354,10 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		hangUp = (ImageView) findViewById(R.id.hang_up);
 		hangUp.setOnClickListener(this);
 
-		dialer = (ImageView) findViewById(R.id.dialer);
-		dialer.setOnClickListener(this);
-
 		numpad = (Numpad) findViewById(R.id.numpad);
 		numpad.getBackground().setAlpha(240);
 
-		chat = (ImageView) findViewById(R.id.chat);
-		chat.setOnClickListener(this);
+
 		missedChats = (TextView) findViewById(R.id.missed_chats);
 
 		//Others
@@ -603,7 +599,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		}
 		transfer.setEnabled(true);
 		pause.setEnabled(true);
-		dialer.setEnabled(true);
+		// dialer.setEnabled(true);
 	}
 
 	public void updateStatusFragment(StatusFragment statusFragment) {
@@ -1003,7 +999,6 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 			return;
 		}
 
-		dialer.setImageResource(R.drawable.footer_dialer);
 		numpad.setVisibility(View.GONE);
 	}
 
@@ -1015,7 +1010,6 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		if (numpad.getVisibility() == View.VISIBLE) {
 			hideNumpad();
 		} else {
-			dialer.setImageResource(R.drawable.dialer_alt_back);
 			numpad.setVisibility(View.VISIBLE);
 		}
 	}

@@ -43,6 +43,7 @@ import com.android.gudana.MainActivity_with_Drawer;
 import com.android.gudana.R;
 import com.android.gudana.chatapp.adapters.MessageAdapter;
 import com.android.gudana.chatapp.models.Message;
+import com.android.gudana.linphone.CallOutgoingActivity;
 import com.android.gudana.project_3.model.MapModel;
 import com.android.gudana.project_3.model.User;
 import com.android.gudana.project_3.ui.ChatMessagesActivity;
@@ -175,8 +176,9 @@ import com.onegravity.contactpicker.picture.ContactPictureType;
 import com.wafflecopter.multicontactpicker.ContactResult;
 import com.wafflecopter.multicontactpicker.MultiContactPicker;
 
-
-
+import org.linphone.core.CallDirection;
+import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneCallLog;
 
 
 public class ChatActivity extends AppCompatActivity  implements  View.OnClickListener
@@ -213,7 +215,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
     // Will be used on Notifications to detairminate if user has chat window open
 
-    public static String otherUserId;
+    public static String otherUserId , OtherUserIdPhone = "" , PhoneCorrespondant = "";
     public static boolean running = false;
 
 
@@ -363,6 +365,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
         currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         otherUserId = getIntent().getStringExtra("userid");
+
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -787,7 +790,14 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                 break;
 
             case R.id.action_call_audio:
-                Toast.makeText(getApplicationContext(), R.string.not_implemented, Toast.LENGTH_SHORT).show();
+
+                if (MainActivity_with_Drawer.isInstanciated()) {
+
+                    MainActivity_with_Drawer.instance().setAddresGoToDialerAndCall(PhoneCorrespondant,OtherUserIdPhone, null);
+                    startActivity(new Intent(MainActivity_with_Drawer.instance(), CallOutgoingActivity.class));
+                }
+                //Toast.makeText(getApplicationContext(), R.string.not_implemented, Toast.LENGTH_SHORT).show();
+
                 break;
             case R.id.action_call_video:
                 Toast.makeText(getApplicationContext(), R.string.not_implemented, Toast.LENGTH_SHORT).show();
@@ -1273,9 +1283,12 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
             {
                 try
                 {
-                    String name = dataSnapshot.child("name").getValue().toString();
+                    // get phone other users
+                    PhoneCorrespondant = dataSnapshot.child("id_asterisk").getValue().toString();
 
-                    appBarName.setText(name);
+                    OtherUserIdPhone = dataSnapshot.child("name").getValue().toString();
+
+                    appBarName.setText(OtherUserIdPhone);
 
                     final String online = dataSnapshot.child("online").getValue().toString();
 

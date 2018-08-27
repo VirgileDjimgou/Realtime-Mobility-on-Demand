@@ -2,6 +2,8 @@
 
 buildscript {
     repositories {
+        maven { url 'https://maven.fabric.io/public' }
+        mavenLocal()
         jcenter()
         google()
         mavenCentral()
@@ -16,6 +18,11 @@ buildscript {
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'com.jakewharton:butterknife-gradle-plugin:9.0.0-SNAPSHOT'
 
+
+
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.1'
+        classpath 'com.github.dcendents:android-maven-plugin:1.2'
+
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -23,7 +30,16 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter()
+
+        maven {
+            url 'https://maven.fabric.io/public'
+        }
+        maven {
+            url "https://s3.amazonaws.com/repo.commonsware.com"
+        }
+
+        mavenLocal()
+        mavenCentral()
         google()
         jcenter()
         maven { url "https://jitpack.io" }

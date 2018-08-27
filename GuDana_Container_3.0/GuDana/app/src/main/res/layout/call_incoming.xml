@@ -34,6 +34,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:layout_below="@id/top_bar"
+		android:background="@color/colorPrimary"
 		android:paddingTop="10dp"
 		android:layout_above="@+id/menu">
 
@@ -44,6 +45,7 @@
 			android:layout_height="wrap_content"
 			android:layout_alignParentTop="true"
 			android:layout_centerHorizontal="true"
+			android:textColor="@color/white"
 			android:gravity="center_vertical|center_horizontal"
 			android:paddingTop="5dp"/>
 
@@ -52,6 +54,7 @@
 			style="@style/font2"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:textColor="@color/white"
 			android:layout_below="@id/contact_name"
 			android:layout_centerHorizontal="true"
 			android:paddingBottom="10dp"

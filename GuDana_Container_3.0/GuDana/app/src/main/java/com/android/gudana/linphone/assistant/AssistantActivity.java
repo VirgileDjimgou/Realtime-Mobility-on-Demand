@@ -79,7 +79,7 @@ import java.util.List;
  */
 public class AssistantActivity extends Activity implements OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback, LinphoneAccountCreator.LinphoneAccountCreatorListener {
 private static AssistantActivity instance;
-	private ImageView back, cancel;
+	// private ImageView back, cancel;
 	private AssistantFragmentsEnum currentFragment;
 	private AssistantFragmentsEnum lastFragment;
 	private AssistantFragmentsEnum firstFragment;
@@ -219,10 +219,10 @@ private static AssistantActivity instance;
 	}
 
 	private void initUI() {
-		back = (ImageView) findViewById(R.id.back);
-		back.setOnClickListener(this);
-		cancel = (ImageView) findViewById(R.id.assistant_cancel);
-		cancel.setOnClickListener(this);
+		// back = (ImageView) findViewById(R.id.back);
+		//back.setOnClickListener(this);
+		//cancel = (ImageView) findViewById(R.id.assistant_cancel);
+		//cancel.setOnClickListener(this);
 	}
 
 	private void changeFragment(Fragment newFragment) {
@@ -236,20 +236,7 @@ private static AssistantActivity instance;
 	public void onClick(View v) {
 		int id = v.getId();
 
-		if (id == R.id.assistant_cancel) {
-			hideKeyboard();
-			LinphonePreferences.instance().firstLaunchSuccessful();
-			if (getResources().getBoolean(R.bool.assistant_cancel_move_to_back)) {
-				moveTaskToBack(true);
-			} else {
-				LinphonePreferences.instance().firstLaunchSuccessful();
-				startActivity(new Intent().setClass(this, MainActivity_with_Drawer.class));
-				finish();
-			}
-		} else if (id == R.id.back) {
-			hideKeyboard();
-			onBackPressed();
-		}
+
 	}
 
 	@Override
@@ -330,15 +317,21 @@ private static AssistantActivity instance;
 			fragment.enableEcCalibrationResultSending(sendEcCalibrationResult);
 			changeFragment(fragment);
 			currentFragment = AssistantFragmentsEnum.ECHO_CANCELLER_CALIBRATION;
-			back.setVisibility(View.VISIBLE);
-			cancel.setEnabled(false);
+			//back.setVisibility(View.VISIBLE);
+			//cancel.setEnabled(false);
 		} else {
 			checkAndRequestAudioPermission();
 		}
 	}
 
 	private void logIn(String username, String password, String ha1, String prefix, String domain, TransportType transport, boolean sendEcCalibrationResult) {
-		saveCreatedAccount(username, password, ha1, prefix, domain, transport);
+		try {
+
+			saveCreatedAccount(username, password, ha1, prefix, domain, transport);
+
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
 	}
 
 	public void checkAccount(String username, String password, String prefix, String domain) {
@@ -358,11 +351,17 @@ private static AssistantActivity instance;
 	}
 
 	public void genericLogIn(String username, String password, String prefix, String domain, TransportType transport) {
-		if (accountCreated) {
-			retryLogin(username, password, prefix, domain, transport);
-		} else {
-			logIn(username, password, null, prefix, domain, transport, false);
+		try{
+			if (accountCreated) {
+				retryLogin(username, password, prefix, domain, transport);
+			} else {
+				logIn(username, password, null, prefix, domain, transport, false);
+			}
+
+		}catch(Exception ex){
+			ex.printStackTrace();
 		}
+
 	}
 
 
@@ -383,14 +382,14 @@ private static AssistantActivity instance;
 		changeFragment(fragment);
 		country = null;
 		currentFragment = AssistantFragmentsEnum.WELCOME;
-		back.setVisibility(View.INVISIBLE);
+		//back.setVisibility(View.INVISIBLE);
 	}
 
 	public void displayLoginGeneric() {
 		fragment = new LoginFragment();
 		changeFragment(fragment);
 		currentFragment = AssistantFragmentsEnum.LOGIN;
-		back.setVisibility(View.VISIBLE);
+		//back.setVisibility(View.VISIBLE);
 	}
 
 
@@ -403,7 +402,7 @@ private static AssistantActivity instance;
 		fragment.setArguments(extra);
 		changeFragment(fragment);
 		currentFragment = AssistantFragmentsEnum.CREATE_ACCOUNT;
-		back.setVisibility(View.VISIBLE);
+		//back.setVisibility(View.VISIBLE);
 	}
 
 
@@ -412,12 +411,18 @@ private static AssistantActivity instance;
 		changeFragment(fragment);
 		lastFragment = currentFragment;
 		currentFragment = AssistantFragmentsEnum.COUNTRY_CHOOSER;
-		back.setVisibility(View.VISIBLE);
+		//back.setVisibility(View.VISIBLE);
 	}
 
 	public void retryLogin(String username, String password, String prefix, String domain, TransportType transport) {
-		accountCreated = false;
-		saveCreatedAccount(username, password, null, prefix, domain, transport);
+		try{
+
+			accountCreated = false;
+			saveCreatedAccount(username, password, null, prefix, domain, transport);
+
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
 	}
 
 	private void launchDownloadCodec() {
@@ -427,8 +432,8 @@ private static AssistantActivity instance;
 				CodecDownloaderFragment codecFragment = new CodecDownloaderFragment();
 				changeFragment(codecFragment);
 				currentFragment = AssistantFragmentsEnum.DOWNLOAD_CODEC;
-				back.setVisibility(View.VISIBLE);
-				cancel.setEnabled(false);
+				//back.setVisibility(View.VISIBLE);
+				//cancel.setEnabled(false);
 			} else
 				goToMainActivity_with_Drawer();
 		} else {
@@ -466,80 +471,74 @@ private static AssistantActivity instance;
 			//boolean isMainAccountLinphoneDotOrg = domain.equals(getString(R.string.default_domain));
 			// added von djimgou patrick
 			boolean isMainAccountLinphoneDotOrg = false;
+			try{
 
-			AccountBuilder builder = new AccountBuilder(LinphoneManager.getLc())
-					.setUsername(username)
-					.setDomain(domain)
-					.setHa1(ha1)
-					.setPassword(password);
 
-			if(prefix != null){
-				builder.setPrefix(prefix);
-			}
+				AccountBuilder builder = new AccountBuilder(LinphoneManager.getLc())
+						.setUsername(username)
+						.setDomain(domain)
+						.setHa1(ha1)
+						.setPassword(password);
 
-			if (isMainAccountLinphoneDotOrg) {
-				if (getResources().getBoolean(R.bool.disable_all_security_features_for_markets)) {
-					builder.setProxy(domain)
-							.setTransport(TransportType.LinphoneTransportTcp);
-				}
-				else {
-					builder.setProxy(domain)
-							.setTransport(TransportType.LinphoneTransportTls);
+				if(prefix != null){
+					builder.setPrefix(prefix);
 				}
 
-				builder.setExpires("604800")
-						.setAvpfEnabled(true)
-						.setAvpfRRInterval(3)
-						.setQualityReportingCollector("sip:voip-metrics@sip.linphone.org")
-						.setQualityReportingEnabled(true)
-						.setQualityReportingInterval(180)
-						.setRealm("sip.linphone.org")
-						.setNoDefault(false);
+				if (isMainAccountLinphoneDotOrg) {
+					if (getResources().getBoolean(R.bool.disable_all_security_features_for_markets)) {
+						builder.setProxy(domain)
+								.setTransport(TransportType.LinphoneTransportTcp);
+					}
+					else {
+						builder.setProxy(domain)
+								.setTransport(TransportType.LinphoneTransportTls);
+					}
 
-				mPrefs.enabledFriendlistSubscription(getResources().getBoolean(R.bool.use_friendlist_subscription));
+					builder.setExpires("604800")
+							.setAvpfEnabled(true)
+							.setAvpfRRInterval(3)
+							.setQualityReportingCollector("sip:voip-metrics@sip.linphone.org")
+							.setQualityReportingEnabled(true)
+							.setQualityReportingInterval(180)
+							.setRealm("sip.linphone.org")
+							.setNoDefault(false);
 
-				mPrefs.setStunServer(getString(R.string.default_stun));
-				mPrefs.setIceEnabled(true);
+					mPrefs.enabledFriendlistSubscription(getResources().getBoolean(R.bool.use_friendlist_subscription));
 
-				accountCreator.setPassword(password);
-				accountCreator.setHa1(ha1);
-				accountCreator.setUsername(username);
-			} else {
-				String forcedProxy = "";
-				if (!TextUtils.isEmpty(forcedProxy)) {
-					builder.setProxy(forcedProxy)
-							.setOutboundProxyEnabled(true)
-							.setAvpfRRInterval(5);
+					mPrefs.setStunServer(getString(R.string.default_stun));
+					mPrefs.setIceEnabled(true);
+
+					accountCreator.setPassword(password);
+					accountCreator.setHa1(ha1);
+					accountCreator.setUsername(username);
+				} else {
+					String forcedProxy = "";
+					if (!TextUtils.isEmpty(forcedProxy)) {
+						builder.setProxy(forcedProxy)
+								.setOutboundProxyEnabled(true)
+								.setAvpfRRInterval(5);
+					}
+
+					if(transport != null) {
+						builder.setTransport(transport);
+					}
 				}
 
-				if(transport != null) {
-					builder.setTransport(transport);
+
+				try {
+					builder.saveNewAccount();
+					if(!newAccount) {
+						// displayRegistrationInProgressDialog();
+						Thread.sleep(200);
+					}
+					Thread.sleep(200);
+					accountCreated = true;
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-			}
 
-		/*
-
-		if (getResources().getBoolean(R.bool.enable_push_id)) {
-			String regId = mPrefs.getPushNotificationRegistrationID();
-			String appId = getString(R.string.push_sender_id);
-			if (regId != null && mPrefs.isPushNotificationEnabled()) {
-				String contactInfos = "app-id=" + appId + ";pn-type=google;pn-tok=" + regId;
-				builder.setContactParameters(contactInfos);
-			}
-		}
-		*/
-
-			try {
-				builder.saveNewAccount();
-				if(!newAccount) {
-					// displayRegistrationInProgressDialog();
-					Thread.sleep(2000);
-				}
-				Thread.sleep(2000);
-				accountCreated = true;
-			} catch (Exception e) {
-				e.printStackTrace();
-				Log.e(e);
+			}catch(Exception ex){
+				ex.printStackTrace();
 			}
 
 
@@ -590,7 +589,7 @@ private static AssistantActivity instance;
 		changeFragment(fragment);
 
 		currentFragment = AssistantFragmentsEnum.CREATE_ACCOUNT_ACTIVATION;
-		back.setVisibility(View.INVISIBLE);
+		//back.setVisibility(View.INVISIBLE);
 	}
 
 	public void displayAssistantCodeConfirm(String username, String phone, String dialcode, boolean recoverAccount) {
@@ -606,7 +605,7 @@ private static AssistantActivity instance;
 		changeFragment(fragment);
 
 		currentFragment = AssistantFragmentsEnum.CREATE_ACCOUNT_CODE_ACTIVATION;
-		back.setVisibility(View.INVISIBLE);
+		//back.setVisibility(View.INVISIBLE);
 	}
 
 	public void displayAssistantLinphoneLogin(String phone, String dialcode) {
@@ -619,7 +618,7 @@ private static AssistantActivity instance;
 		changeFragment(fragment);
 
 		currentFragment = AssistantFragmentsEnum.LINPHONE_LOGIN;
-		back.setVisibility(View.VISIBLE);
+		//back.setVisibility(View.VISIBLE);
 	}
 
 	public void isAccountVerified(String username) {

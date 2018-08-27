@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 
 import android.os.StrictMode;
+import android.support.annotation.NonNull;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,6 +70,7 @@ import android.widget.Toast;
 
 import com.android.gudana.cardview.Card_Home_fragment;
 import com.android.gudana.chatapp.MainActivity;
+import com.android.gudana.chatapp.activities.PhoneAuthActivity;
 import com.android.gudana.chatapp.activities.ProfileActivity;
 import com.android.gudana.chatapp.activities.UsersActivity;
 import com.android.gudana.chatapp.activities.WelcomeActivity;
@@ -101,10 +103,17 @@ import com.android.gudana.linphone.ui.AddressText;
 import com.android.gudana.linphone.xmlrpc.XmlRpcHelper;
 import com.android.gudana.linphone.xmlrpc.XmlRpcListenerBase;
 import com.android.gudana.util.Client;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -114,6 +123,7 @@ import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
+import org.acra.util.ToastSender;
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAuthInfo;
@@ -137,7 +147,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
@@ -189,7 +201,9 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
     private boolean doNotGoToCallActivity = false;
     private List<String> sideMenuItems;
     private boolean callTransfer = false;
-
+    public static  String password_asterisk = null;
+    public static String server_adresse = null;
+    public static String  Users_Id_asterisk = null ;
 
     // add
 
@@ -222,6 +236,14 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
     private Client myClient;
 
     public static   AccountHeader headerResult = null;
+
+    private DatabaseReference userDB;
+    private DatabaseReference AsteriskUsersIndex;
+    private ValueEventListener AsteriskListener = null;
+    private ValueEventListener postListener = null;
+    public static FirebaseUser user_Global;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -258,9 +280,9 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
             if (LinphonePreferences.instance().getAccountCount() > 0) {
                 LinphonePreferences.instance().firstLaunchSuccessful();
             } else {
-                startActivity(new Intent().setClass(this, AssistantActivity.class));
-                finish();
-                return;
+                //startActivity(new Intent().setClass(this, AssistantActivity.class));
+                //finish();
+                //return;
             }
         }
 
@@ -483,62 +505,179 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
         //mViewPager.setCurrentItem(3);
 
 
-        /*
-
-
-        // Action bar related
-
-        // Toolbar toolbar = findViewById(R.id.main_app_bar);
-        // toolbar.setTitleTextColor(Color.WHITE);
-        //setSupportActionBar(toolbar);
-        //getSupportActionBar().setTitle(R.string.app_name);
-
-        // Fragments handler using SmartTabLayout
-
-        FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
-                getSupportFragmentManager(), FragmentPagerItems.with(this)
-                .add("Home", Card_Home_fragment.class)
-                .add("Call", HistoryListFragment.class)
-                .add("Requests", RequestsFragment.class)
-                .add("Chat", ChatFragment.class)
-                .add("Friends", FriendsFragment.class)
-                //.add("Dialer", DialerFragment.class)
-                .create());
-
-        ViewPager viewPager = findViewById(R.id.viewpager);
-        viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(0);
-
-        SmartTabLayout viewPagerTab = findViewById(R.id.viewpagertab);
-        viewPagerTab.set
-        viewPagerTab.setViewPager(viewPager);
-
-        */
-
-
-        // Start registration     ...
-        // this.myClient = new Client(this.getApplicationContext(),"206.189.16.110", 12345, "IdUser6546ghujhg");
-        // myClient.execute();
-
 
         try{
 
-            // send  credentials  to Asterisk  Server ...
-            String ServerAdr =  "206.189.16.110";
-            int  Port = 2004;
-            String IdUser= "45612";
-            this.myClient = null;
-            //AsteriskAuthentification( ServerAdr,Port,IdUser);
-            this.myClient = new Client(this.getApplicationContext(),ServerAdr, Port, IdUser);
-            myClient.execute();
+            final FirebaseDatabase database = FirebaseDatabase.getInstance();
+            // control your Asterisk Credentials on asterisk Server and Firebase
+            user_Global = FirebaseAuth.getInstance().getCurrentUser();
+            userDB = FirebaseDatabase.getInstance().getReference().child("Users").child(user_Global.getUid());
+            HashMap map = new HashMap();
+            //map.put("Authentified" , "await");
+            userDB.updateChildren(map);
 
-            //this.myClient.SendData("data connection ");
-            //this.myClient.SendData("hello world from  androdi " + "/n");
-            // MainActivity_with_Drawer.instance().displaySettings();
+            this.postListener = new ValueEventListener()  {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+                    if(dataSnapshot.exists()){
+
+                        try{
+
+                            Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                            // test if the recors Phone already exist  ...if not than
+                            // than you are a new user   ...
+                            if(map.get("id_asterisk")!=null){
+                                // than this user is already registered ...
+                                String GuD_Voice_Id = map.get("id_asterisk").toString();
+
+
+                                try{
+
+                                    postListener = null;
+                                    AsteriskListener = null;
+                                    userDB = null;
+                                    AsteriskUsersIndex = null;
+
+                                }catch(Exception ex){
+                                    ex.printStackTrace();
+                                }
+
+                               //  Toast.makeText(MainActivity_with_Drawer.this, "you are already registeterd on  Gudana voice  Server... :  "+ GuD_Voice_Id ,Toast.LENGTH_LONG ).show();
+
+                                // save User Info and continue  normaly  ... user is already registerd
+                                // StaticConfig.UID = user_Global.getUid();
+
+                            }else{
+                                // we must start a registration on Asterisk Server  ...
+
+                                Toast.makeText(MainActivity_with_Drawer.this , "voice Server Registration  ... " ,Toast.LENGTH_LONG ).show();
+                                // get the actual index of Asterisk users stored on  firebase Databases ...
+                                AsteriskUsersIndex = FirebaseDatabase.getInstance().getReference().child("asterisk");
+
+                               AsteriskListener = new ValueEventListener()  {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        if (dataSnapshot.exists()) {
+                                            Map<String, Object> map_ast = (Map<String, Object>) dataSnapshot.getValue();
+
+                                            try{
+                                                if(map_ast.get("password")!=null){
+                                                    // than this user is already registered ...
+                                                    password_asterisk = map_ast.get("password").toString();
+                                                    Toast.makeText(MainActivity_with_Drawer.this , "password "+ password_asterisk ,Toast.LENGTH_LONG ).show();
+
+                                                    // save User Info and continue  normaly  ... user is already registerd
+                                                    // StaticConfig.UID = user_Global.getUid();
+
+                                                }
+
+                                                if(map_ast.get("server")!=null){
+                                                    // than this user is already registered ...
+                                                    server_adresse  = map_ast.get("server").toString();
+
+                                                    // save User Info and continue  normaly  ... user is already registerd
+                                                    // StaticConfig.UID = user_Global.getUid();
+
+                                                }
+
+                                                if(map_ast.get("index")!=null){
+                                                    // than this user is already registered ...
+                                                    Users_Id_asterisk  = map_ast.get("index").toString();
+                                                    Toast.makeText(MainActivity_with_Drawer.this, "id_voice = ... :  "+ Users_Id_asterisk ,Toast.LENGTH_LONG ).show();
+
+                                                    // update index asterix
+                                                    HashMap map_asterisk = new HashMap();
+                                                    map_asterisk.put("index" , Integer.parseInt(Users_Id_asterisk)+2);
+                                                    AsteriskUsersIndex.updateChildren(map_asterisk);
+
+                                                    // update  child users ... with asterisk  id
+
+                                                    HashMap map_user = new HashMap();
+                                                    map_user.put("id_asterisk" , Users_Id_asterisk);
+                                                    userDB.updateChildren(map_user);
+
+                                                    /*
+                                                    // start Registration asterisk Server
+                                                    displayCustomToast("disabled at the moment ", Toast.LENGTH_LONG);
+                                                    mPrefs = LinphonePreferences.instance();
+                                                    for (int x = 0; x <= 5; x++){
+                                                        try{
+                                                            mPrefs.deleteAccount(x);
+                                                            Thread.sleep(500);
+
+                                                        }catch(Exception ex){
+                                                            ex.printStackTrace();
+                                                        }
+
+                                                    }
+                                                    */
+
+
+                                                    displayCustomToast("registration voice server ", Toast.LENGTH_LONG);
+
+                                                    try{
+
+                                                        // transport type always udp
+
+                                                        AssistantActivity assist = new AssistantActivity();
+                                                        transport = LinphoneAddress.TransportType.LinphoneTransportUdp;
+                                                        android.util.Log.e("","");
+                                                        assist.genericLogIn(Users_Id_asterisk, password_asterisk, null, server_adresse, transport);
+
+                                                    }catch(Exception ex){
+                                                        ex.printStackTrace();
+                                                    }
+
+
+                                                    // remove all listeners   ...
+                                                    userDB.removeEventListener(postListener);
+                                                    AsteriskUsersIndex.removeEventListener(AsteriskListener);
+                                                    postListener = null;
+                                                    AsteriskListener = null;
+                                                    userDB = null;
+                                                    AsteriskUsersIndex = null;
+
+                                                }
+
+                                            }catch(Exception ex){
+                                                ex.printStackTrace();
+                                            }
+                                            // ...
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                        // Failed to read value
+                                        Toast.makeText(MainActivity_with_Drawer.this, "error retrieve data asterisk index ", Toast.LENGTH_SHORT).show();
+                                    }
+                                };
+                                AsteriskUsersIndex.addValueEventListener(AsteriskListener);
+
+                            }
+
+
+                        }catch(Exception ex){
+                            ex.printStackTrace();
+                        }
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                    Toast.makeText(MainActivity_with_Drawer.this, databaseError.toString() , Toast.LENGTH_LONG).show();
+                }
+            };
+            userDB.addValueEventListener(postListener);
 
         }catch(Exception ex){
             ex.printStackTrace();
         }
+
 
 
     }
@@ -1014,7 +1153,9 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
         LinphoneManager.AddressType address = new AddressText(this, null);
         address.setDisplayedName(name);
         address.setText(number);
-        LinphoneManager.getInstance().newOutgoingCall(address);
+        // LinphoneManager.getInstance().newOutgoingCall(address);
+        LinphoneManager.getInstance().newOutgoingCall(number, name);
+
     }
 
     public void startIncallActivity(LinphoneCall currentCall) {
