@@ -44,11 +44,6 @@ import com.android.gudana.R;
 import com.android.gudana.chatapp.adapters.MessageAdapter;
 import com.android.gudana.chatapp.models.Message;
 import com.android.gudana.linphone.CallOutgoingActivity;
-import com.android.gudana.project_3.model.MapModel;
-import com.android.gudana.project_3.model.User;
-import com.android.gudana.project_3.ui.ChatMessagesActivity;
-import com.android.gudana.project_3.utils.Constants;
-import com.android.gudana.project_3.utils.EmailEncoding;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.features.ReturnMode;
 import com.esafirm.imagepicker.model.Image;
@@ -928,7 +923,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                     Place place = PlacePicker.getPlace(this, data);
                     if (place!=null){
                         LatLng latLng = place.getLatLng();
-                        MapModel mapModel = new MapModel(latLng.latitude+"",latLng.longitude+"");
                         sendMessage("location");
                         sendMessage_location_contact("location" , latLng.latitude+":"+latLng.longitude);
                         // ChatModel chatModel = new ChatModel(userModel, Calendar.getInstance().getTime().getTime()+"",mapModel);
@@ -969,7 +963,9 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
                 if(task.isSuccessful())
                 {
-                    String imageUrl = task.getResult().getDownloadUrl().toString();
+                    //String imageUrl = task.getResult().getDownloadUrl().toString();
+                    String imageUrl = task.getResult().getUploadSessionUri().toString();
+
 
                     Map messageMap = new HashMap();
                     messageMap.put("message", imageUrl);
@@ -1085,7 +1081,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
                 if(task.isSuccessful())
                 {
-                    String imageUrl = task.getResult().getDownloadUrl().toString();
+                    String imageUrl = task.getResult().getUploadSessionUri().toString();
 
                     Map messageMap = new HashMap();
                     messageMap.put("message", imageUrl);
@@ -1200,7 +1196,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
                 if(task.isSuccessful())
                 {
-                    String imageUrl = task.getResult().getDownloadUrl().toString();
+                    String imageUrl = task.getResult().getUploadSessionUri().toString();
 
                     Map messageMap = new HashMap();
                     messageMap.put("message", imageUrl);

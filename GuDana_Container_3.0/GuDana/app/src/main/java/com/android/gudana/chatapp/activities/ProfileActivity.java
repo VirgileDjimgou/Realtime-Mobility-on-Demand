@@ -263,7 +263,9 @@ public class ProfileActivity extends AppCompatActivity
                 {
                     if(task.isSuccessful())
                     {
-                        String imageUrl = task.getResult().getDownloadUrl().toString();
+                        //String imageUrl = task.getResult().getDownloadUrl().toString();
+                        String imageUrl = task.getResult().getUploadSessionUri().toString();
+
 
                         // Updating image on ca_user data
 
@@ -304,7 +306,7 @@ public class ProfileActivity extends AppCompatActivity
                 {
                     if(task.isSuccessful())
                     {
-                        String imageUrl = task.getResult().getDownloadUrl().toString();
+                        String imageUrl = task.getResult().getUploadSessionUri().toString();
 
                         // Updating image on ca_user data
 

@@ -173,4 +173,79 @@
     <color name="divider">#B6B6B6</color>
 
 
+
+
+    <color name="style_color_primary">#2d5d82</color>
+    <color name="style_color_primary_dark">#21425d</color>
+    <color name="style_color_accent">#01bcd5</color>
+    <color name="primary_transparent">#103F51B5</color>
+
+    <color name="material_deep_purple_50">#EDE7F6</color>
+    <color name="material_deep_purple_500">#673AB7</color>
+    <color name="material_deep_purple_700">#512DA8</color>
+    <color name="material_deep_purple_a200">#E040FB</color>
+
+    <color name="material_green_50">#E8F5E9</color>
+    <color name="material_green_500">#4CAF50</color>
+    <color name="material_green_700">#388E3C</color>
+    <color name="material_green_a200">#69F0AE</color>
+
+    <color name="material_lime_a700">#AEEA00</color>
+
+    <color name="material_purple_50">#F3E5F5</color>
+    <color name="material_purple_a700">#AA00FF</color>
+
+    <color name="material_red_a200">#FF5252</color>
+
+
+    <color name="fab_color_pressed">#007787</color>
+    <color name="fab_color_shadow">#44000000</color>
+
+    <color name="btn_default_light_normal">#00000000</color>
+    <color name="btn_default_light_pressed">#40ffffff</color>
+    <color name="btn_send_normal">#02c754</color>
+    <color name="btn_send_pressed">#006633</color>
+    <color name="btn_context_menu_normal">#ffffff</color>
+    <color name="btn_context_menu_pressed">#40000000</color>
+    <color name="btn_context_menu_text_red">#ffff0000</color>
+
+    <color name="text_like_counter">#2b5a83</color>
+
+    <color name="bg_comments">#ffffff</color>
+
+
+    <color name="blue_grey_500">#607D8B</color>
+
+    <color name="user_detail_separator">#007787</color>
+
+    <!-- week view -->
+    <color name="event_color_01">#59dbe0</color>
+    <color name="event_color_02">#f57f68</color>
+    <color name="event_color_03">#87d288</color>
+    <color name="event_color_04">#f8b552</color>
+    <color name="toolbar">#efefef</color>
+    <color name="toolbar_text">#8f000000</color>
+
+    <color name="body_text_1">#de000000</color>
+    <color name="body_text_2">#8a000000</color>
+    <color name="body_text_3">#60000000</color>
+    <color name="body_text_disabled">#44000000</color>
+
+    <color name="body_text_1_inverse">#deffffff</color>
+    <color name="body_text_2_inverse">#8affffff</color>
+    <color name="flat_button_text">#ff0097a7</color>
+    <color name="list_dropdown_divider_color">#92a3a3a3</color>
+    <color name="navview_icon">#ff444444</color>
+    <color name="video_title">#de07434d</color>
+    <color name="filter_text">#ff0097a7</color>
+    <color name="my_schedule_conflict">#dd2c00</color>
+    <color name="my_schedule_past">#95a1a6</color>
+    <color name="my_schedule_hour_header_default">#de455a64</color>
+    <color name="my_schedule_hour_header_finished">#b8455a64</color>
+    <color name="my_schedule_icon_default">#ff07434d</color>
+    <color name="my_schedule_icon_finished">#ff49757c</color>
+    <color name="my_schedule_session_title_default">#de07434d</color>
+    <color name="my_schedule_session_title_finished">#b807434d</color>
+
+
 </resources>

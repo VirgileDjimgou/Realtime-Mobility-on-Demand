@@ -6,6 +6,10 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorGrayDark</item>
+
+        <item name="colorControlHighlight">@color/fab_color_pressed</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="MainTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -14,6 +18,10 @@
         <item name="colorAccent">@color/colorGrayDark</item>
 
         <item name="actionOverflowButtonStyle">@style/DotsDarkTheme</item>
+
+        <item name="colorControlHighlight">@color/fab_color_pressed</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="ProfileTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -52,6 +60,10 @@
         <item name="actionBarStyle">@style/AppBarOverlay</item>
         <!-- set Can use Activity transitions -->
         <item name="android:windowContentTransitions">true</item>
+
+        <item name="colorControlHighlight">@color/fab_color_pressed</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="ButtonStyle" parent="Base.Widget.AppCompat.Button.Colored">
@@ -297,6 +309,9 @@
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">italic</item>
     </style>
+
+
+
 
 
 </resources>

@@ -18,6 +18,9 @@ android {
                 includeCompileClasspath = true
             }
         }
+
+        multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -25,6 +28,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
+    }
+
+    configurations {
+        all*.exclude group: 'com.android.support', module: 'support-v13'
     }
 
     packagingOptions {
@@ -38,10 +45,6 @@ android {
     }
 
     useLibrary 'org.apache.http.legacy'
-
-
-    productFlavors {
-    }
 
 }
 
@@ -74,16 +77,37 @@ dependencies {
     compile 'com.android.support:cardview-v7:26.0.2'
     compile 'com.android.support:percent:26.0.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.1'
-    compile 'com.google.firebase:firebase-core:11.8.0'
-    compile 'com.google.firebase:firebase-auth:11.8.0'
-    compile 'com.google.firebase:firebase-core:11.8.0'
-    compile 'com.google.firebase:firebase-database:11.8.0'
-    compile 'com.google.firebase:firebase-storage:11.8.0'
+    compile 'com.google.firebase:firebase-auth:16.0.3'
+    compile 'com.google.firebase:firebase-core:16.0.1'
+    // AUTH
+    implementation 'com.google.firebase:firebase-database:16.0.1'
+    compile 'com.google.android.gms:play-services-auth:16.0.0'
+
+    // Firebase
+    compile 'com.google.firebase:firebase-messaging:17.3.0'
+    compile 'com.google.firebase:firebase-config:16.0.0'
+
+    compile 'com.google.firebase:firebase-common:16.0.1'
+
+    implementation 'com.google.firebase:firebase-storage:16.0.1'
+    implementation 'com.firebaseui:firebase-ui-database:4.1.0'
+    implementation 'com.google.firebase:firebase-messaging:16.0.1'
+    implementation 'com.google.firebase:firebase-crash:16.0.1'
+
+    // FirebaseUI
+    compile 'com.firebaseui:firebase-ui:4.1.0'
+    // FirebaseUI Auth only
+    compile 'com.firebaseui:firebase-ui-auth:4.1.0'
+    // FirebaseUI Storage only
+    compile 'com.firebaseui:firebase-ui-storage:4.1.0'
+    // Single target that includes all FirebaseUI libraries above
+
+    //Places SERVICES
+    compile 'com.google.android.gms:play-services-places:15.0.1'
     compile 'com.firebase:geofire-android:2.1.1'
     compile 'com.firebase:geofire-android:2.1.1'
     compile 'com.android.support:support-annotations:26.0.2'
 
-    // compile 'com.github.bumptech.glide:glide:4.0.0'
     compile 'com.github.jd-alexander:library:1.1.0'
     compile 'com.github.clans:fab:1.6.2'
     compile 'com.paypal.sdk:paypal-android-sdk:2.15.3'
@@ -116,7 +140,6 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.0.2'
     compile 'com.squareup.retrofit2:converter-gson:2.0.2'
 
-    // glide
 
     //  telephone Country  .,...
     compile 'com.googlecode.libphonenumber:libphonenumber:6.2'
@@ -139,12 +162,11 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.0.2'
     compile 'com.squareup.retrofit2:converter-gson:2.0.2'
 
-    // glide
     compile 'com.1gravity:android-contactpicker:1.3.2'
     compile('com.afollestad.material-dialogs:core:0.8.6.0@aar') {
         transitive = true
     }
-    compile 'ch.acra:acra:4.9.0'
+    // compile 'ch.acra:acra:4.9.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'org.osmdroid:osmdroid-android:5.2@aar'
 
@@ -161,19 +183,6 @@ dependencies {
     compile 'com.github.hani-momanii:SuperNova-Emoji:1.1'
     compile 'me.himanshusoni.chatmessageview:chat-message-view:1.0.3'
 
-    // AUTH
-    compile 'com.google.android.gms:play-services-auth:11.8.0'
-    compile 'com.google.firebase:firebase-auth:11.8.0'
-
-    //DATABASE FIREBASE,UI
-    compile 'com.google.firebase:firebase-database:11.8.0'
-    compile 'com.firebaseui:firebase-ui-database:0.4.1'
-
-    //STORAGE FIREBASE
-    compile 'com.google.firebase:firebase-storage:11.8.0'
-
-    //Places SERVICES
-    compile 'com.google.android.gms:play-services-places:11.8.0'
 
     // project 3
     compile 'com.android.support:appcompat-v7:26.0.2'
@@ -183,28 +192,11 @@ dependencies {
     //Jackson Databind
     compile 'com.fasterxml.jackson.core:jackson-databind:2.7.2'
 
-    //Glide transform
-    compile 'jp.wasabeef:glide-transformations:2.0.1'
-
-    // Firebase
-    compile 'com.google.firebase:firebase-database:11.8.0'
-    compile 'com.google.firebase:firebase-auth:11.8.0'
-    compile 'com.google.firebase:firebase-storage:11.8.0'
-    compile 'com.google.firebase:firebase-messaging:11.8.0'
-    compile 'com.google.firebase:firebase-config:11.8.0'
-
-    // FirebaseUI
-    compile 'com.firebaseui:firebase-ui:0.6.0'
-
-    //  compile 'com.google.android.gms:play-services-appindexing:11.8.0'
 
     // AUTH
-    compile 'com.google.android.gms:play-services-auth:11.8.0'
-    compile 'com.google.firebase:firebase-auth:11.8.0'
+    compile 'com.google.android.gms:play-services-auth:16.0.0'
 
     //DATABASE FIREBASE,UI
-    compile 'com.google.firebase:firebase-database:11.8.0'
-    compile 'com.firebaseui:firebase-ui-database:0.4.1'
     compile('com.mikepenz:materialdrawer:5.9.1@aar') {
         transitive = true
     }
@@ -214,7 +206,7 @@ dependencies {
     // for experimental rx picker
     //implementation 'com.github.esafirm.android-image-picker:rximagepicker:x.y.z'
     // If you have a problem with Glide, please use the same Glide version or simply open an issue
-    implementation 'com.github.bumptech.glide:glide:4.5.0'
+    // implementation 'com.github.bumptech.glide:glide:4.5.0'
 
 
 
@@ -255,7 +247,6 @@ dependencies {
 
     // firebase ui ...
 
-    // implementation 'com.firebaseui:firebase-ui-auth:4.0.0'
 
     // Required only if Facebook login support is required
 
@@ -288,10 +279,6 @@ dependencies {
 
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 
-    implementation 'com.google.firebase:firebase-storage:11.8.0'
-    implementation 'com.firebaseui:firebase-ui-database:3.1.0'
-    implementation 'com.google.firebase:firebase-messaging:11.8.0'
-    implementation 'com.google.firebase:firebase-crash:11.8.0'
 
     compile 'com.squareup.picasso:picasso:2.5.2'
     //https://github.com/square/picasso (Apache License 2.0)
@@ -329,20 +316,15 @@ dependencies {
     // add upes feed
     compile 'com.android.support:palette-v7:26.0.2'
 
-    compile 'com.google.firebase:firebase-common:11.8.0'
-    compile 'com.google.firebase:firebase-crash:11.8.0'
-    compile 'com.google.android.gms:play-services-appindexing:9.0.2'
-    // FirebaseUI Database only
-    compile 'com.firebaseui:firebase-ui-database:1.0.1'
-    // FirebaseUI Auth only
-    compile 'com.firebaseui:firebase-ui-auth:1.0.1'
-    // FirebaseUI Storage only
-    compile 'com.firebaseui:firebase-ui-storage:1.0.1'
-    // Single target that includes all FirebaseUI libraries above
-    compile 'com.firebaseui:firebase-ui:1.0.1'
+
 
     compile 'pub.devrel:easypermissions:0.1.5'
-    compile 'com.github.bumptech.glide:glide:3.6.0'
+
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
+    //compile 'com.github.bumptech.glide:glide:3.6.0'
+
+
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'org.apache.httpcomponents:httpcore:4.3.1'
     compile 'org.apache.httpcomponents:httpmime:4.3.1'

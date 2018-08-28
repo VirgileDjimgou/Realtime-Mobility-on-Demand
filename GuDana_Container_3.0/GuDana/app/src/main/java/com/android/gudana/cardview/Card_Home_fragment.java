@@ -110,7 +110,7 @@ public class Card_Home_fragment extends Fragment implements Card_Home_fragment_o
             // initCollapsingToolbar();
             final CollapsingToolbarLayout collapsingToolbar =
                     (CollapsingToolbarLayout) view_layout.findViewById(R.id.collapsing_toolbar);
-            collapsingToolbar.setTitle("GuD Services");
+            collapsingToolbar.setTitle("GuD TamTam");
             AppBarLayout appBarLayout = (AppBarLayout) view_layout.findViewById(R.id.appbar);
             appBarLayout.setExpanded(true);
 
@@ -128,7 +128,7 @@ public class Card_Home_fragment extends Fragment implements Card_Home_fragment_o
                         collapsingToolbar.setTitle(getString(R.string.gud_services));
                         isShow = true;
                     } else if (isShow) {
-                        collapsingToolbar.setTitle("GuD Services");
+                        collapsingToolbar.setTitle("GuD TamTam");
                         isShow = false;
                     }
                 }
@@ -213,18 +213,17 @@ public class Card_Home_fragment extends Fragment implements Card_Home_fragment_o
 
         try{
 
-
-            CardCustom a = new CardCustom("GuD Driver", covers[0]);
+            CardCustom a = new CardCustom("post 1", 24,covers[0]);
             albumList.add(a);
 
-            a = new CardCustom("GuD Passenger",  covers[1]);
+            a = new CardCustom("post 2",  35,covers[1]);
             albumList.add(a);
 
-            a = new CardCustom("GuD Delivery",  covers[2]);
+            a = new CardCustom("post 3", 44, covers[2]);
             albumList.add(a);
 
 
-            a = new CardCustom("GuD Money",  covers[3]);
+            a = new CardCustom("GuD Money",56,  covers[3]);
             albumList.add(a);
 
 
