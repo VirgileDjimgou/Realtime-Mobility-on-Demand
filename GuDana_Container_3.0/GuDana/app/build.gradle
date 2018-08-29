@@ -83,6 +83,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:16.0.1'
     compile 'com.google.android.gms:play-services-auth:16.0.0'
 
+    implementation 'com.github.GrenderG:Toasty:1.3.0'
+
     // Firebase
     compile 'com.google.firebase:firebase-messaging:17.3.0'
     compile 'com.google.firebase:firebase-config:16.0.0'
@@ -134,12 +136,10 @@ dependencies {
     // interactive windows
     compile 'com.appolica:interactive-info-window:v1.0.6'
 
-
     // retrofit, gson
     compile 'com.google.code.gson:gson:2.6.2'
     compile 'com.squareup.retrofit2:retrofit:2.0.2'
     compile 'com.squareup.retrofit2:converter-gson:2.0.2'
-
 
     //  telephone Country  .,...
     compile 'com.googlecode.libphonenumber:libphonenumber:6.2'
@@ -183,7 +183,6 @@ dependencies {
     compile 'com.github.hani-momanii:SuperNova-Emoji:1.1'
     compile 'me.himanshusoni.chatmessageview:chat-message-view:1.0.3'
 
-
     // project 3
     compile 'com.android.support:appcompat-v7:26.0.2'
     compile 'com.android.support:design:26.0.2'
@@ -191,7 +190,6 @@ dependencies {
 
     //Jackson Databind
     compile 'com.fasterxml.jackson.core:jackson-databind:2.7.2'
-
 
     // AUTH
     compile 'com.google.android.gms:play-services-auth:16.0.0'
@@ -207,8 +205,6 @@ dependencies {
     //implementation 'com.github.esafirm.android-image-picker:rximagepicker:x.y.z'
     // If you have a problem with Glide, please use the same Glide version or simply open an issue
     // implementation 'com.github.bumptech.glide:glide:4.5.0'
-
-
 
     // custom floating button
     compile 'com.github.clans:fab:1.6.2'
@@ -244,9 +240,7 @@ dependencies {
     // compile 'com.felipecsl:gifimageview:2.2.0'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.15'
 
-
     // firebase ui ...
-
 
     // Required only if Facebook login support is required
 
@@ -312,7 +306,6 @@ dependencies {
 
     compile 'com.droidninja:filepicker:2.1.5'
 
-
     // add upes feed
     compile 'com.android.support:palette-v7:26.0.2'
 
@@ -346,6 +339,24 @@ dependencies {
     //compile 'com.github.gabrielemariotti.cards:cardslib-core:2.1.0'
     testCompile 'junit:junit:4.12'
     compile 'ch.acra:acra:4.5.0'
+
+    // multipicker lib
+    compile 'com.kbeanie:multipicker:1.5'
+
+    // fabmenu
+    implementation 'com.rany.albeg.wein:spring-fab-menu:1.0.1'
+    
+    // choce dialog
+    compile 'com.yarolegovich:lovely-dialog:1.1.0'
+
+    // flow layout with auto Spacing
+    // compile 'com.nex3z:flow-layout:1.2.2'
+
+    // layout with complex entry
+    // compile 'com.github.pchmn:MaterialChipsInput:1.0.8'
+
+
+
 
 }
 apply plugin: 'com.google.gms.google-services'

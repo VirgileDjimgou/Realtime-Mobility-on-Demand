@@ -1,4 +1,4 @@
-package com.android.gudana.cardview;
+package com.android.gudana.GuDFeed;
 
 
 public class CardCustom {

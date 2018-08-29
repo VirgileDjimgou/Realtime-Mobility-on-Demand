@@ -78,47 +78,18 @@
     <include layout="@layout/content_main_card" />
 
 
-
-    <RelativeLayout
-        android:id="@+id/container"
-        android:layout_width="320dp"
-        android:layout_height="500dp"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center|bottom"
-        android:paddingTop="10dp">
-
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewPager"
-            android:layout_width="match_parent"
-            android:layout_height="350dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:layout_gravity="bottom"
-            android:background="@color/colorAccent"
-            android:clipToPadding="false"
-            android:overScrollMode="never"
-            android:paddingBottom="30dp"
-            android:paddingEnd="@dimen/card_padding"
-            android:paddingLeft="@dimen/card_padding"
-            android:paddingRight="@dimen/card_padding"
-            android:paddingStart="@dimen/card_padding" />
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/viewPager"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center_horizontal|top"
-            android:onClick="clickBackLogin"
-            android:src="@drawable/plus_x"
-            android:transitionName="loginFab"
-            app:fabSize="normal" />
-    </RelativeLayout>
-
-
-
+    <com.nightonke.boommenu.BoomMenuButton
+        android:id="@+id/bmb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/passenger"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="35dp"
+        android:layout_marginEnd="5dp"
+        android:layout_gravity="bottom|right"
+        app:bmb_buttonEnum="ham"
+        app:bmb_buttonPlaceEnum="buttonPlace_ham_4"
+        app:bmb_piecePlaceEnum="piecePlace_ham_4" />
 
 
 </android.support.design.widget.CoordinatorLayout>

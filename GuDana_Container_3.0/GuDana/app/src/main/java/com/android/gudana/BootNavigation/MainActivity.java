@@ -30,7 +30,7 @@ import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
 
 import com.android.gudana.BuildConfig;
 import com.android.gudana.R;
-import com.android.gudana.cardview.Card_Home_fragment;
+import com.android.gudana.GuDFeed.GuDFeed_Fragment;
 // import com.android.rivchat.MainActivity_NavDrawer;
 
 
@@ -279,7 +279,7 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
 
         if (fromUser) {
             final FragmentManager manager = getSupportFragmentManager();
-            Card_Home_fragment fragment = (Card_Home_fragment) manager.findFragmentById(R.id.fragment);
+            GuDFeed_Fragment fragment = (GuDFeed_Fragment) manager.findFragmentById(R.id.fragment);
             if (null != fragment) {
                 // fragment.scrollToTop();
             }
@@ -309,11 +309,11 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
             switch (position) {
                 case 0:
                     //  chat fragment
-                    return new Card_Home_fragment();
+                    return new GuDFeed_Fragment();
 
                 case 1:
                     // problaby  call fragment
-                    return new Card_Home_fragment();
+                    return new GuDFeed_Fragment();
 
                 case 2:
                     // status share fragment

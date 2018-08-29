@@ -479,8 +479,8 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
             // first
             TextOutsideCircleButton.Builder builder_0_video = new TextOutsideCircleButton.Builder()
-                    .normalImageRes(R.mipmap.ic_doc_round)
-                    .normalText("video share")
+                    .normalImageRes(R.mipmap.ic_media)
+                    .normalText("Media  share")
                     .listener(new OnBMClickListener() {
                         @Override
                         public void onBoomButtonClick(int index) {
@@ -778,7 +778,8 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                 MainActivity_with_Drawer.tabLayout.getTabAt(3);
                 MainActivity_with_Drawer.mViewPager.setCurrentItem(3);
                 play_sound();
-                NavUtils.navigateUpFromSameTask(this);
+                finish();
+                // NavUtils.navigateUpFromSameTask(this);
                 break;
             case R.id.action_search:
                 Toast.makeText(getApplicationContext(), R.string.not_implemented, Toast.LENGTH_SHORT).show();
@@ -787,7 +788,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
             case R.id.action_call_audio:
 
                 if (MainActivity_with_Drawer.isInstanciated()) {
-
                     MainActivity_with_Drawer.instance().setAddresGoToDialerAndCall(PhoneCorrespondant,OtherUserIdPhone, null);
                     startActivity(new Intent(MainActivity_with_Drawer.instance(), CallOutgoingActivity.class));
                 }
@@ -1302,7 +1302,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                     {
                         if(appBarSeen.getText().length() == 0)
                         {
-                            appBarSeen.setText("Last Seen: " + getTimeAgo(Long.parseLong(online)));
+                            appBarSeen.setText("Seen: " + getTimeAgo(Long.parseLong(online)));
                         }
                         else
                         {
@@ -1317,7 +1317,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                                         @Override
                                         public void run()
                                         {
-                                            appBarSeen.setText("Last Seen: " + getTimeAgo(Long.parseLong(online)));
+                                            appBarSeen.setText("Seen: " + getTimeAgo(Long.parseLong(online)));
                                         }
                                     });
                                 }

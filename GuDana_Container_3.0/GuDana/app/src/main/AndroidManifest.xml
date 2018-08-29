@@ -2,25 +2,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.gudana">
 
-
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-
-
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.CAMERA"/>
-
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <!-- Used for Importing / Exporting Wallets -->
@@ -32,15 +26,34 @@
 
     <!-- Used for optional Applock Feature -->
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
-    <uses-feature android:name="android.hardware.fingerprint" android:required="false" />
-    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
-    <uses-feature android:name="android.hardware.telephony" android:required="false" />
-    <uses-feature android:name="android.hardware.location" android:required="false" />
-    <uses-feature android:name="android.hardware.location.gps" android:required="false" />
-    <uses-feature android:name="android.hardware.location.network" android:required="false" />
-    <uses-feature android:name="android.hardware.microphone" android:required="false" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.fingerprint"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.network"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.microphone"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <supports-screens android:anyDensity="true" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -52,7 +65,6 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
 
     <!-- Permissions for Push Notification -->
     <permission
@@ -101,18 +113,14 @@
     <uses-permission android:name="com.android.vending.BILLING" />
     <!-- Needed for overlay widget -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <supports-screens
         android:anyDensity="true"
@@ -129,13 +137,11 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/api_key_google_places" />
 
-
-        <service android:name="com.android.gudana.chatapp.utils.FirebaseMessagingService">
+        <service android:name=".chatapp.utils.FirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -145,17 +151,14 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
 
-
-
         <activity
-            android:name="com.android.gudana.linphone.LinphoneLauncherActivity"
-            android:label="@string/app_name"
-            android:windowSoftInputMode="adjustPan|stateHidden"
+            android:name=".linphone.LinphoneLauncherActivity"
             android:exported="true"
-            android:theme="@style/NoTitle">
+            android:label="@string/app_name"
+            android:theme="@style/NoTitle"
+            android:windowSoftInputMode="adjustPan|stateHidden">
 
-        <!--
-            -->
+            <!--  -->
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -188,63 +191,54 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
-
-
         <activity
-                    android:name="com.android.gudana.MainActivity_with_Drawer"
-                    android:label="@string/app_name"
-                    android:configChanges="orientation|screenSize"
-                    android:theme="@style/AppTheme.NoActionBar">
+            android:name=".MainActivity_with_Drawer"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.CALL" />
+                <action android:name="android.intent.action.CALL_PRIVILEGED" />
 
+                <category android:name="android.intent.category.DEFAULT" />
 
-                <intent-filter>
-                    <action android:name="android.intent.action.CALL" />
-                    <action android:name="android.intent.action.CALL_PRIVILEGED" />
-                    <category android:name="android.intent.category.DEFAULT" />
-                    <data android:scheme="tel" />
-                    <data android:scheme="sip" /> />
-                </intent-filter>
+                <data android:scheme="tel" />
+                <data android:scheme="sip" />
+                />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SENDTO" />
 
-                <intent-filter>
-                    <action android:name="android.intent.action.SENDTO" />
-                    <category android:name="android.intent.category.DEFAULT" />
-                    <data android:scheme="sip" />
-                    <data android:scheme="imto" />
-                </intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
 
-                <intent-filter>
-                    <action android:name="android.intent.action.SENDTO" />
-                    <category android:name="android.intent.category.DEFAULT" />
-                    <data android:scheme="sip" />
-                    <data android:scheme="imto" />
-                </intent-filter>
+                <data android:scheme="sip" />
+                <data android:scheme="imto" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SENDTO" />
 
+                <category android:name="android.intent.category.DEFAULT" />
 
+                <data android:scheme="sip" />
+                <data android:scheme="imto" />
+            </intent-filter>
+            <intent-filter>
+                <data android:mimeType="@string/sync_mimetype" /> <!-- Change package in res/values/non_localizable_custom.xml ! -->
+                <action android:name="android.intent.action.VIEW" />
 
-                <intent-filter>
-                    <data android:mimeType="@string/sync_mimetype" /> <!-- Change package in res/values/non_localizable_custom.xml ! -->
-                    <action android:name="android.intent.action.VIEW" />
-                    <category android:name="android.intent.category.BROWSABLE" />
-                    <category android:name="android.intent.category.DEFAULT" />
-                </intent-filter>
-
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
-
-
-
         <activity
-            android:name="com.android.gudana.chatapp.activities.PhoneAuthActivity"
+            android:name=".chatapp.activities.PhoneAuthActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
-
-
         <activity
-            android:name="com.android.gudana.chatapp.activities.WelcomeActivity"
+            android:name=".chatapp.activities.WelcomeActivity"
             android:theme="@style/WelcomeTheme" />
-
         <activity
-            android:name="com.android.gudana.chatapp.activities.ProfileActivity"
+            android:name=".chatapp.activities.ProfileActivity"
             android:theme="@style/ProfileTheme">
             <intent-filter>
                 <action android:name="com.android.gudana.chatapp.chatapp_PROFILE_TARGET_NOTIFICATION" />
@@ -252,14 +246,12 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name="com.android.gudana.chatapp.activities.UsersActivity"
+            android:name=".chatapp.activities.UsersActivity"
             android:parentActivityName=".MainActivity_with_Drawer"
             android:theme="@style/UsersTheme" />
-
         <activity
-            android:name="com.android.gudana.chatapp.activities.ChatActivity"
+            android:name=".chatapp.activities.ChatActivity"
             android:parentActivityName=".MainActivity_with_Drawer"
             android:theme="@style/ChatTheme">
             <intent-filter>
@@ -268,16 +260,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
-
         <activity
-            android:name="com.android.gudana.chatapp.activities.FullScreenActivity"
-            android:theme="@style/ProfileTheme">
-
-        </activity>
-
-
-
+            android:name=".chatapp.activities.FullScreenActivity"
+            android:theme="@style/ProfileTheme" />
         <activity
             android:name=".linphone.CallIncomingActivity"
             android:launchMode="singleTop"
@@ -315,8 +300,8 @@
         </activity>
         <activity
             android:name=".linphone.assistant.AssistantActivity"
-            android:screenOrientation="behind"
             android:launchMode="singleTop"
+            android:screenOrientation="behind"
             android:theme="@style/NoTitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -324,8 +309,8 @@
         </activity>
         <activity
             android:name=".linphone.purchase.InAppPurchaseActivity"
-            android:screenOrientation="nosensor"
             android:launchMode="singleTop"
+            android:screenOrientation="nosensor"
             android:theme="@style/NoTitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -333,8 +318,8 @@
         </activity>
         <activity
             android:name=".linphone.assistant.RemoteProvisioningLoginActivity"
-            android:screenOrientation="nosensor"
             android:launchMode="singleTop"
+            android:screenOrientation="nosensor"
             android:theme="@style/NoTitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -342,8 +327,8 @@
         </activity>
         <activity
             android:name=".linphone.assistant.RemoteProvisioningActivity"
-            android:screenOrientation="nosensor"
             android:launchMode="singleTop"
+            android:screenOrientation="nosensor"
             android:theme="@style/NoTitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -392,7 +377,7 @@
         </receiver>
         <receiver
             android:name=".linphone.BluetoothManager"
-            android:enabled="false"></receiver>
+            android:enabled="false" />
         <receiver android:name=".linphone.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -472,30 +457,53 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-
-
         <activity
             android:name=".BootNavigation.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoActionBar.NoTranslucent2">
+            android:theme="@style/AppTheme.NoActionBar.NoTranslucent2" />
+        <activity
+            android:name=".chatapp.activities.FriendsActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity_with_Drawer"
+            android:theme="@style/UsersTheme" />
+        <activity
+            android:name=".chatapp.activities.RequestActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity_with_Drawer"
+            android:theme="@style/UsersTheme" />
 
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+
+        <activity
+            android:name=".GuDFeed.ImagePreviewActivity"
+            android:label="Image Preview"
+            android:parentActivityName=".MainActivity_with_Drawer"
+            android:theme="@style/UsersTheme"
+            android:screenOrientation="portrait" />
+
+
+        <activity
+            android:name=".GuDFeed.activities.create_post"
+            android:label="@string/title_activity_create_post"
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity_with_Drawer"
+            android:theme="@style/UsersTheme"/>
+
+        <activity
+            android:name=".GuDFeed.activities.SeePost"
+            android:label="@string/title_activity_see_post"
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity_with_Drawer"
+            android:theme="@style/UsersTheme">
 
         </activity>
-
-
-
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-
-
-
-
     </application>
 
 </manifest>

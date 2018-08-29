@@ -22,7 +22,7 @@
     <dimen name="detail_backdrop_height">250dp</dimen>
     <dimen name="backdrop_title">30dp</dimen>
     <dimen name="backdrop_subtitle">18dp</dimen>
-    <dimen name="card_margin">5dp</dimen>
+    <dimen name="card_margin">1dp</dimen>
     <dimen name="card_album_radius">0dp</dimen>
     <dimen name="album_cover_height">160dp</dimen>
     <dimen name="album_title_padding">10dp</dimen>
@@ -84,7 +84,9 @@
     <dimen name="text_size_xlarge">20sp</dimen>
     <dimen name="text_size_diff_large_small">6sp</dimen>
     <dimen name="my_schedule_icon_size">24dp</dimen>
-    <dimen name="my_schedule_icon_horizontal_padding">24dp</dimen> <!-- center 24dp in @keyline_2 -->
+    <dimen name="my_schedule_icon_horizontal_padding">24dp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="text_margin">16dp</dimen> <!-- center 24dp in @keyline_2 -->
 
 
 </resources>

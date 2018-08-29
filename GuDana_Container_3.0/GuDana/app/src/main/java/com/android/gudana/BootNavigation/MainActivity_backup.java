@@ -24,7 +24,7 @@ import com.android.gudana.BuildConfig;
 import com.android.gudana.MainActivity_with_Drawer;
 import com.android.gudana.R;
 // import com.android.rivchat.linphone.LinphoneActivity;
-import com.android.gudana.cardview.Card_Home_fragment;
+import com.android.gudana.GuDFeed.GuDFeed_Fragment;
 import com.android.gudana.linphone.assistant.AssistantActivity;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -390,7 +390,7 @@ public class MainActivity_backup extends BaseActivity implements BottomNavigatio
 
         if (fromUser) {
             final FragmentManager manager = getSupportFragmentManager();
-            Card_Home_fragment fragment = (Card_Home_fragment) manager.findFragmentById(R.id.fragment);
+            GuDFeed_Fragment fragment = (GuDFeed_Fragment) manager.findFragmentById(R.id.fragment);
             if (null != fragment) {
                 // fragment.scrollToTop();
             }
@@ -416,7 +416,7 @@ public class MainActivity_backup extends BaseActivity implements BottomNavigatio
             switch (position) {
                 case 0:
                     //  chat fragment
-                    return new Card_Home_fragment();
+                    return new GuDFeed_Fragment();
 
                 case 1:
                     // problaby  call fragment

@@ -11,13 +11,10 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 
 import android.os.StrictMode;
-import android.support.annotation.NonNull;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -25,7 +22,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import android.graphics.Color;
+
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -58,25 +55,21 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.gudana.cardview.Card_Home_fragment;
-import com.android.gudana.chatapp.MainActivity;
-import com.android.gudana.chatapp.activities.PhoneAuthActivity;
+import com.android.gudana.GuDFeed.GuDFeed_Fragment;
+import com.android.gudana.chatapp.activities.FriendsActivity;
 import com.android.gudana.chatapp.activities.ProfileActivity;
+import com.android.gudana.chatapp.activities.RequestActivity;
 import com.android.gudana.chatapp.activities.UsersActivity;
 import com.android.gudana.chatapp.activities.WelcomeActivity;
 import com.android.gudana.chatapp.fragments.ChatFragment;
-import com.android.gudana.chatapp.fragments.FriendsFragment;
-import com.android.gudana.chatapp.fragments.RequestsFragment;
+import com.android.gudana.dashboard.DashboardFragment;
 import com.android.gudana.linphone.AccountPreferencesFragment;
 import com.android.gudana.linphone.CallActivity;
 import com.android.gudana.linphone.CallIncomingActivity;
@@ -103,8 +96,6 @@ import com.android.gudana.linphone.ui.AddressText;
 import com.android.gudana.linphone.xmlrpc.XmlRpcHelper;
 import com.android.gudana.linphone.xmlrpc.XmlRpcListenerBase;
 import com.android.gudana.util.Client;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -113,7 +104,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -123,7 +113,6 @@ import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
-import org.acra.util.ToastSender;
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAuthInfo;
@@ -150,11 +139,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-
-import com.ogaclejapan.smarttablayout.SmartTabLayout;
-import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
-import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
 // import rehanced.com.simpleetherwallet.activities.AnalyticsApplication;
 
@@ -433,8 +417,13 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
                 .withSelectedItem(-1)
 
                 .addDrawerItems(
-                        new PrimaryDrawerItem().withName(getResources().getString(R.string.app_name)).withIcon(R.mipmap.ic_launcher_round),
+                        new PrimaryDrawerItem().withName(getResources().getString(R.string.requests)).withIcon(R.mipmap.ic_requests),
+                        new PrimaryDrawerItem().withName(getResources().getString(R.string.friends)).withIcon(R.mipmap.ic_friend),
                         new PrimaryDrawerItem().withName(getResources().getString(R.string.action_settings)).withIcon(R.mipmap.ic_settings_round),
+
+                        new PrimaryDrawerItem().withName(getResources().getString(R.string.action_favorites)).withIcon(R.mipmap.ic_favorites),
+                        new PrimaryDrawerItem().withName(getResources().getString(R.string.your_feeds)).withIcon(R.mipmap.ic_your_feed),
+
                         new PrimaryDrawerItem().withName(getResources().getString(R.string.help)).withIcon(R.mipmap.ic_help_round),
                         new PrimaryDrawerItem().withName(getResources().getString(R.string.about)).withIcon(R.mipmap.ic_about_round)
                 )
@@ -477,13 +466,14 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
         appbar = findViewById(R.id.appbar);
         checkAndRequestReadContactsPermission();
 
-        fragments = new Fragment[6];
-        fragments[0] = new Card_Home_fragment();
-        fragments[1] = new RequestsFragment();
-        fragments[2] = new HistoryListFragment();
-        fragments[3] = new ChatFragment();
-        fragments[4] = new FriendsFragment();
-        fragments[5] = new DialerFragment();
+        fragments = new Fragment[4];
+        fragments[0] = new DashboardFragment();
+        fragments[1] = new GuDFeed_Fragment();
+        //fragments[1] = new RequestsFragment();
+        fragments[2] = new ChatFragment();
+        fragments[3] = new HistoryListFragment();
+        //fragments[4] = new FriendsFragment();
+        //fragments[5] = new DialerFragment();
 
 
 
@@ -493,14 +483,13 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
 
         tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-        tabLayout.getTabAt(0).setIcon(R.mipmap.ic_home);
-        tabLayout.getTabAt(1).setIcon(R.mipmap.ic_requests);
-        tabLayout.getTabAt(2).setIcon(R.mipmap.ic_call_history);
-        tabLayout.getTabAt(3).setIcon(R.mipmap.ic_chat);
-        tabLayout.getTabAt(4).setIcon(R.mipmap.ic_friend);
-        tabLayout.getTabAt(5).setIcon(R.mipmap.ic_dialer);
+        tabLayout.getTabAt(0).setIcon(R.mipmap.ic_home).setText("Home");
+        tabLayout.getTabAt(1).setIcon(R.mipmap.ic_your_feed).setText("GuDFeed");
+        tabLayout.getTabAt(2).setIcon(R.mipmap.ic_chat).setText("Chat");
+        tabLayout.getTabAt(3).setIcon(R.mipmap.ic_call_history).setText("Call");
 
-        mViewPager.setOffscreenPageLimit(6);
+
+        mViewPager.setOffscreenPageLimit(4);
         //tabLayout.getTabAt(3);
         //mViewPager.setCurrentItem(3);
 
@@ -2053,55 +2042,53 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
             case 1: {
 
 
+                Intent intent = new Intent(this, RequestActivity.class);
+                startActivity(intent);
+
                 break;
             }
             case 2: {
-                //Intent phoneActivity = new Intent(this, LinphoneLauncherActivity.class);
-                //startActivity(phoneActivity);
+                Intent intent = new Intent(this, FriendsActivity.class);
+                startActivity(intent);
 
-                startActivity(new Intent(MainActivity_with_Drawer.this, AssistantActivity.class));
+                //Toast.makeText(this, "position  : "+Integer.toString(position), Toast.LENGTH_SHORT).show();
+
                 break;
             }
             case 3: {
-                displayCustomToast("registration voice server ", Toast.LENGTH_LONG);
-
-                try{
-
-                    // transport type always udp
-
-                    AssistantActivity assist = new AssistantActivity();
-                    transport = LinphoneAddress.TransportType.LinphoneTransportUdp;
-                    android.util.Log.e("","");
-                    assist.genericLogIn("7002", "1234", null, "206.189.16.110", transport);
-
-                }catch(Exception ex){
-                    ex.printStackTrace();
-                }
+                Toast.makeText(this, "position  : "+Integer.toString(position), Toast.LENGTH_SHORT).show();
 
                 break;
             }
             case 4: {
-                displayCustomToast("disabled at the moment ", Toast.LENGTH_LONG);
-                mPrefs = LinphonePreferences.instance();
-                for (int x = 0; x <= 5; x++){
-                    try{
-                        mPrefs.deleteAccount(x);
-                        Thread.sleep(500);
+                Toast.makeText(this, "position  : "+Integer.toString(position), Toast.LENGTH_SHORT).show();
 
-                    }catch(Exception ex){
-                        ex.printStackTrace();
-                    }
-
-                }
                 break;
             }
             case 5: {
+                Toast.makeText(this, "position  : "+Integer.toString(position), Toast.LENGTH_SHORT).show();
 
                 break;
             }
             default: {
+                Toast.makeText(this, "position  : "+Integer.toString(position), Toast.LENGTH_SHORT).show();
                 return;
             }
+        }
+    }
+
+    public void deleteAccount(){
+        displayCustomToast("disabled at the moment ", Toast.LENGTH_LONG);
+        mPrefs = LinphonePreferences.instance();
+        for (int x = 0; x <= 5; x++){
+            try{
+                mPrefs.deleteAccount(x);
+                Thread.sleep(500);
+
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
+
         }
     }
 

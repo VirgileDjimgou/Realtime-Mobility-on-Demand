@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,8 +17,8 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.android.gudana.cardview.Card_Home_fragment.animHide;
-import static com.android.gudana.cardview.Card_Home_fragment.layoutAnimation;
+import static com.android.gudana.dashboard.DashboardFragment.animHide;
+import static com.android.gudana.dashboard.DashboardFragment.layoutAnimation;
 
 public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
 

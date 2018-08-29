@@ -1,12 +1,12 @@
-package com.android.gudana.cardview;
+package com.android.gudana.GuDFeed;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -16,19 +16,30 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import com.android.gudana.GuDFeed.activities.create_post;
+import com.android.gudana.MainActivity_with_Drawer;
 import com.android.gudana.R;
+import com.android.gudana.chatapp.activities.ProfileActivity;
 import com.android.gudana.viewpagercards.CardItem;
 import com.android.gudana.viewpagercards.CardPagerAdapter;
 import com.android.gudana.viewpagercards.ShadowTransformer;
+import com.google.firebase.auth.FirebaseAuth;
+import com.nightonke.boommenu.Animation.BoomEnum;
+import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
+import com.nightonke.boommenu.BoomButtons.HamButton;
+import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
+import com.nightonke.boommenu.BoomMenuButton;
+import com.nightonke.boommenu.ButtonEnum;
+import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Card_Home_fragment extends Fragment implements Card_Home_fragment_onbackpressed {
+import es.dmoral.toasty.Toasty;
+
+public class GuDFeed_Fragment extends Fragment {
 
     private RecyclerView recyclerView;
     private AlbumsAdapter adapter;
@@ -38,13 +49,14 @@ public class Card_Home_fragment extends Fragment implements Card_Home_fragment_o
 
     public static CardPagerAdapter mCardAdapter;
     public static ShadowTransformer mCardShadowTransformer;
-    public static FloatingActionButton floatButton;
-    public static RelativeLayout layoutAnimation;
-    public static  Animation animShow, animHide;
+
+
+    private BoomMenuButton bmb ;
 
 
 
-    public Card_Home_fragment() {
+
+    public GuDFeed_Fragment() {
         // Required empty public constructor
     }
 
@@ -67,10 +79,89 @@ public class Card_Home_fragment extends Fragment implements Card_Home_fragment_o
             //setSupportActionBar(toolbar);
 
             context = view_layout.getContext();
+            mViewPager = (ViewPager) view_layout.findViewById(R.id.viewPager);
+
+
+            // instaciate bmb button  ...
+            try{
+
+                //bmb.setDraggable(true);
+
+
+                // boom menu    ...
+                bmb = (BoomMenuButton) view_layout.findViewById(R.id.bmb);
+                assert bmb != null;
+                bmb.setButtonEnum(ButtonEnum.Ham);
+                bmb.setPiecePlaceEnum(PiecePlaceEnum.HAM_3);
+                bmb.setButtonPlaceEnum(ButtonPlaceEnum.HAM_3);
+                bmb.setBoomEnum(BoomEnum.values()[7]); // random  boom
+                bmb.setUse3DTransformAnimation(true);
+                //bmb.setDraggable(true);
+                bmb.setDuration(500);
+
+
+
+                bmb.clearBuilders();
+
+                // first
+                HamButton.Builder builder_0_doc = new HamButton.Builder()
+                        .normalImageRes(R.mipmap.ic_your_feed)
+                        .normalText("Create your own Service")
+                        .listener(new OnBMClickListener() {
+                            @Override
+                            public void onBoomButtonClick(int index) {
+
+
+                                Intent profileIntent = new Intent(GuDFeed_Fragment.this.getContext(), create_post.class);
+                                startActivity(profileIntent);
+
+                                Toasty.info(context,
+                                        "We are sorry. The service you requested is currently unavailable on your location . Please try again later.", Toast.LENGTH_LONG, true).show();
+                            }
+                        });
+
+                bmb.addBuilder(builder_0_doc);
+
+
+                // first
+                HamButton.Builder builder_0_video = new HamButton.Builder()
+                        .normalImageRes(R.mipmap.ic_listener_tamtam)
+                        .normalText("create a listener for custom Service")
+                        .listener(new OnBMClickListener() {
+                            @Override
+                            public void onBoomButtonClick(int index) {
+
+                                Toasty.info(context,
+                                        "We are sorry. The service you requested is currently unavailable on your location . Please try again later.", Toast.LENGTH_LONG, true).show();
+
+                            }
+                        });
+
+                bmb.addBuilder(builder_0_video);
+
+
+                // first
+                HamButton.Builder search = new HamButton.Builder()
+                        .normalImageRes(R.mipmap.ic_search)
+                        .normalText("Search")
+                        .listener(new OnBMClickListener() {
+                            @Override
+                            public void onBoomButtonClick(int index) {
+
+                                Toasty.info(context,
+                                        "We are sorry. The service you requested is currently unavailable on your location . Please try again later.", Toast.LENGTH_LONG, true).show();
+
+                            }
+                        });
+
+                bmb.addBuilder(search);
+
+            }catch(Exception ex){
+
+                ex.printStackTrace();
+            }
 
             // Init View Pager ...
-            layoutAnimation = (RelativeLayout) view_layout.findViewById(R.id.container);
-            layoutAnimation.setVisibility(View.GONE);
             mViewPager = (ViewPager) view_layout.findViewById(R.id.viewPager);
 
             mCardAdapter = new CardPagerAdapter();
@@ -80,37 +171,13 @@ public class Card_Home_fragment extends Fragment implements Card_Home_fragment_o
             mCardAdapter.addCardItem(new CardItem(R.string.title_4, R.drawable.album1));
             //mFragmentCardAdapter = new CardFragmentPagerAdapter(getSupportFragmentManager(), dpToPixels(2, context));
 
-            mCardShadowTransformer = new ShadowTransformer(mViewPager, mCardAdapter);
-            //mFragmentCardShadowTransformer = new ShadowTransformer(mViewPager, mFragmentCardAdapter);
-            mViewPager.setAdapter(mCardAdapter);
-            mViewPager.setPageTransformer(false, mCardShadowTransformer);
-            mViewPager.setOffscreenPageLimit(4);
-            mCardShadowTransformer.enableScaling(true);
-
-
-            // init animation ...
-
-            animShow = AnimationUtils.loadAnimation(context, R.anim.view_show);
-            animHide = AnimationUtils.loadAnimation(context, R.anim.view_hide);
-            floatButton = (FloatingActionButton) view_layout.findViewById(R.id.fab);
-            floatButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //container.setVisibility(View.GONE);
-                    animHide.reset();
-                    animHide = AnimationUtils.loadAnimation(context, R.anim.view_hide);
-                    layoutAnimation.setAnimation(animHide);
-                    layoutAnimation.setVisibility(View.GONE);
-                }
-            });
-
 
 
 
             // initCollapsingToolbar();
             final CollapsingToolbarLayout collapsingToolbar =
                     (CollapsingToolbarLayout) view_layout.findViewById(R.id.collapsing_toolbar);
-            collapsingToolbar.setTitle("GuD TamTam");
+            collapsingToolbar.setTitle("GuDFeed");
             AppBarLayout appBarLayout = (AppBarLayout) view_layout.findViewById(R.id.appbar);
             appBarLayout.setExpanded(true);
 
@@ -128,27 +195,26 @@ public class Card_Home_fragment extends Fragment implements Card_Home_fragment_o
                         collapsingToolbar.setTitle(getString(R.string.gud_services));
                         isShow = true;
                     } else if (isShow) {
-                        collapsingToolbar.setTitle("GuD TamTam");
+                        collapsingToolbar.setTitle("GuDFeed");
                         isShow = false;
                     }
                 }
             });
 
-
-            try {
             recyclerView = (RecyclerView) view_layout.findViewById(R.id.recycler_view);
 
             albumList = new ArrayList<>();
             adapter = new AlbumsAdapter(context, albumList);
 
-            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(context, 2);
+            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(context, 1);
             recyclerView.setLayoutManager(mLayoutManager);
-            recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), false));
+            recyclerView.addItemDecoration(new GridSpacingItemDecoration(1, dpToPx(10), false));
             recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.setAdapter(adapter);
 
             prepareCards();
 
+            try {
                 //Glide.with(this).load(R.drawable.cover).into((ImageView) view.findViewById(R.id.backdrop));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -159,46 +225,12 @@ public class Card_Home_fragment extends Fragment implements Card_Home_fragment_o
             ex.printStackTrace();
         }
 
+
+
         return view_layout;
     }
 
-    public static void Driver_Card(){
-        mCardAdapter = new CardPagerAdapter();
-        mCardAdapter.addCardItem(new CardItem(R.string.moto_driver, R.drawable.moto_driver));
-        mCardAdapter.addCardItem(new CardItem(R.string.taxi_driver, R.drawable.taxi_us));
-        mCardAdapter.addCardItem(new CardItem(R.string.transporter, R.drawable.icon_transporte));
-        mCardAdapter.addCardItem(new CardItem(R.string.custom, R.drawable.traffic));
-        //mFragmentCardAdapter = new CardFragmentPagerAdapter(getSupportFragmentManager(), dpToPixels(2, context));
 
-        mCardShadowTransformer = new ShadowTransformer(mViewPager, mCardAdapter);
-        //mFragmentCardShadowTransformer = new ShadowTransformer(mViewPager, mFragmentCardAdapter);
-        mViewPager.setAdapter(mCardAdapter);
-        mViewPager.setPageTransformer(false, mCardShadowTransformer);
-        mViewPager.setOffscreenPageLimit(4);
-        mCardShadowTransformer.enableScaling(true);
-
-    }
-
-    public static  void  Passenger_Card(){
-
-        mCardAdapter = new CardPagerAdapter();
-        mCardAdapter.addCardItem(new CardItem(R.string.title_1, R.drawable.cab_passenger));
-        mCardAdapter.addCardItem(new CardItem(R.string.title_2, R.drawable.cab_passenger_wom));
-        mCardAdapter.addCardItem(new CardItem(R.string.title_3, R.drawable.moto_driver));
-        //mFragmentCardAdapter = new CardFragmentPagerAdapter(getSupportFragmentManager(), dpToPixels(2, context));
-
-        mCardShadowTransformer = new ShadowTransformer(mViewPager, mCardAdapter);
-        //mFragmentCardShadowTransformer = new ShadowTransformer(mViewPager, mFragmentCardAdapter);
-        mViewPager.setAdapter(mCardAdapter);
-        mViewPager.setPageTransformer(false, mCardShadowTransformer);
-        mViewPager.setOffscreenPageLimit(3);
-        mCardShadowTransformer.enableScaling(true);
-
-    }
-    public static  void Paket_Delivery(){
-
-
-    }
 
     /**
      * Adding few albums for testing
