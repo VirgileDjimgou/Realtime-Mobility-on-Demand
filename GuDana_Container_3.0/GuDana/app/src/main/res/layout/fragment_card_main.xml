@@ -84,9 +84,9 @@
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/passenger"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="35dp"
-        android:layout_marginEnd="5dp"
         android:layout_gravity="bottom|right"
+        android:layout_marginBottom="75dp"
+        android:layout_marginEnd="5dp"
         app:bmb_buttonEnum="ham"
         app:bmb_buttonPlaceEnum="buttonPlace_ham_4"
         app:bmb_piecePlaceEnum="piecePlace_ham_4" />

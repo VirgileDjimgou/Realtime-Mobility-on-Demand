@@ -53,9 +53,6 @@ public class GuDFeed_Fragment extends Fragment {
 
     private BoomMenuButton bmb ;
 
-
-
-
     public GuDFeed_Fragment() {
         // Required empty public constructor
     }

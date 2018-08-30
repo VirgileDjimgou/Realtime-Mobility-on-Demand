@@ -345,17 +345,15 @@ dependencies {
 
     // fabmenu
     implementation 'com.rany.albeg.wein:spring-fab-menu:1.0.1'
-    
+
     // choce dialog
     compile 'com.yarolegovich:lovely-dialog:1.1.0'
 
     // flow layout with auto Spacing
-    // compile 'com.nex3z:flow-layout:1.2.2'
+    compile 'com.nex3z:flow-layout:1.2.2'
 
     // layout with complex entry
-    // compile 'com.github.pchmn:MaterialChipsInput:1.0.8'
-
-
+    //compile 'com.github.pchmn:MaterialChipsInput:1.0.8'
 
 
 }

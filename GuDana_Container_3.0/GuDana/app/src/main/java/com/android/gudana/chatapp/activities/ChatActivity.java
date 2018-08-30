@@ -763,9 +763,9 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     @Override
     public void onBackPressed()
     {
-        MainActivity_with_Drawer.tabLayout.getTabAt(3);
-        MainActivity_with_Drawer.mViewPager.setCurrentItem(3);
-        NavUtils.navigateUpFromSameTask(this);
+        //MainActivity_with_Drawer.tabLayout.getTabAt(3);
+        //MainActivity_with_Drawer.mViewPager.setCurrentItem(3);
+        //NavUtils.navigateUpFromSameTask(this);
     }
 
     @Override
@@ -775,9 +775,9 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         {
             case android.R.id.home:
 
-                MainActivity_with_Drawer.tabLayout.getTabAt(3);
-                MainActivity_with_Drawer.mViewPager.setCurrentItem(3);
-                play_sound();
+                //MainActivity_with_Drawer.tabLayout.getTabAt(3);
+                //MainActivity_with_Drawer.mViewPager.setCurrentItem(3);
+                //play_sound();
                 finish();
                 // NavUtils.navigateUpFromSameTask(this);
                 break;

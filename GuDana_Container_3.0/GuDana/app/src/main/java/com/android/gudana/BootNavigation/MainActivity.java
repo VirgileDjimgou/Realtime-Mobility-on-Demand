@@ -31,6 +31,10 @@ import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
 import com.android.gudana.BuildConfig;
 import com.android.gudana.R;
 import com.android.gudana.GuDFeed.GuDFeed_Fragment;
+import com.android.gudana.chatapp.fragments.ChatFragment;
+import com.android.gudana.dashboard.DashboardFragment;
+import com.android.gudana.linphone.DialerFragment;
+import com.android.gudana.linphone.HistoryListFragment;
 // import com.android.rivchat.MainActivity_NavDrawer;
 
 
@@ -284,7 +288,6 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
                 // fragment.scrollToTop();
             }
         }
-
     }
 
     public static class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -309,7 +312,7 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
             switch (position) {
                 case 0:
                     //  chat fragment
-                    return new GuDFeed_Fragment();
+                    return new DashboardFragment();
 
                 case 1:
                     // problaby  call fragment
@@ -318,14 +321,15 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
                 case 2:
                     // status share fragment
                     //return new HistoryListFragment();
+                    return new ChatFragment();
 
                 case 3:
                     // VOIP frgament  real call and real SMS  ......  not free  domaine
-                    //return new ContactsListFragment();
+                    new HistoryListFragment();
 
                 case 4:
                     // user profil fragment
-                    //return  new  DialerFragment();
+                    return  new DialerFragment();
 
             }
 

@@ -10,7 +10,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 
+import android.graphics.Color;
 import android.os.StrictMode;
+import android.support.annotation.IdRes;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,6 +64,15 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import com.android.gudana.BootNavigation.BaseActivity;
+import com.android.gudana.BootNavigation.BlankFragment;
+import com.android.gudana.BootNavigation.EnableDisableItemsActivity;
+import com.android.gudana.BootNavigation.MainActivityCustomBadge;
+import com.android.gudana.BootNavigation.MainActivityCustomBehavior;
+import com.android.gudana.BootNavigation.MainActivityFragment;
+import com.android.gudana.BootNavigation.MainActivityNoCoordinator;
+import com.android.gudana.BootNavigation.MainActivityNoHide;
+import com.android.gudana.BootNavigation.MainActivityTabletCollapsedToolbar;
 import com.android.gudana.GuDFeed.GuDFeed_Fragment;
 import com.android.gudana.chatapp.activities.FriendsActivity;
 import com.android.gudana.chatapp.activities.ProfileActivity;
@@ -108,6 +119,7 @@ import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.holder.BadgeStyle;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
@@ -140,10 +152,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import it.sephiroth.android.library.bottomnavigation.BadgeProvider;
+import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
+
+import static android.util.Log.INFO;
+import static android.util.Log.VERBOSE;
+import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
+
 // import rehanced.com.simpleetherwallet.activities.AnalyticsApplication;
 
-public class MainActivity_with_Drawer extends AppCompatActivity  implements View.OnClickListener, ContactPicked_Drawer, ActivityCompat.OnRequestPermissionsResultCallback{
+public class MainActivity_with_Drawer extends BaseActivity implements View.OnClickListener, ContactPicked_Drawer, ActivityCompat.OnRequestPermissionsResultCallback{
 
+    static final String TAG = MainActivity_with_Drawer.class.getSimpleName();
+
+    public static final int MENU_TYPE_3_ITEMS = 0;
+    public static final int MENU_TYPE_3_ITEMS_NO_BACKGROUND = 1;
+
+    public static final int MENU_TYPE_4_ITEMS = 2;
+    public static final int MENU_TYPE_4_ITEMS_NO_BACKGROUND = 3;
+
+    public static final int MENU_TYPE_5_ITEMS = 4;
+    public static final int MENU_TYPE_5_ITEMS_NO_BACKGROUND = 5;
 
     // addded   ...
     public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
@@ -226,6 +255,8 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
     private ValueEventListener AsteriskListener = null;
     private ValueEventListener postListener = null;
     public static FirebaseUser user_Global;
+    public static  PrimaryDrawerItem RequestItem , Friend , Favorites , YourFeeds, Helps, About ;
+    public static  Drawer result;
 
 
 
@@ -233,11 +264,64 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // setContentView(R.layout.activity_main_nav);
-        setContentView(R.layout.main);
+        // setContentView(R.layout.bn_activity_main);
+
+
+        try{
+
+            setContentView(R.layout.main);
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+
+        BottomNavigation.DEBUG = BuildConfig.DEBUG;
+
+        final ViewGroup root = (ViewGroup) findViewById(R.id.CoordinatorLayout01);
+        final CoordinatorLayout coordinatorLayout;
+        if (root instanceof CoordinatorLayout) {
+            coordinatorLayout = (CoordinatorLayout) root;
+        } else {
+            coordinatorLayout = null;
+        }
+
+
+        final int statusbarHeight = getStatusBarHeight();
+        final boolean translucentStatus = hasTranslucentStatusBar();
+        final boolean translucentNavigation = hasTranslucentNavigation();
+
+        log(TAG, VERBOSE, "translucentStatus: %b", translucentStatus);
+
+
+
+        initializeBottomNavigation(savedInstanceState);
+        initializeUI(savedInstanceState);
+
+        BottomNavigation navigation = getBottomNavigation();
+        navigation.inflateMenu(R.menu.bottombar_menu_5items_no_background);
+
+        if (translucentStatus) {
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) root.getLayoutParams();
+            params.topMargin = -statusbarHeight;
+
+            params = (ViewGroup.MarginLayoutParams) toolbar.getLayoutParams();
+            params.topMargin = statusbarHeight;
+        }
+
+        if (translucentNavigation) {
+            final ViewPager viewPager = getViewPager();
+            if (null != viewPager) {
+                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) viewPager.getLayoutParams();
+                params.bottomMargin = -getNavigationBarHeight();
+            }
+        }
+
+
 
         if (android.os.Build.VERSION.SDK_INT > 9)
         {
@@ -381,6 +465,8 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
         mAlwaysChangingPhoneAngle = rotation;
 
 
+
+
         // ------------------------- Material Drawer ---------------------------------
 
         // Create the AccountHeader
@@ -407,30 +493,39 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
         //headerResult.setSelectionFirstLineShown(true);
         //headerResult.setSelectionSecondLine("@string/slogan");
         //headerResult.setSelectionSecondLineShown(true);
+        // RequestItem , Friend , Favorites , YourFeeds, Helps, About
+
+        RequestItem  = new PrimaryDrawerItem().withName(getResources().getString(R.string.requests)).withIcon(R.mipmap.ic_requests);
 
 
+        Friend  = new PrimaryDrawerItem().withName(getResources().getString(R.string.friends)).withIcon(R.mipmap.ic_friend);
+
+        Favorites = new PrimaryDrawerItem().withName(getResources().getString(R.string.action_favorites)).withIcon(R.mipmap.ic_favorites);
+        YourFeeds = new PrimaryDrawerItem().withName(getResources().getString(R.string.your_feeds)).withIcon(R.mipmap.ic_your_feed);
+
+        Helps  = new PrimaryDrawerItem().withName(getResources().getString(R.string.help)).withIcon(R.mipmap.ic_help_round);
+        About  = new PrimaryDrawerItem().withName(getResources().getString(R.string.about)).withIcon(R.mipmap.ic_about_round);
+
+        RequestItem.withBadge("19").withBadgeStyle(new BadgeStyle().withTextColor(Color.WHITE).withColorRes(R.color.md_red_700));
+
+
+        // RequestItem.
 
         DrawerBuilder wip = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(toolbar)
                 .withAccountHeader(headerResult)
                 .withSelectedItem(-1)
-
-                .addDrawerItems(
-                        new PrimaryDrawerItem().withName(getResources().getString(R.string.requests)).withIcon(R.mipmap.ic_requests),
-                        new PrimaryDrawerItem().withName(getResources().getString(R.string.friends)).withIcon(R.mipmap.ic_friend),
-                        new PrimaryDrawerItem().withName(getResources().getString(R.string.action_settings)).withIcon(R.mipmap.ic_settings_round),
-
-                        new PrimaryDrawerItem().withName(getResources().getString(R.string.action_favorites)).withIcon(R.mipmap.ic_favorites),
-                        new PrimaryDrawerItem().withName(getResources().getString(R.string.your_feeds)).withIcon(R.mipmap.ic_your_feed),
-
-                        new PrimaryDrawerItem().withName(getResources().getString(R.string.help)).withIcon(R.mipmap.ic_help_round),
-                        new PrimaryDrawerItem().withName(getResources().getString(R.string.about)).withIcon(R.mipmap.ic_about_round)
-                )
+                .addDrawerItems( RequestItem , Friend , Favorites , YourFeeds, Helps, About)
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         selectItem(position);
+                        if(position == 1){
+                            RequestItem.withBadge("").withBadgeStyle(new BadgeStyle().withTextColor(Color.WHITE).withColorRes(R.color.white));
+                            result.updateItem(RequestItem);
+                        }
+                        Toast.makeText(MainActivity_with_Drawer.this, "Item  " + Integer.toString(position) + "Clicked ", Toast.LENGTH_SHORT).show();
                         return false;
                     }
                 })
@@ -453,7 +548,7 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
                 });
 
 
-        Drawer result = wip.build();
+        result = wip.build();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         result.getActionBarDrawerToggle().setDrawerIndicatorEnabled(true);
@@ -461,7 +556,7 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
 
 
         // ------------------------------------------------------------------------
-
+/*
         coord = findViewById(R.id.main_content);
         appbar = findViewById(R.id.appbar);
         checkAndRequestReadContactsPermission();
@@ -490,8 +585,14 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
 
 
         mViewPager.setOffscreenPageLimit(4);
+        */
         //tabLayout.getTabAt(3);
         //mViewPager.setCurrentItem(3);
+
+
+
+
+        // Navigation init  ...
 
 
 
@@ -1317,111 +1418,6 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
         super.onPause();
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        super.onCreateOptionsMenu(menu);
-
-        getMenuInflater().inflate(R.menu.ca_main_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        super.onOptionsItemSelected(item);
-
-        switch(item.getItemId())
-        {
-            case R.id.menuLogout:
-                AlertDialog.Builder logoutBuilder = new AlertDialog.Builder(MainActivity_with_Drawer.this);
-                logoutBuilder.setTitle("Logout");
-                logoutBuilder.setMessage("Are you sure you want to logout?");
-                logoutBuilder.setPositiveButton("YES", new DialogInterface.OnClickListener()
-                {
-                    public void onClick(DialogInterface dialog, int id)
-                    {
-                        FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("online").setValue(ServerValue.TIMESTAMP);
-
-                        FirebaseAuth.getInstance().signOut();
-
-                        Intent welcomeIntent = new Intent(MainActivity_with_Drawer.this, WelcomeActivity.class);
-                        startActivity(welcomeIntent);
-                        finish();
-                    }
-                });
-                logoutBuilder.setNegativeButton("NO", new DialogInterface.OnClickListener()
-                {
-                    public void onClick(DialogInterface dialog, int id)
-                    {
-                        dialog.dismiss();
-                    }
-                });
-                AlertDialog logoutDialog = logoutBuilder.create();
-                logoutDialog.show();
-                return true;
-            case R.id.menuChangelog:
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://gudana.com/master/CHANGELOG.md")));
-                return true;
-            case R.id.menuAbout:
-                AlertDialog.Builder aboutBuilder = new AlertDialog.Builder(MainActivity_with_Drawer.this);
-                aboutBuilder.setTitle("GuDana Beta v12.1");
-                aboutBuilder.setMessage("Project is closed  source and licensed under .... .\n\nMake sure you read all Legal content.\n\nRaf, 2018. All Rights Reserved.");
-                aboutBuilder.setNegativeButton("Close", new DialogInterface.OnClickListener()
-                {
-                    public void onClick(DialogInterface dialog, int id)
-                    {
-                        dialog.dismiss();
-                    }
-                });
-                AlertDialog aboutDialog = aboutBuilder.create();
-                aboutDialog.show();
-                return true;
-            case R.id.menuLegal:
-                AlertDialog.Builder legalBuilder = new AlertDialog.Builder(this);
-                legalBuilder.setTitle("Legal");
-                legalBuilder.setItems(new CharSequence[]{"License", "Privacy Policy", "Terms and Conditions", "Third Party Notices"}, new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int position)
-                    {
-                        switch(position)
-                        {
-                            case 0:
-                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://gudana.com/blob/master/LICENSE")));
-                                break;
-                            case 1:
-                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://gudana.com/master/PRIVACY_POLICY.md")));
-                                break;
-                            case 2:
-                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://gudana.com/master/TERMS_AND_CONDITIONS.md")));
-                                break;
-                            case 3:
-                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://gudana.com/master/THIRD_PARTY_NOTICES.md")));
-                                break;
-                        }
-                    }
-                });
-
-                AlertDialog legalDialog = legalBuilder.create();
-                legalDialog.show();
-                return true;
-            case R.id.menuProfile:
-                Intent profileIntent = new Intent(MainActivity_with_Drawer.this, ProfileActivity.class);
-                profileIntent.putExtra("userid", FirebaseAuth.getInstance().getCurrentUser().getUid());
-                startActivity(profileIntent);
-                return true;
-            case R.id.menuSearch:
-                Intent usersIntent = new Intent(MainActivity_with_Drawer.this, UsersActivity.class);
-                startActivity(usersIntent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-
     @Override
     public void onBackPressed()
     {
@@ -1700,10 +1696,6 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
 
        //  refreshAccounts();
 
-        if(getResources().getBoolean(R.bool.enable_in_app_purchase)){
-            isTrialAccount();
-        }
-
         if(LinphonePreferences.instance().isFriendlistsubscriptionEnabled() && LinphoneManager.getLc().getDefaultProxyConfig() != null){
             LinphoneManager.getInstance().subscribeFriendList(true);
         } else {
@@ -1823,7 +1815,6 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
         }
         return super.onKeyDown(keyCode, event);
     }
-
 
 
     private int getStatusIconResource(LinphoneCore.RegistrationState state) {
@@ -1956,10 +1947,6 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
         return -1;
     }
 
-
-    // end add ...
-
-
     public void snackError(String s, int length) {
         if (coord == null) return;
         Snackbar mySnackbar = Snackbar.make(coord, s, length);
@@ -2034,8 +2021,6 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
         }
         return response;
     }
-
-
 
     private void selectItem(int position) {
         switch (position) {
@@ -2116,6 +2101,313 @@ public class MainActivity_with_Drawer extends AppCompatActivity  implements View
 
     public AppBarLayout getAppBar() {
         return appbar;
+    }
+
+
+    protected int getActivityLayoutResId() {return R.layout.bn_activity_main;}
+
+    protected void initializeBottomNavigation(final Bundle savedInstanceState) {
+        if (null == savedInstanceState) {
+            getBottomNavigation().setDefaultSelectedIndex(0);
+            final BadgeProvider provider = getBottomNavigation().getBadgeProvider();
+            provider.show(R.id.bbn_item3);
+            provider.show(R.id.bbn_item4);
+        }
+    }
+
+    protected void initializeUI(final Bundle savedInstanceState) {
+
+
+        final ViewPager viewPager = getViewPager();
+        if (null != viewPager) {
+
+            getBottomNavigation().setOnMenuChangedListener(new BottomNavigation.OnMenuChangedListener() {
+                @Override
+                public void onMenuChanged(final BottomNavigation parent) {
+
+                    viewPager.setAdapter(new MainActivity_with_Drawer.ViewPagerAdapter(MainActivity_with_Drawer.this, parent.getMenuItemCount()));
+                    //viewPager.setAdapter(new MainActivity_with_Drawer.ViewPagerAdapter(MainActivity_with_Drawer.this, 5));
+                    viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                        @Override
+                        public void onPageScrolled(
+                                final int position, final float positionOffset, final int positionOffsetPixels) { }
+
+                        @Override
+                        public void onPageSelected(final int position) {
+                            if (getBottomNavigation().getSelectedIndex() != position) {
+                                getBottomNavigation().setSelectedIndex(position, false);
+                            }
+                        }
+
+                        @Override
+                        public void onPageScrollStateChanged(final int state) { }
+                    });
+                }
+            });
+
+        }
+
+
+        //   inflate menu   to 5 items   ... and change background color  ..
+        BottomNavigation navigation = getBottomNavigation();
+        if (null == navigation) {
+            // return 0; ... do something to avoid  Exception   ...
+        }else{
+            navigation.inflateMenu(R.menu.bottombar_menu_5items);
+        }
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        super.onOptionsItemSelected(item);
+
+        switch(item.getItemId())
+        {
+            case R.id.menuLogout:
+                AlertDialog.Builder logoutBuilder = new AlertDialog.Builder(MainActivity_with_Drawer.this);
+                logoutBuilder.setTitle("Logout");
+                logoutBuilder.setMessage("Are you sure you want to logout?");
+                logoutBuilder.setPositiveButton("YES", new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("online").setValue(ServerValue.TIMESTAMP);
+
+                        FirebaseAuth.getInstance().signOut();
+
+                        Intent welcomeIntent = new Intent(MainActivity_with_Drawer.this, WelcomeActivity.class);
+                        startActivity(welcomeIntent);
+                        finish();
+                    }
+                });
+                logoutBuilder.setNegativeButton("NO", new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog logoutDialog = logoutBuilder.create();
+                logoutDialog.show();
+                return true;
+            case R.id.menuChangelog:
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://gudana.com/master/CHANGELOG.md")));
+                return true;
+            case R.id.menuAbout:
+                AlertDialog.Builder aboutBuilder = new AlertDialog.Builder(MainActivity_with_Drawer.this);
+                aboutBuilder.setTitle("GuDana Beta v12.1");
+                aboutBuilder.setMessage("Project is closed  source and licensed under .... .\n\nMake sure you read all Legal content.\n\nRaf, 2018. All Rights Reserved.");
+                aboutBuilder.setNegativeButton("Close", new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog aboutDialog = aboutBuilder.create();
+                aboutDialog.show();
+                return true;
+            case R.id.menuLegal:
+                AlertDialog.Builder legalBuilder = new AlertDialog.Builder(this);
+                legalBuilder.setTitle("Legal");
+                legalBuilder.setItems(new CharSequence[]{"License", "Privacy Policy", "Terms and Conditions", "Third Party Notices"}, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int position)
+                    {
+                        switch(position)
+                        {
+                            case 0:
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://gudana.com/blob/master/LICENSE")));
+                                break;
+                            case 1:
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://gudana.com/master/PRIVACY_POLICY.md")));
+                                break;
+                            case 2:
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://gudana.com/master/TERMS_AND_CONDITIONS.md")));
+                                break;
+                            case 3:
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://gudana.com/master/THIRD_PARTY_NOTICES.md")));
+                                break;
+                        }
+                    }
+                });
+
+                AlertDialog legalDialog = legalBuilder.create();
+                legalDialog.show();
+                return true;
+            case R.id.menuProfile:
+                Intent profileIntent = new Intent(MainActivity_with_Drawer.this, ProfileActivity.class);
+                profileIntent.putExtra("userid", FirebaseAuth.getInstance().getCurrentUser().getUid());
+                startActivity(profileIntent);
+                return true;
+            case R.id.menuSearch:
+                Intent usersIntent = new Intent(MainActivity_with_Drawer.this, UsersActivity.class);
+                startActivity(usersIntent);
+                return true;
+
+
+            case R.id.item1:
+                return setMenuType(MENU_TYPE_3_ITEMS);
+            case R.id.item2:
+                return setMenuType(MENU_TYPE_3_ITEMS_NO_BACKGROUND);
+            case R.id.item3:
+                return setMenuType(MENU_TYPE_4_ITEMS);
+            case R.id.item4:
+                return setMenuType(MENU_TYPE_4_ITEMS_NO_BACKGROUND);
+            case R.id.item5:
+                return setMenuType(MENU_TYPE_5_ITEMS);
+            case R.id.item6:
+                return setMenuType(MENU_TYPE_5_ITEMS_NO_BACKGROUND);
+            case R.id.item7:
+                // start  Linphone Activity ...
+                //startActivity(new Intent(this, MainActivity_NavDrawer.class));
+                // startActivity(new Intent(this, MainActivityTablet.class));
+                return true;
+            case R.id.item8:
+                startActivity(new Intent(this, MainActivityTabletCollapsedToolbar.class));
+                return true;
+            case R.id.item9:
+                startActivity(new Intent(this, MainActivityCustomBehavior.class));
+                return true;
+            case R.id.item10:
+                startActivity(new Intent(this, MainActivityCustomBadge.class));
+                return true;
+            case R.id.item11:
+                startActivity(new Intent(this, MainActivityNoHide.class));
+                return true;
+            case R.id.item12:
+                startActivity(new Intent(this, EnableDisableItemsActivity.class));
+                return true;
+            case R.id.item13:
+                startActivity(new Intent(this, MainActivityNoCoordinator.class));
+                return true;
+
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.ca_main_menu, menu);
+        return true;
+    }
+
+    public boolean setMenuType(final int type) {
+        BottomNavigation navigation = getBottomNavigation();
+        if (null == navigation) {
+            return false;
+        }
+
+        switch (type) {
+            case MENU_TYPE_3_ITEMS:
+                navigation.inflateMenu(R.menu.bottombar_menu_3items);
+                break;
+
+            case MENU_TYPE_3_ITEMS_NO_BACKGROUND:
+                navigation.inflateMenu(R.menu.bottombar_menu_3items_no_background);
+                break;
+
+            case MENU_TYPE_4_ITEMS:
+                navigation.inflateMenu(R.menu.bottombar_menu_4items);
+                break;
+
+            case MENU_TYPE_4_ITEMS_NO_BACKGROUND:
+                navigation.inflateMenu(R.menu.bottombar_menu_4items_no_background);
+                break;
+
+            case MENU_TYPE_5_ITEMS:
+                navigation.inflateMenu(R.menu.bottombar_menu_5items);
+                break;
+
+            case MENU_TYPE_5_ITEMS_NO_BACKGROUND:
+                navigation.inflateMenu(R.menu.bottombar_menu_5items_no_background);
+                break;
+        }
+
+        return true;
+    }
+
+    @Override
+    public void onMenuItemSelect(final int itemId, final int position, final boolean fromUser) {
+        log(TAG, INFO, "onMenuItemSelect(" + itemId + ", " + position + ", " + fromUser + ")");
+        if (fromUser) {
+            getBottomNavigation().getBadgeProvider().remove(itemId);
+            if (null != getViewPager()) {
+                getViewPager().setCurrentItem(position);
+            }
+        }
+    }
+
+    @Override
+    public void onMenuItemReselect(@IdRes final int itemId, final int position, final boolean fromUser) {
+        log(TAG, INFO, "onMenuItemReselect(" + itemId + ", " + position + ", " + fromUser + ")");
+
+        if (fromUser) {
+            final FragmentManager manager = getSupportFragmentManager();
+            GuDFeed_Fragment fragment = (GuDFeed_Fragment) manager.findFragmentById(R.id.fragment);
+            if (null != fragment) {
+                // fragment.scrollToTop();
+            }
+        }
+    }
+
+    public static class ViewPagerAdapter extends FragmentPagerAdapter {
+
+        private final int mCount;
+
+        public ViewPagerAdapter(final AppCompatActivity activity, int count) {
+            super(activity.getSupportFragmentManager());
+            this.mCount = count;
+        }
+
+        @Override
+        public Fragment getItem(final int position) {
+
+            android.util.Log.d( "position ", String.valueOf(position));
+
+            //fragments[3] = new HistoryListFragment();
+            //fragments[4] = new ContactsListFragment();
+            //fragments[5] = new DialerFragment();
+
+
+            switch (position) {
+                case 0:
+                    //  chat fragment
+                   //return new DashboardFragment();
+                   return new GuDFeed_Fragment();
+
+                case 1:
+                    // problaby  call fragment
+                    return new MainActivityFragment();
+
+                case 2:
+                    // status share fragment
+                    //return new HistoryListFragment();
+                    return new ChatFragment();
+
+                case 3:
+                    // VOIP frgament  real call and real SMS  ......  not free  domaine
+                    return new HistoryListFragment();
+
+
+                case 4:
+                    // user profil fragment
+                    return new DashboardFragment();
+            }
+
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            return mCount;
+        }
     }
 }
 

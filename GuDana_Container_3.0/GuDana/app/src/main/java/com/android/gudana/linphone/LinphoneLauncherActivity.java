@@ -24,6 +24,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.android.gudana.BootNavigation.MainActivity;
 import com.android.gudana.MainActivity_with_Drawer;
 import com.android.gudana.R;
 
@@ -76,6 +77,8 @@ public class LinphoneLauncherActivity extends Activity {
 		} else {
 			// classToStart = LinphoneActivity.class;
 			classToStart = MainActivity_with_Drawer.class;
+			// classToStart = MainActivity.class;
+
 		}
 
 		// We need LinphoneService to start bluetoothManager

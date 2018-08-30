@@ -9,6 +9,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -32,6 +33,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.gudana.GuDFeed.AbActivity;
+import com.android.gudana.GuDFeed.adapters.SimpleAdapter;
 import com.android.gudana.MainActivity_with_Drawer;
 import com.google.firebase.database.FirebaseDatabase;
 import com.kbeanie.multipicker.api.CacheLocation;
@@ -60,16 +62,15 @@ import es.dmoral.toasty.Toasty;
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 
-public class create_post extends AbActivity implements VideoPickerCallback , ImagePickerCallback , MediaPickerCallback {
+public class create_post extends AbActivity implements
+        VideoPickerCallback ,
+        ImagePickerCallback ,
+        MediaPickerCallback {
 
     private ListView lvResults;
-
     private Button Post;
-
     private ImageView video_taker, image_taker;
-
     private String pickerPath;
-
     private ImageView btEmoji;
     private EmojIconActions emojIcon;
     private EmojiconEditText messageEditText;
@@ -171,6 +172,20 @@ public class create_post extends AbActivity implements VideoPickerCallback , Ima
                 .penaltyLog()
                 .penaltyDeath()
                 .build());
+
+        //
+        initRecyclerView();
+    }
+
+
+
+    private void initRecyclerView() {
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        // recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        SimpleAdapter adapter = new SimpleAdapter();
+        recyclerView.setAdapter(adapter);
+        adapter.setCount(10);
     }
 
 
@@ -234,8 +249,8 @@ public class create_post extends AbActivity implements VideoPickerCallback , Ima
         switch (item.getItemId()) {
             case android.R.id.home:
                 //NavUtils.navigateUpFromSameTask(this);
-                MainActivity_with_Drawer.tabLayout.getTabAt(3);
-                MainActivity_with_Drawer.mViewPager.setCurrentItem(3);
+                //MainActivity_with_Drawer.tabLayout.getTabAt(3);
+                //MainActivity_with_Drawer.mViewPager.setCurrentItem(3);
                 finish();
                 break;
         }
