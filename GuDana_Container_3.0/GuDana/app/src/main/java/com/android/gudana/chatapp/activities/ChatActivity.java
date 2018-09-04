@@ -28,6 +28,7 @@ import android.view.MenuItem;
 import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -715,6 +716,10 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         //showMessages();
         //addListeners();
         openVoiceRecorder();
+
+        // hide Keyboard
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
 
     }
 

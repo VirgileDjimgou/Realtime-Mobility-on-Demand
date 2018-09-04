@@ -12,6 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.gudana.chatapp.utils.FileOpen;
+import com.android.gudana.hify.ui.activities.notification.ImagePreview;
+import com.android.gudana.video_player.FullscreenActivity;
 import com.bumptech.glide.Glide;
 import com.kbeanie.multipicker.api.entity.ChosenAudio;
 import com.kbeanie.multipicker.api.entity.ChosenFile;
@@ -21,6 +24,7 @@ import com.android.gudana.GuDFeed.ImagePreviewActivity;
 import com.android.gudana.R;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import es.dmoral.toasty.Toasty;
@@ -40,6 +44,7 @@ public class MediaResultsAdapter extends BaseAdapter {
     private final static String FORMAT_IMAGE_VIDEO_DIMENSIONS = "%sw x %sh";
     private final static String FORMAT_ORIENTATION = "Ortn: %s";
     private final static String FORMAT_DURATION = "%s";
+    public static String LinkRes ="";
 
     private final Context context;
     private List<? extends ChosenFile> files;
@@ -125,7 +130,7 @@ public class MediaResultsAdapter extends BaseAdapter {
     }
 
     private void showVideo(ChosenFile file, View view) {
-        ChosenVideo video = (ChosenVideo) file;
+        final ChosenVideo video = (ChosenVideo) file;
 
         TextView tvName = (TextView) view.findViewById(R.id.tvName);
         tvName.setText(file.getDisplayName());
@@ -158,7 +163,18 @@ public class MediaResultsAdapter extends BaseAdapter {
             public void onClick(View v) {
 
                 // call Video  player ... Toast
-                Toast.makeText(context, "Video Player started ", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(context, "Video Player started ", Toast.LENGTH_SHORT).show();
+                try {
+                   // FileOpen.openVideoFile(context, Uri.fromFile(new File(video.getOriginalPath())) );
+                    Intent intent=new Intent(context,FullscreenActivity.class)
+                            .putExtra("uri",Uri.fromFile(new File(video.getOriginalPath())).toString());
+                    LinkRes =  Uri.fromFile(new File(video.getOriginalPath())).toString();
+                    context.startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                // openVideoFile(Context context, Uri uri_video)
+
             }
         });
     }
@@ -215,6 +231,15 @@ public class MediaResultsAdapter extends BaseAdapter {
 
         TextView tvSize = (TextView) view.findViewById(R.id.tvSize);
         tvSize.setText(file.getHumanReadableSize(false));
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Log.i(TAG, "onClick: Tapped: " + image.getOriginalPath());
+                Toasty.info(context, "onClick: Tapped: ", Toast.LENGTH_SHORT).show();
+               // Toasty.info();
+            }
+        });
 
     }
 

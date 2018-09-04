@@ -72,4 +72,25 @@ public class FileOpen {
         }
 
     }
+
+    public static void openVideoFile(Context context, Uri uri_video) throws IOException {
+        // Create URI
+
+        try{
+
+            //File file=url;
+            Uri uri = uri_video;
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(uri, "video/*");
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+    }
+
+
 }

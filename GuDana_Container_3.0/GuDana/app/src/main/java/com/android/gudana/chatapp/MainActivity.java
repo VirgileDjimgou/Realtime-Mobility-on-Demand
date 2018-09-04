@@ -17,8 +17,8 @@ import com.android.gudana.chatapp.activities.ProfileActivity;
 import com.android.gudana.chatapp.activities.UsersActivity;
 import com.android.gudana.chatapp.activities.WelcomeActivity;
 import com.android.gudana.chatapp.fragments.ChatFragment;
-import com.android.gudana.chatapp.fragments.FriendsFragment;
-import com.android.gudana.chatapp.fragments.RequestsFragment;
+import com.android.gudana.chatapp.fragments.ChatFriendsFragment;
+import com.android.gudana.chatapp.fragments.ChatRequestsFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
@@ -48,9 +48,9 @@ public class MainActivity extends AppCompatActivity
 
         FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
                 getSupportFragmentManager(), FragmentPagerItems.with(this)
-                .add("Requests", RequestsFragment.class)
+                .add("Requests", ChatRequestsFragment.class)
                 .add("Chat", ChatFragment.class)
-                .add("Friends", FriendsFragment.class)
+                .add("Friends", ChatFriendsFragment.class)
                 .create());
 
         ViewPager viewPager = findViewById(R.id.viewpager);

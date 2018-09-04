@@ -329,6 +329,8 @@ public class WelcomeActivity extends AppCompatActivity
                                             else
                                             {
                                                 Log.d(TAG, "registerData failed: " + task.getException().getMessage());
+                                                Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_LONG).show();
+
                                             }
                                         }
                                     });

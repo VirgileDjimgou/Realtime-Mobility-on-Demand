@@ -16,7 +16,6 @@
         android:paddingRight="10dp"
         android:paddingStart="10dp">
 
-
         <Button
             android:id="@+id/addTopicsBut"
             android:layout_width="110dp"
@@ -30,8 +29,8 @@
             android:text="+ Add Topics"
             android:textSize="13dp"
             android:textStyle="bold"
-            android:textColor="@color/white"
-            android:background="@drawable/roundedbutton"/>
+            android:background="@drawable/input_backgtound"
+            android:textColor="@color/white"/>
 
         <EditText
             android:layout_width="match_parent"
@@ -125,19 +124,12 @@
             />
 
 
-        <ImageView
-            android:id="@+id/take_picture"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@mipmap/ic_photos"
-            />
-
         <Button android:id="@+id/post_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:textSize="30dp"
-            android:background="@drawable/roundedbutton"
+            android:background="@drawable/input_backgtound"
             android:text="Post" />
 
     </LinearLayout>

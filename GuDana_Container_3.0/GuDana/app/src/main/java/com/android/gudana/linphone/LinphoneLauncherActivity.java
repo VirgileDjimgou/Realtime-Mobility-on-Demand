@@ -76,8 +76,9 @@ public class LinphoneLauncherActivity extends Activity {
 			classToStart = RemoteProvisioningActivity.class;
 		} else {
 			// classToStart = LinphoneActivity.class;
-			classToStart = MainActivity_with_Drawer.class;
+			// classToStart = MainActivity_with_Drawer.class;
 			// classToStart = MainActivity.class;
+			classToStart = com.android.gudana.hify.ui.activities.MainActivity.class;
 
 		}
 

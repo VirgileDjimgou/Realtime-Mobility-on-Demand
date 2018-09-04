@@ -1,8 +1,16 @@
 package com.android.gudana.GuDFeed.activities;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
@@ -14,6 +22,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -24,7 +33,9 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,7 +46,28 @@ import android.widget.Toast;
 import com.android.gudana.GuDFeed.AbActivity;
 import com.android.gudana.GuDFeed.adapters.SimpleAdapter;
 import com.android.gudana.MainActivity_with_Drawer;
+import com.android.gudana.Manifest;
+import com.android.gudana.hify.adapters.UploadListAdapter;
+import com.android.gudana.hify.ui.activities.MainActivity;
+import com.android.gudana.hify.ui.activities.post.PostImage;
+import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.kbeanie.multipicker.api.CacheLocation;
 import com.kbeanie.multipicker.api.CameraImagePicker;
 import com.kbeanie.multipicker.api.CameraVideoPicker;
@@ -50,17 +82,29 @@ import com.kbeanie.multipicker.api.entity.ChosenImage;
 import com.kbeanie.multipicker.api.entity.ChosenVideo;
 import com.android.gudana.GuDFeed.adapters.MediaResultsAdapter;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import com.android.gudana.R;
+import com.nguyenhoanglam.imagepicker.model.Config;
+import com.nguyenhoanglam.imagepicker.model.Image;
 import com.yarolegovich.lovelydialog.LovelyStandardDialog;
 
 import es.dmoral.toasty.Toasty;
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
+import id.zelory.compressor.Compressor;
+
+import static com.android.gudana.hify.adapters.UploadListAdapter.uploadedImagesUrl;
+import static com.android.gudana.hify.ui.activities.MainActivity.imageView;
+
 
 public class create_post extends AbActivity implements
         VideoPickerCallback ,
@@ -69,7 +113,7 @@ public class create_post extends AbActivity implements
 
     private ListView lvResults;
     private Button Post;
-    private ImageView video_taker, image_taker;
+    private ImageView video_taker;
     private String pickerPath;
     private ImageView btEmoji;
     private EmojIconActions emojIcon;
@@ -77,14 +121,50 @@ public class create_post extends AbActivity implements
     private ListView recyclerView;
     private MediaResultsAdapter adapter = null;
     private List<ChosenFile> files_to_post = new ArrayList<>();
+    private ProgressDialog mDialog;
+
+
+
+    private FirebaseFirestore mFirestore;
+    private FirebaseAuth mAuth;
+    private FirebaseUser mCurrentUser;
+    private Map<String, Object> postMap;
+    private StorageReference mStorage;
+
+    /// image   url upload
+    public static List<String> uploadedImagesUrl_hybrid = new ArrayList<>();
+    public static List<String> uploadedImagesUrl_hybrid_video = new ArrayList<>();
+
+
+    public static int fileUploaded = 0;
+    public static int numb_of_file = 0;
+
+    private static final int MY_CAMERA_REQUEST_CODE = 100;
+
+
+    public static void startActivity(Context context) {
+        Intent intent = new Intent(context, create_post.class);
+        context.startActivity(intent);
+    }
+
+    @NonNull
+    public static String random() {
+        Random generator = new Random();
+        StringBuilder randomStringBuilder = new StringBuilder();
+        int randomLength = generator.nextInt(10);
+        char tempChar;
+        for (int i = 0; i < randomLength; i++) {
+            tempChar = (char) (generator.nextInt(96) + 32);
+            randomStringBuilder.append(tempChar);
+        }
+        return randomStringBuilder.toString();
+    }
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_picker_activity);
-
-
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowCustomEnabled(true);
@@ -93,7 +173,6 @@ public class create_post extends AbActivity implements
         getSupportActionBar().setSubtitle("Create your storytelling");
         messageEditText = (EmojiconEditText) findViewById(R.id.editTextMessage);
         recyclerView = findViewById(R.id.lvResults);
-
 
         // Will handle typing feature, 0 means no typing, 1 typing, 2 deleting and 3 thinking (5+ sec delay)
 
@@ -131,29 +210,29 @@ public class create_post extends AbActivity implements
             @Override
             public void onClick(View v) {
 
-                dialog_video();
+                if (files_to_post.size()>0){
+
+                    chechkNumberofvide();
+                }else{
+                    dialog_video();
+
+                }
                 // pickVideoSingle();
             }
         });
 
-        image_taker = (ImageView) findViewById(R.id.take_picture);
-        image_taker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // post video  ...
-                dialog_Images();
 
-                // takeVideo();
-            }
-        });
 
         Post = (Button) findViewById(R.id.post_button);
-        Post.setEnabled(false);
+
+        // Post.setEnabled(false);
         Post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // post .... on firebase  ...
                 // takeVideo();
+                UploadOnStorage(files_to_post);
+
             }
         });
 
@@ -175,6 +254,46 @@ public class create_post extends AbActivity implements
 
         //
         initRecyclerView();
+
+        // init storage
+        mStorage= FirebaseStorage.getInstance().getReference();
+
+        postMap = new HashMap<>();
+
+        mFirestore = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        mCurrentUser = mAuth.getCurrentUser();
+
+
+
+        // hide Keyboard
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+     askPermission();
+    }
+
+    private void askPermission() {
+
+        Dexter.withActivity(this)
+                .withPermissions(android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        android.Manifest.permission.ACCESS_FINE_LOCATION,
+                        android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                        android.Manifest.permission.CAMERA,
+                        android.Manifest.permission.READ_EXTERNAL_STORAGE
+                )
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        if(report.isAnyPermissionPermanentlyDenied()){
+                            Toast.makeText(create_post.this, "You have denied some permissions permanently, if the app force close try granting permission from settings.", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                    }
+                }).check();
+
     }
 
 
@@ -218,17 +337,44 @@ public class create_post extends AbActivity implements
                 .show();
     }
 
+    public void chechkNumberofvide(){
+
+        new LovelyStandardDialog(this, LovelyStandardDialog.ButtonLayout.VERTICAL)
+                .setTopColorRes(R.color.blue)
+                .setButtonsColorRes(R.color.blue)
+                .setIcon(R.mipmap.ic_video)
+                .setTitle("choose another video ? ")
+                .setMessage("you can only post 1 video at a time ... do you want  to delete they already taken and chose another one ? ")
+                .setPositiveButton("continue ", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog_video();
+                        // Toast.makeText(create_post.this, "positive clicked", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Cancel", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Toast.makeText(create_post.this, "positive clicked", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .show();
+
+    }
+
     public void dialog_video() {
 
         new LovelyStandardDialog(this, LovelyStandardDialog.ButtonLayout.VERTICAL)
                 .setTopColorRes(R.color.purple)
-                .setButtonsColorRes(R.color.black)
+                .setButtonsColorRes(R.color.blue)
                 .setIcon(R.mipmap.ic_video)
                 .setTitle("Video Choice")
-                .setMessage(" Options to select a video ")
+                .setMessage(" Maximale Video duration should be 120 seconds ")
                 .setPositiveButton("use Camera", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        // always rest the number of video  if something ist in puffer
+                        files_to_post.clear();
                         takeVideo();
                         // Toast.makeText(create_post.this, "positive clicked", Toast.LENGTH_SHORT).show();
                     }
@@ -236,6 +382,7 @@ public class create_post extends AbActivity implements
                 .setNegativeButton("from gallery ", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        files_to_post.clear();
                         pickVideoSingle();
                         //Toast.makeText(create_post.this, "positive clicked", Toast.LENGTH_SHORT).show();
                     }
@@ -281,7 +428,7 @@ public class create_post extends AbActivity implements
         // For capturing Low quality videos; Default is 1: HIGH
         extras.putInt(MediaStore.EXTRA_VIDEO_QUALITY, 0);
         // Set the duration of the video
-        extras.putInt(MediaStore.EXTRA_DURATION_LIMIT, 60);
+        extras.putInt(MediaStore.EXTRA_DURATION_LIMIT, 120);
         cameraPicker_video.setExtras(extras);
         cameraPicker_video.setVideoPickerCallback(this);
         pickerPath = cameraPicker_video.pickVideo();
@@ -336,6 +483,7 @@ public class create_post extends AbActivity implements
                     videoPicker.setVideoPickerCallback(this);
                 }
                 videoPicker.submit(data);
+
             } else if (requestCode == Picker.PICK_VIDEO_CAMERA) {
                 if (cameraPicker_video == null) {
                     cameraPicker_video = new CameraVideoPicker(this, pickerPath);
@@ -382,18 +530,27 @@ public class create_post extends AbActivity implements
 
     @Override
     public void onVideosChosen(List<ChosenVideo> files) {
-        if (files_to_post.size() < 10) {
+        // reset recycler
+        if (files_to_post.size() < 6) {
 
             files_to_post.addAll(files);
+            long video_duration = files.get(0).getDuration();
+            if(video_duration >= 61090*2){
+                Toasty.error(this, "your video exceed 120 seconds ....please reduce the duration of your video !" + files.get(0).getDuration(), Toast.LENGTH_LONG).show();
+            }else{
 
-            MediaResultsAdapter adapter = new MediaResultsAdapter(files_to_post, this);
-            this.adapter = this.adapter;
-            lvResults.setAdapter(adapter);
+                // files_to_post.clear();
+                MediaResultsAdapter adapter = new MediaResultsAdapter(files_to_post, this);
+                this.adapter = this.adapter;
+                lvResults.setAdapter(adapter);
+
+            }
+
 
         } else {
-
+            files_to_post.clear();
             Toasty.warning(create_post.this,
-                    "you can not  post more than  10 Items ! ", Toast.LENGTH_LONG, true).show();
+                    "you cannot  post more than  6 Items ! ", Toast.LENGTH_LONG, true).show();
 
         }
 
@@ -443,12 +600,11 @@ public class create_post extends AbActivity implements
     }
 
 
-    // added
+    // added  FileOpen.openFile(context,localFile);
 
     @Override
     public void onImagesChosen(List<ChosenImage> images) {
         if (files_to_post.size() < 10) {
-
             files_to_post.addAll(images);
             this.adapter = new MediaResultsAdapter(files_to_post, this);
             lvResults.setAdapter(adapter);
@@ -460,5 +616,265 @@ public class create_post extends AbActivity implements
         }
 
     }
+
+    // file uploader in reference  ...
+    protected void UploadOnStorage(List<ChosenFile> files) {
+
+                try{
+
+                    mDialog = new ProgressDialog(this);
+                    mDialog.setMessage("Posting...");
+                    mDialog.setIndeterminate(true);
+                    mDialog.setCancelable(false);
+                    mDialog.setCanceledOnTouchOutside(false);
+                    mDialog.show();
+
+
+                    numb_of_file = files.size();
+
+                    if(!files.isEmpty()){
+
+                        for(int i=0;i<files.size();i++) {
+
+                            Uri fileUri = Uri.fromFile(new File(files.get(i).getOriginalPath()));
+                            final ChosenVideo video = (ChosenVideo) files.get(i);
+                            //Glide.with(context).load(Uri.fromFile(new File(video.getPreviewThumbnail()))).into(ivImage);
+                            // String fileName = files.get(i).get
+
+                            final StorageReference fileToUploadStorage = mStorage.child("post_images").child(random() + ".png");
+
+                            Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(files.get(i).getOriginalPath(),MediaStore.Images.Thumbnails.MINI_KIND);
+
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                            byte[] data = baos.toByteArray();
+
+                        /*
+
+                        UploadTask uploadTask = fileToUploadStorage.putBytes(data);
+                        uploadTask.addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle unsuccessful uploads
+                            }
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                                Toast.makeText(create_post.this, "sent video thumbail", Toast.LENGTH_SHORT).show();
+                                // Uri downloadUrl = taskSnapshot.getUploadSessionUri();
+                                uploadedImagesUrl_hybrid.add(fileToUploadStorage.getDownloadUrl().toString() );
+
+                                // ...
+                            }
+                        });
+
+                        */
+
+                            fileToUploadStorage.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                                    fileToUploadStorage.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri) {
+
+                                            try{
+                                                //Toast.makeText(create_post.this, "Send : " + uri.toString(), Toast.LENGTH_SHORT).show();
+                                                uploadedImagesUrl_hybrid.add(uri.toString() );
+
+
+                                            }catch (Exception ex){
+
+                                            }
+
+                                        }
+                                    });
+
+                                }
+                            });
+
+
+
+
+
+                            // after that send video   ......
+                            // StorageReference file = FirebaseStorage.getInstance().getReference().child("message_doc").child(messageId +"#"+filename+"."+ ext);
+                            final StorageReference VideoUploadStorage = mStorage.child("post_video").child(random() + files.get(i).getExtension());
+
+
+                            VideoUploadStorage.putFile(fileUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                                    VideoUploadStorage.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri) {
+
+                                            try{
+                                                //Toast.makeText(create_post.this, "Send : " + uri.toString(), Toast.LENGTH_SHORT).show();
+
+                                                uploadedImagesUrl_hybrid_video.add(uri.toString());
+                                                fileUploaded = fileUploaded +1;
+                                                if(fileUploaded >= numb_of_file ){
+                                                    // than update firestore ...
+                                                    mDialog.dismiss();
+
+                                                    uploadPost();
+
+                                                }
+
+                                            }catch (Exception ex){
+
+                                            }
+
+                                        }
+                                    });
+
+                                }
+                            });
+
+                        }
+
+
+
+                    }
+
+                }catch(Exception ex){
+
+                }
+
+
+        }
+
+
+
+    // uploader   document on firestore  database
+
+    private void uploadPost() {
+
+        try{
+
+            mDialog = new ProgressDialog(this);
+            mDialog.setMessage("Posting...");
+            mDialog.setIndeterminate(true);
+            mDialog.setCancelable(false);
+            mDialog.setCanceledOnTouchOutside(false);
+
+            if (!uploadedImagesUrl_hybrid.isEmpty()) {
+
+                mDialog.show();
+                mFirestore.collection("Users").document(mCurrentUser.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                        postMap.put("userId", documentSnapshot.getString("id"));
+                        postMap.put("username", documentSnapshot.getString("username"));
+                        postMap.put("name", documentSnapshot.getString("name"));
+                        postMap.put("userimage", documentSnapshot.getString("image"));
+                        postMap.put("timestamp", String.valueOf(System.currentTimeMillis()));
+                        postMap.put("image_count", uploadedImagesUrl_hybrid.size());
+                        try {
+                            postMap.put("image_url_0", uploadedImagesUrl_hybrid.get(0));
+                            postMap.put("image_video_0", uploadedImagesUrl_hybrid_video.get(0));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            postMap.put("image_url_1", uploadedImagesUrl_hybrid.get(1));
+                            postMap.put("image_video_1", uploadedImagesUrl_hybrid_video.get(1));
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            postMap.put("image_url_2", uploadedImagesUrl_hybrid.get(2));
+                            postMap.put("image_video_2", uploadedImagesUrl_hybrid_video.get(2));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            postMap.put("image_url_3", uploadedImagesUrl_hybrid.get(3));
+                            postMap.put("image_video_3", uploadedImagesUrl_hybrid_video.get(3));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            postMap.put("image_url_4", uploadedImagesUrl_hybrid.get(4));
+                            postMap.put("image_video_4", uploadedImagesUrl_hybrid_video.get(4));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            postMap.put("image_url_5", uploadedImagesUrl_hybrid.get(5));
+                            postMap.put("image_video_5", uploadedImagesUrl_hybrid_video.get(5));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            postMap.put("image_url_6", uploadedImagesUrl_hybrid.get(6));
+                            postMap.put("image_video_6", uploadedImagesUrl_hybrid_video.get(6));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        postMap.put("likes", "0");
+                        postMap.put("favourites", "0");
+                        postMap.put("description", messageEditText.getText().toString());
+                        postMap.put("color", "0");
+                        postMap.put("is_video_post", true);
+
+                        mFirestore.collection("Posts")
+                                .add(postMap)
+                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                    @Override
+                                    public void onSuccess(DocumentReference documentReference) {
+                                        mDialog.dismiss();
+                                        Toasty.info(create_post.this, "Post sent", Toast.LENGTH_SHORT).show();
+
+                                        try{
+
+                                            uploadedImagesUrl_hybrid.clear();
+                                            uploadedImagesUrl_hybrid_video.clear();
+                                            //uploadedImagesUrl_hybrid_video = null;
+                                            //uploadedImagesUrl_hybrid = null;
+                                            fileUploaded = 0;
+                                            finish();
+
+                                        }catch(Exception ex){
+                                            ex.printStackTrace();
+                                        }
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        mDialog.dismiss();
+                                        Log.e("Error sending post", e.getMessage());
+                                    }
+                                });
+
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        mDialog.dismiss();
+                        Log.e("Error getting user", e.getMessage());
+                    }
+                });
+
+            } else {
+                mDialog.dismiss();
+                Toast.makeText(this, "No image has been uploaded, Please wait or try again", Toast.LENGTH_SHORT).show();
+            }
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+
+
+    }
+
 
 }

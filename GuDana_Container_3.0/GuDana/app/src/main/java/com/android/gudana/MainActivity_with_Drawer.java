@@ -564,10 +564,10 @@ public class MainActivity_with_Drawer extends BaseActivity implements View.OnCli
         fragments = new Fragment[4];
         fragments[0] = new DashboardFragment();
         fragments[1] = new GuDFeed_Fragment();
-        //fragments[1] = new RequestsFragment();
+        //fragments[1] = new ChatRequestsFragment();
         fragments[2] = new ChatFragment();
         fragments[3] = new HistoryListFragment();
-        //fragments[4] = new FriendsFragment();
+        //fragments[4] = new ChatFriendsFragment();
         //fragments[5] = new DialerFragment();
 
 
