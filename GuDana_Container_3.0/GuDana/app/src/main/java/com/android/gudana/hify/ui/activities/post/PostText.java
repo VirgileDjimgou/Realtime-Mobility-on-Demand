@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -32,6 +33,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.yarolegovich.lovelydialog.LovelyInfoDialog;
+import com.yarolegovich.lovelydialog.LovelyStandardDialog;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -67,6 +70,22 @@ public class PostText extends AppCompatActivity {
         onBackPressed();
         return true;
     }
+
+    private void hashtag_dialog(){
+
+        new LovelyInfoDialog(this)
+                .setTopColorRes(R.color.blue)
+                .setIcon(R.mipmap.ic_hashtag)
+                .setTitle("Hashtag GuDana")
+                .setMessage("Add hashtag  to help people on GuDana Network see your post or your services : use the symbol hashtag  # " +
+                        "to start you own or choose GuDana sugested hashtag ")
+                //This will add Don't show again checkbox to the dialog. You can pass any ID as argument
+                .setNotShowAgainOptionEnabled(0)
+                .setNotShowAgainOptionChecked(true)
+                .show();
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +137,10 @@ public class PostText extends AppCompatActivity {
 
             }
         });
+
+
+        hashtag_dialog();
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
     }
 

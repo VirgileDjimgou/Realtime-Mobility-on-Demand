@@ -384,7 +384,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setTitle("");
+        actionBar.setTitle("test  name .... ");
 
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View actionBarView = inflater.inflate(R.layout.ca_chat_bar, null);
@@ -838,14 +838,16 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                 // make web rtc call
                 Intent intentaudio = new Intent(this, ConnectActivity.class);
                 intentaudio.putExtra("vid_or_aud", "audio");
+                intentaudio.putExtra("user_id", currentUserId);
                 startActivity(intentaudio);
 
-                //Toasty.info(getApplicationContext(), R.string.not_implemented, Toast.LENGTH_SHORT).show();
+                //Toasty.info(getApplicationContext(), R.string.not_imp6565lemented, Toast.LENGTH_SHORT).show();
 
                 break;
             case R.id.action_call_video:
                 Intent intentvideo = new Intent(this, ConnectActivity.class);
-                intentvideo.putExtra("userid", "video");
+                intentvideo.putExtra("vid_or_aud", "video");
+                intentvideo.putExtra("user_id", currentUserId);
                 startActivity(intentvideo);
                 break;
         }

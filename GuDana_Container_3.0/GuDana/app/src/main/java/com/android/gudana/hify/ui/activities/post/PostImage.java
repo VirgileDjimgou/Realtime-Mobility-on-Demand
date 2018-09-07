@@ -45,6 +45,8 @@ import com.google.firebase.storage.UploadTask;
 import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.model.Image;
 import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImagePicker;
+import com.yarolegovich.lovelydialog.LovelyInfoDialog;
+import com.yarolegovich.lovelydialog.LovelyStandardDialog;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -100,6 +102,23 @@ public class PostImage extends AppCompatActivity {
         }
         return randomStringBuilder.toString();
     }
+
+
+    private void hashtag_dialog(){
+
+        new LovelyInfoDialog(this)
+                .setTopColorRes(R.color.blue)
+                .setIcon(R.mipmap.ic_hashtag)
+                .setTitle("Hashtag GuDana")
+                .setMessage("Add hashtag  to help people on GuDana Network see your post or your services : use the symbol hashtag  # " +
+                        "to start you own or choose GuDana sugested hashtag ")
+                //This will add Don't show again checkbox to the dialog. You can pass any ID as argument
+                .setNotShowAgainOptionEnabled(0)
+                .setNotShowAgainOptionChecked(true)
+                .show();
+    }
+
+
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -171,6 +190,8 @@ public class PostImage extends AppCompatActivity {
 
         mDialog = new ProgressDialog(this);
         mStorage= FirebaseStorage.getInstance().getReference();
+
+        hashtag_dialog();
     }
 
     @Override

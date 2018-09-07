@@ -105,6 +105,9 @@ public class ConnectActivity extends Activity {
   private String keyprefNegotiated;
   private String keyprefDataId;
   private String Video_or_audio_Call = "";
+  private String user_id = "";
+  private String id_server_app_rtc = "";
+  private boolean video_flag = true;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -152,11 +155,6 @@ public class ConnectActivity extends Activity {
     setContentView(R.layout.rtc_activity_connect);
 
 
-    // get intent  video or audio  ....
-    Video_or_audio_Call = getIntent().getStringExtra("vid_or_aud");
-    // Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
-    Toasty.info(ConnectActivity.this.getApplicationContext() , Video_or_audio_Call , Toast.LENGTH_SHORT).show();
-
 
     roomEditText = (EditText) findViewById(R.id.room_edittext);
     roomEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -188,10 +186,36 @@ public class ConnectActivity extends Activity {
       boolean useValuesFromIntent =
           intent.getBooleanExtra(CallActivity.EXTRA_USE_VALUES_FROM_INTENT, false);
       String room = sharedPref.getString(keyprefRoom, "");
-      connectToRoom(room, true, loopback, useValuesFromIntent, runTimeMs);
+      connectToRoom(room, true, loopback, useValuesFromIntent, runTimeMs, true);
     }
 
     askPermission();
+
+    // get intent  video or audio  ....
+    Video_or_audio_Call = getIntent().getStringExtra("vid_or_aud");
+    if(Video_or_audio_Call.equalsIgnoreCase("audio")){
+      video_flag = false;
+    }else{
+      video_flag = true;
+    }
+    user_id = getIntent().getStringExtra("user_id");
+    // Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
+    // generate your id apprtc ...
+    // id_server_app_rtc = "gudana"+user_id + Integer.toString(getRandomNumber());
+    id_server_app_rtc = "gudana" + Integer.toString(getRandomNumber());
+
+    Toasty.info(ConnectActivity.this.getApplicationContext() , Video_or_audio_Call , Toast.LENGTH_SHORT).show();
+    // start the   audio call or video call
+    connectToRoom(id_server_app_rtc, false, false, false, 0 , video_flag);
+
+  }
+
+
+  // generate random number
+  private int getRandomNumber(){
+    Random rand = new Random();
+    int value = rand.nextInt(100000);
+    return  value;
   }
 
   @Override
@@ -235,7 +259,7 @@ public class ConnectActivity extends Activity {
       startActivity(intent);
       return true;
     } else if (item.getItemId() == R.id.action_loopback) {
-      connectToRoom(null, false, true, false, 0);
+      connectToRoom(null, false, true, false, 0 , true);
       return true;
     } else {
       return super.onOptionsItemSelected(item);
@@ -372,7 +396,7 @@ public class ConnectActivity extends Activity {
   }
 
   private void connectToRoom(String roomId, boolean commandLineRun, boolean loopback,
-                             boolean useValuesFromIntent, int runTimeMs) {
+                             boolean useValuesFromIntent, int runTimeMs , boolean video_or_not) {
     this.commandLineRun = commandLineRun;
 
     // roomId is random for loopback.
@@ -383,9 +407,14 @@ public class ConnectActivity extends Activity {
     String roomUrl = sharedPref.getString(
         keyprefRoomServerUrl, getString(R.string.pref_room_server_url_default));
 
+    /*
     // Video call enabled flag. to decide if that is a video call or audio call ...
     boolean videoCallEnabled = sharedPrefGetBoolean(R.string.pref_videocall_key,
         CallActivity.EXTRA_VIDEO_CALL, R.string.pref_videocall_default, useValuesFromIntent);
+
+        */
+
+     boolean videoCallEnabled = video_or_not;
 
     // Use screencapture option.
     boolean useScreencapture = sharedPrefGetBoolean(R.string.pref_screencapture_key,
@@ -654,7 +683,7 @@ public class ConnectActivity extends Activity {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
           String roomId = ((TextView) view).getText().toString();
-          connectToRoom(roomId, false, false, false, 0);
+          connectToRoom(roomId, false, false, false, 0 , true);
         }
       };
 
@@ -672,7 +701,7 @@ public class ConnectActivity extends Activity {
   private final OnClickListener connectListener = new OnClickListener() {
     @Override
     public void onClick(View view) {
-      connectToRoom(roomEditText.getText().toString(), false, false, false, 0);
+      connectToRoom(roomEditText.getText().toString(), false, false, false, 0 , true);
     }
   };
 }

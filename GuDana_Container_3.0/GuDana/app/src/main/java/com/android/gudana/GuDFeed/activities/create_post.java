@@ -95,6 +95,7 @@ import java.util.TimerTask;
 import com.android.gudana.R;
 import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.model.Image;
+import com.yarolegovich.lovelydialog.LovelyInfoDialog;
 import com.yarolegovich.lovelydialog.LovelyStandardDialog;
 
 import es.dmoral.toasty.Toasty;
@@ -158,6 +159,20 @@ public class create_post extends AbActivity implements
             randomStringBuilder.append(tempChar);
         }
         return randomStringBuilder.toString();
+    }
+
+    private void hashtag_dialog(){
+
+        new LovelyInfoDialog(this)
+                .setTopColorRes(R.color.blue)
+                .setIcon(R.mipmap.ic_hashtag)
+                .setTitle("Hashtag GuDana")
+                .setMessage("Add hashtag  to help people on GuDana Network see your post or your services : use the symbol hashtag  # " +
+                        "to start you own or choose GuDana sugested hashtag ")
+                //This will add Don't show again checkbox to the dialog. You can pass any ID as argument
+                .setNotShowAgainOptionEnabled(0)
+                .setNotShowAgainOptionChecked(true)
+                .show();
     }
 
 
@@ -269,6 +284,8 @@ public class create_post extends AbActivity implements
         // hide Keyboard
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
      askPermission();
+     // hastag dialog
+        hashtag_dialog();
     }
 
     private void askPermission() {
