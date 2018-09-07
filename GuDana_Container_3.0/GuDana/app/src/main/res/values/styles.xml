@@ -1,5 +1,12 @@
 <resources>
 
+    <style name="CallActivityTheme" parent="android:Theme.Black">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimaryy</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkk</item>
@@ -44,9 +51,9 @@
 
 
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorPrimaryy</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkk</item>
+        <item name="colorAccent">@color/colorAccentt</item>
     </style>
 
     <style name="FullscreenTheme" parent="AppTheme.NoActionBar">
@@ -86,21 +93,21 @@
     </style>
 
     <style name="ProfileTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimary</item>
-        <item name="colorAccent">@color/colorGrayDark</item>
+        <item name="colorPrimary">@color/colorPrimaryy</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkk</item>
+        <item name="colorAccent">@color/colorAccentt</item>
     </style>
 
     <style name="ChatTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimary</item>
-        <item name="colorAccent">@color/colorGrayDark</item>
+        <item name="colorPrimary">@color/colorAccentt</item>
+        <item name="colorPrimaryDark">@color/colorAccentt</item>
+        <item name="colorAccent">@color/colorAccentt</item>
     </style>
 
     <style name="UsersTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimary</item>
-        <item name="colorAccent">@color/colorGrayDark</item>
+        <item name="colorPrimary">@color/colorPrimaryy</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkk</item>
+        <item name="colorAccent">@color/colorAccentt</item>
     </style>
 
     <style name="DotsDarkTheme" parent="@style/Widget.AppCompat.ActionButton.Overflow">

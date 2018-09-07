@@ -37,6 +37,7 @@ public class FCMService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+
         handleDataMessage(remoteMessage);
     }
 
@@ -76,47 +77,47 @@ public class FCMService extends FirebaseMessagingService {
         final Intent resultIntent;
 
         switch (click_action) {
-            case "com.amsavarthan.hify.TARGETNOTIFICATION":
+            case "com.android.gudana.hify.TARGETNOTIFICATION":
 
                 resultIntent = new Intent(getApplicationContext(), NotificationActivity.class);
 
                 break;
-            case "com.amsavarthan.hify.TARGETNOTIFICATIONREPLY":
+            case "com.android.gudana.hify.TARGETNOTIFICATIONREPLY":
 
                 resultIntent = new Intent(getApplicationContext(), NotificationReplyActivity.class);
 
                 break;
-            case "com.amsavarthan.hify.TARGETNOTIFICATION_IMAGE":
+            case "com.android.gudana.hify.TARGETNOTIFICATION_IMAGE":
 
                 resultIntent = new Intent(getApplicationContext(), NotificationImage.class);
 
                 break;
-            case "com.amsavarthan.hify.TARGETNOTIFICATIONREPLY_IMAGE":
+            case "com.android.gudana.hify.TARGETNOTIFICATIONREPLY_IMAGE":
 
                 resultIntent = new Intent(getApplicationContext(), NotificationImageReply.class);
 
                 break;
-            case "com.amsavarthan.hify.TARGET_FRIENDREQUEST":
+            case "com.android.gudana.hify.TARGET_FRIENDREQUEST":
 
                 resultIntent = new Intent(getApplicationContext(), FriendProfile.class);
 
                 break;
-            case "com.amsavarthan.hify.TARGET_ACCEPTED":
+            case "com.android.gudana.hify.TARGET_ACCEPTED":
 
                 resultIntent = new Intent(getApplicationContext(), FriendProfile.class);
 
                 break;
-            case "com.amsavarthan.hify.TARGET_DECLINED":
+            case "com.android.gudana.hify.TARGET_DECLINED":
 
                 resultIntent = new Intent(getApplicationContext(), AddUserDetail.class);
 
                 break;
-            case "com.amsavarthan.hify.TARGET_COMMENT":
+            case "com.android.gudana.hify.TARGET_COMMENT":
 
                 resultIntent = new Intent(getApplicationContext(), CommentsActivity.class);
 
                 break;
-            case "com.amsavarthan.hify.TARGET_UPDATE":
+            case "com.android.gudana.hify.TARGET_UPDATE":
 
                 resultIntent = new Intent(getApplicationContext(), UpdateAvailable.class);
 

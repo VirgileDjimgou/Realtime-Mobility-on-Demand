@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-condensed"
                 android:text=" unknown file "
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:visibility="visible"/>
 
@@ -65,7 +65,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="TEST"
-                    android:textColor="@color/colorWhite"
+                    android:textColor="@color/black"
                     android:layout_centerInParent="true"
                     android:visibility="gone"/>
             </RelativeLayout>
@@ -75,7 +75,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/black"
                 android:fontFamily="sans-serif-condensed"
                 android:text="time"
                 android:textStyle="italic" />
@@ -107,12 +107,13 @@
                 android:layout_marginTop="1dp"
                 app:bmb_buttonEnum="textOutsideCircle"
                 app:bmb_buttonRadius="17dp"
-                app:bmb_highlightedColor="@color/purple"
-                app:bmb_normalColor="@color/colorPrimary"
+                app:bmb_highlightedColor="@color/colorAccentt"
+                app:bmb_normalColor="@color/colorAccentt"
 
                 />
 
         </RelativeLayout>
+
 
 
 
@@ -228,8 +229,8 @@
                 android:layout_marginTop="1dp"
                 app:bmb_buttonEnum="textOutsideCircle"
                 app:bmb_buttonRadius="17dp"
-                app:bmb_highlightedColor="@color/purple"
-                app:bmb_normalColor="@color/colorPrimary"
+                app:bmb_highlightedColor="@color/colorAccentt"
+                app:bmb_normalColor="@color/colorAccentt"
 
                 />
 

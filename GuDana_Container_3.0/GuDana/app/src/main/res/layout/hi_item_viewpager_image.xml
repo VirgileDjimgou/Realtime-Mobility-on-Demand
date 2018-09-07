@@ -13,4 +13,27 @@
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"/>
 
+    <ImageView
+        android:id="@+id/play_video_ok"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:background="@mipmap/ic_video_ready_to_play"
+        android:scaleType="center"
+        android:src="@mipmap/ic_video_ready_to_play"
+        android:visibility="visible" />
+
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/loading_video_indicator"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:background="@drawable/video_loading_icon"
+        android:src="@drawable/video_loading_icon"
+        android:scaleType="center"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        />
+
 </RelativeLayout>

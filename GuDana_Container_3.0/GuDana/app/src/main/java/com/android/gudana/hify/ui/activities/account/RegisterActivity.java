@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.gudana.gpslocationtracking.LocationTrack;
 import com.android.gudana.hify.utils.AnimationUtil;
 import com.android.gudana.hify.utils.database.UserHelper;
 import com.android.gudana.R;
@@ -27,6 +30,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -37,7 +43,10 @@ import com.yalantis.ucrop.UCrop;
 import com.yarolegovich.lovelydialog.LovelyInfoDialog;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -52,11 +61,14 @@ public class RegisterActivity extends AppCompatActivity {
     public Uri imageUri;
     public StorageReference storageReference;
     public ProgressDialog mDialog;
-    public String name_, pass_, email_,username_,location_;
-    private EditText name,email,password,location,username;
+    public String name_, pass_, email_,username_,location_ = "--##--";
+    private EditText name,email,password,username;
     private CircleImageView profile_image;
     private FirebaseAuth mAuth;
     private FirebaseFirestore firebaseFirestore;
+    LocationTrack locationTrack;
+    String UserAdresse = "";
+
 
     public static void startActivity(Activity activity, Context context, View view) {
         Intent intent = new Intent(context, RegisterActivity.class);
@@ -90,7 +102,6 @@ public class RegisterActivity extends AppCompatActivity {
         name=(EditText)findViewById(R.id.name);
         email=(EditText)findViewById(R.id.email);
         password=(EditText)findViewById(R.id.password);
-        location=(EditText)findViewById(R.id.location);
         username=(EditText)findViewById(R.id.username);
 
         mDialog = new ProgressDialog(this);
@@ -123,7 +134,6 @@ public class RegisterActivity extends AppCompatActivity {
                     name_=name.getText().toString();
                     email_=email.getText().toString();
                     pass_=password.getText().toString();
-                    location_=location.getText().toString();
 
                     mDialog.show();
 
@@ -155,7 +165,6 @@ public class RegisterActivity extends AppCompatActivity {
 
                     if (TextUtils.isEmpty(location_)) {
 
-                        AnimationUtil.shakeView(location, RegisterActivity.this);
                         mDialog.dismiss();
 
                     }
@@ -200,7 +209,6 @@ public class RegisterActivity extends AppCompatActivity {
                         AnimationUtil.shakeView(name, RegisterActivity.this);
                         AnimationUtil.shakeView(email, RegisterActivity.this);
                         AnimationUtil.shakeView(password, RegisterActivity.this);
-                        AnimationUtil.shakeView(location, RegisterActivity.this);
                         mDialog.dismiss();
 
                     }
@@ -221,10 +229,56 @@ public class RegisterActivity extends AppCompatActivity {
                             .show();
 
                 }
-
             }
         });
 
+
+        locationTrack = new LocationTrack(RegisterActivity.this);
+        // chech if gps is enable  ....
+        if (locationTrack.canGetLocation()) {
+
+            double longitude = locationTrack.getLongitude();
+            double latitude = locationTrack.getLatitude();
+            location_ = getAddress(latitude, longitude);
+
+        } else {
+            locationTrack.showSettingsAlert();
+        }
+
+
+    }
+
+
+    //get the adresse
+    public String getAddress(double lat, double lng) {
+
+        String Adresse = "";
+        Geocoder geocoder = new Geocoder(RegisterActivity.this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
+            Address obj = addresses.get(0);
+            String add = obj.getAddressLine(0);
+            add = add + "\n" + obj.getCountryName();
+            //add = add + "\n" + obj.getCountryCode();
+            add = add + "\n" + obj.getAdminArea();
+            //add = add + "\n" + obj.getPostalCode();
+            //add = add + "\n" + obj.getSubAdminArea();
+            add = add + "\n" + obj.getLocality();
+            //add = add + "\n" + obj.getSubThoroughfare();
+
+            Log.v("IGA", "Address" + add);
+            Adresse = add;
+            // Toast.makeText(this, "Address=>" + add,
+            // Toast.LENGTH_SHORT).show();
+
+            // TennisAppActivity.showDialog(add);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
+        return  Adresse;
 
     }
 
@@ -282,6 +336,12 @@ public class RegisterActivity extends AppCompatActivity {
                                                                                Toasty.warning(RegisterActivity.this, "A Verification Link has been sent to your email Account . " +
                                                                                        "Please Click on the link to continue the validation process", Toast.LENGTH_SHORT).show();
 
+                                                                               Toasty.warning(RegisterActivity.this, "A Verification Link has been sent to your email Account . " +
+                                                                                       "Please Click on the link to continue the validation process", Toast.LENGTH_SHORT).show();
+
+                                                                               FirebaseAuth.getInstance().signOut();
+
+
                                                                                finish();
                                                                            }
                                                                        }).addOnFailureListener(new OnFailureListener() {
@@ -300,6 +360,48 @@ public class RegisterActivity extends AppCompatActivity {
                                                                                        .show();
                                                                            }
                                                                        });
+
+
+                                                                       // registering new User s
+                                                                       // Registering user with data he gave us
+                                                                       FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                                                                       if(firebaseUser != null)
+                                                                       {
+                                                                           String userid = firebaseUser.getUid();
+
+                                                                           // "Packing" user data
+
+                                                                           Map map = new HashMap<>();
+                                                                           map.put("token", FirebaseInstanceId.getInstance().getToken());
+                                                                           map.put("name", username_);
+                                                                           map.put("email", email_);
+                                                                           map.put("status", "Welcome to my GuDana Profile!");
+                                                                           map.put("image", uri.toString());
+                                                                           map.put("cover", uri.toString());
+                                                                           map.put("date", ServerValue.TIMESTAMP);
+
+                                                                           // Uploading user data
+
+                                                                           FirebaseDatabase.getInstance().getReference().child("Users").child(userid).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>()
+                                                                           {
+                                                                               @Override
+                                                                               public void onComplete(@NonNull Task<Void> task)
+                                                                               {
+                                                                                   if(task.isSuccessful())
+                                                                                   {
+
+                                                                                       Toast.makeText(getApplicationContext(), "User registered .", Toast.LENGTH_LONG).show();
+                                                                                   }
+                                                                                   else
+                                                                                   {
+                                                                                       Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_LONG).show();
+
+                                                                                   }
+                                                                               }
+                                                                           });
+                                                                       }
+
 
                                                                    }
                                                                }).addOnFailureListener(new OnFailureListener() {

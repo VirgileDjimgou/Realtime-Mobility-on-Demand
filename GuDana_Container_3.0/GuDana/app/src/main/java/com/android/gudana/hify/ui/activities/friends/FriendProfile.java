@@ -22,6 +22,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.gudana.chatapp.activities.ChatActivity;
+import com.android.gudana.chatapp.activities.ProfileActivity;
 import com.android.gudana.hify.adapters.PostsAdapter;
 import com.android.gudana.hify.models.Post;
 import com.android.gudana.R;
@@ -32,6 +34,10 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -54,6 +60,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 public class FriendProfile extends AppCompatActivity {
 
     private String id;
+
 
     public static void startActivity(Context context, String id){
 
@@ -210,10 +217,14 @@ public class FriendProfile extends AppCompatActivity {
 
         private TextView name,username,email,location,post,friend,bio,created,req_sent;
         private CircleImageView profile_pic;
-        private Button add_friend,remove_friend,accept,decline;
+        private Button add_friend,remove_friend,accept,decline, send_message;
         private LinearLayout req_layout;
         private View rootView;
         private ProgressDialog mDialog;
+
+        private  String currentUserId, otherUserId;
+        private Context mContext;
+
 
         public AboutFragment() {
         }
@@ -230,6 +241,19 @@ public class FriendProfile extends AppCompatActivity {
                 Toast.makeText(rootView.getContext(), "Error retrieving information.", Toast.LENGTH_SHORT).show();
                 getActivity().finish();
             }
+
+
+            send_message = rootView.findViewById(R.id.send_message);
+            // send_message.setVisibility(View.GONE);
+            send_message.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent sendMessageIntent = new Intent(rootView.getContext(), ChatActivity.class);
+                    sendMessageIntent.putExtra("userid", id);
+                    startActivity(sendMessageIntent);
+                }
+            });
 
             mFirestore = FirebaseFirestore.getInstance();
             currentUser= FirebaseAuth.getInstance().getCurrentUser();
@@ -316,10 +340,19 @@ public class FriendProfile extends AppCompatActivity {
                                                             .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                                                 @Override
                                                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                                    if(documentSnapshot.exists())
+                                                                    if(documentSnapshot.exists()){
+
                                                                         showRequestLayout();
-                                                                    else
+                                                                        send_message.setVisibility(View.GONE);
+                                                                    }
+
+                                                                    else{
+
                                                                         showAddButton();
+                                                                        send_message.setVisibility(View.GONE);
+
+                                                                    }
+
 
                                                                 }
                                                             })
@@ -332,6 +365,7 @@ public class FriendProfile extends AppCompatActivity {
 
                                                 }else{
                                                     req_sent.setVisibility(View.VISIBLE);
+                                                    send_message.setVisibility(View.GONE);
                                                     req_sent.setAlpha(0.0f);
 
                                                     req_sent.animate()
@@ -384,6 +418,8 @@ public class FriendProfile extends AppCompatActivity {
                     });
 
 
+            currentUserId =  currentUser.getUid();
+            otherUserId = id;
 
             return rootView;
         }
@@ -526,6 +562,33 @@ public class FriendProfile extends AppCompatActivity {
                                                 @Override
                                                 public void onClick(@NonNull BottomDialog dialog) {
                                                     removeFriend();
+
+
+                                                    // remove  on fireebase ... for chat
+
+                                                    Map map = new HashMap<>();
+                                                    map.put("Friends/" + otherUserId + "/" + currentUserId, null);
+                                                    map.put("Friends/" + currentUserId + "/" + otherUserId, null);
+
+                                                    // remove message button
+                                                    send_message.setVisibility(View.GONE);
+                                                    // Updating data
+
+                                                    FirebaseDatabase.getInstance().getReference().updateChildren(map, new DatabaseReference.CompletionListener()
+                                                    {
+                                                        @Override
+                                                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference)
+                                                        {
+                                                            if(databaseError == null)
+                                                            {
+                                                                Log.d("debug ", "friend removed ");
+                                                            }
+                                                            else
+                                                            {
+                                                                Log.d("debug ", "removeFriend failed: " + databaseError.getMessage());
+                                                            }
+                                                        }
+                                                    });
                                                     dialog.dismiss();
                                                 }
                                             }).onNegative(new BottomDialog.ButtonCallback() {
@@ -546,6 +609,53 @@ public class FriendProfile extends AppCompatActivity {
         public void acceptRequest() {
 
             mDialog.show();
+
+
+            currentUserId =  currentUser.getUid();
+            otherUserId = id;
+
+            // Pushing notification to get keyId
+
+            DatabaseReference acceptNotificationRef = FirebaseDatabase.getInstance().getReference().child("Notifications").child(otherUserId).push();
+            String acceptNotificationId = acceptNotificationRef.getKey();
+
+            // "Packing" request
+
+            HashMap<String, String> acceptNotificationData = new HashMap<>();
+            acceptNotificationData.put("from", currentUserId);
+            acceptNotificationData.put("type", "accept");
+
+            // "Packing" data
+
+            Map map = new HashMap<>();
+            map.put("Friends/" + otherUserId + "/" + currentUserId + "/date", ServerValue.TIMESTAMP);
+            map.put("Friends/" + currentUserId + "/" + otherUserId + "/date", ServerValue.TIMESTAMP);
+
+            map.put("Requests/" + otherUserId + "/" + currentUserId, null);
+            map.put("Requests/" + currentUserId + "/" + otherUserId, null);
+
+            map.put("Notifications/" + otherUserId + "/" + acceptNotificationId, acceptNotificationData);
+
+            // Updating data
+
+            FirebaseDatabase.getInstance().getReference().updateChildren(map, new DatabaseReference.CompletionListener()
+            {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference)
+                {
+                    if(databaseError == null)
+                    {
+                        // Toast.makeText(getContext()), "You are now friends!", Toast.LENGTH_SHORT).show();
+                        Log.d("Request failed  ", "ok : ");
+
+                    }
+                    else
+                    {
+                        Log.d("Request failed  ", "acceptRequest failed: " + databaseError.getMessage());
+                    }
+                }
+            });
+
 
             //Delete from friend request
             mFirestore.collection("Users")
@@ -627,6 +737,7 @@ public class FriendProfile extends AppCompatActivity {
                                                                                                         public void onAnimationEnd(Animator animation) {
                                                                                                             super.onAnimationEnd(animation);
                                                                                                             req_layout.setVisibility(View.GONE);
+                                                                                                            send_message.setVisibility(View.VISIBLE);
                                                                                                             showRemoveButton();
                                                                                                         }
                                                                                                     }).start();
@@ -683,6 +794,33 @@ public class FriendProfile extends AppCompatActivity {
         private void declineRequest() {
 
             try {
+                // decline chat friend request   ....
+                // "Packing" data
+
+                Map map = new HashMap<>();
+                map.put("Requests/" + otherUserId + "/" + currentUserId, null);
+                map.put("Requests/" + currentUserId + "/" + otherUserId, null);
+
+                // Updating data on database
+
+                FirebaseDatabase.getInstance().getReference().updateChildren(map, new DatabaseReference.CompletionListener()
+                {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference)
+                    {
+                        if(databaseError == null)
+                        {
+                            Log.d("Error ", " Request declined ...");
+
+                        }
+                        else
+                        {
+                            Log.d("Error ", "cancelRequest failed: " + databaseError.getMessage());
+                        }
+                    }
+                });
+
+
                 //delete friend request data
                 mFirestore.collection("Users").document(currentUser.getUid())
                         .collection("Friend_Requests").document(id).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -767,6 +905,44 @@ public class FriendProfile extends AppCompatActivity {
 
                                             }
                                         });
+
+                                // add friend in firebase chat   ....
+                                // Pushing notification to get keyId
+                                // send requests  for chat  ....
+                                // Pushing notification to get keyId
+
+                                DatabaseReference notificationRef = FirebaseDatabase.getInstance().getReference().child("Notifications").child(otherUserId).push();
+                                String notificationId = notificationRef.getKey();
+
+                                // "Packing" request
+
+                                HashMap<String, String> notificationData = new HashMap<>();
+                                notificationData.put("from", currentUserId);
+                                notificationData.put("type", "request");
+
+                                HashMap map = new HashMap();
+                                map.put("Requests/" + otherUserId + "/" + currentUserId + "/type", "received");
+                                map.put("Requests/" + currentUserId + "/" + otherUserId + "/type", "sent");
+                                map.put("Notifications/" + otherUserId + "/" + notificationId, notificationData);
+
+                                // Updating data into database
+
+                                FirebaseDatabase.getInstance().getReference().updateChildren(map, new DatabaseReference.CompletionListener()
+                                {
+                                    @Override
+                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference)
+                                    {
+                                        if(databaseError == null)
+                                        {
+                                            Log.d("failed " , "request send  " );
+                                        }
+                                        else
+                                        {
+                                            Log.d("failed " , "sendRequest failed: " + databaseError.getMessage());
+                                        }
+                                    }
+                                });
+
                             }
 
                         }

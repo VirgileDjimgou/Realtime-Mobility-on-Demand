@@ -55,7 +55,11 @@ public class LinphoneLauncherActivity extends Activity {
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		}
 		setContentView(R.layout.launch_screen);
-        
+
+		Intent myIntent = new Intent(LinphoneLauncherActivity.this, com.android.gudana.hify.ui.activities.MainActivity.class);
+		LinphoneLauncherActivity.this.startActivity(myIntent);
+
+        /*
 		mHandler = new Handler();
 		
 		if (LinphoneService.isReady()) {
@@ -66,6 +70,7 @@ public class LinphoneLauncherActivity extends Activity {
 			mThread = new ServiceWaitThread();
 			mThread.start();
 		}
+		*/
 	}
 
 	protected void onServiceReady() {

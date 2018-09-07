@@ -38,7 +38,10 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.gudana.GuDFeed.activities.create_post;
+import com.android.gudana.apprtc.ConnectActivity;
+import com.android.gudana.chatapp.activities.ChatActivity;
 import com.android.gudana.chatapp.fragments.ChatFragment;
+import com.android.gudana.chatapp.fragments.ChatFriendsFragment;
 import com.android.gudana.chatapp.fragments.ChatRequestsFragment;
 import com.android.gudana.hify.adapters.DrawerAdapter;
 import com.android.gudana.hify.models.DrawerItem;
@@ -60,6 +63,7 @@ import com.android.gudana.hify.ui.fragment.FriendsFragment;
 import com.android.gudana.hify.ui.fragment.ProfileFragment;
 import com.android.gudana.hify.utils.Config;
 import com.android.gudana.hify.utils.NetworkUtil;
+import com.android.gudana.hify.utils.PermissionsCustom;
 import com.android.gudana.hify.utils.database.UserHelper;
 import com.android.gudana.R;
 import com.android.gudana.linphone.DialerFragment;
@@ -109,14 +113,14 @@ import static com.android.gudana.R2.id.removeFriend;
 
 public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnItemSelectedListener {
 
+    // POS_DASHBOARD   CHAT  POS_SEND_FRIEND   POS_ABOUT  POS_LOGOUT
+
+
     private static final int POS_DASHBOARD = 0;
-    private static final int POS_SEND_MESSAGE = 1;
-    private static final int CHAT = 2 ;
-    private static final int POS_FRIENDS = 3;
-    private static final int POS_ABOUT = 4;
-    private static final int POS_LOGOUT = 5;
-    private static final int POS_SEND_REQUEST = 6;
-    private static final int POS_SEND_FRIEND = 7;
+    private static final int CHAT = 1 ;
+    private static final int POS_SEND_FRIEND = 2;
+    private static final int POS_ABOUT = 3;
+    private static final int POS_LOGOUT = 4;
     public static  boolean loadpost_firstime = false;
     public static boolean mode_public = true ; // if  not thanmode private  ....in this mode you see once the post of your friends
     // in Public mode you see all the post on the Networks  ... ....
@@ -287,6 +291,7 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
 
             mCurrentFragment = new Dashboard();
             firebaseMessagingService();
+
             askPermission();
 
             userId = currentuser.getUid();
@@ -325,10 +330,7 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
                     createItemFor(2),
                     createItemFor(3),
                     createItemFor(4),
-                    new SpaceItem(48),
-                    createItemFor(5),
-                    createItemFor(6),
-                    createItemFor(7)));
+                    new SpaceItem(18)));
 
             adapter.setListener(this);
 
@@ -383,12 +385,19 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
                 .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.READ_EXTERNAL_STORAGE
-                        )
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.RECORD_AUDIO,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.ACCESS_NETWORK_STATE,
+                        Manifest.permission.CALL_PHONE
+
+
+                )
                 .withListener(new MultiplePermissionsListener() {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
-                         if(report.isAnyPermissionPermanentlyDenied()){
+                        if(report.isAnyPermissionPermanentlyDenied()){
                             Toast.makeText(MainActivity.this, "You have denied some permissions permanently, if the app force close try granting permission from settings.", Toast.LENGTH_LONG).show();
                         }
                     }
@@ -400,6 +409,7 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
                 }).check();
 
     }
+
 
     private void setUserProfile() {
 
@@ -465,8 +475,11 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
     public void onItemSelected(int position) {
 
         android.support.v4.app.Fragment selectedScreen;
+        Log.d("position" , Integer.toString(position));
+
         switch (position) {
 
+            // POS_DASHBOARD   CHAT  POS_SEND_FRIEND  POS_SEND_REQUEST POS_ABOUT  POS_LOGOUT
             case POS_DASHBOARD:
                 toolbar.setTitle("Dashboard");
                 try {
@@ -482,46 +495,31 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
 
                 return;
 
-
             case CHAT:
                 toolbar.setTitle("GuDTalk");
                 try {
                     getSupportActionBar().setTitle("GuDTalk");
-                }catch (Exception e){
-                    Log.e("Error",e.getMessage());
-                }
+
                 this.invalidateOptionsMenu();
                 mState=false;
                 selectedScreen = new ChatFragment();
                 showFragment(selectedScreen);
                 slidingRootNav.closeMenu(true);
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Log.e("Error",e.getMessage());
+                }
 
                 return;
 
-            case POS_SEND_MESSAGE:
 
-                if(currentuser.isEmailVerified()) {
-                    toolbar.setTitle("Crypto Messages");
-                    try {
-                        getSupportActionBar().setTitle("Flash Messages");
-                    } catch (Exception e) {
-                        Log.e("Error", e.getMessage());
-                    }
-                    this.invalidateOptionsMenu();
-                    mState = false;
-                    selectedScreen = new FlashMessage();
-                    showFragment(selectedScreen);
-                    slidingRootNav.closeMenu(true);
-                }else{
-                    showDialog();
-                }
 
             case POS_SEND_FRIEND:
 
                 if(currentuser.isEmailVerified()) {
-                    toolbar.setTitle("FRIEND");
+                    toolbar.setTitle("Manage FRIEND");
                     try {
-                        getSupportActionBar().setTitle("Friend");
+                        getSupportActionBar().setTitle("Manage Friend");
                     } catch (Exception e) {
                         Log.e("Error", e.getMessage());
                     }
@@ -535,46 +533,10 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
                 }
                 return ;
 
-            case POS_SEND_REQUEST:
-
-                if(currentuser.isEmailVerified()) {
-                    toolbar.setTitle("REQUEST");
-                    try {
-                        getSupportActionBar().setTitle("Request");
-                    } catch (Exception e) {
-                        Log.e("Error", e.getMessage());
-                    }
-                    this.invalidateOptionsMenu();
-                    mState = false;
-                    selectedScreen = new ChatRequestsFragment();
-                    showFragment(selectedScreen);
-                    slidingRootNav.closeMenu(true);
-                }else{
-                    showDialog();
-                }
-
-                return;
-
-            case POS_FRIENDS:
-
-                if(currentuser.isEmailVerified()) {
-                    toolbar.setTitle("Friends Chat");
-                    try {
-                        getSupportActionBar().setTitle("Chat Requests");
-                    } catch (Exception e) {
-                        Log.e("Error", e.getMessage());
-                    }
-                    this.invalidateOptionsMenu();
-                    mState = false;
-                    selectedScreen = new ChatRequestsFragment();
-                    showFragment(selectedScreen);
-                    slidingRootNav.closeMenu(true);
-                }else{
-                    showDialog();
-                }
-                return;
 
             case POS_ABOUT:
+
+                 // test about  ...
                 if(currentuser.isEmailVerified()) {
                     toolbar.setTitle("About");
                     try {
@@ -590,6 +552,7 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
                 }else{
                     showDialog();
                 }
+
                 return;
 
             case POS_LOGOUT:

@@ -42,8 +42,11 @@ import android.widget.Toast;
 import com.android.gudana.BuildConfig;
 import com.android.gudana.MainActivity_with_Drawer;
 import com.android.gudana.R;
+import com.android.gudana.apprtc.ConnectActivity;
 import com.android.gudana.chatapp.adapters.MessageAdapter;
 import com.android.gudana.chatapp.models.Message;
+import com.android.gudana.hify.ui.activities.MainActivity;
+import com.android.gudana.hify.utils.PermissionsCustom;
 import com.android.gudana.linphone.CallOutgoingActivity;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.features.ReturnMode;
@@ -65,6 +68,11 @@ import com.google.firebase.storage.OnPausedListener;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.nightonke.boommenu.BoomMenuButton;
 
 import java.io.File;
@@ -77,6 +85,7 @@ import java.util.TimerTask;
 
 import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
+import es.dmoral.toasty.Toasty;
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 
@@ -331,12 +340,12 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
         if (requestCode == MY_CAMERA_PERMISSION_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
+                Toasty.info(this, "camera permission granted", Toast.LENGTH_LONG).show();
                 Intent cameraIntent = new
                         Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(cameraIntent, CAMERA_REQUEST);
             } else {
-                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+                Toasty.info(this, "camera permission denied", Toast.LENGTH_LONG).show();
             }
 
         }
@@ -559,7 +568,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                         @Override
                         public void onBoomButtonClick(int index) {
                             pickContact();
-                            // Toast.makeText(ChatMessagesActivity.this, "Button " + index + " is pressed.", Toast.LENGTH_SHORT).show();
+                            // Toasty.info(ChatMessagesActivity.this, "Button " + index + " is pressed.", Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -575,7 +584,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                         public void onBoomButtonClick(int index) {
                             locationPlacesIntent();
 
-                            // Toast.makeText(ChatMessagesActivity.this, "Button " + index + " is pressed.", Toast.LENGTH_SHORT).show();
+                            // Toasty.info(ChatMessagesActivity.this, "Button " + index + " is pressed.", Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -720,6 +729,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         // hide Keyboard
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
+        askPermission();
 
     }
 
@@ -732,6 +742,38 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
             }
         }
         return true;
+    }
+
+
+    private void askPermission() {
+
+        Dexter.withActivity(this)
+                .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.RECORD_AUDIO,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.ACCESS_NETWORK_STATE,
+                        Manifest.permission.CALL_PHONE
+
+
+                )
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        if(report.isAnyPermissionPermanentlyDenied()){
+                            Toasty.info(ChatActivity.this, "You have denied some permissions permanently, if the app force close try granting permission from settings.", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                    }
+                }).check();
+
     }
 
 
@@ -787,20 +829,24 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                 // NavUtils.navigateUpFromSameTask(this);
                 break;
             case R.id.action_search:
-                Toast.makeText(getApplicationContext(), R.string.not_implemented, Toast.LENGTH_SHORT).show();
+                Toasty.info(getApplicationContext(), "not yet implemented ", Toast.LENGTH_LONG).show();
+
                 break;
 
             case R.id.action_call_audio:
 
-                if (MainActivity_with_Drawer.isInstanciated()) {
-                    MainActivity_with_Drawer.instance().setAddresGoToDialerAndCall(PhoneCorrespondant,OtherUserIdPhone, null);
-                    startActivity(new Intent(MainActivity_with_Drawer.instance(), CallOutgoingActivity.class));
-                }
-                //Toast.makeText(getApplicationContext(), R.string.not_implemented, Toast.LENGTH_SHORT).show();
+                // make web rtc call
+                Intent intentaudio = new Intent(this, ConnectActivity.class);
+                intentaudio.putExtra("vid_or_aud", "audio");
+                startActivity(intentaudio);
+
+                //Toasty.info(getApplicationContext(), R.string.not_implemented, Toast.LENGTH_SHORT).show();
 
                 break;
             case R.id.action_call_video:
-                Toast.makeText(getApplicationContext(), R.string.not_implemented, Toast.LENGTH_SHORT).show();
+                Intent intentvideo = new Intent(this, ConnectActivity.class);
+                intentvideo.putExtra("userid", "video");
+                startActivity(intentvideo);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -1000,7 +1046,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                     play_sound();
                     // update   ...  progression UI
                     progressStatus = progressStatus +1;
-                    infos_progress_files.setText(String.valueOf(progressStatus) +"/"+String.valueOf(number_of_files_to_send) + " files");
+                    infos_progress_files.setText("Uploaded "+String.valueOf(progressStatus) +"/"+String.valueOf(number_of_files_to_send) + " files");
                     // progress_bar.setProgress(progressStatus);
 
                     // stop the  disapear the animation  ...
@@ -1032,7 +1078,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                         }
                     });
                 }else {
-                    Toast.makeText(getApplicationContext(), "upload failed  ", Toast.LENGTH_SHORT).show();
+                    Toasty.info(getApplicationContext(), "upload failed  ", Toast.LENGTH_SHORT).show();
                     infos_progress_layout.setVisibility(View.GONE);
                     progressStatus = 0;
                     number_of_files_to_send = 0;
@@ -1048,14 +1094,14 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
             public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                 double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
                 System.out.println("Upload is " + progress + "% done");
-                // Toast.makeText(getApplicationContext(), "Upload is " + progress + "% done", Toast.LENGTH_SHORT).show();
+                // Toasty.info(getApplicationContext(), "Upload is " + progress + "% done", Toast.LENGTH_SHORT).show();
                 progress_bar.setProgress((int) Math.floor(progress + 0.5d));
 
             }
         }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(getApplicationContext(), "upload is paused ! ", Toast.LENGTH_SHORT).show();
+                Toasty.info(getApplicationContext(), "upload is paused ! ", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -1117,7 +1163,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
                     // update   ...  progression UI
                     progressStatus = progressStatus +1;
-                    infos_progress_files.setText(String.valueOf(progressStatus) +"/"+String.valueOf(number_of_files_to_send) + " files");
+                    infos_progress_files.setText("Uploaded "+String.valueOf(progressStatus) +"/"+String.valueOf(number_of_files_to_send) + " files");
                     progress_bar.setProgress(progressStatus);
 
                     // stop the  disapear the animation  ...
@@ -1144,7 +1190,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                         }
                     });
                 }else {
-                    Toast.makeText(getApplicationContext(), "upload failed  ", Toast.LENGTH_SHORT).show();
+                    Toasty.info(getApplicationContext(), "upload failed  ", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -1156,14 +1202,14 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
             public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                 double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
                 System.out.println("Upload is " + progress + "% done");
-                // Toast.makeText(getApplicationContext(), "Upload is " + progress + "% done", Toast.LENGTH_SHORT).show();
+                // Toasty.info(getApplicationContext(), "Upload is " + progress + "% done", Toast.LENGTH_SHORT).show();
                 progress_bar.setProgress((int) Math.floor(progress + 0.5d));
 
             }
         }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(getApplicationContext(), "upload is paused ! ", Toast.LENGTH_SHORT).show();
+                Toasty.info(getApplicationContext(), "upload is paused ! ", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -1233,7 +1279,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
                     // update   ...  progression UI
                     progressStatus = progressStatus +1;
-                    infos_progress_files.setText(String.valueOf(progressStatus) +"/"+String.valueOf(number_of_files_to_send) + " files");
+                    infos_progress_files.setText("Uploaded "+String.valueOf(progressStatus) +"/"+String.valueOf(number_of_files_to_send) + " files");
                     progress_bar.setProgress(progressStatus);
 
                     // stop the  disapear the animation  ...
@@ -1260,7 +1306,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                         }
                     });
                 }else {
-                    Toast.makeText(getApplicationContext(), "upload failed  ", Toast.LENGTH_SHORT).show();
+                    Toasty.info(getApplicationContext(), "upload failed  ", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -1464,7 +1510,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
         if(message.length() == 0)
         {
-            Toast.makeText(getApplicationContext(), "Message cannot be empty", Toast.LENGTH_SHORT).show();
+            Toasty.info(getApplicationContext(), "Message cannot be empty", Toast.LENGTH_SHORT).show();
 
             sendButton.setEnabled(true);
         }
@@ -1535,7 +1581,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
         if(message.length() == 0)
         {
-            Toast.makeText(getApplicationContext(), "invalid message !", Toast.LENGTH_SHORT).show();
+            Toasty.info(getApplicationContext(), "invalid message !", Toast.LENGTH_SHORT).show();
 
             sendButton.setEnabled(true);
         }
@@ -1729,13 +1775,13 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
                 if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
 
-                    Toast.makeText(ChatActivity.this, "Start recording  ", Toast.LENGTH_LONG).show();
+                    Toasty.info(ChatActivity.this, "Start recording  ", Toast.LENGTH_LONG).show();
                     startRecording();
                     //mRecordLable.setText("Recording started...");
                 }
                 else if (motionEvent.getAction() == MotionEvent.ACTION_UP){
 
-                    Toast.makeText(ChatActivity.this, "Stop recording  ", Toast.LENGTH_LONG).show();
+                    Toasty.info(ChatActivity.this, "Stop recording  ", Toast.LENGTH_LONG).show();
 
                     stopRecording();
 
@@ -1775,7 +1821,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         // uploadAudio();
         voice_upload_images_to_firebase(Uri.fromFile(new File(mFileName)));
     }
-
 
 
 

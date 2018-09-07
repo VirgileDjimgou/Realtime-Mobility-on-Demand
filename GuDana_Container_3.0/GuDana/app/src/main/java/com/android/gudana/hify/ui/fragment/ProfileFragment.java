@@ -24,12 +24,14 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.android.gudana.chatapp.activities.ProfileActivity;
 import com.android.gudana.hify.adapters.PostsAdapter;
 import com.android.gudana.hify.models.Post;
 import com.android.gudana.hify.ui.activities.MainActivity;
@@ -46,6 +48,8 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -312,6 +316,7 @@ public class ProfileFragment extends Fragment {
         private FirebaseAuth mAuth;
         private FirebaseFirestore mFirestore;
         private UserHelper userHelper;
+        private Button Send_button;
 
         private TextView name,username,email,location,post,friend,bio,created;
         private CircleImageView profile_pic;
@@ -324,6 +329,9 @@ public class ProfileFragment extends Fragment {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.hi_frag_about_profile, container, false);
 
+
+            Send_button = rootView.findViewById(R.id.send_message);
+            Send_button.setVisibility(View.GONE);
 
             mAuth = FirebaseAuth.getInstance();
             mFirestore = FirebaseFirestore.getInstance();
@@ -401,6 +409,7 @@ public class ProfileFragment extends Fragment {
 
         private FirebaseAuth mAuth;
         private FirebaseFirestore mFirestore;
+        private DatabaseReference userDatabase;
         private UserHelper userHelper;
 
         private EditText name,username,email,bio,location;
@@ -422,6 +431,8 @@ public class ProfileFragment extends Fragment {
 
             mAuth = FirebaseAuth.getInstance();
             mFirestore = FirebaseFirestore.getInstance();
+            userDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
 
             name=rootView.findViewById(R.id.name);
             username=rootView.findViewById(R.id.username);
@@ -594,6 +605,44 @@ public class ProfileFragment extends Fragment {
                         final DocumentReference userDocument=mFirestore.collection("Users").document(mAuth.getCurrentUser().getUid());
 
                         if(imageUri!=null){
+
+                            // update the Chat profile
+                            StorageReference file = FirebaseStorage.getInstance().getReference().child("profile_images").child(mAuth.getCurrentUser().getUid() + ".jpg");
+                            file.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>()
+                            {
+                                @Override
+                                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task)
+                                {
+                                    if(task.isSuccessful())
+                                    {
+                                        //String imageUrl = task.getResult().getDownloadUrl().toString();
+                                        String imageUrl = task.getResult().getUploadSessionUri().toString();
+
+
+                                        // Updating image on ca_user data
+
+                                        userDatabase.child("image").setValue(imageUrl).addOnCompleteListener(new OnCompleteListener<Void>()
+                                        {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task)
+                                            {
+                                                if(task.isSuccessful())
+                                                {
+                                                    Toast.makeText(rootView.getContext() , "Picture updated", Toast.LENGTH_SHORT).show();
+                                                }
+                                                else
+                                                {
+                                                    Log.d("", "updateImage listener failed: " + task.getException().getMessage());
+                                                }
+                                            }
+                                        });
+                                    }
+                                    else
+                                    {
+                                        Log.d("update Chat Profile ", "uploadImage listener failed: " + task.getException().getMessage());
+                                    }
+                                }
+                            });
 
                             dialog.setMessage("Updating Details....");
                             dialog.show();

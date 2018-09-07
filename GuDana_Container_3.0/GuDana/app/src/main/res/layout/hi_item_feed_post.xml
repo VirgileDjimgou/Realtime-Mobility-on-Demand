@@ -155,8 +155,8 @@
 
             <ImageView
                 android:id="@+id/play_video_ok"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:scaleType="center"
                 android:layout_gravity="center"
                 android:src="@mipmap/ic_play_video"

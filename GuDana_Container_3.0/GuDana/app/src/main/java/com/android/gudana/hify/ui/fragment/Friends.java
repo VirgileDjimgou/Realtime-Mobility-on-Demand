@@ -130,8 +130,6 @@ public class Friends extends Fragment {
         mRecyclerView.setStateDisplay(EmptyStateRecyclerView.STATE_ERROR,
                 new TextStateDisplay(view.getContext(),"Sorry for inconvenience","Something went wrong :("));
 
-
-
         startListening();
 
     }

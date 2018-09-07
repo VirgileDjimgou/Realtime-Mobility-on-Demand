@@ -168,7 +168,7 @@ public class MediaResultsAdapter extends BaseAdapter {
                    // FileOpen.openVideoFile(context, Uri.fromFile(new File(video.getOriginalPath())) );
                     Intent intent=new Intent(context,FullscreenActivity.class)
                             .putExtra("uri",Uri.fromFile(new File(video.getOriginalPath())).toString());
-                    LinkRes =  Uri.fromFile(new File(video.getOriginalPath())).toString();
+                    FullscreenActivity.link_video =  Uri.fromFile(new File(video.getOriginalPath())).toString();
                     context.startActivity(intent);
                 } catch (Exception e) {
                     e.printStackTrace();

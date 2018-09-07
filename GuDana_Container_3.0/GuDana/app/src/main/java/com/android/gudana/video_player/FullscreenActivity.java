@@ -29,10 +29,7 @@ public class FullscreenActivity extends AppCompatActivity {
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
      */
     private static final boolean AUTO_HIDE = true;
-
-    String intent_URI;
-    public static String LinkVideo = "";
-
+    public   static String link_video = "";
 
     /**
      * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
@@ -102,50 +99,21 @@ public class FullscreenActivity extends AppCompatActivity {
 
         setContentView(R.layout.vid_activity_fullscreen);
 
-        try{
+        mVisible = true;
+        mBetterVideoPlayer = (BetterVideoPlayer) findViewById(R.id.bvp);
+        mBetterVideoPlayer.setSource(Uri.parse(link_video));
 
-
-            intent_URI=getIntent().getStringExtra("uri");
-            //intent_URL=getIntent().getStringExtra("url");
-
-            PhotoView photoView = findViewById(R.id.photo_view);
-
-            if(!TextUtils.isEmpty(intent_URI)) {
-                // photoView.setImageURI(Uri.parse(intent_URI));
-            }else {
-
-
+        mBetterVideoPlayer.getToolbar().setTitle("FullScreen Sample");
+        mBetterVideoPlayer.getToolbar()
+                .setNavigationIcon(android.support.v7.appcompat.R.drawable.abc_ic_ab_back_material);
+        mBetterVideoPlayer.getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
             }
-            try{
+        });
 
-                mVisible = true;
-                mBetterVideoPlayer = (BetterVideoPlayer) findViewById(R.id.bvp);
-                //mBetterVideoPlayer.setSo
-                Log.d("link ", LinkRes);
-                mBetterVideoPlayer.setSource(Uri.parse(LinkRes));
-
-                mBetterVideoPlayer.getToolbar().setTitle("GuDVideo Player");
-                mBetterVideoPlayer.getToolbar();
-
-            }catch (Exception ex){
-                ex.printStackTrace();
-            }
-
-            mVisible = true;
-            mBetterVideoPlayer = (BetterVideoPlayer) findViewById(R.id.bvp);
-            mBetterVideoPlayer.setSource(Uri.parse(intent_URI));
-
-            mBetterVideoPlayer.getToolbar().setTitle("GuDVideo Player");
-            mBetterVideoPlayer.getToolbar()
-                    .setNavigationIcon(android.support.v7.appcompat.R.drawable.abc_ic_ab_back_material);
-            mBetterVideoPlayer.getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBackPressed();
-                }
-            });
-
-            // Set up the user interaction to manually show or hide the system UI.
+        // Set up the user interaction to manually show or hide the system UI.
         /*mBetterVideoPlayer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -153,17 +121,10 @@ public class FullscreenActivity extends AppCompatActivity {
             }
         });*/
 
-            // Upon interacting with UI controls, delay any scheduled hide()
-            // operations to prevent the jarring behavior of controls going away
-            // while interacting with the UI.
-            //findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
-
-
-        }catch(Exception ex){
-            ex.printStackTrace();
-
-        }
-
+        // Upon interacting with UI controls, delay any scheduled hide()
+        // operations to prevent the jarring behavior of controls going away
+        // while interacting with the UI.
+        //findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
     }
 
     @Override
@@ -185,42 +146,28 @@ public class FullscreenActivity extends AppCompatActivity {
     }
 
     private void hide() {
-
-        try{
-
-            // Hide UI first
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.hide();
-            }
-            mVisible = false;
-
-            // Schedule a runnable to remove the status and navigation bar after a delay
-            mHideHandler.removeCallbacks(mShowPart2Runnable);
-            mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
-
-        }catch (Exception ex){
-            ex.printStackTrace();
+        // Hide UI first
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
         }
+        mVisible = false;
 
+        // Schedule a runnable to remove the status and navigation bar after a delay
+        mHideHandler.removeCallbacks(mShowPart2Runnable);
+        mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
     }
 
     @SuppressLint("InlinedApi")
     private void show() {
-        try{
+        // Show the system bar
+        mBetterVideoPlayer.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+        mVisible = true;
 
-            // Show the system bar
-            mBetterVideoPlayer.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-            mVisible = true;
-
-            // Schedule a runnable to display UI elements after a delay
-            mHideHandler.removeCallbacks(mHidePart2Runnable);
-            mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
-
-        }catch(Exception ex){
-
-        }
+        // Schedule a runnable to display UI elements after a delay
+        mHideHandler.removeCallbacks(mHidePart2Runnable);
+        mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
     }
 
     /**
@@ -228,13 +175,7 @@ public class FullscreenActivity extends AppCompatActivity {
      * previously scheduled calls.
      */
     private void delayedHide(int delayMillis) {
-        try{
-
-            mHideHandler.removeCallbacks(mHideRunnable);
-            mHideHandler.postDelayed(mHideRunnable, delayMillis);
-
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
+        mHideHandler.removeCallbacks(mHideRunnable);
+        mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 }

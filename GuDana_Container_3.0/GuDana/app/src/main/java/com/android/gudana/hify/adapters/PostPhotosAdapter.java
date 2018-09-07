@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.gudana.chatapp.utils.FileOpen;
@@ -20,6 +21,7 @@ import com.android.gudana.hify.ui.activities.notification.ImagePreviewSave;
 import com.android.gudana.hify.ui.views.HifyImageView;
 import com.android.gudana.R;
 import com.android.gudana.hify.utils.database.fileDownloader;
+import com.android.gudana.video_player.FullscreenActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.krishna.fileloader.FileLoader;
@@ -33,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import id.zelory.compressor.Compressor;
+import pl.droidsonroids.gif.GifImageView;
 
 import static com.mikepenz.iconics.Iconics.TAG;
 
@@ -78,30 +81,67 @@ public class PostPhotosAdapter extends PagerAdapter {
         final View imageLayout = inflater.inflate(R.layout.hi_item_viewpager_image, view, false);
 
         assert imageLayout!=null;
-        HifyImageView imageView = imageLayout.findViewById(R.id.image);
+        final HifyImageView imageView = imageLayout.findViewById(R.id.image);
+        final GifImageView LoadingView =  imageLayout.findViewById(R.id.loading_video_indicator);
+        final ImageView ready_to_play = imageLayout.findViewById(R.id.play_video_ok);
+        final fileDownloader FileDOwnload_and_prepare = new fileDownloader();
         //BlurImageView background_image = imageLayout.findViewById(R.id.background_image);
+        ready_to_play.setEnabled(false);
+        ready_to_play.setVisibility(View.GONE);
 
         if(!local) {
 
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(video_file== true){
-                        // Toast.makeText(context, "Video    Video  ", Toast.LENGTH_SHORT).show();
-                        // download and open the  open the file
-                        // FileOpen.openVideoFile(URL_VIDEO);
-                        //holder.VideoIndicator.setVisibility(View.VISIBLE);
-                        fileDownloader.Fileloader(context , URL_VIDEO);
+                    try{
+                        if(video_file== true){
+                            // Toast.makeText(context, "Video    Video  ", Toast.LENGTH_SHORT).show();
+                            // download and open the  open the file
+                            // FileOpen.openVideoFile(URL_VIDEO);
+                            //holder.VideoIndicator.setVisibility(View.VISIBLE);
+                            LoadingView.setVisibility(View.VISIBLE);
+                            FileDOwnload_and_prepare.Fileloader(context , URL_VIDEO ,LoadingView , ready_to_play);
+                            //than we must disable the object
+                            imageView.setEnabled(false); // to avoid another click on this view
 
-                    }else{
+                        }else{
 
-                        Intent intent=new Intent(context,ImagePreviewSave.class)
-                                .putExtra("uri","")
-                                .putExtra("sender_name","Posts")
-                                .putExtra("url",IMAGES.get(position).getUrl());
-                        context.startActivity(intent);
+                            Intent intent=new Intent(context,ImagePreviewSave.class)
+                                    .putExtra("uri","")
+                                    .putExtra("sender_name","Posts")
+                                    .putExtra("url",IMAGES.get(position).getUrl());
+                            context.startActivity(intent);
+
+                        }
+
+                    }catch(Exception ex){
 
                     }
+
+                }
+            });
+
+            ready_to_play.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    //  FileOpen.openVideoFile(context , myUri);
+                    try {
+                        // FileOpen.openVideoFile(context, Uri.fromFile(new File(video.getOriginalPath())) );
+                        Uri fakeLink = null;
+                        Intent intent=new Intent(context,FullscreenActivity.class)
+                                .putExtra("uri",fakeLink);
+                        String Link_res = FileDOwnload_and_prepare.getPath_to_ressource();
+                        FullscreenActivity.link_video = Link_res;
+
+                        //context.startActivity(intent);
+
+                        FileOpen.openVideoFile(context, Uri.parse(Link_res));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                 }
             });
 

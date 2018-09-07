@@ -85,7 +85,6 @@ public class AddFriends extends Fragment {
 
         usersList = new ArrayList<>();
         usersAdapter = new AddFriendAdapter(usersList, view.getContext(), mView.findViewById(R.id.layout));
-
         mRecyclerView.setItemAnimator(new FlipInTopXAnimator());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         mRecyclerView.setHasFixedSize(true);

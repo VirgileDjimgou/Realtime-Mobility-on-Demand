@@ -117,24 +117,6 @@
                         android:paddingBottom="12dp"/>
 
                     <EditText
-                        android:id="@+id/location"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/password"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginLeft="30dp"
-                        android:layout_marginRight="30dp"
-                        android:layout_marginTop="20dp"
-                        android:background="@drawable/input_light_white"
-                        android:ems="10"
-                        android:hint="Locality"
-                        android:inputType="textPostalAddress"
-                        android:paddingStart="20dp"
-                        android:paddingEnd="12dp"
-                        android:paddingTop="12dp"
-                        android:paddingBottom="12dp"/>
-
-                    <EditText
                         android:id="@+id/password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -156,7 +138,7 @@
                         android:id="@+id/button"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/location"
+                        android:layout_below="@+id/password"
                         android:layout_centerHorizontal="true"
                         android:layout_marginBottom="30dp"
                         android:layout_marginLeft="30dp"
