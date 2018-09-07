@@ -384,7 +384,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setTitle("test  name .... ");
+        actionBar.setTitle("");
 
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View actionBarView = inflater.inflate(R.layout.ca_chat_bar, null);
@@ -730,6 +730,9 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         askPermission();
+
+        initDatabases();
+        appBarName.setText("GuDana User");
 
     }
 
@@ -1333,7 +1336,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                 try
                 {
                     // get phone other users
-                    PhoneCorrespondant = dataSnapshot.child("id_asterisk").getValue().toString();
 
                     OtherUserIdPhone = dataSnapshot.child("name").getValue().toString();
 

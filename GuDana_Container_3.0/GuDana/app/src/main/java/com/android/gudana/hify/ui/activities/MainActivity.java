@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
     public static TextView username;
     private AuthCredential credential;
     private Fragment mCurrentFragment;
+    // public static url_icon_
     public BroadcastReceiver NetworkChangeReceiver = new BroadcastReceiver() {
 
         @Override

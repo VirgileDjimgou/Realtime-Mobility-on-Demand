@@ -1,35 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!---
- * This is a part of ChatApp Project (https://github.com/h01d/ChatApp)
- * Licensed under Apache License 2.0
- *
- * @author  Raf (https://github.com/h01d)
- * @version 1.1
- * @since   27/02/2018
--->
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TextView
-        android:id="@+id/chat_bar_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="ChatApp"
-        android:textColor="#fff"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+    <LinearLayout
+        android:layout_width="53dp"
+        android:layout_height="53dp">
 
-    <TextView
-        android:id="@+id/chat_bar_seen"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textColor="#fff" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/icon_image"
+            android:elevation="3dp"
+            android:layout_margin="6dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/user"
+            android:scaleType="centerCrop"/>
+
+    </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/chat_bar_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ChatApp"
+                android:textColor="#fff"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/chat_bar_seen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#fff" />
+
+
+        </LinearLayout>
+
+
 
 
 </LinearLayout>
+
