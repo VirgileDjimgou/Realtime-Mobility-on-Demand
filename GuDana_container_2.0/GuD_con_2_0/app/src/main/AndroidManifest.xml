@@ -89,7 +89,6 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
@@ -100,7 +99,6 @@
 
                 <data android:scheme="tel" />
                 <data android:scheme="sip" />
-                />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SENDTO" />
@@ -153,16 +151,6 @@
 
         </activity>
 
-        <activity
-            android:name=".linphone.LinphoneActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="behind"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
-
 
         <activity
             android:name=".linphone.CallIncomingActivity"
@@ -182,119 +170,8 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".linphone.CallActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/FullScreen">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
 
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <data android:mimeType="lin_audio/*" />
-                <data android:mimeType="video/*" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            -->
-        </activity>
-        <activity
-            android:name=".linphone.assistant.AssistantActivity"
-            android:screenOrientation="behind"
-            android:launchMode="singleTop"
-            android:theme="@style/NoTitle">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".linphone.purchase.InAppPurchaseActivity"
-            android:screenOrientation="nosensor"
-            android:launchMode="singleTop"
-            android:theme="@style/NoTitle">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".linphone.assistant.RemoteProvisioningLoginActivity"
-            android:screenOrientation="nosensor"
-            android:launchMode="singleTop"
-            android:theme="@style/NoTitle">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".linphone.assistant.RemoteProvisioningActivity"
-            android:screenOrientation="nosensor"
-            android:launchMode="singleTop"
-            android:theme="@style/NoTitle">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-            <intent-filter>
-                <data android:scheme="linphone-config" /> <!-- Change if needed -->
-                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-        <service
-            android:name=".linphone.LinphoneService"
-            android:label="@string/service_name"
-            android:stopWithTask="false" />
-        <service
-            android:name=".linphone.sync.SyncService"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.content.SyncAdapter" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.content.SyncAdapter"
-                android:resource="@xml/lin_syncadapter" />
-            <meta-data
-                android:name="android.provider.CONTACTS_STRUCTURE"
-                android:resource="@xml/lin_contacts" />
-        </service>
-        <service android:name=".linphone.sync.AuthenticationService">
-            <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.accounts.AccountAuthenticator"
-                android:resource="@xml/lin_authenticator" />
-        </service>
-
-        <receiver android:name=".linphone.NetworkManager">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:name=".linphone.BluetoothManager"
-            android:enabled="false"></receiver>
-        <receiver android:name=".linphone.BootReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.ACTION_SHUTDOWN" />
-            </intent-filter>
-        </receiver>
-        <receiver android:name=".linphone.PhoneStateChangedReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.PHONE_STATE" />
-            </intent-filter>
-        </receiver>
-
-        <!-- This one needs to be registered from application -->
-        <receiver android:name=".linphone.KeepAliveReceiver" />
 
         <!-- Needed for push notification -->
         <receiver
@@ -310,54 +187,7 @@
 
         <service android:name=".linphone.gcm.GCMService" />
 
-        <activity
-            android:name=".linphone.tutorials.TutorialLauncherActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/NoTitle">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".linphone.tutorials.TutorialBuddyStatusActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/NoTitle">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".linphone.tutorials.TutorialChatRoomActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/NoTitle">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".linphone.tutorials.TutorialHelloWorldActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/NoTitle">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".linphone.tutorials.TutorialRegistrationActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/NoTitle">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".linphone.tutorials.TutorialCardDavSync"
-            android:launchMode="singleTop"
-            android:theme="@style/NoTitle">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
+
 
 
         <activity
@@ -386,12 +216,6 @@
             android:persistent="true" />
 
 
-        <activity
-            android:name="com.android.rivchat.MainActivity_NavDrawer"
-            android:label="@string/app_name"
-            android:launchMode="singleTop"
-            android:configChanges="orientation|screenSize"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
 
 
         <activity

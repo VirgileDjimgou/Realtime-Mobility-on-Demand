@@ -27,11 +27,13 @@
         <enum name="topToBottom" value="3" />
     </attr>
 
+
     <declare-styleable name="SlidingDrawer">
         <attr name="handle" format="reference" />
         <attr name="content" format="reference" />
         <attr name="direction" />
     </declare-styleable>
+
 
 
 

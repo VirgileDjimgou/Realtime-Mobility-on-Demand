@@ -2,15 +2,16 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.jakewharton.butterknife'
 
 
-
 android {
 
-    compileSdkVersion 26
+    compileSdkVersion 27
     buildToolsVersion '27.0.3'
+
     defaultConfig {
         applicationId 'com.android.gudana'
         minSdkVersion 21
-        targetSdkVersion 23
+        targetSdkVersion 27
+
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -54,6 +55,7 @@ android {
 
     useLibrary 'org.apache.http.legacy'
 
+
 }
 
 repositories {
@@ -75,11 +77,19 @@ ext {
 }
 
 dependencies {
-    implementation 'com.android.support:support-v4:26.0.2'
+
+    configurations.all {
+        resolutionStrategy {
+            force 'com.android.support:support-v4:27.1.0'
+        }}
+
+    // implementation 'com.android.support:support-v4:26.0.2'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
+
 
 
     compile files('libs/audio_device_java.jar')
@@ -319,6 +329,8 @@ dependencies {
     compile 'me.jahirfiquitiva:FABsMenu:1.1.1'
     //https://github.com/jahirfiquitiva/FABsMenu (Apache License 2.0)
 
+
+
     // audio recorder   ...
     compile 'com.github.safetysystemtechnology:audio-recorder-button:v1.3'
 
@@ -427,6 +439,8 @@ dependencies {
 
     // file downloader and beaitifl cache   ...
     implementation 'com.github.kk121:File-Loader:1.2'
+
+
 
 }
 apply plugin: 'com.google.gms.google-services'
