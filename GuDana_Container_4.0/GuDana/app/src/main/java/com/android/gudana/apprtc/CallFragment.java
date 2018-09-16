@@ -26,16 +26,22 @@ import android.widget.Toast;
 
 import com.android.gudana.R;
 import com.android.gudana.chatapp.activities.ChatActivity;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.webrtc.RendererCommon.ScalingType;
 
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
 
 import static com.android.gudana.chatapp.activities.ChatActivity.Call_dispo;
@@ -58,6 +64,8 @@ public class CallFragment extends Fragment {
   private ScalingType scalingType;
   private boolean videoCallEnabled = true;
   public static DatabaseReference userDB;
+  private CircleImageView contactPicture;
+
 
 
   /**
@@ -85,6 +93,9 @@ public class CallFragment extends Fragment {
     toggleMuteButton = (ImageButton) controlView.findViewById(R.id.button_call_toggle_mic);
     captureFormatText = (TextView) controlView.findViewById(R.id.capture_format_text_call);
     captureFormatSlider = (SeekBar) controlView.findViewById(R.id.capture_format_slider_call);
+
+    contactPicture = (CircleImageView) controlView.findViewById(R.id.image);
+
 
     // Add buttons click events.
     disconnectButton.setOnClickListener(new View.OnClickListener() {
@@ -138,13 +149,49 @@ public class CallFragment extends Fragment {
           // another kind of notification  ...
       }
       // start chronometer  ....
-    call_time_voice.setFormat("Time Running - %s"); // set the format for a chronometer
+    call_time_voice.setFormat("Time- %s"); // set the format for a chronometer
     call_time_voice.start();
 
 
     // start call status  ...
     Check_Correspondantavailibility(controlView.getContext(), ConnectActivity.user_id);
+
+    // init  caller id
+    InitCallerProfil(ConnectActivity.user_id);
+
     return controlView;
+  }
+
+  // init profil but we can optimize that
+
+  public void InitCallerProfil(String CallerUserId) {
+
+    contactView.setText("GuDaba User");
+    FirebaseFirestore.getInstance().collection("Users")
+            .document(CallerUserId)
+            .get()
+            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+              @Override
+              public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                String friend_name = "";
+                friend_name=documentSnapshot.getString("name");
+                //friend_email=documentSnapshot.getString("email");
+                String friend_image =documentSnapshot.getString("image");
+                //friend_token=documentSnapshot.getString("token");
+
+                contactView.setText(friend_name);
+                //email.setText(friend_email);
+                //location.setText(documentSnapshot.getString("location"));
+                //bio.setText(documentSnapshot.getString("bio"));
+
+                Glide.with(controlView)
+                        .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.default_user_art_g_2))
+                        .load(friend_image)
+                        .into(contactPicture);
+              }
+            });
+
   }
 
 
@@ -170,7 +217,7 @@ public class CallFragment extends Fragment {
               if(map_call.get("call_possible")!=null){
                 // than this user is already registered ...
                 boolean availibilty  = (boolean) map_call.get("call_possible");
-                if(availibilty = false) {
+                if(availibilty == false) {
                   // than we must stop the call  ...
                   // ViCall.stopRinging();
                   // put the  call  dispo enable

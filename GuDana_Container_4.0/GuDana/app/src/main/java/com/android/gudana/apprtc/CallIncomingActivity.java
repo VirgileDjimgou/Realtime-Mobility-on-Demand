@@ -171,36 +171,39 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 						ViCall.stopRinging();
 						answer();
 
+
+						float curX;
+						switch (motionEvent.getAction()) {
+							case MotionEvent.ACTION_DOWN:
+								acceptUnlock.setVisibility(View.VISIBLE);
+								decline.setVisibility(View.GONE);
+								answerX = motionEvent.getX();
+								break;
+							case MotionEvent.ACTION_MOVE:
+								curX = motionEvent.getX();
+								if((answerX - curX) >= 0)
+									view.scrollBy((int) (answerX - curX), view.getScrollY());
+								answerX = curX;
+								if (curX < screenWidth/4) {
+									ViCall.stopRinging();
+									answer();
+									return true;
+								}
+								break;
+							case MotionEvent.ACTION_UP:
+								view.scrollTo(0, view.getScrollY());
+								decline.setVisibility(View.VISIBLE);
+								acceptUnlock.setVisibility(View.GONE);
+								break;
+						}
+
 					}catch(Exception ex){
 
 						ex.printStackTrace();
 					}
-
-					float curX;
-					switch (motionEvent.getAction()) {
-						case MotionEvent.ACTION_DOWN:
-							acceptUnlock.setVisibility(View.VISIBLE);
-							decline.setVisibility(View.GONE);
-							answerX = motionEvent.getX();
-							break;
-						case MotionEvent.ACTION_MOVE:
-							curX = motionEvent.getX();
-							if((answerX - curX) >= 0)
-								view.scrollBy((int) (answerX - curX), view.getScrollY());
-							answerX = curX;
-							if (curX < screenWidth/4) {
-								answer();
-								return true;
-							}
-							break;
-						case MotionEvent.ACTION_UP:
-							view.scrollTo(0, view.getScrollY());
-							decline.setVisibility(View.VISIBLE);
-							acceptUnlock.setVisibility(View.GONE);
-							break;
-					}
 					return true;
-				}
+
+				} // afetre that  ....
 			});
 
 			decline.setOnTouchListener(new View.OnTouchListener() {
@@ -211,39 +214,45 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 
 						Call_dispo = true;
 						ViCall.stopRinging();
+						decline();
+
+						float curX;
+						switch (motionEvent.getAction()) {
+							case MotionEvent.ACTION_DOWN:
+								declineUnlock.setVisibility(View.VISIBLE);
+								accept.setVisibility(View.GONE);
+								declineX = motionEvent.getX();
+								break;
+							case MotionEvent.ACTION_MOVE:
+								curX = motionEvent.getX();
+								view.scrollBy((int) (declineX - curX), view.getScrollY());
+								declineX = curX;
+								Log.w(curX);
+								if (curX > (screenWidth/2)){
+
+									Call_dispo = true;
+									ViCall.stopRinging();
+									decline();
+									return true;
+								}
+								break;
+							case MotionEvent.ACTION_UP:
+								view.scrollTo(0, view.getScrollY());
+								accept.setVisibility(View.VISIBLE);
+								declineUnlock.setVisibility(View.GONE);
+								break;
+
+						}
+
 
 					}catch(Exception ex){
 
 						Call_dispo = true;
 						ex.printStackTrace();
 					}
-
-					float curX;
-					switch (motionEvent.getAction()) {
-						case MotionEvent.ACTION_DOWN:
-							declineUnlock.setVisibility(View.VISIBLE);
-							accept.setVisibility(View.GONE);
-							declineX = motionEvent.getX();
-							break;
-						case MotionEvent.ACTION_MOVE:
-							curX = motionEvent.getX();
-							view.scrollBy((int) (declineX - curX), view.getScrollY());
-							declineX = curX;
-							Log.w(curX);
-							if (curX > (screenWidth/2)){
-								decline();
-								return true;
-							}
-							break;
-						case MotionEvent.ACTION_UP:
-							view.scrollTo(0, view.getScrollY());
-							accept.setVisibility(View.VISIBLE);
-							declineUnlock.setVisibility(View.GONE);
-							break;
-
-					}
 					return true;
-				}
+
+				} // after that  ...
 			});
 		}
 
@@ -395,6 +404,10 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 			// put the  call  dispo enable
 			Call_dispo = true;
 
+			// reset call
+			ChatActivity.resetCallparameter(CallIncomingActivity.this , ConnectActivity.user_id);
+
+
 		}catch(Exception ex){
 
 			Call_dispo = true;
@@ -489,8 +502,6 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 
 		try{
 
-			ViCall.stopRinging();
-
 			userDB = FirebaseDatabase.getInstance().getReference().child("Users").child(UserID);
 			// Set the  Driver Response to true ...
 			//HashMap map = new HashMap();
@@ -507,7 +518,7 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 							if(map_call.get("call_possible")!=null){
 								// than this user is already registered ...
 								boolean availibilty  = (boolean) map_call.get("call_possible");
-								if(availibilty = false) {
+								if(availibilty == false) {
 									// than we must stop the call  ...
 									ViCall.stopRinging();
 									// put the  call  dispo enable
