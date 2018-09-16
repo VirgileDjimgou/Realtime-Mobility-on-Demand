@@ -263,6 +263,7 @@
         <activity
             android:name=".chatapp.activities.FullScreenActivity"
             android:theme="@style/ProfileTheme" />
+
         <activity
             android:name=".linphone.CallIncomingActivity"
             android:launchMode="singleTop"
@@ -281,6 +282,7 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".linphone.CallActivity"
             android:launchMode="singleTop"

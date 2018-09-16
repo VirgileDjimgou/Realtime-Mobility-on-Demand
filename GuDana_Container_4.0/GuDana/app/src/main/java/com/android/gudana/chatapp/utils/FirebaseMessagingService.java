@@ -10,6 +10,8 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
 import com.android.gudana.R;
+import com.android.gudana.apprtc.CallIncomingActivity;
+import com.android.gudana.apprtc.ConnectActivity;
 import com.android.gudana.chatapp.activities.ChatActivity;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -49,36 +51,63 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
             if(notificationTitle.equals("you have a call"))
             {
+                // start a call activity   ...
+
+
+                // check if you are in  a conversation a the moment  ....
+                if(ChatActivity.Call_dispo == true){ // you are available ...
+                    try {
+
+                        Intent CallStart = new Intent(this, CallIncomingActivity.class);
+                        CallStart.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        CallStart.putExtra("userid", notificationFrom);
+                        startActivity(CallStart);
+
+
+                    }catch(Exception ex){
+                        ex.printStackTrace();
+                    }
+
+                }else{ // if not you will get a notification
+
+
+                    if(!ChatActivity.running || ChatActivity.running && !ChatActivity.otherUserId.equals(notificationFrom))
+                    {
+                        // Creating the notification
+
+                        NotificationCompat.Builder notification = new NotificationCompat.Builder(this, getString(R.string.default_notification_channel_id))
+                                .setContentTitle(notificationTitle)
+                                .setContentText(notificationMessage)
+                                .setSmallIcon(R.drawable.ic_send_message)
+                                .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.mipmap.ic_launcher))
+                                .setAutoCancel(true)
+                                .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
+
+                        Intent intent = new Intent(notificationAction);
+                        intent.putExtra("userid", notificationFrom);
+
+                        // Extract a unique notification from sender userId so we can have only 1 notification per user
+
+                        int notificationId = Integer.parseInt(notificationFrom.replaceAll("[^0-9]", ""));
+
+                        PendingIntent pendingIntent = PendingIntent.getActivity(this, notificationId % 65535, intent, PendingIntent.FLAG_ONE_SHOT);
+
+                        notification.setContentIntent(pendingIntent);
+
+                        // Pushing notification to device
+
+                        notificationManager.notify(notificationId % 65535, notification.build());
+                    }
+
+
+
+                }
+
                 // If it's a message notification
                 // Checking if ChatActivity is not open or if its, it should have a different userId from current
 
-                if(!ChatActivity.running || ChatActivity.running && !ChatActivity.otherUserId.equals(notificationFrom))
-                {
-                    // Creating the notification
 
-                    NotificationCompat.Builder notification = new NotificationCompat.Builder(this, getString(R.string.default_notification_channel_id))
-                            .setContentTitle(notificationTitle)
-                            .setContentText(notificationMessage)
-                            .setSmallIcon(R.drawable.ic_send_message)
-                            .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.mipmap.ic_launcher))
-                            .setAutoCancel(true)
-                            .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
 
-                    Intent intent = new Intent(notificationAction);
-                    intent.putExtra("userid", notificationFrom);
-
-                    // Extract a unique notification from sender userId so we can have only 1 notification per user
-
-                    int notificationId = Integer.parseInt(notificationFrom.replaceAll("[^0-9]", ""));
-
-                    PendingIntent pendingIntent = PendingIntent.getActivity(this, notificationId % 65535, intent, PendingIntent.FLAG_ONE_SHOT);
-
-                    notification.setContentIntent(pendingIntent);
-
-                    // Pushing notification to device
-
-                    notificationManager.notify(notificationId % 65535, notification.build());
-                }
             }
 
 

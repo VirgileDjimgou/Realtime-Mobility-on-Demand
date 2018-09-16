@@ -3,6 +3,10 @@
 
     <color name="black_overlay">#66000000</color>
 
+
+    <color name="bg_gradient_start">#31244e</color>
+    <color name="bg_gradient_end">#6b394c</color>
+
     <color name="colorPrimaryy">#FFFFFF</color>
     <color name="colorPrimaryDarkk">#FFFFFF</color>
     <color name="colorAccentt">#5093FF</color>

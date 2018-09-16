@@ -49,6 +49,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import es.dmoral.toasty.Toasty;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -209,10 +210,6 @@ public class LoginActivity extends AppCompatActivity {
                 .show();
     }
 
-
-
-
-
     public void performLogin() {
 
         final String email_, pass_;
@@ -356,8 +353,8 @@ public class LoginActivity extends AppCompatActivity {
                                         mDialog.dismiss();
                                         new BottomDialog.Builder(LoginActivity.this)
                                                 .setTitle("Information")
-                                                .setContent("This account is being used in another device, please logout from that device and try again.")
-                                                .setPositiveText("Ok")
+                                                .setContent("This account is being used in another device, do you want to logout from that Device  and  use your Credential in this Device  ? " )
+                                                .setPositiveText("try with another Credential")
                                                 .setPositiveBackgroundColorResource(R.color.colorAccentt)
                                                 .setCancelable(true)
                                                 .onPositive(new BottomDialog.ButtonCallback() {
@@ -366,11 +363,53 @@ public class LoginActivity extends AppCompatActivity {
                                                         dialog.dismiss();
                                                     }
                                                 })
+
+                                                .setNegativeText("Logout")
+                                                .setNegativeTextColorResource(R.color.red)
+                                                //.setNegativeTextColor(ContextCompat.getColor(this, R.color.colorAccent)
+                                                .onNegative(new BottomDialog.ButtonCallback() {
+                                                    @Override
+                                                    public void onClick(BottomDialog dialog) {
+                                                        Log.d("logout ", "Do something!");
+
+                                                        // logout from another device  and login again ...
+                                                        final ProgressDialog mDialog = new ProgressDialog(LoginActivity.this);
+                                                        mDialog.setIndeterminate(true);
+                                                        mDialog.setMessage("Logging you out...");
+                                                        mDialog.setCancelable(false);
+                                                        mDialog.setCanceledOnTouchOutside(false);
+                                                        mDialog.show();
+
+                                                        Map<String, Object> tokenRemove = new HashMap<>();
+                                                        tokenRemove.put("token_id", "");
+                                                        final String current_id = task.getResult().getUser().getUid();
+                                                        mFirestore.collection("Users").document(current_id).update(tokenRemove).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void aVoid) {
+                                                                userHelper.deleteContact(1);
+                                                                mAuth.signOut();
+                                                                //LoginActivity.startActivityy(LoginActivity.this);
+                                                                mDialog.dismiss();
+                                                                //finish();
+                                                                Toasty.info(LoginActivity.this, " You have successfully logged out! ", Toast.LENGTH_LONG).show();
+
+                                                                overridePendingTransitionExit();
+                                                            }
+                                                        }).addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
+                                                                Log.e("Logout Error", e.getMessage());
+                                                            }
+                                                        });
+                                                    }
+                                                })
                                                 .show();
 
                                         if (mAuth.getCurrentUser() != null) {
                                             mAuth.signOut();
                                         }
+
+
 
                                     }
                                 }
@@ -491,6 +530,8 @@ public class LoginActivity extends AppCompatActivity {
         }
 
     }
+
+
 
     @Override
     public void finish() {

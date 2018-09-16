@@ -30,6 +30,7 @@ exports.sendNotification = functions.database.ref('/Notifications/{user_id}/{not
 		
 
     const fromUser = admin.database().ref(`/Notifications/${user_id}/${notification_id}`).once('value');
+
 		console.log('log Etape 2!');
 
     return fromUser.then(fromUserResult => 

@@ -283,9 +283,6 @@ public class CallActivity extends Activity implements AppRTCClient.SignalingEven
       return;
     }
 
-
-
-
     boolean loopback = intent.getBooleanExtra(EXTRA_LOOPBACK, false);
     boolean tracing = intent.getBooleanExtra(EXTRA_TRACING, false);
 

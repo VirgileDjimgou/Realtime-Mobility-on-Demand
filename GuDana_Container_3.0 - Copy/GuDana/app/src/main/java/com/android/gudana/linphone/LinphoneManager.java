@@ -125,7 +125,8 @@ import static android.media.AudioManager.STREAM_VOICE_CALL;
  * @author Guillaume Beraudo
  *
  */
-public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessage.LinphoneChatMessageListener, LinphoneAccountCreator.LinphoneAccountCreatorListener {
+public class LinphoneManager implements LinphoneCoreListener,
+		LinphoneChatMessage.LinphoneChatMessageListener, LinphoneAccountCreator.LinphoneAccountCreatorListener {
 
 	private static LinphoneManager instance;
 	private Context mServiceContext;

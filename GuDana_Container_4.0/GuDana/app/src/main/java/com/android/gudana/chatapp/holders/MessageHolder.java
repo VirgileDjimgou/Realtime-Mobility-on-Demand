@@ -1012,45 +1012,51 @@ public class MessageHolder extends RecyclerView.ViewHolder
             {
                 try
                 {
-                    final String image = dataSnapshot.child("image").getValue().toString();
+                    if(dataSnapshot.child("image").getValue().toString() != null){
+                        final String image = dataSnapshot.child("image").getValue().toString();
 
-                    if(!image.equals("default"))
-                    {
-                        Picasso.with(context)
-                                .load(image)
-                                .resize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, context.getResources().getDisplayMetrics()), (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, context.getResources().getDisplayMetrics()))
-                                .centerCrop()
-                                .networkPolicy(NetworkPolicy.OFFLINE)
-                                .placeholder(R.drawable.user)
-                                .into(messageImageLeft, new Callback()
-                                {
-                                    @Override
-                                    public void onSuccess()
+
+                        if(!image.equals("default"))
+                        {
+                            Picasso.with(context)
+                                    .load(image)
+                                    .resize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, context.getResources().getDisplayMetrics()), (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, context.getResources().getDisplayMetrics()))
+                                    .centerCrop()
+                                    .networkPolicy(NetworkPolicy.OFFLINE)
+                                    .placeholder(R.drawable.user)
+                                    .into(messageImageLeft, new Callback()
                                     {
+                                        @Override
+                                        public void onSuccess()
+                                        {
 
-                                    }
+                                        }
 
-                                    @Override
-                                    public void onError()
-                                    {
-                                        Picasso.with(context)
-                                                .load(image)
-                                                .resize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, context.getResources().getDisplayMetrics()), (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, context.getResources().getDisplayMetrics()))
-                                                .centerCrop()
-                                                .placeholder(R.drawable.user)
-                                                .error(R.drawable.user)
-                                                .into(messageImageLeft);
-                                    }
-                                });
+                                        @Override
+                                        public void onError()
+                                        {
+                                            Picasso.with(context)
+                                                    .load(image)
+                                                    .resize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, context.getResources().getDisplayMetrics()), (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, context.getResources().getDisplayMetrics()))
+                                                    .centerCrop()
+                                                    .placeholder(R.drawable.user)
+                                                    .error(R.drawable.user)
+                                                    .into(messageImageLeft);
+                                        }
+                                    });
+                        }
+                        else
+                        {
+                            messageImageLeft.setImageResource(R.drawable.user);
+                        }
+
                     }
-                    else
-                    {
-                        messageImageLeft.setImageResource(R.drawable.user);
-                    }
+
                 }
                 catch(Exception e)
                 {
                     Log.d(TAG, "userDatabase exception: " + e.getMessage());
+                    messageImageLeft.setImageResource(R.drawable.user);
                     e.printStackTrace();
                 }
             }

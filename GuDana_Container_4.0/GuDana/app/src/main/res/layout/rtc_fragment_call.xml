@@ -1,9 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/bg_gradient"
     android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/contact_detail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/top_bar"
+        android:background="@drawable/bg_gradient"
+        android:paddingTop="10dp"
+        android:layout_above="@+id/menu">
+
+        <TextView
+            android:id="@+id/contact_name"
+            style="@style/font5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/white"
+            android:gravity="center_vertical|center_horizontal"
+            android:paddingTop="5dp"/>
+
+        <TextView
+            android:id="@+id/contact_number"
+            style="@style/font2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:layout_below="@id/contact_name"
+            android:layout_centerHorizontal="true"
+            android:paddingBottom="10dp"
+            android:layout_gravity="center_vertical|center_horizontal" />
+
+        <RelativeLayout
+            android:id="@+id/avatar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/contact_number"
+            android:layout_margin="5dp"
+            android:gravity="center">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/image"
+                android:layout_width="220dp"
+                android:layout_height="220dp"
+                android:src="@drawable/default_user_art_g_2"
+                app:civ_border_color="@color/colorPrimaryy"
+                app:civ_border_width="0dp" />
+
+
+        </RelativeLayout>
+
+        <Chronometer
+            android:id="@+id/call_time_voice"
+            style="@style/font2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="30dp"
+            android:layout_below="@id/avatar_layout"
+            android:layout_centerHorizontal="true"
+            android:paddingBottom="10dp"
+            android:layout_gravity="center_vertical|center_horizontal" />
+
+
+    </RelativeLayout>
+
 
     <TextView
         android:id="@+id/contact_name_call"
@@ -11,6 +78,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_above="@+id/buttons_call_container"
+        android:textColor="@color/colorWhite"
         android:textSize="28sp"
         android:textStyle="bold"
         android:layout_margin="8dp"/>
@@ -27,7 +95,7 @@
 
        <ImageButton
            android:id="@+id/button_call_disconnect"
-           android:background="@drawable/disconnect"
+           android:background="@mipmap/ic_disconnect_call"
            android:contentDescription="@string/disconnect_call"
            android:layout_marginEnd="16dp"
            android:layout_width="48dp"
@@ -35,7 +103,7 @@
 
        <ImageButton
            android:id="@+id/button_call_switch_camera"
-           android:background="@android:drawable/ic_menu_camera"
+           android:background="@mipmap/ic_photo"
            android:contentDescription="@string/switch_camera"
            android:layout_marginEnd="8dp"
            android:layout_width="48dp"
@@ -43,14 +111,14 @@
 
         <ImageButton
            android:id="@+id/button_call_scaling_mode"
-           android:background="@drawable/ic_action_return_from_full_screen"
+           android:background="@mipmap/ic_scalling"
            android:contentDescription="@string/disconnect_call"
            android:layout_width="48dp"
            android:layout_height="48dp"/>
 
        <ImageButton
            android:id="@+id/button_call_toggle_mic"
-           android:background="@android:drawable/ic_btn_speak_now"
+           android:background="@drawable/ico_mic"
            android:contentDescription="@string/toggle_mic"
            android:layout_marginEnd="8dp"
            android:layout_width="48dp"
@@ -62,6 +130,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:textColor="@color/colorWhite"
         android:layout_above="@+id/capture_format_slider_call"
         android:textSize="16sp"
         android:text="@string/capture_format_change_text"/>

@@ -36,13 +36,18 @@ import android.widget.Toast;
 
 import com.android.gudana.BuildConfig;
 import com.android.gudana.R;
+import com.android.gudana.apprtc.CallIncomingActivity;
 import com.android.gudana.apprtc.ConnectActivity;
+import com.android.gudana.apprtc.linphone.LinphoneManager;
 import com.android.gudana.chatapp.adapters.MessageAdapter;
 import com.android.gudana.chatapp.models.Message;
 // import com.android.gudana.linphone.CallOutgoingActivity;
+import com.android.gudana.hify.ui.activities.MainActivity;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
 import com.firebase.ui.database.FirebaseListAdapter;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -52,6 +57,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnPausedListener;
 import com.google.firebase.storage.OnProgressListener;
@@ -216,6 +222,10 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     private TextView infos_progress_files;
     private TextView infos_progress_stop;
     private Context context;
+    LinphoneManager ViCall ;
+    public static  DatabaseReference userDB;
+
+
 
 
 
@@ -252,6 +262,9 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
 
     public static  RelativeLayout data_processing = null;
+    public static  String call_type = "video";
+    public static  boolean Call_dispo = true;
+    public static  boolean callmelder_notification =  false;
     // public static Context mContext;
 
 
@@ -260,29 +273,35 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
+            try{
+                switch (requestCode){
+                    case 200:
+                        permissionToRecordAccepted  = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                        permissionToWriteAccepted  = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                        break;
+                }
+                if (!permissionToRecordAccepted ) ChatActivity.super.finish();
+                if (!permissionToWriteAccepted ) ChatActivity.super.finish();
 
 
-        switch (requestCode){
-            case 200:
-                permissionToRecordAccepted  = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                permissionToWriteAccepted  = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-                break;
-        }
-        if (!permissionToRecordAccepted ) ChatActivity.super.finish();
-        if (!permissionToWriteAccepted ) ChatActivity.super.finish();
+                if (requestCode == MY_CAMERA_PERMISSION_CODE) {
+                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                        Toasty.info(this, "camera permission granted", Toast.LENGTH_LONG).show();
+                        Intent cameraIntent = new
+                                Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                        startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                    } else {
+                        Toasty.info(this, "camera permission denied", Toast.LENGTH_LONG).show();
+                    }
+
+                }
 
 
-        if (requestCode == MY_CAMERA_PERMISSION_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toasty.info(this, "camera permission granted", Toast.LENGTH_LONG).show();
-                Intent cameraIntent = new
-                        Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_REQUEST);
-            } else {
-                Toasty.info(this, "camera permission denied", Toast.LENGTH_LONG).show();
+            }catch (Exception ex){
+                ex.printStackTrace();
+
             }
 
-        }
 
 
     }
@@ -296,6 +315,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         // setContentView(R.layout.ca_activity_chat);
         setContentView(R.layout.p3_messages_activity);
         running = true;
+        ViCall = new LinphoneManager(ChatActivity.this.getApplicationContext());
 
         // messageEditText = findViewById(R.id.chat_message);
         messageEditText = (EmojiconEditText)findViewById(R.id.editTextMessage);
@@ -661,15 +681,23 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         // mToolBar.setTitle(chatName);
         //showMessages();
         //addListeners();
-        openVoiceRecorder();
 
-        // hide Keyboard
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        try{
 
-        askPermission();
 
-        initDatabases();
-        appBarName.setText("GuDana User");
+            openVoiceRecorder();
+
+            // hide Keyboard
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
+            askPermission();
+
+            initDatabases();
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        // appBarName.setText("GuDana User");
 
     }
 
@@ -771,20 +799,38 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
             case R.id.action_call_audio:
 
-                // make web rtc call
-                Intent intentaudio = new Intent(this, ConnectActivity.class);
-                intentaudio.putExtra("vid_or_aud", "audio");
-                intentaudio.putExtra("user_id", currentUserId);
-                startActivity(intentaudio);
+                if(Call_dispo == false){
+                    Toasty.warning(context, "you can not start  two calls at the same time  ! ", Toast.LENGTH_LONG).show();
+
+                }else {
+                    callmelder_notification = true;  // send a notification for  to registread the call
+                    // make web rtc call
+                    call_type = "audio";
+                    Call_dispo = false; // you  are not anymore available to take another call or to start another call
+                    Intent intentaudio = new Intent(this, ConnectActivity.class);
+                    intentaudio.putExtra("vid_or_aud", call_type);
+                    intentaudio.putExtra("user_id", currentUserId);
+                    startActivity(intentaudio);
+                }
 
                 //Toasty.info(getApplicationContext(), R.string.not_imp6565lemented, Toast.LENGTH_SHORT).show();
-
                 break;
             case R.id.action_call_video:
-                Intent intentvideo = new Intent(this, ConnectActivity.class);
-                intentvideo.putExtra("vid_or_aud", "video");
-                intentvideo.putExtra("user_id", currentUserId);
-                startActivity(intentvideo);
+                
+                if(Call_dispo == false){
+                    Toasty.warning(context, "you can not start  two calls at the same time  ! ", Toast.LENGTH_LONG).show();
+                    
+                }else {
+
+                    callmelder_notification = true;  // send a notification for  to registread the call
+                    call_type = "video";
+                    Call_dispo = false; // you  are not anymore available to take another call or to start another call
+                    Intent intentvideo = new Intent(this, ConnectActivity.class);
+                    intentvideo.putExtra("vid_or_aud", call_type);
+                    intentvideo.putExtra("user_id", currentUserId);
+                    startActivity(intentvideo);
+                }
+
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -1269,7 +1315,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
     }
 
-    public static  void call_infos_notification(){
+    public static  void call_infos_notification(final Context context_call){
 
 
         // Pushing message/notification so we can get keyIds
@@ -1290,10 +1336,12 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         messageMap.put("from", currentUserId);
         messageMap.put("to", otherUserId);
         messageMap.put("timestamp", ServerValue.TIMESTAMP);
+        messageMap.put("callId",ConnectActivity.id_server_app_rtc);
 
         HashMap<String, String> notificationData = new HashMap<>();
         notificationData.put("from", currentUserId);
         notificationData.put("type", type);
+        notificationData.put("callId", ConnectActivity.id_server_app_rtc);
 
         Map userMap = new HashMap();
         userMap.put("Messages/" + currentUserId + "/" + otherUserId + "/" + pushId, messageMap);
@@ -1324,6 +1372,69 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                 }
             }
         });
+
+
+
+        Map<String, Object> map = null;
+        map = new HashMap<>();
+        map.put("call_id", ConnectActivity.id_server_app_rtc);
+        map.put("call_type", call_type);
+        map.put("date_last_call", ServerValue.TIMESTAMP);
+        map.put("phone_available", false); // that meant you are  at the moment online  ...
+        map.put("call_possible", true); // that meant you are  at the moment online  ...
+
+        //userDB.updateChildren(map);
+
+
+        FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<Void> task)
+            {
+                if(task.isSuccessful())
+                {
+                    Toasty.info(context_call, "Initialisation with GuDana Voice Cloud successful ", Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    Toasty.error(context_call, "sorry GuDana Voice Cloud  is unreachable right now ! .... please try again later ", Toast.LENGTH_LONG).show();
+
+                }
+            }
+        });
+
+
+    }
+
+
+    public static  void resetCallparameter(final Context context_call , String UserID){
+
+
+        Map<String, Object> map = null;
+        map = new HashMap<>();
+        map.put("call_possible", false); // that meant you are  at the moment online  ...
+
+        //userDB.updateChildren(map);
+
+
+        FirebaseDatabase.getInstance().getReference().child("Users").child(UserID).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<Void> task)
+            {
+                if(task.isSuccessful())
+                {
+                    Toasty.info(context_call, "interrupted call ... your correspondent is apparently not available", Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    Toasty.error(context_call, "sorry GuDana Voice Cloud  is unreachable right now ! .... please try again later ", Toast.LENGTH_LONG).show();
+
+                }
+            }
+        });
+
+
     }
 
     private void initDatabases()
@@ -1738,7 +1849,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         }
     }
 
-
     // ######################################//// #######################################
 
     private void pickContact(){
@@ -1754,7 +1864,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                 .bubbleTextColor(Color.WHITE) //Optional - default: White
                 .showPickerForResult(CONTACT_PICKER_REQUEST);
     }
-
 
     @Override
     public void onClick(View view) {
@@ -1772,8 +1881,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         getMenuInflater().inflate(R.menu.menu_chat, menu);
         return true;
     }
-
-
 
     /**
      * location places picker
@@ -1800,9 +1907,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         it.putExtra(MediaStore.EXTRA_OUTPUT,photoURI);
         startActivityForResult(it, IMAGE_CAMERA_REQUEST);
     }
-
-
-
 
     public void openVoiceRecorder(){
         //Implement voice selection
@@ -1862,7 +1966,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         // uploadAudio();
         voice_upload_images_to_firebase(Uri.fromFile(new File(mFileName)));
     }
-
 
 
 }

@@ -13,6 +13,7 @@ package com.android.gudana.apprtc;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -37,7 +38,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.gudana.R;
-import com.android.gudana.hify.ui.activities.MainActivity;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -56,7 +56,7 @@ import es.dmoral.toasty.Toasty;
 /**
  * Handles the initial setup where the user selects which room to join.
  */
-public class ConnectActivity extends Activity {
+public class Connect_webrtc_call_api extends Activity {
   private static final String TAG = "ConnectActivity";
   private static final int CONNECTION_REQUEST = 1;
   private static final int REMOVE_FAVORITE_INDEX = 0;
@@ -105,14 +105,17 @@ public class ConnectActivity extends Activity {
   private String keyprefNegotiated;
   private String keyprefDataId;
   private String Video_or_audio_Call = "";
-  public static  String user_id = "";
+  private String user_id = "";
   public static  String id_server_app_rtc = "";
   private boolean video_flag = true;
-  private String CallChannel = "";
+  private Context mContext;
 
+  /*
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    setContentView(R.layout.rtc_activity_connect);
+
 
     // Get setting keys.
     PreferenceManager.setDefaultValues(this, R.xml.rtc_preferences, false);
@@ -153,7 +156,6 @@ public class ConnectActivity extends Activity {
     keyprefNegotiated = getString(R.string.pref_negotiated_key);
     keyprefDataId = getString(R.string.pref_data_id_key);
 
-    setContentView(R.layout.rtc_activity_connect);
 
 
 
@@ -203,23 +205,85 @@ public class ConnectActivity extends Activity {
     // Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
     // generate your id apprtc ...
     // id_server_app_rtc = "gudana"+user_id + Integer.toString(getRandomNumber());
-
-    //call channel intentaudio.putExtra("call_channel", call_server_id );
     id_server_app_rtc = "gudana" + Integer.toString(getRandomNumber());
-    try{
-      CallChannel =  getIntent().getStringExtra("call_channel");
-      if(CallChannel.length() >= 7){
-        id_server_app_rtc = CallChannel;
-      }
 
-    }catch(Exception ex){
-      ex.printStackTrace();
-    }
-
-
-    Toasty.info(ConnectActivity.this.getApplicationContext() , Video_or_audio_Call , Toast.LENGTH_SHORT).show();
+    Toasty.info(Connect_webrtc_call_api.this.getApplicationContext() , Video_or_audio_Call , Toast.LENGTH_SHORT).show();
     // start the   audio call or video call
     connectToRoom(id_server_app_rtc, false, false, false, 0 , video_flag);
+
+  }
+
+*/
+
+  public  Connect_webrtc_call_api(Context context , String Video_or_audio_Call , String user_id ){
+
+    // askPermission();
+
+    mContext = context;
+    // Get setting keys.
+    PreferenceManager.setDefaultValues(context, R.xml.rtc_preferences, false);
+    sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+    keyprefVideoCallEnabled = getString(R.string.pref_videocall_key);
+    keyprefScreencapture = getString(R.string.pref_screencapture_key);
+    keyprefCamera2 = getString(R.string.pref_camera2_key);
+    keyprefResolution = getString(R.string.pref_resolution_key);
+    keyprefFps = getString(R.string.pref_fps_key);
+    keyprefCaptureQualitySlider = getString(R.string.pref_capturequalityslider_key);
+    keyprefVideoBitrateType = getString(R.string.pref_maxvideobitrate_key);
+    keyprefVideoBitrateValue = getString(R.string.pref_maxvideobitratevalue_key);
+    keyprefVideoCodec = getString(R.string.pref_videocodec_key);
+    keyprefHwCodecAcceleration = getString(R.string.pref_hwcodec_key);
+    keyprefCaptureToTexture = getString(R.string.pref_capturetotexture_key);
+    keyprefFlexfec = getString(R.string.pref_flexfec_key);
+    keyprefAudioBitrateType = getString(R.string.pref_startaudiobitrate_key);
+    keyprefAudioBitrateValue = getString(R.string.pref_startaudiobitratevalue_key);
+    keyprefAudioCodec = getString(R.string.pref_audiocodec_key);
+    keyprefNoAudioProcessingPipeline = getString(R.string.pref_noaudioprocessing_key);
+    keyprefAecDump = getString(R.string.pref_aecdump_key);
+    keyprefOpenSLES = getString(R.string.pref_opensles_key);
+    keyprefDisableBuiltInAec = getString(R.string.pref_disable_built_in_aec_key);
+    keyprefDisableBuiltInAgc = getString(R.string.pref_disable_built_in_agc_key);
+    keyprefDisableBuiltInNs = getString(R.string.pref_disable_built_in_ns_key);
+    keyprefEnableLevelControl = getString(R.string.pref_enable_level_control_key);
+    keyprefDisableWebRtcAGCAndHPF = getString(R.string.pref_disable_webrtc_agc_and_hpf_key);
+    keyprefDisplayHud = getString(R.string.pref_displayhud_key);
+    keyprefTracing = getString(R.string.pref_tracing_key);
+    keyprefRoomServerUrl = getString(R.string.pref_room_server_url_key);
+    keyprefRoom = getString(R.string.pref_room_key);
+    keyprefRoomList = getString(R.string.pref_room_list_key);
+    keyprefEnableDataChannel = getString(R.string.pref_enable_datachannel_key);
+    keyprefOrdered = getString(R.string.pref_ordered_key);
+    keyprefMaxRetransmitTimeMs = getString(R.string.pref_max_retransmit_time_ms_key);
+    keyprefMaxRetransmits = getString(R.string.pref_max_retransmits_key);
+    keyprefDataProtocol = getString(R.string.pref_data_protocol_key);
+    keyprefNegotiated = getString(R.string.pref_negotiated_key);
+    keyprefDataId = getString(R.string.pref_data_id_key);
+
+
+
+
+    // get intent  video or audio  ....
+    // Video_or_audio_Call = getIntent().getStringExtra("vid_or_aud");
+    if(Video_or_audio_Call.equalsIgnoreCase("audio")){
+      video_flag = false;
+    }else{
+      video_flag = true;
+    }
+    // user_id = getIntent().getStringExtra("user_id");
+    // Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
+    // generate your id apprtc ...
+    // id_server_app_rtc = "gudana"+user_id + Integer.toString(getRandomNumber());
+    id_server_app_rtc = "gudana" +user_id+ Integer.toString(getRandomNumber());
+
+    // Toasty.info(Connect_webrtc_call_api.this.getApplicationContext() , Video_or_audio_Call , Toast.LENGTH_SHORT).show();
+    // start the   audio call or video call
+
+  }
+
+  public  String  StartCall(){
+    connectToRoom(id_server_app_rtc, false, false, false, 0 , video_flag);
+
+    return id_server_app_rtc;
 
   }
 
@@ -230,6 +294,7 @@ public class ConnectActivity extends Activity {
     return  value;
   }
 
+  /*
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.rtc_connect_menu, menu);
@@ -312,9 +377,6 @@ public class ConnectActivity extends Activity {
       roomListView.requestFocus();
       roomListView.setItemChecked(0, true);
     }
-
-    // always finisch this activity
-      finish();
   }
 
   @Override
@@ -327,10 +389,12 @@ public class ConnectActivity extends Activity {
     }
   }
 
-  /**
-   * Get a value from the shared preference or from the intent, if it does not
-   * exist the default is used.
-   */
+
+
+  */
+
+
+
   private String sharedPrefGetString(
           int attributeId, String intentName, int defaultId, boolean useFromIntent) {
     String defaultValue = getString(defaultId);
@@ -361,7 +425,7 @@ public class ConnectActivity extends Activity {
               @Override
               public void onPermissionsChecked(MultiplePermissionsReport report) {
                 if(report.isAnyPermissionPermanentlyDenied()){
-                  Toast.makeText(ConnectActivity.this, "You have denied some permissions permanently, if the app force close try granting permission from settings.", Toast.LENGTH_LONG).show();
+                  Toast.makeText(Connect_webrtc_call_api.this, "You have denied some permissions permanently, if the app force close try granting permission from settings.", Toast.LENGTH_LONG).show();
                 }
               }
 
@@ -601,7 +665,7 @@ public class ConnectActivity extends Activity {
     Log.d(TAG, "Connecting to room " + roomId + " at URL " + roomUrl);
     if (validateUrl(roomUrl)) {
       Uri uri = Uri.parse(roomUrl);
-      Intent intent = new Intent(this, CallActivity.class);
+      Intent intent = new Intent(mContext, CallActivity.class);
       intent.setData(uri);
       intent.putExtra(CallActivity.EXTRA_ROOMID, roomId);
       intent.putExtra(CallActivity.EXTRA_LOOPBACK, loopback);
@@ -678,7 +742,7 @@ public class ConnectActivity extends Activity {
       return true;
     }
 
-    new AlertDialog.Builder(this)
+    new AlertDialog.Builder(mContext)
         .setTitle(getText(R.string.invalid_url_title))
         .setMessage(getString(R.string.invalid_url_text, url))
         .setCancelable(false)

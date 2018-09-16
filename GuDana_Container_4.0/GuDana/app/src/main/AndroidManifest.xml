@@ -243,7 +243,6 @@
 
 
 
-
         <activity
             android:name="com.android.gudana.hify.ui.activities.account.LoginActivity"
             android:screenOrientation="portrait"
@@ -379,30 +378,31 @@
             android:screenOrientation="portrait" />
 
 
+        <activity
+            android:name="com.android.gudana.apprtc.SettingsActivity"
+            android:label="@string/settings_name">
+        </activity>
 
-
+        <activity
+            android:name=".apprtc.CallIncomingActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="behind"
+            android:theme="@style/NoTitle">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-
-                <data
-                    android:scheme="https"
-                    android:host="appr.tc"
-                    />
-                <data
-                    android:scheme="http"
-                    android:host="appr.tc"
-                    />
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name="com.android.gudana.apprtc.SettingsActivity"
-            android:label="@string/settings_name"
-            >
+            android:name=".linphone.CallOutgoingActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="behind"
+            android:theme="@style/NoTitle">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
         </activity>
+
 
 
 
@@ -474,46 +474,7 @@
 
         <!-- add linphone   minifest ...-->
 
-        <activity
-            android:name=".MainActivity_with_Drawer"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.CALL" />
-                <action android:name="android.intent.action.CALL_PRIVILEGED" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:scheme="tel" />
-                <data android:scheme="sip" />
-                />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.SENDTO" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:scheme="sip" />
-                <data android:scheme="imto" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.SENDTO" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:scheme="sip" />
-                <data android:scheme="imto" />
-            </intent-filter>
-            <intent-filter>
-                <data android:mimeType="@string/sync_mimetype" /> <!-- Change package in res/values/non_localizable_custom.xml ! -->
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".chatapp.activities.PhoneAuthActivity"
             android:launchMode="singleTop"
@@ -532,11 +493,11 @@
         </activity>
         <activity
             android:name=".chatapp.activities.UsersActivity"
-            android:parentActivityName=".MainActivity_with_Drawer"
+            android:parentActivityName=".hify.ui.activities.MainActivity"
             android:theme="@style/UsersTheme" />
         <activity
             android:name=".chatapp.activities.ChatActivity"
-            android:parentActivityName=".MainActivity_with_Drawer"
+            android:parentActivityName=".hify.ui.activities.MainActivity"
             android:theme="@style/ChatTheme">
             <intent-filter>
                 <action android:name="com.android.gudana.chatapp.chatapp_CHAT_TARGET_NOTIFICATION" />
@@ -550,22 +511,15 @@
 
 
 
-
-
-        <activity
-            android:name=".BootNavigation.MainActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoActionBar.NoTranslucent2" />
         <activity
             android:name=".chatapp.activities.FriendsActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity_with_Drawer"
+            android:parentActivityName=".hify.ui.activities.MainActivity"
             android:theme="@style/UsersTheme" />
         <activity
             android:name=".chatapp.activities.RequestActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity_with_Drawer"
+            android:parentActivityName=".hify.ui.activities.MainActivity"
             android:theme="@style/UsersTheme" />
 
         <meta-data
@@ -579,7 +533,7 @@
         <activity
             android:name=".GuDFeed.ImagePreviewActivity"
             android:label="Image Preview"
-            android:parentActivityName=".MainActivity_with_Drawer"
+            android:parentActivityName=".hify.ui.activities.MainActivity"
             android:theme="@style/UsersTheme"
             android:screenOrientation="portrait" />
 
@@ -588,14 +542,14 @@
             android:name=".GuDFeed.activities.create_post"
             android:label="@string/title_activity_create_post"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity_with_Drawer"
+            android:parentActivityName=".hify.ui.activities.MainActivity"
             android:theme="@style/AppTheme"/>
 
         <activity
             android:name=".GuDFeed.activities.SeePost"
             android:label="@string/title_activity_see_post"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity_with_Drawer"
+            android:parentActivityName=".hify.ui.activities.MainActivity"
             android:theme="@style/UsersTheme">
 
         </activity>
