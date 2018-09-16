@@ -260,6 +260,9 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 			@Override
 			public void onClick(View v) {
 				if(isScreenActive) {
+
+					Call_dispo = true;
+					ViCall.stopRinging();
 					decline();
 				} else {
 					accept.setVisibility(View.GONE);
