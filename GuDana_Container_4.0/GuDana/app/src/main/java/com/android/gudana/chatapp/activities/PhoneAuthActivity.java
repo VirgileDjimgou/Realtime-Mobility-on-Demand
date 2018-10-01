@@ -171,7 +171,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                                                 // than this user is already registered ...
                                                 String Phone = map.get("phone").toString();
                                                 // save User Info and continue  normaly  ... user is already registerd
-                                                // StaticConfig.UID = user_Global.getUid();
+                                                // StaticConfigUser_fromFirebase.UID = user_Global.getUid();
                                                 saveUserInfo();
                                                 Intent intent = new Intent(PhoneAuthActivity.this, MainActivity.class);
                                                 startActivity(intent);

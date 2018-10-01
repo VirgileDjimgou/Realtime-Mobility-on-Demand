@@ -17,7 +17,7 @@ buildscript {
         //classpath 'com.google.gms:google-services:3.1.1' // google-services plugin
         classpath 'com.google.gms:google-services:4.0.1' // google-services plugin
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-        classpath 'com.jakewharton:butterknife-gradle-plugin:9.0.0-SNAPSHOT'
+        //classpath 'com.jakewharton:butterknife-gradle-plugin:9.0.0-SNAPSHOT'
         //classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.1'
         classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
         classpath 'com.github.dcendents:android-maven-plugin:1.2'
@@ -33,9 +33,7 @@ allprojects {
         maven {
             url 'https://maven.fabric.io/public'
         }
-        maven {
-            url "https://s3.amazonaws.com/repo.commonsware.com"
-        }
+        // maven { url "https://s3.amazonaws.com/repo.commonsware.com" }
 
         mavenLocal()
         mavenCentral()

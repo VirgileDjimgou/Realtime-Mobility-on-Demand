@@ -100,6 +100,9 @@ public class MessageHolder extends RecyclerView.ViewHolder
 
         String otherUserId = from;
 
+       //  FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
+
         if(from.equals(currentUserId))
         {
             otherUserId = to;

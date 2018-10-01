@@ -72,6 +72,9 @@ public class ChatHolder extends RecyclerView.ViewHolder
         final CircleImageView userImage = view.findViewById(R.id.user_image);
         final ImageView userOnline = view.findViewById(R.id.user_online);
 
+
+        // FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
         userStatus.setText(message);
 
         userTime.setVisibility(View.VISIBLE);
@@ -96,6 +99,7 @@ public class ChatHolder extends RecyclerView.ViewHolder
         // Initialize/Update ca_user data
 
         userDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(userid);
+        userDatabase.keepSynced(true); // For offline use
         userListener = new ValueEventListener()
         {
             Timer timer; // Will be used to avoid flickering online status when changing activity

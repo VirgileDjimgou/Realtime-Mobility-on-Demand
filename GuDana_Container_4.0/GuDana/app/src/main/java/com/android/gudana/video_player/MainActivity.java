@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(savedInstanceState == null) {
             bvp.setAutoPlay(true);
-            bvp.setSource(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.video));
+            bvp.setSource(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.hify_sound));
             bvp.setCaptions(R.raw.sub, CaptionsView.CMime.SUBRIP);
         }
 

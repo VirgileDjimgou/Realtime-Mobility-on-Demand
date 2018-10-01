@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.android.gudana.chatapp.activities.ChatActivity;
 import com.android.gudana.chatapp.activities.ProfileActivity;
+import com.android.gudana.chatapp.models.StaticConfigUser_fromFirebase;
 import com.android.gudana.hify.adapters.PostsAdapter;
 import com.android.gudana.hify.models.Post;
 import com.android.gudana.R;
@@ -54,8 +55,12 @@ import java.util.Locale;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.dmoral.toasty.Toasty;
 import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+
+import static com.android.gudana.chatapp.activities.ChatActivity.FCM_Message_Sender;
+import static com.android.gudana.chatapp.activities.ChatActivity.getDateAndTime;
 
 public class FriendProfile extends AppCompatActivity {
 
@@ -727,7 +732,7 @@ public class FriendProfile extends AppCompatActivity {
                                                                                         public void onSuccess(Void aVoid) {
 
                                                                                             mDialog.dismiss();
-                                                                                            Toast.makeText(rootView.getContext(), "Friend request accepted", Toast.LENGTH_SHORT).show();
+                                                                                            Toasty.info(rootView.getContext(), "Friend request accepted", Toast.LENGTH_SHORT).show();
 
                                                                                             req_layout.animate()
                                                                                                     .alpha(0.0f)
@@ -741,6 +746,17 @@ public class FriendProfile extends AppCompatActivity {
                                                                                                             showRemoveButton();
                                                                                                         }
                                                                                                     }).start();
+
+                                                                                            // send notification   to tell that you ae a new friend   ...
+                                                                                            FCM_Message_Sender.sendWithOtherThread("token" ,
+                                                                                                    friend_token ,
+                                                                                                    "new friend" ,
+                                                                                                    currentUserId ,
+                                                                                                    StaticConfigUser_fromFirebase.USER_NAME,
+                                                                                                    StaticConfigUser_fromFirebase.USER_URL_IMAGE,
+                                                                                                    getDateAndTime(),
+                                                                                                    "room_disable",
+                                                                                                    " You have a new friend");
 
                                                                                         }
                                                                                     })
@@ -826,7 +842,7 @@ public class FriendProfile extends AppCompatActivity {
                         .collection("Friend_Requests").document(id).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(rootView.getContext(), "Friend request denied", Toast.LENGTH_SHORT).show();
+                        Toasty.info(rootView.getContext(), "Friend request denied", Toast.LENGTH_SHORT).show();
 
                         req_layout.animate()
                                 .alpha(0.0f)
@@ -839,6 +855,20 @@ public class FriendProfile extends AppCompatActivity {
                                         showAddButton();
                                     }
                                 }).start();
+
+                        // friend request declined   ...
+                        // send notification   to tell that you ae a new friend   ...
+                        // i want to take this function and adapt this to my   .... ..
+                        FCM_Message_Sender.sendWithOtherThread("token" ,
+                                friend_token ,
+                                "friend request declined" ,
+                                currentUserId ,
+                                StaticConfigUser_fromFirebase.USER_NAME,
+                                StaticConfigUser_fromFirebase.USER_URL_IMAGE,
+                                getDateAndTime(),
+                                "room_disable",
+
+                                "declined Friend Request");
 
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -906,11 +936,27 @@ public class FriendProfile extends AppCompatActivity {
                                             }
                                         });
 
+
+                                FCM_Message_Sender.sendWithOtherThread("token" ,
+                                        friend_token ,
+                                        "Friend Request" ,
+                                        currentUserId ,
+                                        StaticConfigUser_fromFirebase.USER_NAME,
+                                        StaticConfigUser_fromFirebase.USER_URL_IMAGE,
+                                        getDateAndTime(),
+                                        "room_disable",
+                                        "you ahev a Friend Request");
+
+
+
                                 // add friend in firebase chat   ....
                                 // Pushing notification to get keyId
                                 // send requests  for chat  ....
                                 // Pushing notification to get keyId
 
+                                // we don't need  this function  because  the cloud  ave bee disable on  google cloud Server  .....  so   i want to use a custom Server   ..
+                                // a Customlocal  function  to send all kind of notification    ..
+                                /*
                                 DatabaseReference notificationRef = FirebaseDatabase.getInstance().getReference().child("Notifications").child(otherUserId).push();
                                 String notificationId = notificationRef.getKey();
 
@@ -924,6 +970,9 @@ public class FriendProfile extends AppCompatActivity {
                                 map.put("Requests/" + otherUserId + "/" + currentUserId + "/type", "received");
                                 map.put("Requests/" + currentUserId + "/" + otherUserId + "/type", "sent");
                                 map.put("Notifications/" + otherUserId + "/" + notificationId, notificationData);
+
+
+                                // send  Friend
 
                                 // Updating data into database
 
@@ -942,6 +991,8 @@ public class FriendProfile extends AppCompatActivity {
                                         }
                                     }
                                 });
+
+                                */
 
                             }
 

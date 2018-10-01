@@ -106,9 +106,11 @@ public class ConnectActivity extends Activity {
   private String keyprefDataId;
   private String Video_or_audio_Call = "";
   public static  String user_id = "";
-  public static  String id_server_app_rtc = "";
+  // public static  String id_server_app_rtc = "";
   private boolean video_flag = true;
   private String CallChannel = "";
+  public static  String  received_call = "receive"; // to tell that  the personn call another  user or  receive a call
+  public static  String room_is_voice_Server = "";
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -205,11 +207,11 @@ public class ConnectActivity extends Activity {
     // id_server_app_rtc = "gudana"+user_id + Integer.toString(getRandomNumber());
 
     //call channel intentaudio.putExtra("call_channel", call_server_id );
-    id_server_app_rtc = "gudana" + Integer.toString(getRandomNumber());
+    room_is_voice_Server = getIntent().getStringExtra("room_id");
     try{
       CallChannel =  getIntent().getStringExtra("call_channel");
       if(CallChannel.length() >= 7){
-        id_server_app_rtc = CallChannel;
+        room_is_voice_Server = CallChannel;
       }
 
     }catch(Exception ex){
@@ -217,11 +219,13 @@ public class ConnectActivity extends Activity {
     }
 
 
-    Toasty.info(ConnectActivity.this.getApplicationContext() , Video_or_audio_Call , Toast.LENGTH_SHORT).show();
+    //Toasty.info(ConnectActivity.this.getApplicationContext() , Video_or_audio_Call , Toast.LENGTH_SHORT).show();
     // start the   audio call or video call
-    connectToRoom(id_server_app_rtc, false, false, false, 0 , video_flag);
+    connectToRoom(room_is_voice_Server, false, false, false, 0 , video_flag);
 
   }
+
+
 
   // generate random number
   private int getRandomNumber(){
@@ -671,6 +675,9 @@ public class ConnectActivity extends Activity {
 
       startActivityForResult(intent, CONNECTION_REQUEST);
     }
+
+    // create  Call Room Id  on Firebase   ... and call history   ...s
+
   }
 
   private boolean validateUrl(String url) {

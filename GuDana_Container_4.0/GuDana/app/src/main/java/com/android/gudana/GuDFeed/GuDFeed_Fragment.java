@@ -16,13 +16,11 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.android.gudana.GuDFeed.activities.create_post;
 import com.android.gudana.R;
-import com.android.gudana.viewpagercards.CardItem;
-import com.android.gudana.viewpagercards.CardPagerAdapter;
-import com.android.gudana.viewpagercards.ShadowTransformer;
 import com.nightonke.boommenu.Animation.BoomEnum;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
 import com.nightonke.boommenu.BoomButtons.HamButton;
@@ -43,9 +41,7 @@ public class GuDFeed_Fragment extends Fragment {
     private List<CardCustom> albumList;
     private Context context;
     public static ViewPager mViewPager;
-
-    public static CardPagerAdapter mCardAdapter;
-    public static ShadowTransformer mCardShadowTransformer;
+    public   LinearLayout SearchAppbar;
 
 
     private BoomMenuButton bmb ;
@@ -158,11 +154,6 @@ public class GuDFeed_Fragment extends Fragment {
             // Init View Pager ...
             mViewPager = (ViewPager) view_layout.findViewById(R.id.viewPager);
 
-            mCardAdapter = new CardPagerAdapter();
-            mCardAdapter.addCardItem(new CardItem(R.string.title_1, R.drawable.album4));
-            mCardAdapter.addCardItem(new CardItem(R.string.title_2, R.drawable.album3));
-            mCardAdapter.addCardItem(new CardItem(R.string.title_3, R.drawable.album2));
-            mCardAdapter.addCardItem(new CardItem(R.string.title_4, R.drawable.album1));
             //mFragmentCardAdapter = new CardFragmentPagerAdapter(getSupportFragmentManager(), dpToPixels(2, context));
 
 
@@ -171,9 +162,12 @@ public class GuDFeed_Fragment extends Fragment {
             // initCollapsingToolbar();
             final CollapsingToolbarLayout collapsingToolbar =
                     (CollapsingToolbarLayout) view_layout.findViewById(R.id.collapsing_toolbar);
-            collapsingToolbar.setTitle("GuDFeed");
+            collapsingToolbar.setTitle("GuDana");
             AppBarLayout appBarLayout = (AppBarLayout) view_layout.findViewById(R.id.appbar);
             appBarLayout.setExpanded(true);
+
+            // linear Layour for app bar
+            SearchAppbar = (LinearLayout) view_layout.findViewById(R.id.linearLayout_toolbar);
 
             // hiding & showing the title when toolbar expanded & collapsed
             appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
@@ -186,10 +180,12 @@ public class GuDFeed_Fragment extends Fragment {
                         scrollRange = appBarLayout.getTotalScrollRange();
                     }
                     if (scrollRange + verticalOffset == 0) {
-                        collapsingToolbar.setTitle(getString(R.string.gud_services));
+                        //collapsingToolbar.setTitle(getString(R.string.gud_services));
+                        SearchAppbar.setVisibility(View.VISIBLE);
                         isShow = true;
                     } else if (isShow) {
-                        collapsingToolbar.setTitle("GuDFeed");
+                        SearchAppbar.setVisibility(View.GONE);
+                        //collapsingToolbar.setTitle("GuDFeed");
                         isShow = false;
                     }
                 }

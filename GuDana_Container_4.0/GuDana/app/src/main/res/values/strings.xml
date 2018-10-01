@@ -588,7 +588,7 @@
 
     <string name="action_add_favourite">Add to your Favourites</string>
     <string name="action_play_next">Hide this Post</string>
-    <string name="backdrop_title"></string>
+    <string name="backdrop_title">GuDDana</string>
     <string name="backdrop_subtitle">Advertising with future Partners,... </string>
 
 
@@ -1798,6 +1798,9 @@ Curiosity might have killed the cat, but it is the driving force behind all inno
     <string name="fri">FRI</string>
     <string name="sat">SAT</string>
     <string name="with_recyclerview">FlowLayout with RecyclerView</string>
+    <string name="touch_anywhre"></string>
+    <string name="search_service">Search on GuDDana Network</string>
+    <string name="search_gud_tag">Search on GuDDana Network</string>
 </resources>
 
 

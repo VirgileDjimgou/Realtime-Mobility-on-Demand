@@ -181,18 +181,16 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/api_key_google_places" />
 
+
+        <!--
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@mipmap/ic_launcher" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccentt" />
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
 
-
-        <service android:name=".chatapp.utils.FirebaseMessagingService">
+             <service android:name=".chatapp.utils.FirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -201,6 +199,30 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
+
+
+-->
+
+
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/notification_channel_id" />
+
+        <service
+            android:name="com.android.gudana.fcm.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+
+
+        <!--android:name="com.android.gudana.hify.ui.activities.MainActivity"-->
 
         <activity
             android:name="com.android.gudana.hify.ui.activities.MainActivity"
@@ -241,6 +263,14 @@
             </intent-filter>
         </activity>
 
+
+
+        <activity
+            android:name="com.android.gudana.fcm.MainActivity_fcm"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/TranslucentBackground">
+        </activity>
 
 
         <activity
@@ -316,7 +346,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
-                <action android:name="com.amsavarthan.hify.TARGETNOTIFICATION" />
+                <action android:name="com.android.gudana.TARGETNOTIFICATION" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -326,7 +356,7 @@
             android:excludeFromRecents="true"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="com.amsavarthan.hify.TARGETNOTIFICATIONREPLY" />
+                <action android:name="com.android.gudana.TARGETNOTIFICATIONREPLY" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -387,21 +417,13 @@
             android:name=".apprtc.CallIncomingActivity"
             android:launchMode="singleTop"
             android:screenOrientation="behind"
+            android:noHistory="true"
             android:theme="@style/NoTitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".linphone.CallOutgoingActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="behind"
-            android:theme="@style/NoTitle">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
 
 
 
@@ -443,12 +465,13 @@
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
         <activity
             android:name="com.android.gudana.hify.ui.activities.friends.FriendProfile"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="com.amsavarthan.hify.TARGET_FRIENDREQUEST" />
+                <action android:name="com.android.gudana.hify.TARGET_FRIENDREQUEST" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

@@ -1,15 +1,20 @@
 package com.android.gudana.chatapp.activities;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -36,13 +41,18 @@ import android.widget.Toast;
 
 import com.android.gudana.BuildConfig;
 import com.android.gudana.R;
+import com.android.gudana.apprtc.CallFragment;
 import com.android.gudana.apprtc.CallIncomingActivity;
 import com.android.gudana.apprtc.ConnectActivity;
 import com.android.gudana.apprtc.linphone.LinphoneManager;
 import com.android.gudana.chatapp.adapters.MessageAdapter;
 import com.android.gudana.chatapp.models.Message;
 // import com.android.gudana.linphone.CallOutgoingActivity;
+import com.android.gudana.chatapp.models.StaticConfigUser_fromFirebase;
+import com.android.gudana.fcm.CustomFcm_Util;
+import com.android.gudana.fcm.MainActivity_fcm;
 import com.android.gudana.hify.ui.activities.MainActivity;
+import com.android.gudana.hify.utils.database.UserHelper;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
 import com.firebase.ui.database.FirebaseListAdapter;
@@ -120,10 +130,13 @@ import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.wafflecopter.multicontactpicker.ContactResult;
 import com.wafflecopter.multicontactpicker.MultiContactPicker;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 
 public class ChatActivity extends AppCompatActivity  implements  View.OnClickListener
 {
+    public  static String pushId_callRoom = "";
     private final String TAG = "CA/ChatActivity";
 
     // Will handle all changes happening in database
@@ -143,6 +156,9 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
     public static  String currentUserId;
 
+    public static  String NameCurrentUser = "";
+    public static  String url_Icon_currentUser = "";
+
     // ca_activity_chat views
 
     private EmojiconEditText messageEditText;
@@ -159,21 +175,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
     public static String otherUserId , OtherUserIdPhone = "" , PhoneCorrespondant = "";
     public static boolean running = false;
-
-
-    // add ..
-    private String messageId;
-    private ImageButton mSendButton;
-    private String chatName;
-    private ListView mMessageList;
-    private Toolbar mToolBar;
-    private String currentUserEmail;
-
-    private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mMessageDatabaseReference;
-    private DatabaseReference mUsersDatabaseReference;
-    private FirebaseListAdapter<Message> mMessageListAdapter;
-    private FirebaseAuth mFirebaseAuth;
 
     private static final int GALLERY_INTENT=2;
     private StorageReference mStorage;
@@ -222,8 +223,9 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     private TextView infos_progress_files;
     private TextView infos_progress_stop;
     private Context context;
-    LinphoneManager ViCall ;
     public static  DatabaseReference userDB;
+    public static DatabaseReference userDB_current;
+    // private static boolean CallPossible_button  =  true;
 
 
 
@@ -263,8 +265,13 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
     public static  RelativeLayout data_processing = null;
     public static  String call_type = "video";
-    public static  boolean Call_dispo = true;
+    // public static  boolean Call_dispo = true;
     public static  boolean callmelder_notification =  false;
+    public static CustomFcm_Util FCM_Message_Sender ;
+    private UserHelper userHelper;
+    public  static String TokenFCM_OtherUser = "";
+
+
     // public static Context mContext;
 
 
@@ -315,7 +322,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         // setContentView(R.layout.ca_activity_chat);
         setContentView(R.layout.p3_messages_activity);
         running = true;
-        ViCall = new LinphoneManager(ChatActivity.this.getApplicationContext());
+        //ViCall = new LinphoneManager(ChatActivity.this.getApplicationContext());
 
         // messageEditText = findViewById(R.id.chat_message);
         messageEditText = (EmojiconEditText)findViewById(R.id.editTextMessage);
@@ -538,6 +545,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                     .listener(new OnBMClickListener() {
                         @Override
                         public void onBoomButtonClick(int index) {
+                            // TextFcm();
                             locationPlacesIntent();
 
                             // Toasty.info(ChatMessagesActivity.this, "Button " + index + " is pressed.", Toast.LENGTH_SHORT).show();
@@ -694,12 +702,32 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
             initDatabases();
 
+            // get User Imformation from remote Database or from local Cache ...
+            GetInformation_from_Users();
+
         }catch(Exception ex){
             ex.printStackTrace();
         }
         // appBarName.setText("GuDana User");
+        // create  fcm Utill to send call  notification and  special notification   ... to other users
+        FCM_Message_Sender = new CustomFcm_Util();
+
+        // init User helper
+        //userHelper = new UserHelper(this);
+        //userHelper.
+    }
+
+    public void getOtherUserData(String OtherUserId){
 
     }
+
+
+    public void TextFcm(){
+        Intent intentvideo = new Intent(this, MainActivity_fcm.class);
+        startActivity(intentvideo);
+    }
+
+
 
     private static boolean hasPermissions(Context context, String... permissions) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
@@ -711,7 +739,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         }
         return true;
     }
-
 
     private void askPermission() {
 
@@ -743,7 +770,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                 }).check();
 
     }
-
 
     @Override
     protected void onResume()
@@ -799,36 +825,28 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
             case R.id.action_call_audio:
 
-                if(Call_dispo == false){
+
+                if(CallFragment.running == true ){
                     Toasty.warning(context, "you can not start  two calls at the same time  ! ", Toast.LENGTH_LONG).show();
 
                 }else {
-                    callmelder_notification = true;  // send a notification for  to registread the call
-                    // make web rtc call
-                    call_type = "audio";
-                    Call_dispo = false; // you  are not anymore available to take another call or to start another call
-                    Intent intentaudio = new Intent(this, ConnectActivity.class);
-                    intentaudio.putExtra("vid_or_aud", call_type);
-                    intentaudio.putExtra("user_id", currentUserId);
-                    startActivity(intentaudio);
+                    call_infos_notification(ChatActivity.this.context ,"audio");
+                    // call Button
+
                 }
 
                 //Toasty.info(getApplicationContext(), R.string.not_imp6565lemented, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_call_video:
-                
-                if(Call_dispo == false){
+
+
+                if(CallFragment.running == true ){
                     Toasty.warning(context, "you can not start  two calls at the same time  ! ", Toast.LENGTH_LONG).show();
                     
                 }else {
+                    call_infos_notification(ChatActivity.this.context ,"video");
+                    // disable call Button  ...
 
-                    callmelder_notification = true;  // send a notification for  to registread the call
-                    call_type = "video";
-                    Call_dispo = false; // you  are not anymore available to take another call or to start another call
-                    Intent intentvideo = new Intent(this, ConnectActivity.class);
-                    intentvideo.putExtra("vid_or_aud", call_type);
-                    intentvideo.putExtra("user_id", currentUserId);
-                    startActivity(intentvideo);
                 }
 
                 break;
@@ -1049,6 +1067,17 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                                     {
                                         sendButton.setEnabled(true);
 
+
+                                        FCM_Message_Sender.sendWithOtherThread("token" ,
+                                                TokenFCM_OtherUser ,
+                                                "image",
+                                                currentUserId,
+                                                StaticConfigUser_fromFirebase.USER_NAME,
+                                                StaticConfigUser_fromFirebase.USER_URL_IMAGE,
+                                                getDateAndTime(),
+                                                "room_disable",
+                                                "photo message");
+
                                         if(databaseError != null)
                                         {
                                             Log.d(TAG, "sendMessage(): updateChildren failed: " + databaseError.getMessage());
@@ -1166,11 +1195,22 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                                 {
                                     sendButton.setEnabled(true);
 
+                                    FCM_Message_Sender.sendWithOtherThread("token" ,
+                                            TokenFCM_OtherUser ,
+                                            "voice",
+                                            currentUserId,
+                                            StaticConfigUser_fromFirebase.USER_NAME,
+                                            StaticConfigUser_fromFirebase.USER_URL_IMAGE,
+                                            getDateAndTime(),
+                                            "room_disable",
+                                            "voice message");
+
+
                                     if(databaseError != null)
                                     {
                                         Log.d(TAG, "sendMessage(): updateChildren failed: " + databaseError.getMessage());
                                     }else{
-                                        Toast.makeText(ChatActivity.this, databaseError.getMessage(), Toast.LENGTH_LONG).show();
+                                        //Toast.makeText(ChatActivity.this, databaseError.getMessage(), Toast.LENGTH_LONG).show();
                                     }
                                 }
                             });
@@ -1290,10 +1330,24 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                                     {
                                         sendButton.setEnabled(true);
 
+                                        FCM_Message_Sender.sendWithOtherThread("token" ,
+                                                TokenFCM_OtherUser ,
+                                                "doc",
+                                                currentUserId,
+                                                StaticConfigUser_fromFirebase.USER_NAME,
+                                                StaticConfigUser_fromFirebase.USER_URL_IMAGE,
+                                                getDateAndTime(),
+                                                "no room",
+                                                "document message");
+
                                         if(databaseError != null)
                                         {
+
                                             Log.d(TAG, "sendMessage(): updateChildren failed: " + databaseError.getMessage());
                                             Toasty.info(ChatActivity.this.getApplicationContext() , databaseError.getMessage(), Toast.LENGTH_LONG).show();
+
+                                            // after that send your notification   ...
+
                                         }else{
                                             // Toasty.info(ChatActivity.this, databaseError.getMessage(), Toast.LENGTH_LONG).show();
                                         }
@@ -1315,10 +1369,83 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
     }
 
-    public static  void call_infos_notification(final Context context_call){
+    public   void call_infos_notification(final Context context_call ,final  String CallType){
 
 
         // Pushing message/notification so we can get keyIds
+
+
+
+        DatabaseReference Call_Room = FirebaseDatabase.getInstance().getReference().child("Call_room").child(currentUserId).child(otherUserId).push();
+        pushId_callRoom = Call_Room.getKey();
+
+
+        Map callroom_map = new HashMap();
+        callroom_map.put("room_id", pushId_callRoom);
+        callroom_map.put("id_caller", currentUserId);
+        callroom_map.put("id_receiver", otherUserId);
+        callroom_map.put("timestamp", ServerValue.TIMESTAMP);
+        callroom_map.put("available_caller", true);
+        callroom_map.put("available_receiver", false);
+        callroom_map.put("room_status", true); //
+        callroom_map.put("call_type", call_type);
+        callroom_map.put("reason_interrupted_call", " -- ");
+        // the end of call extremely important    ..
+
+
+        Map callroom_map_messages = new HashMap();
+        callroom_map_messages.put("Call_room//" + pushId_callRoom, callroom_map);
+
+
+        // update call room id
+        FirebaseDatabase.getInstance().getReference().updateChildren(callroom_map_messages, new DatabaseReference.CompletionListener()
+        {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference)
+            {
+
+                if(databaseError != null)
+                {
+                    //Log.d("error", "sendMessage(): updateChildren failed: " + databaseError.getMessage());
+                    Toasty.info(context_call, "sendMessage(): updateChildren failed: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(ChatActivity.this.getApplicationContext(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                }else{
+                    // we can  start the call intent  ....
+                    // start call
+                    // so now start the call
+                    if (CallType.equalsIgnoreCase("video")){
+
+                        // video call //
+
+                        // start a call pushId_callRoom
+
+                        callmelder_notification = true;  // send a notification for  to registread the call
+                        call_type = "video";
+                        Intent intentvideo = new Intent(ChatActivity.this.context, ConnectActivity.class);
+                        intentvideo.putExtra("vid_or_aud", call_type);
+                        intentvideo.putExtra("user_id", currentUserId);
+                        intentvideo.putExtra("room_id", pushId_callRoom);
+                        startActivity(intentvideo);
+
+                    }else {
+                        // audio call
+
+                        callmelder_notification = true;  // send a notification for  to registread the call
+                        // make web rtc call
+                        call_type = "audio";
+                        Intent intentaudio = new Intent(ChatActivity.this.context, ConnectActivity.class);
+                        ConnectActivity.received_call = "caller";
+                        intentaudio.putExtra("vid_or_aud", call_type);
+                        intentaudio.putExtra("user_id", currentUserId);
+                        startActivity(intentaudio);
+
+                    }
+                }
+            }
+        });
+
+
+        // "Packing" message
 
         DatabaseReference userMessage = FirebaseDatabase.getInstance().getReference().child("Messages").child(currentUserId).child(otherUserId).push();
         String pushId = userMessage.getKey();
@@ -1326,22 +1453,23 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         DatabaseReference notificationRef = FirebaseDatabase.getInstance().getReference().child("Notifications").child(otherUserId).push();
         String notificationId = notificationRef.getKey();
 
-        // "Packing" message
-
         String type = "call";
-        String message = "Gudana User  try to call you";
+        String message = StaticConfigUser_fromFirebase.USER_NAME+" try to call you";
         Map messageMap = new HashMap();
         messageMap.put("message", message);
         messageMap.put("type", type);
         messageMap.put("from", currentUserId);
         messageMap.put("to", otherUserId);
         messageMap.put("timestamp", ServerValue.TIMESTAMP);
-        messageMap.put("callId",ConnectActivity.id_server_app_rtc);
+        messageMap.put("callId",pushId_callRoom);
 
+
+        /*
         HashMap<String, String> notificationData = new HashMap<>();
         notificationData.put("from", currentUserId);
         notificationData.put("type", type);
         notificationData.put("callId", ConnectActivity.id_server_app_rtc);
+        */
 
         Map userMap = new HashMap();
         userMap.put("Messages/" + currentUserId + "/" + otherUserId + "/" + pushId, messageMap);
@@ -1355,7 +1483,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         userMap.put("Chat/" + otherUserId + "/" + currentUserId + "/timestamp", ServerValue.TIMESTAMP);
         userMap.put("Chat/" + otherUserId + "/" + currentUserId + "/seen", 0);
 
-        userMap.put("Notifications/" + otherUserId + "/" + notificationId, notificationData);
+        //userMap.put("Notifications/" + otherUserId + "/" + notificationId, notificationData);
 
         // Updating database with the new data including message, chat and notification
 
@@ -1373,17 +1501,23 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
             }
         });
 
+        // send notification    ...
+
+        FCM_Message_Sender.sendWithOtherThread("token" ,
+                TokenFCM_OtherUser ,
+                "call" ,
+                currentUserId ,
+                NameCurrentUser,
+                url_Icon_currentUser,
+                getDateAndTime(),
+                pushId_callRoom,
+                " missed call ");
 
 
         Map<String, Object> map = null;
         map = new HashMap<>();
-        map.put("call_id", ConnectActivity.id_server_app_rtc);
-        map.put("call_type", call_type);
-        map.put("date_last_call", ServerValue.TIMESTAMP);
-        map.put("phone_available", false); // that meant you are  at the moment online  ...
-        map.put("call_possible", true); // that meant you are  at the moment online  ...
-
-        //userDB.updateChildren(map);
+        map.put("call_availability", false); // not available anymore to take another call
+               //userDB.updateChildren(map);
 
 
         FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>()
@@ -1393,6 +1527,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
             {
                 if(task.isSuccessful())
                 {
+
                     Toasty.info(context_call, "Initialisation with GuDana Voice Cloud successful ", Toast.LENGTH_LONG).show();
                 }
                 else
@@ -1404,42 +1539,198 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         });
 
 
+
+
     }
 
 
-    public static  void resetCallparameter(final Context context_call , String UserID){
+    public static  void resetCallparameter(final Context context_call , final String Room_Id , String ClassName_func , String reason , int call_attribut){
 
+
+        Toasty.info(context_call, "Call Reset Parameter  : " + ClassName_func, Toast.LENGTH_LONG).show();
 
         Map<String, Object> map = null;
         map = new HashMap<>();
-        map.put("call_possible", false); // that meant you are  at the moment online  ...
+        map.put("room_status", false); // that meant you are  at the moment online  .....
+        map.put("reason_interrupted_call", reason);
+        map.put("available_caller", false);
+        map.put("available_receiver", false);
+
+
+        //  a user or the both is not available anymore  ......
 
         //userDB.updateChildren(map);
+        FirebaseDatabase.getInstance().getReference().child("Call_room").child(Room_Id).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<Void> task)
+            {
+
+                if(task.isSuccessful())
+                {
+
+                    Toasty.info(context_call, "interrupted call ...", Toast.LENGTH_LONG).show();
+                    // Call enabledb
+
+                }
+                else
+                {
+
+                    Toasty.error(context_call, "sorry GuDana Voice Cloud  is unreachable right now ! .... please try again later ", Toast.LENGTH_LONG).show();
+
+                }
+
+            }
+        });
 
 
-        FirebaseDatabase.getInstance().getReference().child("Users").child(UserID).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>()
+        // and Update Call History    ....
+
+        Map callroom_map = new HashMap();
+        callroom_map.put("room_id", pushId_callRoom);
+        callroom_map.put("id_caller", currentUserId);
+        callroom_map.put("id_receiver", otherUserId);
+        callroom_map.put("timestamp", ServerValue.TIMESTAMP);
+        callroom_map.put("available_caller", true);
+        callroom_map.put("available_receiver", false);
+        callroom_map.put("room_status", true); //
+        callroom_map.put("call_type", call_type);
+        callroom_map.put("call_duration", "1:62");
+        callroom_map.put("call_attribut", call_attribut); // 0 = incomming Call ... 1= outgoing Call ... 2= missed Call
+        callroom_map.put("reason_interrupted_call", " -- ");
+        // the end of call extremely important    ..
+
+
+        Map callroom_map_messages = new HashMap();
+        callroom_map_messages.put("Call_room//" + pushId_callRoom, callroom_map);
+
+
+        FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId).child("call_History").updateChildren(callroom_map_messages).addOnCompleteListener(new OnCompleteListener<Void>()
         {
             @Override
             public void onComplete(@NonNull Task<Void> task)
             {
                 if(task.isSuccessful())
                 {
-                    Toasty.info(context_call, "interrupted call ... your correspondent is apparently not available", Toast.LENGTH_LONG).show();
+                    Toasty.info(context_call, "call History updated ", Toast.LENGTH_LONG).show();
+                    // start call
+                    // so now start the call
+
                 }
                 else
                 {
-                    Toasty.error(context_call, "sorry GuDana Voice Cloud  is unreachable right now ! .... please try again later ", Toast.LENGTH_LONG).show();
+                    Toasty.error(context_call, "sorry GuDana Voice Cloud  is unreachable right now ! .... " +
+                            "please check your internet connection or try again later ", Toast.LENGTH_LONG).show();
 
                 }
             }
         });
 
 
+
+
+
     }
+
+    public static  void missedCallNotification(final Context context_call , final String CallType , final String missedCallerId , final String Room_Id , String ClassName_func , final String reason){
+
+
+        Toasty.info(context_call, "Call Reset Parameter  : " + ClassName_func, Toast.LENGTH_LONG).show();
+
+        Map<String, Object> map = null;
+        map = new HashMap<>();
+        map.put("room_status", false); // that meant you are  at the moment online  .....
+        map.put("reason_interrupted_call", reason);
+        map.put("available_caller", false);
+        map.put("available_receiver", false);
+
+
+        //  a user or the both is not available anymore  ......
+
+        //userDB.updateChildren(map);
+        FirebaseDatabase.getInstance().getReference().child("Call_room").child(Room_Id).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<Void> task)
+            {
+
+                if(task.isSuccessful())
+                {
+
+                    //Toasty.info(context_call, "interrupted call ...", Toast.LENGTH_LONG).show();
+                    // Call enabledb
+
+                }
+                else
+                {
+
+                    //Toasty.error(context_call, "sorry GuDana Voice Cloud  is unreachable right now ! .... please try again later ", Toast.LENGTH_LONG).show();
+
+                }
+
+            }
+        });
+
+
+        // and Update Call History    ....
+
+        Map callroom_map = new HashMap();
+        callroom_map.put("room_id", Room_Id);
+        callroom_map.put("id_caller", missedCallerId);
+        callroom_map.put("id_receiver", FirebaseAuth.getInstance().getCurrentUser().getUid());
+        callroom_map.put("timestamp", ServerValue.TIMESTAMP);
+        callroom_map.put("available_caller", false);
+        callroom_map.put("available_receiver", false);
+        callroom_map.put("room_status", false); //
+        callroom_map.put("call_type", CallType);
+        callroom_map.put("call_duration", "1:62");
+        callroom_map.put("call_attribut", "missed call"); // incomming Call ...outgoing Call ... missed Call
+        callroom_map.put("reason_interrupted_call", reason);
+        // the end of call extremely important    ..
+
+
+        Map callroom_map_messages = new HashMap();
+        callroom_map_messages.put("Call_room//" + pushId_callRoom, callroom_map);
+
+
+        FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId).child("call_History").updateChildren(callroom_map_messages).addOnCompleteListener(new OnCompleteListener<Void>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<Void> task)
+            {
+                if(task.isSuccessful())
+                {
+                    Toasty.info(context_call, "call History updated ", Toast.LENGTH_LONG).show();
+                    // start call
+                    // so now start the call
+
+                }
+                else
+                {
+                    Toasty.error(context_call, "sorry GuDana Voice Cloud  is unreachable right now ! .... " +
+                            "please check your internet connection or try again later ", Toast.LENGTH_LONG).show();
+
+                }
+            }
+        });
+
+
+
+
+
+    }
+
 
     private void initDatabases()
     {
         // Initialize/Update realtime other user data such as name and online status
+
+
+        if(userDatabase != null && userListener != null)
+        {
+            userDatabase.removeEventListener(userListener);
+        }
+
 
         userDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(otherUserId);
         userListener = new ValueEventListener()
@@ -1453,6 +1744,8 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                 {
                     // get Image    to profil icon
                     final String Url_image = dataSnapshot.child("image").getValue().toString();
+                    TokenFCM_OtherUser = dataSnapshot.child("token").getValue().toString();
+
 
                     if(!Url_image.equals("default"))
                     {
@@ -1582,6 +1875,43 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         chatDatabase.addValueEventListener(chatListener);
     }
 
+    private void GetInformation_from_Users(){
+
+        userDB_current = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId);
+        // Set the  Driver Response to true ...
+        //HashMap map = new HashMap();
+        //map.put("Authentified" , "await");
+        //userDB.updateChildren(map);
+        userDB_current.keepSynced(true);
+        userDB_current.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    try{
+                        Map<String, Object> user_data = (Map<String, Object>) dataSnapshot.getValue();
+                        // test if the recors Phone already exist  ...if not than
+                        // than you are a new user   ...
+                        NameCurrentUser   =  user_data.get("name").toString();
+                        url_Icon_currentUser =  user_data.get("image").toString();
+
+
+
+                    }catch(Exception ex){
+                        Toasty.error(getApplicationContext(), ex.toString() , Toast.LENGTH_LONG).show();
+                        ex.printStackTrace();
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toasty.error(getApplicationContext(),databaseError.toString(), Toast.LENGTH_LONG).show();
+
+            }
+        });
+    }
+
     private void loadMessages()
     {
         messagesList.clear();
@@ -1656,11 +1986,13 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         }
     }
 
-    private void sendMessage(String type)
+    private void sendMessage(final String type)
     {
+
+        // thsi function ist to send  the text message  and location  message to firebase  and send the  notification
         sendButton.setEnabled(false);
 
-        String message = messageEditText.getText().toString();
+        final String message = messageEditText.getText().toString();
 
         if(message.length() == 0)
         {
@@ -1716,6 +2048,18 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                 {
                     sendButton.setEnabled(true);
 
+                    // send notification  for other User //...
+
+                    FCM_Message_Sender.sendWithOtherThread("token" ,
+                             TokenFCM_OtherUser ,
+                             "Message",
+                             currentUserId,
+                             NameCurrentUser,
+                             url_Icon_currentUser,
+                             getDateAndTime(),
+                            "room_disable",
+                            message);
+
                     if(databaseError != null)
                     {
                         Log.d(TAG, "sendMessage(): updateChildren failed: " + databaseError.getMessage());
@@ -1726,15 +2070,12 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     }
 
 
-    private void sendMessage_location_contact(String type , String message)
+    private void sendMessage_location_contact(final String type , String message)
     {
         sendButton.setEnabled(false);
-
-
         if(message.length() == 0)
         {
             Toasty.info(getApplicationContext(), "invalid message !", Toast.LENGTH_SHORT).show();
-
             sendButton.setEnabled(true);
         }
         else
@@ -1785,6 +2126,17 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference)
                 {
                     sendButton.setEnabled(true);
+                    // send notification  ...
+
+                    FCM_Message_Sender.sendWithOtherThread("token" ,
+                            TokenFCM_OtherUser ,
+                            type ,
+                            currentUserId ,
+                            StaticConfigUser_fromFirebase.USER_NAME,
+                            StaticConfigUser_fromFirebase.USER_URL_IMAGE,
+                            getDateAndTime(),
+                            "no room",
+                            " send you a media ");
 
                     if(databaseError != null)
                     {
@@ -1793,6 +2145,15 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                 }
             });
         }
+    }
+
+
+    public static  String getDateAndTime() {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        System.out.println( sdf.format(cal.getTime()) );
+
+        return  sdf.format(cal.getTime());
     }
 
     private String getTimeAgo(long time)

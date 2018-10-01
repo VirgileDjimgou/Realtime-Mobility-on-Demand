@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.gudana.chatapp.models.StaticConfigUser_fromFirebase;
 import com.android.gudana.gpslocationtracking.LocationTrack;
 import com.android.gudana.hify.utils.AnimationUtil;
 import com.android.gudana.hify.utils.database.UserHelper;
@@ -326,7 +327,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                                        userMap.put("bio",getString(R.string.default_bio));
                                                                        userMap.put("username", username_);
                                                                        userMap.put("location", location_);
-                                                                       userMap.put("token_id", "");
+                                                                       userMap.put("token_id", FirebaseInstanceId.getInstance().getToken()); // hier we must put the token id    ....   ...
 
                                                                        firebaseFirestore.collection("Users").document(userUid).set(userMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                            @Override
@@ -370,10 +371,11 @@ public class RegisterActivity extends AppCompatActivity {
                                                                        {
                                                                            String userid = firebaseUser.getUid();
 
-                                                                           // "Packing" user data
+                                                                           // "Packing" user data #
+                                                                           // je doi declarer un objet user icic et voir comment ce  se passe ...
 
                                                                            Map map = new HashMap<>();
-                                                                           map.put("token", FirebaseInstanceId.getInstance().getToken());
+                                                                           map.put("token", FirebaseInstanceId.getInstance().getToken()); // i can use this  for cloud mess
                                                                            map.put("name", username_);
                                                                            map.put("email", email_);
                                                                            map.put("status", "Welcome to my GuDana Profile!");
@@ -382,6 +384,9 @@ public class RegisterActivity extends AppCompatActivity {
                                                                            map.put("date", ServerValue.TIMESTAMP);
 
                                                                            // Uploading user data
+                                                                           // beause of final dig .... :) ;
+                                                                           StaticConfigUser_fromFirebase.USER_URL_IMAGE = uri.toString();
+
 
                                                                            FirebaseDatabase.getInstance().getReference().child("Users").child(userid).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>()
                                                                            {
@@ -392,6 +397,13 @@ public class RegisterActivity extends AppCompatActivity {
                                                                                    {
 
                                                                                        Toast.makeText(getApplicationContext(), "User registered .", Toast.LENGTH_LONG).show();
+
+                                                                                       // after  save the   User data on Device  for later Use  ....   ...
+                                                                                       // StaticConfigUser_fromFirebase.STR_EXTRA_USERNAME = username_;
+                                                                                       StaticConfigUser_fromFirebase.STR_EXTRA_EMAIL = email_;
+                                                                                       StaticConfigUser_fromFirebase.STR_USER_ID = userUid;
+                                                                                       StaticConfigUser_fromFirebase.USER_NAME = name_;
+                                                                                       StaticConfigUser_fromFirebase.STR_USER_TOKEN_FCM = FirebaseInstanceId.getInstance().getToken();
                                                                                    }
                                                                                    else
                                                                                    {

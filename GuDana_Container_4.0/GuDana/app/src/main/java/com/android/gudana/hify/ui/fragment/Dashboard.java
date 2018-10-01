@@ -1,15 +1,25 @@
 package com.android.gudana.hify.ui.fragment;
 
+import android.content.Context;
+import android.content.Intent;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.Toast;
+
+import com.android.gudana.GuDFeed.GuDFeed_Fragment;
+import com.android.gudana.GuDFeed.activities.create_post;
 import com.android.gudana.hify.adapters.PostsAdapter;
 import com.android.gudana.hify.models.Post;
 import com.android.gudana.R;
@@ -24,12 +34,20 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.nightonke.boommenu.Animation.BoomEnum;
+import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
+import com.nightonke.boommenu.BoomButtons.HamButton;
+import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
+import com.nightonke.boommenu.BoomMenuButton;
+import com.nightonke.boommenu.ButtonEnum;
+import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 import com.tylersuehr.esr.EmptyStateRecyclerView;
 import com.tylersuehr.esr.ImageTextStateDisplay;
 import com.tylersuehr.esr.TextStateDisplay;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
 import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 
 import static com.android.gudana.hify.ui.activities.MainActivity.loadpost_firstime;
@@ -49,14 +67,57 @@ public class Dashboard extends Fragment {
     FirebaseUser currentUser;
     EmptyStateRecyclerView mPostsRecyclerView;
     PostsAdapter mAdapter;
-    View mView;
+    View view_layout;
     private List<String> mFriendIdList=new ArrayList<>();
+
+
+
+    private Context context;
+    public static ViewPager mViewPager;
+    public LinearLayout SearchAppbar;
+
+
+    private BoomMenuButton bmb ;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.hi_dashboard_fragment, container, false);
-        return mView;
+        view_layout = inflater.inflate(R.layout.fragment_card_main, container, false);
+
+
+        // initCollapsingToolbar();
+        final CollapsingToolbarLayout collapsingToolbar =
+                (CollapsingToolbarLayout) view_layout.findViewById(R.id.collapsing_toolbar);
+        AppBarLayout appBarLayout = (AppBarLayout) view_layout.findViewById(R.id.appbar);
+        appBarLayout.setExpanded(true);
+
+        // linear Layour for app bar
+        SearchAppbar = (LinearLayout) view_layout.findViewById(R.id.linearLayout_toolbar);
+
+        // hiding & showing the title when toolbar expanded & collapsed
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isShow = false;
+            int scrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+                if (scrollRange + verticalOffset == 0) {
+                    //collapsingToolbar.setTitle(getString(R.string.gud_services));
+                    SearchAppbar.setVisibility(View.VISIBLE);
+                    isShow = true;
+                } else if (isShow) {
+                    SearchAppbar.setVisibility(View.GONE);
+                    //collapsingToolbar.setTitle("GuDFeed");
+                    isShow = false;
+                }
+            }
+        });
+
+
+        return view_layout;
     }
 
     @Override
@@ -75,7 +136,7 @@ public class Dashboard extends Fragment {
 
         mPostsList = new ArrayList<>();
         mAdapter = new PostsAdapter(mPostsList, view.getContext(),getActivity());
-        mPostsRecyclerView = view.findViewById(R.id.posts_recyclerview);
+        mPostsRecyclerView = view.findViewById(R.id.posts_recyclerview_new);
         mPostsRecyclerView.setItemAnimator(new SlideInLeftAnimator());
         mPostsRecyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(), DividerItemDecoration.VERTICAL));
         mPostsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

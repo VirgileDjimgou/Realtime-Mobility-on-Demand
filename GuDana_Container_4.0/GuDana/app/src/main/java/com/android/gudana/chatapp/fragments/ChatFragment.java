@@ -45,6 +45,7 @@ public class ChatFragment extends Fragment
 
         // Initialize Chat Database
 
+        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         DatabaseReference chatDatabase = FirebaseDatabase.getInstance().getReference().child("Chat").child(currentUserId);
         chatDatabase.keepSynced(true); // For offline use
 

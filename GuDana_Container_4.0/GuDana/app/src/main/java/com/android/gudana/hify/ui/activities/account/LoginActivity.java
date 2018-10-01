@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.gudana.chatapp.models.StaticConfigUser_fromFirebase;
 import com.android.gudana.gpslocationtracking.LocationTrack;
 import com.android.gudana.hify.ui.activities.MainActivity;
 import com.android.gudana.hify.utils.AnimationUtil;
@@ -102,7 +103,6 @@ public class LoginActivity extends AppCompatActivity {
         mDialog.setIndeterminate(true);
         mDialog.setCanceledOnTouchOutside(false);
         mDialog.setCancelable(false);
-
         email=findViewById(R.id.email);
         password=findViewById(R.id.password);
 
@@ -216,18 +216,12 @@ public class LoginActivity extends AppCompatActivity {
         email_ = email.getText().toString();
         pass_ = password.getText().toString();
 
-
-        // perform login on firebase  ......
-
-
-
-
-        // perform login on firestore  ......
-
+        //perform login firebase and the data on as static config  ...
 
         if (!TextUtils.isEmpty(email_) && !TextUtils.isEmpty(pass_)) {
             mDialog.show();
 
+            //
             mAuth.signInWithEmailAndPassword(email_, pass_).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull final Task<AuthResult> task) {
@@ -264,6 +258,12 @@ public class LoginActivity extends AppCompatActivity {
                                                                 ,documentSnapshot.getString("location")
                                                                 ,documentSnapshot.getString("bio")
                                                         );
+                                                         // i need  something  sorry
+                                                        //  im principe we need to save the data   ..  also in
+                                                        //save  the  current user data ...
+                                                        StaticConfigUser_fromFirebase.USER_NAME = documentSnapshot.getString("username");
+                                                        StaticConfigUser_fromFirebase.STR_EXTRA_EMAIL = documentSnapshot.getString("email");
+
 
                                                         mDialog.dismiss();
                                                         MainActivity.startActivity(LoginActivity.this);

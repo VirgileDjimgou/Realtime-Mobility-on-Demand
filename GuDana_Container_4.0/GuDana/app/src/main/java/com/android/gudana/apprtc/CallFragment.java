@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.gudana.R;
+import com.android.gudana.apprtc.linphone.LinphoneManager;
 import com.android.gudana.chatapp.activities.ChatActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -44,7 +45,7 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
 
-import static com.android.gudana.chatapp.activities.ChatActivity.Call_dispo;
+import static com.android.gudana.apprtc.ConnectActivity.room_is_voice_Server;
 import static com.android.gudana.chatapp.activities.ChatActivity.callmelder_notification;
 
 /**
@@ -53,7 +54,7 @@ import static com.android.gudana.chatapp.activities.ChatActivity.callmelder_noti
 public class CallFragment extends Fragment {
   private View controlView;
   private TextView contactView ;
-  private Chronometer call_time_voice ;
+  public static  Chronometer call_time_voice ;
   private ImageButton disconnectButton;
   private ImageButton cameraSwitchButton;
   private ImageButton videoScalingButton;
@@ -63,8 +64,17 @@ public class CallFragment extends Fragment {
   private OnCallEvents callEvents;
   private ScalingType scalingType;
   private boolean videoCallEnabled = true;
-  public static DatabaseReference userDB;
   private CircleImageView contactPicture;
+  private ValueEventListener mListener;
+
+
+  public static  LinphoneManager ViCall ;
+  public static DatabaseReference CallRoomDb;
+
+  public static boolean running = false;
+
+
+
 
 
 
@@ -101,10 +111,17 @@ public class CallFragment extends Fragment {
     disconnectButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        Call_dispo = true;
+        // stop vibrate
+        ViCall.stopRinging();
         callEvents.onCallHangUp();
+        /*
         // send notification ...to tell that your are not available anymore ....
-        ChatActivity.resetCallparameter(controlView.getContext() , ConnectActivity.user_id);
+        ChatActivity.resetCallparameter(controlView.getContext() ,
+                room_is_voice_Server,
+                "CallFragment  : disconnect",
+                "your correspondent is not available "
+        );
+        */
         getActivity().finish();
       }
     });
@@ -140,14 +157,6 @@ public class CallFragment extends Fragment {
     });
 
 
-    // send notification audio call or video call    ... to another user
-      if(callmelder_notification){
-          // send a notification for  to registread the call
-          ChatActivity.call_infos_notification(controlView.getContext());
-          callmelder_notification = false;
-      }else{
-          // another kind of notification  ...
-      }
       // start chronometer  ....
     call_time_voice.setFormat("Time- %s"); // set the format for a chronometer
     call_time_voice.start();
@@ -158,6 +167,25 @@ public class CallFragment extends Fragment {
 
     // init  caller id
     InitCallerProfil(ConnectActivity.user_id);
+
+    ViCall = new LinphoneManager(controlView.getContext());
+
+    if(ConnectActivity.received_call.equalsIgnoreCase("caller")){
+      /// start ringing  and vibrate
+      try{
+
+        ViCall.startRinging_without_vibrate(controlView.getContext());
+        //ViCall.startRinging();
+
+      }catch(Exception ex){
+        ex.printStackTrace();
+
+      }
+
+    }
+
+    // set the running method  to tell that you can not take another call
+    running = true;
 
     return controlView;
   }
@@ -194,19 +222,16 @@ public class CallFragment extends Fragment {
 
   }
 
-
   public void Check_Correspondantavailibility(final Context context , String UserID){
 
     try{
 
-      // ViCall.stopRinging();
-
-      userDB = FirebaseDatabase.getInstance().getReference().child("Users").child(UserID);
+      CallRoomDb = FirebaseDatabase.getInstance().getReference().child("Call_room").child(room_is_voice_Server);
       // Set the  Driver Response to true ...
       //HashMap map = new HashMap();
       //map.put("Authentified" , "await");
       //userDB.updateChildren(map);
-      userDB.addValueEventListener(new ValueEventListener() {
+      mListener = CallRoomDb.addValueEventListener(new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
           if(dataSnapshot.exists()){
@@ -214,23 +239,53 @@ public class CallFragment extends Fragment {
               Map<String, Object> map_call = (Map<String, Object>) dataSnapshot.getValue();
               // test if the recors Phone already exist  ...if not than
               // than you are a new user   ...
-              if(map_call.get("call_possible")!=null){
+              if(map_call.get("available_caller")!=null){
                 // than this user is already registered ...
-                boolean availibilty  = (boolean) map_call.get("call_possible");
-                if(availibilty == false) {
+                boolean caller_availibilty  = (boolean) map_call.get("available_caller");
+                if(caller_availibilty == false) {
                   // than we must stop the call  ...
-                  // ViCall.stopRinging();
+                  ViCall.stopRinging();
                   // put the  call  dispo enable
-                  Call_dispo = true;
+                  /*
+                  ChatActivity.resetCallparameter(context ,
+                          room_is_voice_Server ,
+                          this.getClass().getName() + "chehcCorrespondant",
+                          "your correspondant ist not available");
+                          */
+                  CallRoomDb.child("Call_room").child(room_is_voice_Server).removeEventListener(mListener);
                   getActivity().finish();
                 }
 
-              }else{
+              }
+
+              if(map_call.get("room_status")!=null){
+                // than this user is already registered ...
+                boolean room_Status  = (boolean) map_call.get("room_status");
+                if(room_Status == false) {
+                  // than we must stop the call  ...
+                  ViCall.stopRinging();
+                  // put the  call  dispo enable
+                  /*
+                  ChatActivity.resetCallparameter(context ,
+                          room_is_voice_Server,
+                          this.getClass().getName() + "chehcCorrespondant",
+                          "your correspondent ist not available ");
+
+                          */
+                  CallRoomDb.child("Call_room").child(room_is_voice_Server).removeEventListener(mListener);
+                  getActivity().finish();
+                }
 
               }
 
 
             }catch(Exception ex){
+
+              ChatActivity.resetCallparameter(context ,
+                      room_is_voice_Server ,
+                      this.getClass().getName() + "chehcCorrespondant",
+              "your correspondant  ist not available ", 0);
+              CallRoomDb.child("Call_room").child(room_is_voice_Server).removeEventListener(mListener);
               Toasty.error(context, ex.toString() , Toast.LENGTH_LONG).show();
               ex.printStackTrace();
             }
@@ -249,13 +304,15 @@ public class CallFragment extends Fragment {
 
     }catch(Exception ex){
 
-      Call_dispo = true;
+      ChatActivity.resetCallparameter(context , room_is_voice_Server,
+              this.getClass().getName() + "chehcCorrespondant",
+              "your correspndant ist not available ", 1);
+      CallRoomDb.child("Call_room").child(room_is_voice_Server).removeEventListener(mListener);
       ex.printStackTrace();
     }
 
 
   }
-
 
 
   // call
@@ -283,6 +340,8 @@ public class CallFragment extends Fragment {
       captureFormatText.setVisibility(View.GONE);
       captureFormatSlider.setVisibility(View.GONE);
     }
+
+    running = true;
   }
 
   // TODO(sakal): Replace with onAttach(Context) once we only support API level 23+.
@@ -290,19 +349,41 @@ public class CallFragment extends Fragment {
   @Override
   public void onAttach(Activity activity) {
     super.onAttach(activity);
+    running = true;
     callEvents = (OnCallEvents) activity;
   }
 
   @Override
   public void onDestroy() {
     // set the avaibility  ...
-    Call_dispo = true;
+    try{
+
+      running = false;
+      ViCall.stopRinging();
+      callEvents.onCallHangUp();
+      // send notification ...to tell that your are not available anymore ....
+      // i think ..we should start this  operation in  a backgroung thread  before to  close this activity  ...
+      ChatActivity.resetCallparameter(controlView.getContext() ,
+              room_is_voice_Server ,
+              getClass().getName()+" CallFragment  : onDestroy",
+              "Call End",0);
+      CallRoomDb.child("Call_room").child(room_is_voice_Server).removeEventListener(mListener);
+
+    }catch(Exception ex){
+      ViCall.stopRinging();
+      callEvents.onCallHangUp();
+        ex.printStackTrace();
+    }
     super.onDestroy();
   }
 
   @Override
   public void onDetach() {
-    Call_dispo = true;
-    super.onDetach();
+      try{
+        // when  the fragment ist in background for example  ...  we  can manage his state in fragment manager ...
+
+      }catch(Exception ex){
+          ex.printStackTrace();
+      }    super.onDetach();
   }
 }

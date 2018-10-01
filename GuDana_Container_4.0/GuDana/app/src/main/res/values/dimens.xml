@@ -114,7 +114,7 @@
     <bool name="is_tablet">false</bool>
 
 
-    <dimen name="detail_backdrop_height">250dp</dimen>
+    <dimen name="detail_backdrop_height">400dp</dimen>
     <dimen name="backdrop_title">30dp</dimen>
     <dimen name="backdrop_subtitle">18dp</dimen>
     <dimen name="card_margin">1dp</dimen>

@@ -279,6 +279,8 @@ public class AddFriendAdapter extends RecyclerView.Adapter<AddFriendAdapter.View
                                 Snackbar.make(view, "Friend request sent to " + deletedItem.getName(), Snackbar.LENGTH_LONG).show();
                                 notifyDataSetChanged();
 
+                                // hier we should sent a notification   ...
+
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override

@@ -44,6 +44,7 @@ import android.preference.CheckBoxPreference;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.android.gudana.R;
@@ -106,6 +107,62 @@ import java.util.TimerTask;
 import static android.media.AudioManager.MODE_RINGTONE;
 import static android.media.AudioManager.STREAM_RING;
 import static android.media.AudioManager.STREAM_VOICE_CALL;
+
+
+import android.app.DownloadManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Environment;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.NotificationCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import android.app.DownloadManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Environment;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.NotificationCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.gudana.hify.utils.Config;
+import com.android.gudana.R;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.DialogOnDeniedPermissionListener;
+import com.karumi.dexter.listener.single.PermissionListener;
+
 
 /**
  *
@@ -206,7 +263,7 @@ public class LinphoneManager {
 	private ByteArrayInputStream mUploadingImageStream;
 	private Timer mTimer;
 
-	private MediaPlayer mRingerPlayer;
+	private MediaPlayer mRingerPlayer, mediaPlayer;
 	private Vibrator mVibrator;
 	private int savedMaxCallWhileGsmIncall;
 	private synchronized void preventSIPCalls() {
@@ -276,6 +333,9 @@ public class LinphoneManager {
 				try {
 					if (ringtone.startsWith("content://")) {
 						mRingerPlayer.setDataSource(mServiceContext, Uri.parse(ringtone));
+
+						// mRingerPlayer.setDataSource(mServiceContext, Uri.parse("android.resource://" + mServiceContext.getPackageName() + "/raw/librem_by_feandesign_call"));
+						// Uri.parse("android.resource://" + mContext.getPackageName() + "/raw/librem_by_feandesign_call");
 					} else {
 						FileInputStream fis = new FileInputStream(ringtone);
 						mRingerPlayer.setDataSource(fis.getFD());
@@ -300,20 +360,102 @@ public class LinphoneManager {
 		isRinging = true;
 	}
 
-	public synchronized void stopRinging() {
-		if (mRingerPlayer != null) {
-			mRingerPlayer.stop();
-			mRingerPlayer.release();
-			mRingerPlayer = null;
+	public void PlayRingBack(Context mContext){
+		//String callRingtonePreferenceString = appPreferences.getCallRingtoneUri();
+		Uri ringtoneUri;
+
+			ringtoneUri = Uri.parse("android.resource://" + mContext.getPackageName() +
+					"/raw/librem_by_feandesign_call");
+
+
+		if (ringtoneUri != null) {
+			mediaPlayer = MediaPlayer.create(mContext, ringtoneUri);
+			mediaPlayer.setLooping(true);
+			mediaPlayer.setAudioStreamType(AudioManager.STREAM_RING);
+			mediaPlayer.start();
 		}
-		if (mVibrator != null) {
-			mVibrator.cancel();
+	}
+
+
+	public  synchronized void startRinging_without_vibrate(Context mContext)  {
+		/*
+		if (!LinphonePreferences.instance().isDeviceRingtoneEnabled()) {
+			// Enable speaker lin_audio route, linphone library will do the ringing itself automatically
+			routeAudioToSpeaker();
+			return;
 		}
+
+		*/
 
 		if (Hacks.needGalaxySAudioHack())
-			mAudioManager.setMode(AudioManager.MODE_NORMAL);
+			mAudioManager.setMode(MODE_RINGTONE);
 
-		isRinging = false;
+		try {
+			if ((mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE || mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) && mVibrator != null) {
+				long[] patern = {0,1000,1000};
+				// mVibrator.vibrate(patern, 1);
+			}
+			if (mRingerPlayer == null) {
+				requestAudioFocus(STREAM_RING);
+				mRingerPlayer = new MediaPlayer();
+				mRingerPlayer.setAudioStreamType(STREAM_RING);
+
+				// hier konnte wir eine Problem haben ....
+				// String ringtone = Settings.System.RI
+				//String ringtone = Settings.System.DEFAULT_RINGTONE_URI.toString();
+				//String packName = mContext.getPackageName().toString();
+				//String ringtone = Uri.parse("android.resource://"+packName+"/"+R.raw.ringback).toString();
+				// Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.hify_sound)
+
+				try {
+
+					mRingerPlayer.setDataSource(mServiceContext, Uri.parse("android.resource://" + mServiceContext.getPackageName() + "/raw/librem_by_feandesign_call"));
+
+
+					//FileInputStream fis = new FileInputStream(ringtone);
+						//mRingerPlayer.setDataSource(fis.getFD());
+						//fis.close();
+					System.out.println("text");
+
+				} catch (Exception e) {
+					// Log.e(e, "Cannot set ringtone");
+					e.printStackTrace();
+				}
+
+				mRingerPlayer.prepare();
+				mRingerPlayer.setLooping(true);
+				mRingerPlayer.start();
+			} else {
+				//Log.w("already ringing");
+				android.util.Log.d("ringing", "already ringing");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			// Log.e(e,"cannot handle incoming call");
+		}
+		isRinging = true;
+	}
+
+	public synchronized void stopRinging() {
+		try{
+
+			if (mRingerPlayer != null) {
+				mRingerPlayer.stop();
+				mRingerPlayer.release();
+				mRingerPlayer = null;
+			}
+			if (mVibrator != null) {
+				mVibrator.cancel();
+			}
+
+			if (Hacks.needGalaxySAudioHack())
+				mAudioManager.setMode(AudioManager.MODE_NORMAL);
+
+			isRinging = false;
+
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
 
 	}
 

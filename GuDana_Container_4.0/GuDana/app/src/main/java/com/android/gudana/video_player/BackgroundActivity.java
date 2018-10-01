@@ -18,7 +18,7 @@ public class BackgroundActivity extends AppCompatActivity {
         setContentView(R.layout.vid_activity_background);
 
         BetterVideoPlayer bvp = findViewById(R.id.bvp);
-        bvp.setSource(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.video));
+        bvp.setSource(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.hify_sound));
         bvp.setCallback(new BetterVideoCallback() {
             @Override
             public void onStarted(BetterVideoPlayer player) {

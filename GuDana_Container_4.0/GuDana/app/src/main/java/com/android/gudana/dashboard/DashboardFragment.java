@@ -19,9 +19,6 @@ import android.widget.Toast;
 
 import com.android.gudana.R;
 import com.android.gudana.GuDFeed.CardCustom;
-import com.android.gudana.viewpagercards.CardItem;
-import com.android.gudana.viewpagercards.CardPagerAdapter;
-import com.android.gudana.viewpagercards.ShadowTransformer;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.nightonke.boommenu.Animation.BoomEnum;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
@@ -45,8 +42,6 @@ public class DashboardFragment extends Fragment
     private List<CardCustom> albumList;
     public static ViewPager mViewPager;
 
-    public static CardPagerAdapter mCardAdapter;
-    public static ShadowTransformer mCardShadowTransformer;
     public static FloatingActionButton floatButton;
     public static RelativeLayout layoutAnimation;
     public static Animation animShow, animHide;
@@ -98,7 +93,6 @@ public class DashboardFragment extends Fragment
             public void onClick(View v) {
 
 
-                Driver_Card();
                 layoutAnimation.setVisibility(View.VISIBLE);
                 animShow.reset();
                 animShow = AnimationUtils.loadAnimation(context, R.anim.view_show);
@@ -127,7 +121,6 @@ public class DashboardFragment extends Fragment
         Passenger.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Passenger_Card();
                 animShow.reset();
                 layoutAnimation.setVisibility(View.VISIBLE);
                 animShow = AnimationUtils.loadAnimation(context, R.anim.view_show);
@@ -215,41 +208,6 @@ public class DashboardFragment extends Fragment
         return view;
     }
 
-
-
-    public static void Driver_Card(){
-        mCardAdapter = new CardPagerAdapter();
-        mCardAdapter.addCardItem(new CardItem(R.string.moto_driver, R.drawable.moto_driver));
-        mCardAdapter.addCardItem(new CardItem(R.string.taxi_driver, R.drawable.taxi_us));
-        mCardAdapter.addCardItem(new CardItem(R.string.transporter, R.drawable.icon_transporte));
-        mCardAdapter.addCardItem(new CardItem(R.string.custom, R.drawable.traffic));
-        //mFragmentCardAdapter = new CardFragmentPagerAdapter(getSupportFragmentManager(), dpToPixels(2, context));
-
-        mCardShadowTransformer = new ShadowTransformer(mViewPager, mCardAdapter);
-        //mFragmentCardShadowTransformer = new ShadowTransformer(mViewPager, mFragmentCardAdapter);
-        mViewPager.setAdapter(mCardAdapter);
-        mViewPager.setPageTransformer(false, mCardShadowTransformer);
-        mViewPager.setOffscreenPageLimit(4);
-        mCardShadowTransformer.enableScaling(true);
-
-    }
-
-    public static  void  Passenger_Card(){
-
-        mCardAdapter = new CardPagerAdapter();
-        mCardAdapter.addCardItem(new CardItem(R.string.title_1, R.drawable.cab_passenger));
-        mCardAdapter.addCardItem(new CardItem(R.string.title_2, R.drawable.cab_passenger_wom));
-        mCardAdapter.addCardItem(new CardItem(R.string.title_3, R.drawable.moto_driver));
-        //mFragmentCardAdapter = new CardFragmentPagerAdapter(getSupportFragmentManager(), dpToPixels(2, context));
-
-        mCardShadowTransformer = new ShadowTransformer(mViewPager, mCardAdapter);
-        //mFragmentCardShadowTransformer = new ShadowTransformer(mViewPager, mFragmentCardAdapter);
-        mViewPager.setAdapter(mCardAdapter);
-        mViewPager.setPageTransformer(false, mCardShadowTransformer);
-        mViewPager.setOffscreenPageLimit(3);
-        mCardShadowTransformer.enableScaling(true);
-
-    }
     public static  void Paket_Delivery(){}
 
 

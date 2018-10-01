@@ -62,6 +62,10 @@ public class FriendHolder extends RecyclerView.ViewHolder
         final CircleImageView userImage = view.findViewById(R.id.user_image);
         final ImageView userOnline = view.findViewById(R.id.user_online);
 
+
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        userDatabase.keepSynced(true); // For offline use
+
         userStatus.setText("Friends Since: " + new SimpleDateFormat("MMM d, yyyy", Locale.getDefault()).format(date));
 
         if(userDatabase != null & userListener != null)

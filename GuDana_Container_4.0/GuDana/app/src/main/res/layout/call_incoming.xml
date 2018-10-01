@@ -5,6 +5,7 @@
 	android:id="@+id/topLayout"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+
 	android:background="@drawable/bg_gradient">
 
 
@@ -85,89 +86,27 @@
 		android:layout_alignParentBottom="true"
 		android:orientation="horizontal" >
 
-		<ImageView
+		<Button
 			android:id="@+id/decline"
 			android:src="@drawable/call_hangup"
 			android:background="@drawable/hangup"
-			android:contentDescription="@string/content_description_decline"
+			android:text="@string/content_description_decline"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
 			android:padding="12dp"/>
 
-		<LinearLayout
-			android:id="@+id/acceptUnlock"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:visibility="gone"
-			android:orientation="horizontal"
-			android:background="@color/colorA"
-			android:paddingLeft="15dp"
-			android:paddingTop="15dp"
-			android:paddingBottom="15dp"
-			android:layout_gravity="bottom">
-
-			<ImageView
-				android:src="@drawable/arrow_accept"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"/>
-
-			<ImageView
-				android:src="@drawable/arrow_accept"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:alpha="0.6"/>
-
-			<ImageView
-				android:id="@+id/acceptArrow"
-				android:src="@drawable/arrow_accept"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:alpha="0.2"/>
-		</LinearLayout>
-
-		<ImageView
+		<Button
 			android:id="@+id/accept"
 			android:src="@drawable/call_audio_start"
-			android:background="@drawable/bg_gradient"
-			android:contentDescription="@string/content_description_accept"
+			android:textColor="@color/white"
+			android:background="@drawable/rounded_accept_button"
+			android:text="@string/content_description_accept"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
 			android:padding="12dp"/>
 
-		<LinearLayout
-			android:id="@+id/declineUnlock"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:visibility="gone"
-			android:orientation="horizontal"
-			android:background="@color/colorD"
-			android:paddingLeft="15dp"
-			android:paddingTop="15dp"
-			android:paddingBottom="15dp"
-			android:layout_gravity="bottom">
-
-			<ImageView
-				android:id="@+id/arrow_hangup"
-				android:src="@drawable/arrow_hangup"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:alpha="0.2"/>
-
-
-			<ImageView
-				android:src="@drawable/arrow_hangup"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:alpha="0.6"/>
-
-			<ImageView
-				android:src="@drawable/arrow_hangup"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"/>
-
-		</LinearLayout>
 	</LinearLayout>
 
 </RelativeLayout>

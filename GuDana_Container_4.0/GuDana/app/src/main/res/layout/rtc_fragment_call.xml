@@ -11,7 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/top_bar"
-        android:background="@drawable/bg_gradient"
         android:paddingTop="10dp"
         android:layout_above="@+id/menu">
 
@@ -26,16 +25,7 @@
             android:gravity="center_vertical|center_horizontal"
             android:paddingTop="5dp"/>
 
-        <TextView
-            android:id="@+id/contact_number"
-            style="@style/font2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:layout_below="@id/contact_name"
-            android:layout_centerHorizontal="true"
-            android:paddingBottom="10dp"
-            android:layout_gravity="center_vertical|center_horizontal" />
+
 
         <RelativeLayout
             android:id="@+id/avatar_layout"
@@ -68,6 +58,18 @@
             android:paddingBottom="10dp"
             android:layout_gravity="center_vertical|center_horizontal" />
 
+        <TextView
+            android:id="@+id/contact_number"
+            style="@style/font2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/touch_anywhre"
+            android:textColor="@color/white"
+            android:layout_below="@id/contact_name"
+            android:layout_centerHorizontal="true"
+            android:paddingBottom="10dp"
+            android:layout_gravity="center_vertical|center_horizontal" />
+
 
     </RelativeLayout>
 
@@ -78,7 +80,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_above="@+id/buttons_call_container"
-        android:textColor="@color/colorWhite"
+        android:textColor="@color/white"
         android:textSize="28sp"
         android:textStyle="bold"
         android:layout_margin="8dp"/>
@@ -103,7 +105,7 @@
 
        <ImageButton
            android:id="@+id/button_call_switch_camera"
-           android:background="@mipmap/ic_photo"
+           android:background="@mipmap/switch_cam"
            android:contentDescription="@string/switch_camera"
            android:layout_marginEnd="8dp"
            android:layout_width="48dp"
@@ -130,7 +132,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:textColor="@color/colorWhite"
+        android:textColor="@color/white"
         android:layout_above="@+id/capture_format_slider_call"
         android:textSize="16sp"
         android:text="@string/capture_format_change_text"/>

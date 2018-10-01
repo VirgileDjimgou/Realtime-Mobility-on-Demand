@@ -136,19 +136,19 @@ public class NotificationUtil {
         Intent resultIntent;
 
         switch (click_action) {
-            case "com.amsavarthan.hify.TARGETNOTIFICATION":
+            case "com.android.gudana.hify.TARGETNOTIFICATION":
                 resultIntent = new Intent(mContext, NotificationActivity.class);
                 break;
-            case "com.amsavarthan.hify.TARGETNOTIFICATIONREPLY":
+            case "com.android.gudana.hify.TARGETNOTIFICATIONREPLY":
                 resultIntent = new Intent(mContext, NotificationReplyActivity.class);
                 break;
-            case "com.amsavarthan.hify.TARGETNOTIFICATION_IMAGE":
+            case "com.android.gudana.hify.TARGETNOTIFICATION_IMAGE":
                 resultIntent = new Intent(mContext, NotificationImage.class);
                 break;
-            case "com.amsavarthan.hify.TARGETNOTIFICATIONREPLY_IMAGE":
+            case "com.android.gudana.hify.TARGETNOTIFICATIONREPLY_IMAGE":
                 resultIntent = new Intent(mContext, NotificationImageReply.class);
                 break;
-            case "com.amsavarthan.hify.TARGET_FRIENDREQUEST":
+            case "com.android.gudana.hify.TARGET_FRIENDREQUEST":
                 resultIntent = new Intent(mContext, FriendProfile.class);
                 break;
             default:

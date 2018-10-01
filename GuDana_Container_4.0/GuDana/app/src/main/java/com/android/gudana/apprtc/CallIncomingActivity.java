@@ -32,6 +32,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -43,6 +44,7 @@ import com.android.gudana.apprtc.LinphoneSliders.LinphoneSliderTriggered;
 import com.android.gudana.apprtc.linphone.LinphoneManager;
 import com.android.gudana.chatapp.activities.ChatActivity;
 import com.android.gudana.hify.adapters.UsersAdapter;
+import com.android.gudana.hify.ui.activities.MainActivity;
 import com.android.gudana.hify.ui.activities.friends.SendActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -80,19 +82,16 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
 
-import static com.android.gudana.chatapp.activities.ChatActivity.Call_dispo;
 
-public class CallIncomingActivity extends Activity implements LinphoneSliderTriggered {
+public class CallIncomingActivity extends Activity{
 	private static CallIncomingActivity instance;
 
 	private TextView name, number;
-	private ImageView  accept, decline;
+	private Button  accept, decline;
 	private CircleImageView contactPicture;
 
 	private LinphoneCall mCall;
-	private LinphoneCoreListenerBase mListener;
-	private LinearLayout acceptUnlock;
-	private LinearLayout declineUnlock;
+	// private LinphoneCoreListenerBase mListener;
 	private boolean isScreenActive, alreadyAcceptedOrDeniedCall;
 	private float answerX;
 	private float declineX;
@@ -101,10 +100,13 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 
 	private FirebaseFirestore mFirestore;
 	private FirebaseUser currentUser;
-	public static DatabaseReference userDB;
+	public static DatabaseReference SanityChechCall_Db;
+	private ValueEventListener mListener;
+
 	private String call_server_id;
 	private String call_type = "video";
 	private String user_id = null;
+	private String room_id = null;
 
 
 	public static CallIncomingActivity instance() {
@@ -127,7 +129,6 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 
 		mFirestore = FirebaseFirestore.getInstance();
 		currentUser= FirebaseAuth.getInstance().getCurrentUser();
-
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.call_incoming);
 
@@ -144,11 +145,8 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 
 		final int screenWidth = getResources().getDisplayMetrics().widthPixels;
 
-		acceptUnlock = (LinearLayout) findViewById(R.id.acceptUnlock);
-		declineUnlock = (LinearLayout) findViewById(R.id.declineUnlock);
-
-		accept = (ImageView) findViewById(R.id.accept);
-		decline = (ImageView) findViewById(R.id.decline);
+		accept = (Button) findViewById(R.id.accept);
+		decline = (Button) findViewById(R.id.decline);
 		accept.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -156,146 +154,58 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 					answer();
 				} else {
 					decline.setVisibility(View.GONE);
-					acceptUnlock.setVisibility(View.VISIBLE);
 				}
 			}
 		});
 
-		if(!isScreenActive) {
-			accept.setOnTouchListener(new View.OnTouchListener() {
-				@Override
-				public boolean onTouch(View view, MotionEvent motionEvent) {
-
-					try{
-
-						ViCall.stopRinging();
-						answer();
-
-
-						float curX;
-						switch (motionEvent.getAction()) {
-							case MotionEvent.ACTION_DOWN:
-								acceptUnlock.setVisibility(View.VISIBLE);
-								decline.setVisibility(View.GONE);
-								answerX = motionEvent.getX();
-								break;
-							case MotionEvent.ACTION_MOVE:
-								curX = motionEvent.getX();
-								if((answerX - curX) >= 0)
-									view.scrollBy((int) (answerX - curX), view.getScrollY());
-								answerX = curX;
-								if (curX < screenWidth/4) {
-									ViCall.stopRinging();
-									answer();
-									return true;
-								}
-								break;
-							case MotionEvent.ACTION_UP:
-								view.scrollTo(0, view.getScrollY());
-								decline.setVisibility(View.VISIBLE);
-								acceptUnlock.setVisibility(View.GONE);
-								break;
-						}
-
-					}catch(Exception ex){
-
-						ex.printStackTrace();
-					}
-					return true;
-
-				} // afetre that  ....
-			});
-
-			decline.setOnTouchListener(new View.OnTouchListener() {
-				@Override
-				public boolean onTouch(View view, MotionEvent motionEvent) {
-
-					try{
-
-						Call_dispo = true;
-						ViCall.stopRinging();
-						decline();
-
-						float curX;
-						switch (motionEvent.getAction()) {
-							case MotionEvent.ACTION_DOWN:
-								declineUnlock.setVisibility(View.VISIBLE);
-								accept.setVisibility(View.GONE);
-								declineX = motionEvent.getX();
-								break;
-							case MotionEvent.ACTION_MOVE:
-								curX = motionEvent.getX();
-								view.scrollBy((int) (declineX - curX), view.getScrollY());
-								declineX = curX;
-								Log.w(curX);
-								if (curX > (screenWidth/2)){
-
-									Call_dispo = true;
-									ViCall.stopRinging();
-									decline();
-									return true;
-								}
-								break;
-							case MotionEvent.ACTION_UP:
-								view.scrollTo(0, view.getScrollY());
-								accept.setVisibility(View.VISIBLE);
-								declineUnlock.setVisibility(View.GONE);
-								break;
-
-						}
-
-
-					}catch(Exception ex){
-
-						Call_dispo = true;
-						ex.printStackTrace();
-					}
-					return true;
-
-				} // after that  ...
-			});
-		}
 
 		decline.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if(isScreenActive) {
 
-					Call_dispo = true;
 					ViCall.stopRinging();
 					decline();
 				} else {
 					accept.setVisibility(View.GONE);
-					acceptUnlock.setVisibility(View.VISIBLE);
 				}
 			}
 		});
 
-
-
-
-
 		instance = this;
-		ViCall = new LinphoneManager(CallIncomingActivity.this.getApplicationContext());
-		/// start ringing  and vibrate
-		try{
 
-			ViCall.startRinging();
-
-		}catch(Exception ex){
-			ex.printStackTrace();
-
-		}
 
 		user_id = getIntent().getStringExtra("userid");
+		room_id = getIntent().getStringExtra("room_id_call");
 		// sett context ...
 		mContext = CallIncomingActivity.this.getApplicationContext();
-		InitCallerProfil(user_id);
 
+		// so extrem important to avoid user  call this activity without   ...once the fcm should  call this activity
+		if(user_id != null && room_id != null){
+			ViCall = new LinphoneManager(CallIncomingActivity.this.getApplicationContext());
+			/// start ringing  and vibrate
+			try{
 
-		askPermission();
-		// start chechker
-		Check_Correspondantavailibility(CallIncomingActivity.this.getApplicationContext(),user_id);
+				ViCall.startRinging();
+
+			}catch(Exception ex){
+				ex.printStackTrace();
+
+			}
+
+			askPermission();
+			InitCallerProfil(user_id);
+			// start chechker
+			Check_Correspondantavailibility(CallIncomingActivity.this.getApplicationContext(),user_id);
+
+		}else{
+
+			// Start MainActivitivty
+			Intent IntentMain = new Intent(CallIncomingActivity.this, MainActivity.class);
+			startActivity(IntentMain);
+			finish();
+
+		}
 
 	}
 
@@ -383,7 +293,7 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 	@Override
 	protected void onDestroy() {
 
-		Call_dispo = true;
+		SanityChechCall_Db.child("Call_room").child(room_id).removeEventListener(mListener);
 		super.onDestroy();
 	}
 
@@ -405,22 +315,22 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 
 			ViCall.stopRinging();
 			// put the  call  dispo enable
-			Call_dispo = true;
+			SanityChechCall_Db.child("Call_room").child(room_id).removeEventListener(mListener);
+
 
 			// reset call
-			ChatActivity.resetCallparameter(CallIncomingActivity.this , ConnectActivity.user_id);
+			ChatActivity.resetCallparameter(CallIncomingActivity.this , room_id , "CallIncomming : Decline ",
+					"your correspondant ist not available",1
+			);
+
 
 
 		}catch(Exception ex){
 
-			Call_dispo = true;
+
+			SanityChechCall_Db.child("Call_room").child(room_id).removeEventListener(mListener);
 			ex.printStackTrace();
 		}
-
-		if (alreadyAcceptedOrDeniedCall) {
-			return;
-		}
-		alreadyAcceptedOrDeniedCall = true;
 		
 		finish();
 	}
@@ -432,22 +342,22 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 
 			ViCall.stopRinging();
 
-			userDB = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
-			// Set the  Driver Response to true ...
-			//HashMap map = new HashMap();
-			//map.put("Authentified" , "await");
-			//userDB.updateChildren(map);
-			userDB.addValueEventListener(new ValueEventListener() {
+			SanityChechCall_Db.keepSynced(true);
+			SanityChechCall_Db = FirebaseDatabase.getInstance().getReference().child("Call_room").child(room_id);
+				// add listeners for single Value
+			SanityChechCall_Db.keepSynced(true);
+			SanityChechCall_Db.addListenerForSingleValueEvent(new ValueEventListener() {
 				@Override
 				public void onDataChange(DataSnapshot dataSnapshot) {
+
 					if(dataSnapshot.exists()){
 						try{
 							Map<String, Object> map_call = (Map<String, Object>) dataSnapshot.getValue();
 							// test if the recors Phone already exist  ...if not than
 							// than you are a new user   ...
-							if(map_call.get("call_id")!=null){
+							if(map_call.get("room_id")!=null){
 								// than this user is already registered ...
-								call_server_id = map_call.get("call_id").toString();
+								call_server_id = map_call.get("room_id").toString();
 								// Toasty.info(mContext, "Server Channel  : "+ call_server_id, Toast.LENGTH_LONG).show();
 								if(map_call.get("call_type")!=null){
 									call_type = map_call.get("call_type").toString();
@@ -456,12 +366,13 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 								}
 
 
-								Call_dispo = false; // you  are not anymore available to take another call or to start another call
 								Intent intentaudio = new Intent(CallIncomingActivity.this, ConnectActivity.class);
 								intentaudio.putExtra("vid_or_aud", call_type);
 								intentaudio.putExtra("user_id", user_id );
 								intentaudio.putExtra("call_channel", call_server_id );
 								startActivity(intentaudio);
+								// remove listener
+								// userDB.child("Users").child(user_id).removeEventListener(mListener);
 								finish();
 
 
@@ -471,6 +382,7 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 
 
 						}catch(Exception ex){
+							SanityChechCall_Db.child("Call_room").child(room_id).removeEventListener(mListener);
 							Toasty.error(CallIncomingActivity.this, ex.toString() , Toast.LENGTH_LONG).show();
 							ex.printStackTrace();
 						}
@@ -480,16 +392,18 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 
 				@Override
 				public void onCancelled(DatabaseError databaseError) {
-					Toasty.error(CallIncomingActivity.this,databaseError.toString(), Toast.LENGTH_LONG).show();
+					Toasty.error(getApplicationContext(),databaseError.toString(), Toast.LENGTH_LONG).show();
 
 				}
 			});
 
 
 
+
 		}catch(Exception ex){
 
-			Call_dispo = true;
+
+			SanityChechCall_Db.child("Call_room").child(room_id).removeEventListener(mListener);
 			ex.printStackTrace();
 		}
 
@@ -505,12 +419,12 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 
 		try{
 
-			userDB = FirebaseDatabase.getInstance().getReference().child("Users").child(UserID);
+			SanityChechCall_Db = FirebaseDatabase.getInstance().getReference().child("Call_room").child(room_id);
 			// Set the  Driver Response to true ...
 			//HashMap map = new HashMap();
 			//map.put("Authentified" , "await");
 			//userDB.updateChildren(map);
-			userDB.addValueEventListener(new ValueEventListener() {
+			mListener = SanityChechCall_Db.addValueEventListener(new ValueEventListener() {
 				@Override
 				public void onDataChange(DataSnapshot dataSnapshot) {
 					if(dataSnapshot.exists()){
@@ -518,23 +432,54 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 							Map<String, Object> map_call = (Map<String, Object>) dataSnapshot.getValue();
 							// test if the recors Phone already exist  ...if not than
 							// than you are a new user   ...
-							if(map_call.get("call_possible")!=null){
+							if(map_call.get("available_caller")!=null){
 								// than this user is already registered ...
-								boolean availibilty  = (boolean) map_call.get("call_possible");
-								if(availibilty == false) {
+								boolean caller_availibilty  = (boolean) map_call.get("available_caller");
+								if(caller_availibilty == false) {
 									// than we must stop the call  ...
 									ViCall.stopRinging();
 									// put the  call  dispo enable
-									Call_dispo = true;
+									/*
+									ChatActivity.resetCallparameter(getApplicationContext() , room_id ,
+											this.getClass().getName() + "chehcCorrespondant",
+											"your correspondant ist not available"
+									);
+									*/
+									SanityChechCall_Db.child("Call_room").child(room_id).removeEventListener(mListener);
 									finish();
 								}
 
-							}else{
+							}
+
+							if(map_call.get("room_status")!=null){
+								// than this user is already registered ...
+								boolean room_Status  = (boolean) map_call.get("room_status");
+								if(room_Status == false) {
+									// than we must stop the call  ...
+									ViCall.stopRinging();
+									// put the  call  dispo enable
+									/*
+									ChatActivity.resetCallparameter(getApplicationContext() , room_id ,
+											this.getClass().getName() + "chehcCorrespondant",
+											"your correspondant ist not available"
+									);
+									*/
+									SanityChechCall_Db.child("Call_room").child(room_id).removeEventListener(mListener);
+									finish();
+								}
 
 							}
 
 
 						}catch(Exception ex){
+
+							/*
+							ChatActivity.resetCallparameter(getApplicationContext() , room_id ,
+									this.getClass().getName() + "chehcCorrespondant",
+									"your correspondant ist not available"
+							);
+							*/
+							SanityChechCall_Db.child("Call_room").child(room_id).removeEventListener(mListener);
 							Toasty.error(context, ex.toString() , Toast.LENGTH_LONG).show();
 							ex.printStackTrace();
 						}
@@ -552,8 +497,14 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 
 
 		}catch(Exception ex){
+			/*
 
-			Call_dispo = true;
+			ChatActivity.resetCallparameter(getApplicationContext() ,
+					room_id , this.getClass().getName() + "chehcCorrespondant",
+					"your correspondant ist not available"
+			);
+			*/
+			SanityChechCall_Db.child("Call_room").child(room_id).removeEventListener(mListener);
 			ex.printStackTrace();
 		}
 
@@ -562,83 +513,6 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 
 
 
-	private void caller_availability_chechker() {
-
-		try{
-
-			ViCall.stopRinging();
-
-			userDB = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
-			// Set the  Driver Response to true ...
-			//HashMap map = new HashMap();
-			//map.put("Authentified" , "await");
-			//userDB.updateChildren(map);
-			userDB.addValueEventListener(new ValueEventListener() {
-				@Override
-				public void onDataChange(DataSnapshot dataSnapshot) {
-					if(dataSnapshot.exists()){
-						try{
-							Map<String, Object> map_call = (Map<String, Object>) dataSnapshot.getValue();
-							// test if the recors Phone already exist  ...if not than
-							// than you are a new user   ...
-							if(map_call.get("call_id")!=null){
-								// than this user is already registered ...
-								call_server_id = map_call.get("call_id").toString();
-								// Toasty.info(mContext, "Server Channel  : "+ call_server_id, Toast.LENGTH_LONG).show();
-								if(map_call.get("call_type")!=null){
-									call_type = map_call.get("call_type").toString();
-								}else{
-									call_type = "audio";
-								}
-
-								finish();
-
-
-							}else{
-
-							}
-
-
-						}catch(Exception ex){
-							Toasty.error(CallIncomingActivity.this, ex.toString() , Toast.LENGTH_LONG).show();
-							ex.printStackTrace();
-						}
-
-					}
-				}
-
-				@Override
-				public void onCancelled(DatabaseError databaseError) {
-					Toasty.error(CallIncomingActivity.this,databaseError.toString(), Toast.LENGTH_LONG).show();
-
-				}
-			});
-
-
-
-		}catch(Exception ex){
-
-			Call_dispo = true;
-			ex.printStackTrace();
-		}
-
-		if (alreadyAcceptedOrDeniedCall) {
-			return;
-		}
-		alreadyAcceptedOrDeniedCall = true;
-
-
-	}
-
-	@Override
-	public void onLeftHandleTriggered() {
-
-	}
-
-	@Override
-	public void onRightHandleTriggered() {
-
-	}
 	
 	private void checkAndRequestCallPermissions() {
 		ArrayList<String> permissionsList = new ArrayList<String>();

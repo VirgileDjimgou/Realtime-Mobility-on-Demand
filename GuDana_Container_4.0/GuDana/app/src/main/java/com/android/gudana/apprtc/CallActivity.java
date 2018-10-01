@@ -34,6 +34,7 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.Toast;
 
 import com.android.gudana.R;
+import com.android.gudana.apprtc.linphone.LinphoneManager;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -61,6 +62,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import es.dmoral.toasty.Toasty;
 
 /**
  * Activity for peer connection call setup, call waiting
@@ -180,6 +183,7 @@ public class CallActivity extends Activity implements AppRTCClient.SignalingEven
   private CallFragment callFragment;
   private HudFragment hudFragment;
   private CpuMonitor cpuMonitor;
+
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -374,6 +378,9 @@ public class CallActivity extends Activity implements AppRTCClient.SignalingEven
       startCall();
     }
 
+
+
+    // ViCall.PlayRingBack(CallActivity.this.getApplicationContext());
 
     askPermission();
   }
@@ -712,7 +719,10 @@ public class CallActivity extends Activity implements AppRTCClient.SignalingEven
       public void run() {
         if (!isError) {
           isError = true;
-          disconnectWithErrorMessage(description);
+          //disconnectWithErrorMessage(description);
+          //Log.e(TAG, "Critical error: " + errorMessage);
+          disconnect();
+          Toasty.error(CallActivity.this, description, Toast.LENGTH_SHORT).show();
         }
       }
     });
