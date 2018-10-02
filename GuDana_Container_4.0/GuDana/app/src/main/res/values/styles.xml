@@ -413,10 +413,6 @@
         <item name="android:textColorPrimary">@color/style_color_primary_dark</item>
     </style>
 
-    <style name="SearchViewStyle" parent="@style/Widget.AppCompat.Light.SearchView">
-        <item name="suggestionRowLayout">@layout/feed_search_dropdown_item_icons_2line</item>
-    </style>
-
     <style name="DropDownItemStyle" parent="@style/Widget.AppCompat.DropDownItem.Spinner">
         <item name="android:background">@drawable/dropdown_item_background</item>
     </style>
@@ -433,7 +429,6 @@
         <item name="colorPrimaryDark">@color/style_color_primary_dark</item>
         <item name="android:background">@color/style_color_primary</item>
         <item name="android:dropDownItemStyle">@style/DropDownItemStyle</item>
-        <item name="searchViewStyle">@style/SearchViewStyle</item>
     </style>
 
     <style name="SearchResultTitle" parent="@style/TextAppearance.AppCompat.SearchResult.Title">

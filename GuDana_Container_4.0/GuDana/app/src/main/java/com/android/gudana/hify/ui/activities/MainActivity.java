@@ -133,7 +133,6 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static android.util.Log.INFO;
 import static android.util.Log.VERBOSE;
-import static com.android.gudana.R2.id.removeFriend;
 import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
 
 /**

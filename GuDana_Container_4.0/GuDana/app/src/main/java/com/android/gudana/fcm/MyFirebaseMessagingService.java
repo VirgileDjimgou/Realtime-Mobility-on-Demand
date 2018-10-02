@@ -53,7 +53,6 @@ import android.widget.Toast;
 
 import es.dmoral.toasty.Toasty;
 
-import static com.android.gudana.R2.id.imageview;
 import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {

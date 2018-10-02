@@ -49,7 +49,7 @@ public class ProfileActivity extends AppCompatActivity
 
     // // Will handle all changes happening in database
 
-    private DatabaseReference userDatabase, requestsDatabase, friendsDatabase;
+    private DatabaseReference userDatabase_profile, requestsDatabase, friendsDatabase;
     private ValueEventListener userListener, requestsListener, friendsListerner;
 
     // Users data
@@ -90,15 +90,15 @@ public class ProfileActivity extends AppCompatActivity
     {
         super.onStart();
 
-        if(userDatabase != null && userListener != null)
+        if(userDatabase_profile != null && userListener != null)
         {
-            userDatabase.removeEventListener(userListener);
+            userDatabase_profile.removeEventListener(userListener);
         }
 
         // Initialize/Update realtime ca_user data such as name, email, status, image
 
-        userDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(otherUserId);
-        userDatabase.keepSynced(true); // For offline use
+        userDatabase_profile = FirebaseDatabase.getInstance().getReference().child("Users").child(otherUserId);
+        userDatabase_profile.keepSynced(true); // For offline use
         userListener = new ValueEventListener()
         {
             @Override
@@ -208,7 +208,7 @@ public class ProfileActivity extends AppCompatActivity
                 Log.d(TAG, "userDatabase listener failed: " + databaseError.getMessage());
             }
         };
-        userDatabase.addValueEventListener(userListener);
+        userDatabase_profile.addValueEventListener(userListener);
 
         if(otherUserId.equals(currentUserId))
         {
@@ -269,7 +269,7 @@ public class ProfileActivity extends AppCompatActivity
 
                         // Updating image on ca_user data
 
-                        userDatabase.child("image").setValue(imageUrl).addOnCompleteListener(new OnCompleteListener<Void>()
+                        userDatabase_profile.child("image").setValue(imageUrl).addOnCompleteListener(new OnCompleteListener<Void>()
                         {
                             @Override
                             public void onComplete(@NonNull Task<Void> task)
@@ -310,7 +310,7 @@ public class ProfileActivity extends AppCompatActivity
 
                         // Updating image on ca_user data
 
-                        userDatabase.child("cover").setValue(imageUrl).addOnCompleteListener(new OnCompleteListener<Void>()
+                        userDatabase_profile.child("cover").setValue(imageUrl).addOnCompleteListener(new OnCompleteListener<Void>()
                         {
                             @Override
                             public void onComplete(@NonNull Task<Void> task)
@@ -453,7 +453,7 @@ public class ProfileActivity extends AppCompatActivity
                         {
                             // Updating on status on ca_user data
 
-                            userDatabase.child("status").setValue(newStatus).addOnCompleteListener(new OnCompleteListener<Void>()
+                            userDatabase_profile.child("status").setValue(newStatus).addOnCompleteListener(new OnCompleteListener<Void>()
                             {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task)
@@ -803,9 +803,9 @@ public class ProfileActivity extends AppCompatActivity
 
     public void removeListeners()
     {
-        if(userDatabase != null && userListener != null)
+        if(userDatabase_profile != null && userListener != null)
         {
-            userDatabase.removeEventListener(userListener);
+            userDatabase_profile.removeEventListener(userListener);
         }
 
         if(requestsDatabase != null && requestsListener != null)

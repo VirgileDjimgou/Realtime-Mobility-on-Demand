@@ -80,16 +80,20 @@ public class CallFragment extends Fragment
             @Override
             protected void onBindViewHolder(final CallHolder holder, int position, final Call model)
             {
-                final String userid = getRef(position).getKey();
+                final String Call_id_node = getRef(position).getKey();
 
-                holder.setHolder(userid, model.getMessage(), model.getTimestamp(), model.getSeen());
+                // test  firebase function
+
+                final String UserID = FirebaseAuth.getInstance().getUid();
+
+                holder.setHolder(UserID , Call_id_node, model.getMessage(), model.getTimestamp(), model.getSeen());
                 holder.getView().setOnClickListener(new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View view)
                     {
                         Intent chatIntent = new Intent(getContext(), ChatActivity.class);
-                        chatIntent.putExtra("userid", userid);
+                        chatIntent.putExtra("userid", Call_id_node);
                         startActivity(chatIntent);
                     }
                 });
@@ -118,6 +122,9 @@ public class CallFragment extends Fragment
 
 
         recyclerView.setAdapter(adapter);
+
+        // Test  this data base
+        // CallHolder.TestFirebase__infos(FirebaseAuth.getInstance().getUid());
         return view;
     }
 
