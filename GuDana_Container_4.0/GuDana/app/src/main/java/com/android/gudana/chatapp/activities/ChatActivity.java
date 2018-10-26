@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -51,6 +52,7 @@ import com.android.gudana.chatapp.models.Message;
 import com.android.gudana.chatapp.models.StaticConfigUser_fromFirebase;
 import com.android.gudana.fcm.CustomFcm_Util;
 import com.android.gudana.fcm.MainActivity_fcm;
+import com.android.gudana.group_chat.ui.ChatMessagesActivity;
 import com.android.gudana.hify.ui.activities.MainActivity;
 import com.android.gudana.hify.utils.database.UserHelper;
 import com.esafirm.imagepicker.features.ImagePicker;
@@ -137,7 +139,7 @@ import java.util.Calendar;
 public class ChatActivity extends AppCompatActivity  implements  View.OnClickListener
 {
     public  static String pushId_callRoom = "";
-    private final String TAG = "CA/ChatActivity";
+    private final String TAG = "CA/CreateGroupChatActivity";
 
     // Will handle all changes happening in database
 
@@ -153,39 +155,31 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     private final List<Message> messagesList = new ArrayList<>();
 
     // User data
-
     public static  String currentUserId;
-
     public static  String NameCurrentUser = "";
     public static  String url_Icon_currentUser = "";
-
     // ca_activity_chat views
 
     private EmojiconEditText messageEditText;
     private RecyclerView recyclerView;
     private Button sendButton;
     private ImageView sendPictureButton;
-
     // ca_chat_bar views
 
     private TextView appBarName, appBarSeen;
     private  CircleImageView messageImageRight = null;
-
     // Will be used on Notifications to detairminate if user has chat window open
 
     public static String otherUserId , OtherUserIdPhone = "" , PhoneCorrespondant = "";
     public static boolean running = false;
-
     private static final int GALLERY_INTENT=2;
     private StorageReference mStorage;
     private ProgressDialog mProgress;
-
     private ImageButton mrecordVoiceButton;
     // private TextView mRecordLable;
 
     private MediaRecorder mRecorder;
     private String mFileName = null;
-
     private static final String LOG_TAG = "Record_log";
     private ValueEventListener mValueEventListener;
 
@@ -195,24 +189,15 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     private String [] permissions = {"android.permission.RECORD_AUDIO", "android.permission.WRITE_EXTERNAL_STORAGE"};
 
     private static final int CONTACT_PICKER_REQUEST = 23 ;
-
-
     private static final int IMAGE_GALLERY_REQUEST = 1;
     private static final int IMAGE_CAMERA_REQUEST = 2;
     private static final int PLACE_PICKER_REQUEST = 3;
     private static final int VOICE_PICKER_REQUEST = 4;
-
     static final String CHAT_REFERENCE = "chatmodel";
 
     //Views UI
-    private ListView rvListMessage;
-    private LinearLayoutManager mLinearLayoutManager;
     private ImageView btEmoji;
-    //private EmojiconEditText edMessage;
-    private View contentRoot;
     private EmojIconActions emojIcon;
-    private ImageButton recordVoiceButton_2;
-    private ProgressBar uploadProgress;
 
     private int progressStatus = 0;
     private int number_of_files_to_send = 0;
@@ -225,18 +210,8 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     private Context context;
     public static  DatabaseReference userDB;
     public static DatabaseReference userDB_current;
-    // private static boolean CallPossible_button  =  true;
-
-
-
-
-
-    // record audio
-    // String filePath = Environment.getExternalStorageDirectory() + "/recorded_audio.wav";
-    int requestCode_record = 200;
 
     private static final int CAMERA_REQUEST = 1888;
-    private ImageView imageView;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
 
     // boom menu
@@ -249,6 +224,8 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     //String filePaths_doc =  Environment.getExternalStorageDirectory().getPath();
     private ArrayList<String> docPaths = new ArrayList<>();
     private ArrayList<String> photoPaths = new ArrayList<>();
+    private static final int REQUEST = 112;
+
     int requestCode = 0;
 
     // Storage Permissions
@@ -259,7 +236,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     };
 
     private Context mContext=ChatActivity.this;
-    private static final int REQUEST = 112;
     private static final int EX_FILE_PICKER_RESULT = 55;
 
 
@@ -271,9 +247,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     private UserHelper userHelper;
     public  static String TokenFCM_OtherUser = "";
 
-
     // public static Context mContext;
-
 
 
     @Override
@@ -309,10 +283,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
             }
 
-
-
     }
-
 
 
     @Override
@@ -322,7 +293,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         // setContentView(R.layout.ca_activity_chat);
         setContentView(R.layout.p3_messages_activity);
         running = true;
-        //ViCall = new LinphoneManager(ChatActivity.this.getApplicationContext());
+        //ViCall = new LinphoneManager(CreateGroupChatActivity.this.getApplicationContext());
 
         // messageEditText = findViewById(R.id.chat_message);
         messageEditText = (EmojiconEditText)findViewById(R.id.editTextMessage);
@@ -355,7 +326,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
         actionBar.setCustomView(actionBarView);
         messageImageRight = actionBarView.findViewById(R.id.icon_image);
-
 
 
         // adad
@@ -433,7 +403,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                                     (AudioManager) ChatActivity.this.getSystemService(Context.AUDIO_SERVICE);
                             audioManager.playSoundEffect(SoundEffectConstants.CLICK);
 
-                            // Toast.makeText(ChatActivity.this, "Button " + index + " is pressed.", Toast.LENGTH_SHORT).show();
+                            // Toast.makeText(CreateGroupChatActivity.this, "Button " + index + " is pressed.", Toast.LENGTH_SHORT).show();
                             //FilePickerBuilder.getInstance().set
                             FilePickerBuilder.getInstance().setMaxCount(99)
                                     .setSelectedFiles(docPaths)
@@ -462,7 +432,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                                     (AudioManager) ChatActivity.this.getSystemService(Context.AUDIO_SERVICE);
                             audioManager.playSoundEffect(SoundEffectConstants.CLICK);
 
-                            // Toast.makeText(ChatActivity.this, "Button " + index + " is pressed.", Toast.LENGTH_SHORT).show();
+                            // Toast.makeText(CreateGroupChatActivity.this, "Button " + index + " is pressed.", Toast.LENGTH_SHORT).show();
                             //FilePickerBuilder.getInstance().set
                             FilePickerBuilder.getInstance().setMaxCount(99)
                                     .setSelectedFiles(docPaths)
@@ -639,6 +609,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
             @Override
             public void afterTextChanged(Editable editable)
             {
+
             }
         });
 
@@ -683,7 +654,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
             requestPermissions(permissions, requestCode);
         }
 
-
         context = ChatActivity.this.getApplicationContext();
         //initializeScreen();
         // mToolBar.setTitle(chatName);
@@ -692,9 +662,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
         try{
 
-
             openVoiceRecorder();
-
             // hide Keyboard
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
@@ -711,22 +679,11 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         // appBarName.setText("GuDana User");
         // create  fcm Utill to send call  notification and  special notification   ... to other users
         FCM_Message_Sender = new CustomFcm_Util();
-
-        // init User helper
-        //userHelper = new UserHelper(this);
-        //userHelper.
     }
 
     public void getOtherUserData(String OtherUserId){
 
     }
-
-
-    public void TextFcm(){
-        Intent intentvideo = new Intent(this, MainActivity_fcm.class);
-        startActivity(intentvideo);
-    }
-
 
 
     private static boolean hasPermissions(Context context, String... permissions) {
@@ -804,9 +761,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     @Override
     public void onBackPressed()
     {
-        //MainActivity_with_Drawer.tabLayout.getTabAt(3);
-        //MainActivity_with_Drawer.mViewPager.setCurrentItem(3);
-        //NavUtils.navigateUpFromSameTask(this);
+        this.finish();
     }
 
     @Override
@@ -819,7 +774,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                 //MainActivity_with_Drawer.tabLayout.getTabAt(3);
                 //MainActivity_with_Drawer.mViewPager.setCurrentItem(3);
                 //play_sound();
-                finish();
+                this.finish();
                 // NavUtils.navigateUpFromSameTask(this);
                 break;
 
@@ -1210,7 +1165,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                                     {
                                         Log.d(TAG, "sendMessage(): updateChildren failed: " + databaseError.getMessage());
                                     }else{
-                                        //Toast.makeText(ChatActivity.this, databaseError.getMessage(), Toast.LENGTH_LONG).show();
+                                        //Toast.makeText(CreateGroupChatActivity.this, databaseError.getMessage(), Toast.LENGTH_LONG).show();
                                     }
                                 }
                             });
@@ -1349,7 +1304,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                                             // after that send your notification   ...
 
                                         }else{
-                                            // Toasty.info(ChatActivity.this, databaseError.getMessage(), Toast.LENGTH_LONG).show();
+                                            // Toasty.info(CreateGroupChatActivity.this, databaseError.getMessage(), Toast.LENGTH_LONG).show();
                                         }
                                     }
                                 });
@@ -1374,11 +1329,8 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
         // Pushing message/notification so we can get keyIds
 
-
-
         DatabaseReference Call_Room = FirebaseDatabase.getInstance().getReference().child("Call_room").child(currentUserId).child(otherUserId).push();
         pushId_callRoom = Call_Room.getKey();
-
 
         Map callroom_map = new HashMap();
         callroom_map.put("room_id", pushId_callRoom);
@@ -1396,7 +1348,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         Map callroom_map_messages = new HashMap();
         callroom_map_messages.put("Call_room//" + pushId_callRoom, callroom_map);
 
-
         // update call room id
         FirebaseDatabase.getInstance().getReference().updateChildren(callroom_map_messages, new DatabaseReference.CompletionListener()
         {
@@ -1408,7 +1359,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                 {
                     //Log.d("error", "sendMessage(): updateChildren failed: " + databaseError.getMessage());
                     Toasty.info(context_call, "sendMessage(): updateChildren failed: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                    // Toast.makeText(ChatActivity.this.getApplicationContext(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(CreateGroupChatActivity.this.getApplicationContext(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                 }else{
                     // we can  start the call intent  ....
                     // start call
@@ -1496,7 +1447,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                 if(databaseError != null)
                 {
                     Log.d("error", "sendMessage(): updateChildren failed: " + databaseError.getMessage());
-                    // Toast.makeText(ChatActivity.this.getApplicationContext(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(CreateGroupChatActivity.this.getApplicationContext(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -1636,7 +1587,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
 
         Toasty.info(context_call, "Call Reset Parameter  : " + ClassName_func, Toast.LENGTH_LONG).show();
-
         Map<String, Object> map = null;
         map = new HashMap<>();
         map.put("room_status", false); // that meant you are  at the moment online  .....
@@ -2328,5 +2278,16 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         voice_upload_images_to_firebase(Uri.fromFile(new File(mFileName)));
     }
 
+    public void Play_Song_out_message() {
+
+        try {
+
+            MediaPlayer mediaPlayer = MediaPlayer.create(ChatActivity.this, R.raw.stairs);
+            mediaPlayer.start();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 
 }

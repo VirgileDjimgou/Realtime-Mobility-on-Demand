@@ -116,7 +116,7 @@ public class CallFragment extends Fragment {
         callEvents.onCallHangUp();
         /*
         // send notification ...to tell that your are not available anymore ....
-        ChatActivity.resetCallparameter(controlView.getContext() ,
+        CreateGroupChatActivity.resetCallparameter(controlView.getContext() ,
                 room_is_voice_Server,
                 "CallFragment  : disconnect",
                 "your correspondent is not available "
@@ -247,7 +247,7 @@ public class CallFragment extends Fragment {
                   ViCall.stopRinging();
                   // put the  call  dispo enable
                   /*
-                  ChatActivity.resetCallparameter(context ,
+                  CreateGroupChatActivity.resetCallparameter(context ,
                           room_is_voice_Server ,
                           this.getClass().getName() + "chehcCorrespondant",
                           "your correspondant ist not available");
@@ -266,7 +266,7 @@ public class CallFragment extends Fragment {
                   ViCall.stopRinging();
                   // put the  call  dispo enable
                   /*
-                  ChatActivity.resetCallparameter(context ,
+                  CreateGroupChatActivity.resetCallparameter(context ,
                           room_is_voice_Server,
                           this.getClass().getName() + "chehcCorrespondant",
                           "your correspondent ist not available ");

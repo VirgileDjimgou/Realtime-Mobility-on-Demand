@@ -58,8 +58,9 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class RegisterActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE =100 ;
-    private static final int PIC_CROP = 1;
     public Uri imageUri;
+
+    private static final int PIC_CROP = 1;
     public StorageReference storageReference;
     public ProgressDialog mDialog;
     public String name_, pass_, email_,username_,location_ = "--##--";

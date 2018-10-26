@@ -1,7 +1,10 @@
 package com.android.gudana.hify.adapters.viewFriends;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.gudana.hify.models.ViewFriends;
+import com.android.gudana.hify.ui.activities.FriendUpdatesActivity;
+import com.android.gudana.hify.ui.activities.FriendsUpdates;
 import com.android.gudana.hify.ui.activities.friends.FriendProfile;
 import com.android.gudana.R;
 import com.bumptech.glide.Glide;
@@ -23,6 +28,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,13 +41,18 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ViewFriendAdapter extends RecyclerView.Adapter<ViewFriendAdapter.ViewHolder> {
 
-    private List<ViewFriends> usersList;
+    private List<ViewFriends> usersList = null;
+    private List<String> usersList_group = new ArrayList<>();;
+
     private Context context;
     private HashMap<String, Object> userMap;
+    private String FromClasse ;
+    private boolean ViewSelected = false;
 
-    public ViewFriendAdapter(List<ViewFriends> usersList, Context context) {
+    public ViewFriendAdapter(List<ViewFriends> usersList, Context context , String  FromClasse) {
         this.usersList = usersList;
         this.context = context;
+        this.FromClasse = FromClasse;
     }
 
     @Override
@@ -299,7 +310,55 @@ public class ViewFriendAdapter extends RecyclerView.Adapter<ViewFriendAdapter.Vi
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FriendProfile.startActivity(context, usersList.get(holder.getAdapterPosition()).getId());
+
+                if(FromClasse.equalsIgnoreCase("new_group")){
+
+                    /*
+                    Intent IntentUpdate =  new Intent(context, FriendsUpdates.class);
+                    IntentUpdate.putExtra("user_id", usersList.get(holder.getAdapterPosition()).getId());
+                    context.startActivity(IntentUpdate);
+                             */
+                    // holder
+                    // Drawable resId = R.drawable.round_background;
+
+                    if(usersList_group.size() > 0){
+
+                    }
+
+                    try{
+                        if(holder.viewForeground.isSelected() == true){
+                            holder.viewForeground.setSelected(false);
+                            holder.viewForeground.setBackground(ContextCompat.getDrawable(context, R.drawable.round_background));
+                            usersList_group.add(usersList.get(holder.getAdapterPosition()).getId());
+                            // holder    ....  marketing   ... je ne suis pas  trop trope ...
+                            Toast.makeText(context, " number of  Users " + usersList_group.size(), Toast.LENGTH_SHORT).show();
+
+                        }else{
+                            holder.viewForeground.setSelected(true);
+                            holder.viewForeground.setBackground(ContextCompat.getDrawable(context, R.color.white));
+                            usersList_group.remove(usersList.get(holder.getAdapterPosition()).getId());
+                            Toast.makeText(context, " number of  Users " + usersList_group.size(), Toast.LENGTH_SHORT).show();
+                        }
+
+                    }catch (Exception ex){
+                        ex.printStackTrace();
+                    }
+
+                }
+
+                if(FromClasse.equalsIgnoreCase("FriendsLastUpdates")){
+
+                    Intent IntentUpdate =  new Intent(context, FriendsUpdates.class);
+                    IntentUpdate.putExtra("user_id", usersList.get(holder.getAdapterPosition()).getId());
+                    context.startActivity(IntentUpdate);
+
+                }
+
+                if(FromClasse.equalsIgnoreCase("Friends")){
+
+                    FriendProfile.startActivity(context, usersList.get(holder.getAdapterPosition()).getId());
+                }
+                // other fullScreen  if the chechk the last Update of this User  ...
             }
         });
 
@@ -387,5 +446,16 @@ public class ViewFriendAdapter extends RecyclerView.Adapter<ViewFriendAdapter.Vi
             listenerText =mView.findViewById(R.id.view_foreground_text);
 
         }
+    }
+
+    // getter and setter  for  liste of selected Users  ..
+
+
+    public List<String> getUsersList_group() {
+        return usersList_group;
+    }
+
+    public void setUsersList_group(List<String> usersList_group) {
+        this.usersList_group = usersList_group;
     }
 }

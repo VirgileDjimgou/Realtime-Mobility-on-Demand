@@ -7,6 +7,20 @@
         Please enter a room name. Room names are shared with everyone, so think
         of something unique and send it to a friend.
     </string>
+
+
+    <string name="start_listening">Start listening</string>
+    <string name="stop_listening">Stop listening</string>
+    <string name="say_something">Say</string>
+    <string name="introduction">Tap on one of the buttons to try an action</string>
+    <string name="tts_hint">Write something to speech</string>
+    <string name="repeat">Repeat please</string>
+    <string name="input_something">Please input something to speak!</string>
+    <string name="speech_not_available">Speech recognition is not available on this device. Do you want to install Google app to have speech recognition?</string>
+    <string name="permission_required">You need to grant the permission to use the microphone</string>
+    <string name="enable_google_voice_typing">Please enable Google Voice Typing to use speech recognition!</string>
+
+
     <string name="favorites">Favorites</string>
     <string name="no_favorites">No favorites</string>
     <string name="invalid_url_title">Invalid URL</string>
@@ -214,14 +228,12 @@
     <string name="pref_tracing_default" translatable="false">false</string>
 
 
-
-
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
 
-    <string name="Welcome_message">Welcome to GuDana</string>
+    <string name="Welcome_message">Welcome to Xshaka</string>
     <string name="register_message">Create a new Account</string>
     <string name="loading_name">Loading Name...</string>
 
@@ -251,7 +263,7 @@
     <string name="title_activity_weather">Weather</string>
 
     <!-- app. -->
-    <string name="package_name">com.gudana.GuDana</string>
+    <string name="package_name">com.Xshaka.Xshaka</string>
     <string name="version_code">v1.6.5</string>
 
     <!-- keyword. -->
@@ -533,8 +545,8 @@
     <string name="send_email">Send email</string>
     <string name="limit">= ? LIMIT 1</string>
     <string name="limit1">= ? LIMIT 1</string>
-    <string name="app_name_weather">GuDana Weather</string>
-    <string name="app_name_planner">GuDana Planner</string>
+    <string name="app_name_weather">Xshaka Weather</string>
+    <string name="app_name_planner">Xshaka Planner</string>
     <string-array name="repeat_array">
         <item>Does not repeat</item>
         <item>Every hour</item>
@@ -560,7 +572,7 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="default_bio">Hey there, I am a GuDana user.</string>
+    <string name="default_bio">Hey there, I am a Xshaka user.</string>
     <string name="username">\@username</string>
     <string name="dummy_location">Getting location</string>
     <string name="loading_username">\@loading...</string>
@@ -568,9 +580,6 @@
     <string name="select_from_gallery">Select from gallery</string>
     <string name="click_on_the_button_below_to_select_image_s">Click on the button below to select image(s)</string>
     <string name="insert_image_s">Insert Image(s)</string>
-
-
-
 
 
     <string name="login_success">login success</string>
@@ -588,7 +597,7 @@
 
     <string name="action_add_favourite">Add to your Favourites</string>
     <string name="action_play_next">Hide this Post</string>
-    <string name="backdrop_title">GuDDana</string>
+    <string name="backdrop_title">Xshaka</string>
     <string name="backdrop_subtitle">Advertising with future Partners,... </string>
 
 
@@ -649,22 +658,22 @@
     <string name="menu_enable_disable_items">Disable Items</string>
 
 
-    <!-- ad GuDana  parameters   and string variables -->
+    <!-- ad Xshaka  parameters   and string variables -->
 
 
     <!-- Custom -->
-    <string name="service_name">Gudana voice Service</string>
-    <string name="addressbook_label">GuDana</string>
-    <string name="notification_title">GuDana</string>
+    <string name="service_name">Xshaka voice Service</string>
+    <string name="addressbook_label">Xshaka</string>
+    <string name="notification_title">Xshaka</string>
     <string name="wait_dialog_text">Starting up</string>
     <string name="notification_registered">%s registered</string>
     <string name="notification_register_failure">%s failed to register</string>
     <string name="tunnel_host"></string>
-    <string name="about_version">GuDana Android %s</string>
-    <string name="about_liblinphone_version">GuDana Core %s</string>
-    <string name="about_text">© 2010-2018 GuDana Communications</string>
-    <string name="about_link">www.gudana.com</string>
-    <string name="sync_account_name">gudana contacts</string>
+    <string name="about_version">Xshaka Android %s</string>
+    <string name="about_liblinphone_version">Xshaka Core %s</string>
+    <string name="about_text">© 2010-2018 Xshaka Communications</string>
+    <string name="about_link">www.Xshaka.com</string>
+    <string name="sync_account_name">Xshaka contacts</string>
     <string name="history_date_format">EEE, d MMM</string>
     <string name="history_detail_date_format">yyyy/MM/dd - HH:mm - </string>
     <string name="inapp_popup_date_format">yyyy/MM/dd</string>
@@ -703,7 +712,7 @@
     <string name="link_account">Link your account</string>
 
     <!-- Launch screen -->
-    <string name="app_description">GuDana Talk</string>
+    <string name="app_description">Xshaka Talk</string>
 
 
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBb7F-tT5vbdBNFsUdrr8kwPJh6SkEeUiI</string>
@@ -974,7 +983,7 @@
     <string name="result">Something will happen here&#8230;</string>
     <string name="subscribed">Subscribed to news topic</string>
     <string name="unsubscribed">Unsubscribed from news topic</string>
-    <string name="by">\"Developed by GuDana Technology\"</string>
+    <string name="by">\"Developed by Xshaka Technology\"</string>
     <string name="connect_phone">Start</string>
     <string name="email_connect">connect  with Email</string>
     <string name="dev_under">backed by Google Cloud Platform and FireBase</string>
@@ -991,7 +1000,7 @@
     <string name="wait_your_response">waiting your response ....</string>
 
     <!-- Assistant -->
-    <string name="welcome">Welcome on GuDana</string>
+    <string name="welcome">Welcome on Xshaka</string>
     <string name="assistant">Assistant</string>
     <string name="assistant_create_account">Create account</string>
     <string name="assistant_link_account">Link account</string>
@@ -1000,21 +1009,21 @@
     <string name="assistant_finish">Finish configuration</string>
     <string name="assistant_validate_account_1">Your account is created. Please check your mails to validate your account:</string>
     <string name="assistant_validate_account_2">Once it is done, come back here and click on the button.</string>
-    <string name="assistant_welcome_desc">This assistant will help you register  and use your GuDana  account.</string>
-    <string name="assistant_linphone_login_desc">Please enter your username and password of gudana account</string>
+    <string name="assistant_welcome_desc">This assistant will help you register  and use your Xshaka  account.</string>
+    <string name="assistant_linphone_login_desc">Please enter your username and password of Xshaka account</string>
     <string name="assistant_login_desc">Please enter your username and password with your SIP domain</string>
     <string name="assistant_remote_provisioning_desc">Please provide your provisioning URL</string>
     <string name="transport">Transport</string>
     <string name="assistant_create_account_phone_number_address">Your SIP address is</string>
-    <string name="assistant_login_linphone">Use GuDana account</string>
+    <string name="assistant_login_linphone">Use Xshaka account</string>
     <string name="assistant_login_generic">Continue on registration screen.</string>
     <string name="assistant_remote_provisioning">Fetch remote configuration</string>
     <string name="assistant_create_account_part_1">Please confirm your country code and enter your phone number</string>
     <string name="assistant_create_account_part_2">We have sent you a SMS with a validation code to your phone number:</string>
     <string name="assistant_create_account_part_3">To complete your phone number verification, please enter the 4 digit code below:\n</string>
-    <string name="assistant_create_account_part_email">Please enter an username, email and password for your GuDana account</string>
+    <string name="assistant_create_account_part_email">Please enter an username, email and password for your Xshaka account</string>
     <string name="assistant_display_name_optional">Display name (optional)</string>
-    <string name="assistant_linphone_account">Use your GuDana account</string>
+    <string name="assistant_linphone_account">Use your Xshaka account</string>
     <string name="assistant_generic_account">Use SIP account</string>
     <string name="assistant_remote_provisioning_title">Fetch remote configuration</string>
     <string name="assistant_fetch_apply">Fetch and apply</string>
@@ -1047,9 +1056,9 @@
     <string name="use_email_for_validation">Use email address for account validation</string>
     <string name="login_with_username">Use your username and password instead of your phone number</string>
     <string name="phone_number_info_title">What will my phone number be used for?</string>
-    <string name="phone_number_info_content">\nThanks to your phone number, your friends will find you more easily.\n\n You will see in your address book who is using GuDana and your friends will know that they can rach you on GuDana as well.\n</string>
-    <string name="phone_number_link_info_content">\nYour friends will find you more easily if you link your account to your phone number\n\nYou will see in your address book who is using GuDana and your friends will know that they can reach you on GuDana as well.\n</string>
-    <string name="phone_number_link_info_content_already_account">You can only use your phone number with one GuDana account.\n\nIf you had already linked your number to an other account but you prefer to use this one, simply link it now and your number will automatically be moved to this account.</string>
+    <string name="phone_number_info_content">\nThanks to your phone number, your friends will find you more easily.\n\n You will see in your address book who is using Xshaka and your friends will know that they can rach you on Xshaka as well.\n</string>
+    <string name="phone_number_link_info_content">\nYour friends will find you more easily if you link your account to your phone number\n\nYou will see in your address book who is using Xshaka and your friends will know that they can reach you on Xshaka as well.\n</string>
+    <string name="phone_number_link_info_content_already_account">You can only use your phone number with one Xshaka account.\n\nIf you had already linked your number to an other account but you prefer to use this one, simply link it now and your number will automatically be moved to this account.</string>
 
     <!-- Status -->
     <string name="invalid_email">Invalid email</string>
@@ -1126,8 +1135,8 @@
     <string name="quit">Quit</string>
 
     <!-- Call -->
-    <string name="incoming_call">GuDana Voice call</string>
-    <string name="outgoing_call">GuDana Voice  call</string>
+    <string name="incoming_call">Xshaka Voice call</string>
+    <string name="outgoing_call">Xshaka Voice  call</string>
     <string name="add_video_dialog">Your correspondent would like to turn on video</string>
     <string name="no_current_call">No active call</string>
     <string name="call_paused_by_remote">Your correspondent paused the call</string>
@@ -1351,7 +1360,7 @@
     <string name="content_description_search_contact">Search contact</string>
     <string name="content_description_search_country">Search country</string>
     <string name="content_description_all_contacts">All contacts</string>
-    <string name="content_description_linphone_contacts">GuDana contacts</string>
+    <string name="content_description_linphone_contacts">Xshaka contacts</string>
     <string name="content_description_call_direction">Call direction</string>
     <string name="content_description_all_calls">All calls</string>
     <string name="content_description_missed_calls">Missed calls</string>
@@ -1474,7 +1483,7 @@
     <string name="profil_status"><![CDATA[&quot;Welcome to my Profile!&quot;]]></string>
     <string name="slogan">Bigger.  Better.  Technology</string>
     <string name="name">Name</string>
-    <string name="see_all_users">all gudana users</string>
+    <string name="see_all_users">all Xshaka users</string>
     <string name="not_implemented">Not Yet Implemented</string>
     <string name="type_your_message_hint">Type a message</string>
     <string name="transporter">Transporter Driver</string>
@@ -1708,7 +1717,7 @@ Curiosity might have killed the cat, but it is the driving force behind all inno
     <string name="like">gud tamtam</string>
     <string name="UserName_Post">UserName_Id</string>
     <string name="minus">bad tamtam</string>
-    <string name="GuDana_Apps">GuDana Apps</string>
+    <string name="GuDana_Apps">Xshaka Apps</string>
     <string name="requests">Requests</string>
     <string name="service_not_available">We are sorry. The service you requested is currently unavailable on your location . Please try again later.</string>
     <string name="your_feeds">your Feeds</string>
@@ -1801,6 +1810,12 @@ Curiosity might have killed the cat, but it is the driving force behind all inno
     <string name="touch_anywhre"></string>
     <string name="search_service">Search on GuDDana Network</string>
     <string name="search_gud_tag">Search on GuDDana Network</string>
+
+    <string name="title_activity_friend_updates">FriendUpdatesActivity</string>
+    <string name="not_implemeted">\"Ouuuups :) Sorry this feature ist not implemend at the moment ... but certainly in the next releases :)</string>
+    <string name="title_activity_friendlist_scrolling">FriendlistScrollingActivity</string>
+    <string name="exit_group">Exit Group</string>
+    <string name="group_info">Group Info</string>
 </resources>
 
 

@@ -2,14 +2,14 @@
 <resources>
 
     <color name="black_overlay">#66000000</color>
-
+    <color name="bgnew">#464756</color>
 
     <color name="bg_gradient_start">#31244e</color>
     <color name="bg_gradient_end">#6b394c</color>
 
     <color name="colorPrimaryy">#FFFFFF</color>
     <color name="colorPrimaryDarkk">#FFFFFF</color>
-    <color name="colorAccentt">#5093FF</color>
+    <color name="colorAccentt">#464756</color>
 
     <color name="colorPrimary">#212121</color>
     <color name="colorPrimaryDark">#1a1a1a</color>
@@ -82,7 +82,7 @@
     <color name="text_like_counter">#2b5a83</color>
     <color name="green">#4caf50</color>
     <color name="orange">#ff5722</color>
-    <color name="purple">#673ab7</color>
+    <color name="purple">#464756</color>
     <color name="blue">#2196f3</color>
     <color name="pink">#e91e63</color>
     <color name="feed">#47abff</color>
@@ -90,9 +90,6 @@
     <color name="flash">#ffcf44</color>
     <color name="permission">#F44236</color>
     <color name="done">#CDFF90</color>
-
-
-
 
 
     <color name="colorRed">#ef5350</color>
@@ -104,7 +101,7 @@
     <color name="colorBlue">#42a5f5</color>
     <color name="colorBlueDark">#0077c2</color>
 
-    <color name="colorPurple">#7e57c2</color>
+    <color name="colorPurple">#464756</color>
     <color name="colorPurpleDark">#4d2c91</color>
 
     <color name="colorPink">#ec407a</color>
@@ -163,7 +160,6 @@
     <color name="testcolorblue">#152b38</color>
 
 
-
     <!-- add GuD Passenger  -->
 
 
@@ -210,7 +206,6 @@
     <color name="refresh_progress_3">@color/theme_primary</color>
 
 
-
     <color name="bg_login">#26ae90</color>
     <color name="bg_register">#2e3237</color>
     <color name="white">#ffffff</color>
@@ -252,8 +247,6 @@
     <color name="primary_text">#212121</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#B6B6B6</color>
-
-
 
 
     <color name="style_color_primary">#2d5d82</color>

@@ -402,7 +402,6 @@ public class ProfileFragment extends Fragment {
         }
 
 
-
     }
 
     public static class EditFragment extends Fragment {

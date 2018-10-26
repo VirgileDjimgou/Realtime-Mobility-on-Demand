@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +26,9 @@ import android.widget.Toast;
 import com.android.gudana.chatapp.activities.ChatActivity;
 import com.android.gudana.chatapp.activities.ProfileActivity;
 import com.android.gudana.chatapp.models.StaticConfigUser_fromFirebase;
+import com.android.gudana.fcm.CustomFcm_Util;
+import com.android.gudana.group_chat.utils.Constants;
+import com.android.gudana.group_chat.utils.EmailEncoding;
 import com.android.gudana.hify.adapters.PostsAdapter;
 import com.android.gudana.hify.models.Post;
 import com.android.gudana.R;
@@ -120,6 +124,60 @@ public class FriendProfile extends AppCompatActivity {
         });
 
     }
+
+
+
+    // remove friend for  group Chat
+    private static void removeFriend_group_chat(String friendEmail)
+    {
+        try{
+
+            //Get current user logged in by email
+            final String userLoggedIn = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+            Log.e("hel", "User logged in is: " + userLoggedIn);
+            final DatabaseReference friendsRef = FirebaseDatabase.getInstance().getReference(Constants.FRIENDS_LOCATION
+                    + "/" + EmailEncoding.commaEncodePeriod(userLoggedIn));
+            friendsRef.child(EmailEncoding.commaEncodePeriod(friendEmail)).removeValue();
+
+
+            final DatabaseReference friendsRef_other = FirebaseDatabase.getInstance().getReference(Constants.FRIENDS_LOCATION
+                    + "/" + EmailEncoding.commaEncodePeriod(friendEmail));
+            friendsRef_other.child(EmailEncoding.commaEncodePeriod(userLoggedIn)).removeValue();
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+
+    }
+
+    // add Friend for group Chat  ...
+    private static void addNewFriend(String newFriendEmail){
+        //Get current user logged in by email
+        try{
+            final String Friendemail = EmailEncoding.commaEncodePeriod(newFriendEmail);
+
+
+            final String userLoggedIn =FirebaseAuth.getInstance().getCurrentUser().getEmail();
+            Log.e("tex", "User logged in is: " + userLoggedIn);
+            //final String newFriendEncodedEmail = EmailEncoding.commaEncodePeriod(newFriendEmail);
+            final DatabaseReference friendsRef = FirebaseDatabase.getInstance().getReference(Constants.FRIENDS_LOCATION
+                    + "/" + EmailEncoding.commaEncodePeriod(userLoggedIn));
+            //Add friends to current users friends list
+            friendsRef.child(Friendemail).setValue(Friendemail);
+
+            // and the second knoten for  the oder user
+            final DatabaseReference friendsRef_other = FirebaseDatabase.getInstance().getReference(Constants.FRIENDS_LOCATION
+                    + "/" + EmailEncoding.commaEncodePeriod(Friendemail));
+            //Add friends to current users friends list
+            friendsRef_other.child(EmailEncoding.commaEncodePeriod(userLoggedIn))
+                    .setValue(EmailEncoding.commaEncodePeriod(userLoggedIn));
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
+
 
     private void loadFragment(Fragment fragment) {
         getFragmentManager()
@@ -287,6 +345,7 @@ public class FriendProfile extends AppCompatActivity {
             mDialog.setCanceledOnTouchOutside(false);
             mDialog.setCancelable(false);
 
+            // get Users Informations
             mFirestore.collection("Users")
                     .document(id)
                     .get()
@@ -297,7 +356,7 @@ public class FriendProfile extends AppCompatActivity {
                             friend_name=documentSnapshot.getString("name");
                             friend_email=documentSnapshot.getString("email");
                             friend_image=documentSnapshot.getString("image");
-                            friend_token=documentSnapshot.getString("token");
+                            friend_token=documentSnapshot.getString("token_id");
 
                             username.setText(String.format(Locale.ENGLISH,"@%s", documentSnapshot.getString("username")));
                             name.setText(friend_name);
@@ -425,6 +484,8 @@ public class FriendProfile extends AppCompatActivity {
 
             currentUserId =  currentUser.getUid();
             otherUserId = id;
+            FCM_Message_Sender = new CustomFcm_Util();
+
 
             return rootView;
         }
@@ -568,6 +629,9 @@ public class FriendProfile extends AppCompatActivity {
                                                 public void onClick(@NonNull BottomDialog dialog) {
                                                     removeFriend();
 
+                                                    // remove friend  group chat  ...
+                                                    // removeFriend_group_chat("mailtoremove");
+
 
                                                     // remove  on fireebase ... for chat
 
@@ -661,6 +725,9 @@ public class FriendProfile extends AppCompatActivity {
                 }
             });
 
+            // add  for group chat   .. ..
+            // addNewFriend(friend_email);
+
 
             //Delete from friend request
             mFirestore.collection("Users")
@@ -746,6 +813,10 @@ public class FriendProfile extends AppCompatActivity {
                                                                                                             showRemoveButton();
                                                                                                         }
                                                                                                     }).start();
+
+
+                                                                                            // add friend  to groups Chat
+                                                                                            addNewFriend(friend_email);
 
                                                                                             // send notification   to tell that you ae a new friend   ...
                                                                                             FCM_Message_Sender.sendWithOtherThread("token" ,
@@ -937,15 +1008,6 @@ public class FriendProfile extends AppCompatActivity {
                                         });
 
 
-                                FCM_Message_Sender.sendWithOtherThread("token" ,
-                                        friend_token ,
-                                        "Friend Request" ,
-                                        currentUserId ,
-                                        StaticConfigUser_fromFirebase.USER_NAME,
-                                        StaticConfigUser_fromFirebase.USER_URL_IMAGE,
-                                        getDateAndTime(),
-                                        "room_disable",
-                                        "you ahev a Friend Request");
 
 
 
@@ -1014,6 +1076,8 @@ public class FriendProfile extends AppCompatActivity {
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
 
                             final String email=documentSnapshot.getString("email");
+                            final String name = documentSnapshot.getString("name");
+                            final String image = documentSnapshot.getString("image");
 
                             userMap.put("name", documentSnapshot.getString("name"));
                             userMap.put("id", documentSnapshot.getString("id"));
@@ -1033,6 +1097,24 @@ public class FriendProfile extends AppCompatActivity {
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
+
+                                            // custom notification ....
+                                            try{
+                                                System.out.println("Send Notification");
+                                                FCM_Message_Sender.sendWithOtherThread("token" ,
+                                                        friend_token ,
+                                                        "Friend Request" ,
+                                                        FirebaseAuth.getInstance().getUid() ,
+                                                        name,
+                                                        image,
+                                                        getDateAndTime(),
+                                                        "room_disable",
+                                                        "you are a hev Friend Request");
+
+                                            }catch(Exception ex){
+                                                ex.printStackTrace();
+                                            }
+
 
                                             //Add for notification data
                                             FirebaseFirestore.getInstance()
@@ -1103,6 +1185,10 @@ public class FriendProfile extends AppCompatActivity {
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
+
+                                    // remove friend  ...
+                                    removeFriend_group_chat(friend_email);
+
                                     Toast.makeText(rootView.getContext(), "Friend removed successfully", Toast.LENGTH_SHORT).show();
 
                                     remove_friend.animate()

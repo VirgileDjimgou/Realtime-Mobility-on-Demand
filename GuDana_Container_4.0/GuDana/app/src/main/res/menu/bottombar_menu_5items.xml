@@ -10,22 +10,30 @@
 
     <item
         android:id="@+id/bbn_item1"
-        android:icon="@drawable/ic_cloud_off_white_24dp"
+        android:enabled="true"
+        android:icon="@drawable/ic_home_white_24dp"
         android:title="Home" />
     <item
         android:id="@+id/bbn_item2"
-        android:icon="@drawable/ic_mail_white_24dp"
+        android:enabled="true"
+        android:icon="@drawable/ic_chat_white_24dp"
         android:title="Chats" />
     <item
         android:id="@+id/bbn_item3"
-        android:icon="@mipmap/ic_call_history"
+        android:enabled="true"
+        android:icon="@drawable/ic_local_phone_phone_24dp"
+        android:background="@android:color/transparent"
         android:title="Calls" />
     <item
         android:id="@+id/bbn_item4"
-        android:icon="@drawable/ic_cast_connected_white_24dp"
-        android:title="Story's" />
+        android:enabled="true"
+        android:icon="@drawable/ic_people_white_24dp"
+        android:background="#CCFF0088"
+        android:title="Friend" />
     <item
         android:id="@+id/bbn_item5"
-        android:icon="@mipmap/ic_friend"
-        android:title="Friends" />
+        android:enabled="true"
+        android:icon="@drawable/ic_person_white_24dp"
+        android:background="#80000000"
+        android:title="My Profile" />
 </menu>

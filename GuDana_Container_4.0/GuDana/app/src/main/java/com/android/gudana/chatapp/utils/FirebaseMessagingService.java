@@ -167,7 +167,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                                                                 .setContentTitle("call  from  other user")
                                                                 .setContentText(notificationMessage)
                                                                 .setSmallIcon(R.drawable.ic_send_message)
-                                                                .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.mipmap.ic_launcher))
+                                                                .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.xshaka_icon))
                                                                 .setAutoCancel(true)
                                                                 .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
 
@@ -224,7 +224,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                 if(notificationTitle.equals("Message"))
                 {
                     // If it's a message notification
-                    // Checking if ChatActivity is not open or if its, it should have a different userId from current
+                    // Checking if CreateGroupChatActivity is not open or if its, it should have a different userId from current
 
                     if(!ChatActivity.running || ChatActivity.running && !ChatActivity.otherUserId.equals(senderID))
                     {
@@ -243,7 +243,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                         NotificationCompat.Builder notification = new NotificationCompat.Builder(this, getString(R.string.default_notification_channel_id))
                                 .setContentTitle("echojh")
                                 .setContentText(notificationMessage)
-                                .setSmallIcon(R.mipmap.ic_launcher)
+                                .setSmallIcon(R.drawable.xshaka_icon)
                                 .setLargeIcon(IconImage)
                                 .setAutoCancel(true)
                                 .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
@@ -275,7 +275,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                             .setContentTitle(SenderName)
                             .setContentText(notificationMessage)
                             .setSmallIcon(R.drawable.ic_person_add_white_24dp)
-                            .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.mipmap.ic_launcher))
+                            .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.xshaka_icon))
                             .setAutoCancel(true)
                             .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
 
@@ -306,7 +306,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                             .setContentTitle(SenderName)
                             .setContentText(notificationMessage)
                             .setSmallIcon(R.drawable.ic_person_add_white_24dp)
-                            .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.mipmap.ic_launcher))
+                            .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.xshaka_icon))
                             .setAutoCancel(true)
                             .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
 
@@ -338,7 +338,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                             .setContentTitle(SenderName)
                             .setContentText(notificationMessage)
                             .setSmallIcon(R.drawable.ic_person_add_white_24dp)
-                            .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.mipmap.ic_launcher))
+                            .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.xshaka_icon))
                             .setAutoCancel(true)
                             .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
 

@@ -67,7 +67,7 @@ public class UpdateAvailable extends AppCompatActivity {
                         .setColorized(true)
                         .setSound(Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.hify_sound))
                         .setColor(Color.parseColor("#2591FC"))
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.drawable.xshaka_icon)
                         .setContentText("File downloaded in /Downloads/Hify Updates/Hify_v" + version+".apk")
                         .build();
 

@@ -147,7 +147,6 @@ public class EmailLoginActivity extends AppCompatActivity {
 
     private void  UserSessionContinueDialog(){
 
-
     }
 
 

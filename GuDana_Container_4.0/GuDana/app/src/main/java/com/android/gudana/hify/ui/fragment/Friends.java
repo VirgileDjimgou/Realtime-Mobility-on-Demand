@@ -90,7 +90,6 @@ public class Friends extends Fragment {
                 });
     }
 
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -101,7 +100,7 @@ public class Friends extends Fragment {
         mRecyclerView =  mView.findViewById(R.id.recyclerView);
 
         usersList = new ArrayList<>();
-        usersAdapter = new ViewFriendAdapter(usersList, view.getContext());
+        usersAdapter = new ViewFriendAdapter(usersList, view.getContext(), "Friends");
 
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerViewTouchHelper(0, ItemTouchHelper.LEFT, new RecyclerViewTouchHelper.RecyclerItemTouchHelperListener() {
             @Override
@@ -133,4 +132,5 @@ public class Friends extends Fragment {
         startListening();
 
     }
+
 }

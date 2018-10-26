@@ -254,7 +254,7 @@ public class MessageHolder extends RecyclerView.ViewHolder
 
             TextOutsideCircleButton.Builder option_1 = new TextOutsideCircleButton.Builder()
                     .normalImageRes(R.drawable.ic_map_image)
-                    .normalText("turn-by-turn navigation : Drive to this point ")
+                    .normalText("turn-by-turn navigation : Drive to this point")
                     .listener(new OnBMClickListener() {
                         @Override
                         public void onBoomButtonClick(int index) {

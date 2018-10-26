@@ -31,6 +31,7 @@ import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
 import com.android.gudana.BuildConfig;
 import com.android.gudana.R;
 import com.android.gudana.GuDFeed.GuDFeed_Fragment;
+import com.android.gudana.linphone.HistoryListFragment;
 // import com.android.rivchat.MainActivity_NavDrawer;
 
 
@@ -317,7 +318,7 @@ public class MainActivity extends BaseActivity implements BottomNavigation.OnMen
 
                 case 2:
                     // status share fragment
-                    //return new HistoryListFragment();
+                    return new HistoryListFragment();
 
                 case 3:
                     // VOIP frgament  real call and real SMS  ......  not free  domaine

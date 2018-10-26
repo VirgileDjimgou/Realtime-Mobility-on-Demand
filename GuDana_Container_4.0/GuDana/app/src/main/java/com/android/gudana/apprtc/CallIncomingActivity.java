@@ -40,7 +40,6 @@ import android.widget.Toast;
 
 import com.android.gudana.R;
 import com.android.gudana.apprtc.compatibility.Compatibility;
-import com.android.gudana.apprtc.LinphoneSliders.LinphoneSliderTriggered;
 import com.android.gudana.apprtc.linphone.LinphoneManager;
 import com.android.gudana.chatapp.activities.ChatActivity;
 import com.android.gudana.hify.adapters.UsersAdapter;
@@ -67,11 +66,6 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
-import org.linphone.core.LinphoneCall.State;
-import org.linphone.core.LinphoneCallParams;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCoreListenerBase;
-import org.linphone.mediastream.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -440,7 +434,7 @@ public class CallIncomingActivity extends Activity{
 									ViCall.stopRinging();
 									// put the  call  dispo enable
 									/*
-									ChatActivity.resetCallparameter(getApplicationContext() , room_id ,
+									CreateGroupChatActivity.resetCallparameter(getApplicationContext() , room_id ,
 											this.getClass().getName() + "chehcCorrespondant",
 											"your correspondant ist not available"
 									);
@@ -459,7 +453,7 @@ public class CallIncomingActivity extends Activity{
 									ViCall.stopRinging();
 									// put the  call  dispo enable
 									/*
-									ChatActivity.resetCallparameter(getApplicationContext() , room_id ,
+									CreateGroupChatActivity.resetCallparameter(getApplicationContext() , room_id ,
 											this.getClass().getName() + "chehcCorrespondant",
 											"your correspondant ist not available"
 									);
@@ -474,7 +468,7 @@ public class CallIncomingActivity extends Activity{
 						}catch(Exception ex){
 
 							/*
-							ChatActivity.resetCallparameter(getApplicationContext() , room_id ,
+							CreateGroupChatActivity.resetCallparameter(getApplicationContext() , room_id ,
 									this.getClass().getName() + "chehcCorrespondant",
 									"your correspondant ist not available"
 							);
@@ -499,7 +493,7 @@ public class CallIncomingActivity extends Activity{
 		}catch(Exception ex){
 			/*
 
-			ChatActivity.resetCallparameter(getApplicationContext() ,
+			CreateGroupChatActivity.resetCallparameter(getApplicationContext() ,
 					room_id , this.getClass().getName() + "chehcCorrespondant",
 					"your correspondant ist not available"
 			);

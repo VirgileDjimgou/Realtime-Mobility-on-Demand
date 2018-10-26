@@ -94,7 +94,7 @@ public class NotificationUtil {
             return;
 
         // notification icon
-        final int icon = R.mipmap.ic_launcher;
+        final int icon = R.drawable.xshaka_icon;
 
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         final PendingIntent resultPendingIntent =
@@ -184,7 +184,7 @@ public class NotificationUtil {
                 .setStyle(bigTextStyle)
                 .addPerson(user_image)
                 .setLargeIcon(getBitmapFromURL(user_image))
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.xshaka_icon)
                 .setContentText(message)
                 .build();
 
@@ -216,7 +216,7 @@ public class NotificationUtil {
                 .setColor(Color.parseColor("#2591FC"))
                 .setStyle(bigPictureStyle)
                 .setLargeIcon(getBitmapFromURL(user_image))
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.xshaka_icon)
                 .addPerson(user_image)
                 .setContentText(message)
                 .build();

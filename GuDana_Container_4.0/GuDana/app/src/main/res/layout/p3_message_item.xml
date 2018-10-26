@@ -7,16 +7,21 @@
     android:layout_height="wrap_content"
     android:id="@+id/messageLine"
     android:orientation="horizontal">
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:elevation="3dp"
+        android:layout_margin="6dp"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:src="@drawable/user"
+        android:scaleType="centerCrop"
         android:id="@+id/leftMessagePic"
         android:layout_marginLeft="10dp"
-        android:src="@mipmap/ic_launcher"/>
+        />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/roundedmessages"
+        android:background="@drawable/message_background"
         android:paddingLeft="20dp"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
@@ -27,12 +32,14 @@
         android:id="@+id/individMessageLayout"
         android:orientation="vertical">
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:indeterminate="true"
-            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:id="@+id/senderTextView"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            android:text="sender"/>
+
 
         <ImageView
             android:layout_width="100dp"
@@ -59,22 +66,103 @@
             android:maxWidth="200dp"
             android:textAppearance="?android:attr/textAppearanceSmall"
             tools:text="Message"
+            android:textColor="@color/colorWhite"
             android:textSize="18sp"
-            android:textStyle="normal|bold" />
+            android:textStyle="normal" />
             <TextView
-                android:id="@+id/senderTextView"
+                android:id="@+id/timespan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
-                tools:text="Sender"
-                android:textSize="12sp" />
+                android:textColor="@color/colorWhite"
+                tools:text="time"
+                android:textSize="10sp" />
 
     </LinearLayout>
-    <ImageView
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/voice_message_layout"
+        android:visibility="gone"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_corner2"
+            android:paddingLeft="1dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingRight="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginTop="10dp"
+            android:visibility="visible"
+            android:orientation="horizontal">
+            <ImageView
+                android:text="play"
+                android:textSize="10pt"
+                android:id="@+id/ButtonPlayStop"
+                android:background="@drawable/ic_play_arrow_black_24dp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"/>
+            <SeekBar
+                android:id="@+id/SeekBar_view"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_width="120dp"
+                android:layout_below="@id/ButtonPlayStop"/>
+
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:background="@drawable/button_red_rounded_backgtound"
+            android:id="@+id/voice_download"
+            android:visibility="visible"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="0dp"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/senderName"
+                android:gravity="center|center_horizontal"
+                android:layout_gravity="center|center_horizontal"
+                android:textColor="@color/white"
+                android:text="senderName and time"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/download_voicemes"
+                android:gravity="center|center_horizontal"
+                android:layout_gravity="center|center_horizontal"
+                android:textColor="@color/white"
+                android:text="please wait ...  "/>
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:id="@+id/rightMessagePic"
         android:visibility="gone"
-        android:layout_marginLeft="10dp"
-        android:src="@mipmap/ic_launcher"/>
+        android:scaleType="centerCrop"
+        android:src="@drawable/user"
+        android:layout_marginLeft="10dp"/>
+
 </LinearLayout>

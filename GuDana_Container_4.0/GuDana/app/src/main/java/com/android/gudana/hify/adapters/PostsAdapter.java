@@ -533,13 +533,15 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                             boolean liked = documentSnapshot.getBoolean("liked");
 
                             // profite et get le type de document
-                            String type_doc = documentSnapshot.getString("type_post");
                             try {
-                                if(type_doc.equalsIgnoreCase("video")){
-                                   //  Toast.makeText(context, "youpi video ! ", Toast.LENGTH_SHORT).show();
+                                if(documentSnapshot.getString("type_post") != null) {
+                                    String type_doc = documentSnapshot.getString("type_post");
+                                    if (type_doc.equalsIgnoreCase("video")) {
+                                        //  Toast.makeText(context, "youpi video ! ", Toast.LENGTH_SHORT).show();
 
-                                }else{
+                                    } else {
 
+                                    }
                                 }
 
                             }catch (Exception ex){

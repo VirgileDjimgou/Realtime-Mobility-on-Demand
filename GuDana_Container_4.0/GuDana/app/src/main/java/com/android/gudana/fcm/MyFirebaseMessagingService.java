@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-
 import com.android.gudana.R;
 import com.android.gudana.apprtc.CallFragment;
 import com.android.gudana.apprtc.CallIncomingActivity;
@@ -67,7 +66,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 	public static final String FCM_message_sender = "body";
 	public static final String fcm_msg = "msg";
 	private static final String CHANNEL_NAME = "FCM";
-	private static final String CHANNEL_DESC = "Firebase Cloud Messaging";
+	private static final String CHANNEL_DESC = "Xshaka Cloud Messaging";
 
     private String senderName = "";
 	private String  MessageSended = "";
@@ -111,7 +110,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 				if(notificationTitle.equals("Message"))
 				{
 					// If it's a message notification
-					// Checking if ChatActivity is not open or if its, it should have a different userId from current
+					// Checking if CreateGroupChatActivity is not open or if its, it should have a different userId from current
 
 					if(!ChatActivity.running || ChatActivity.running && !ChatActivity.otherUserId.equals(senderID))
 					{
@@ -140,7 +139,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 				// to send a notification for  your phone  ...s
 				// sendNotification(remoteMessage, data);
-				Toasty.info(this, "Gudana Notification  activated ...", Toast.LENGTH_SHORT).show();
+				Toasty.info(this, "Xshaka Notification  activated ...", Toast.LENGTH_SHORT).show();
 
 			}
 
@@ -188,14 +187,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 				.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
 				// .setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.win))
 				.setContentIntent(pendingIntent)
-				.setContentInfo("GuDana Cloud Notification")
+				.setContentInfo("Xshaka Cloud Notification")
 				//.setLargeIcon(getRoundedRectBitmap(bigPicture,12))
 				.setLargeIcon(bigPicture)
 				.setColor(ContextCompat.getColor(this, R.color.colorAccent))
 				.setLights(Color.RED, 1000, 300)
 				.setDefaults(Notification.DEFAULT_VIBRATE)
 				.setNumber(++numMessages)
-				.setSmallIcon(R.mipmap.ic_launcher);
+				.setSmallIcon(R.drawable.xshaka_icon);
 
 
 

@@ -10,13 +10,12 @@
     android:paddingTop="5dp"
     android:orientation="horizontal">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/photoImageView"
-        android:layout_width="0dp"
+        android:layout_width="50dp"
         android:layout_weight="15"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher"
-        android:adjustViewBounds="true" />
+        android:layout_height="50dp"
+        android:src="@drawable/xshaka_icon" />
     <LinearLayout
         android:layout_weight="60"
         android:layout_width="0dp"

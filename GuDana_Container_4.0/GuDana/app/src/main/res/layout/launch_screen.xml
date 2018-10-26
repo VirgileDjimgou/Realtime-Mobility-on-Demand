@@ -11,7 +11,7 @@
 		android:orientation="vertical">
 
 		<ImageView
-			android:src="@mipmap/ic_launcher"
+			android:src="@drawable/xshaka_icon"
 			android:layout_width="100dp"
 			android:layout_height="100dp"
 			android:layout_gravity="center"/>

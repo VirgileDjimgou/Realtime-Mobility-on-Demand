@@ -1,7 +1,8 @@
 package com.android.gudana.hify.ui.fragment;
 
+import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
+import android.content.res.Configuration;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
@@ -15,11 +16,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.android.gudana.GuDFeed.GuDFeed_Fragment;
-import com.android.gudana.GuDFeed.activities.create_post;
+import com.allattentionhere.fabulousfilter.AAH_FabulousFragment;
 import com.android.gudana.hify.adapters.PostsAdapter;
 import com.android.gudana.hify.models.Post;
 import com.android.gudana.R;
@@ -28,12 +29,16 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.nightonke.boommenu.Animation.BoomEnum;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
 import com.nightonke.boommenu.BoomButtons.HamButton;
@@ -42,8 +47,7 @@ import com.nightonke.boommenu.BoomMenuButton;
 import com.nightonke.boommenu.ButtonEnum;
 import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 import com.tylersuehr.esr.EmptyStateRecyclerView;
-import com.tylersuehr.esr.ImageTextStateDisplay;
-import com.tylersuehr.esr.TextStateDisplay;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,11 +57,36 @@ import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 import static com.android.gudana.hify.ui.activities.MainActivity.loadpost_firstime;
 import static com.android.gudana.hify.ui.activities.MainActivity.mode_public;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.graphics.drawable.ColorDrawable;
+import android.support.design.widget.FloatingActionButton;
+import android.view.KeyEvent;
+import android.view.ViewAnimationUtils;
+import android.view.Window;
+import android.widget.ImageView;
+
+import net.gotev.speech.GoogleVoiceTypingDisabledException;
+import net.gotev.speech.Speech;
+import net.gotev.speech.SpeechDelegate;
+import net.gotev.speech.SpeechRecognitionNotAvailable;
+import net.gotev.speech.SpeechUtil;
+import net.gotev.speech.TextToSpeechCallback;
+import net.gotev.speech.ui.SpeechProgressView;
+
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
+
 /**
  * Created by amsavarthan on 29/3/18.
  */
 
-public class Dashboard extends Fragment {
+public class Dashboard extends Fragment
+        implements AAH_FabulousFragment.Callbacks,
+        AAH_FabulousFragment.AnimationListener,
+        SpeechDelegate {
     private String TAG = Dashboard.class.getName();
 
     List<Post> mPostsList;
@@ -69,6 +98,14 @@ public class Dashboard extends Fragment {
     PostsAdapter mAdapter;
     View view_layout;
     private List<String> mFriendIdList=new ArrayList<>();
+    ChatShortcutFragment dialogFrag ;
+    FriendUpdateShortcutFragment dialog_friends;
+
+
+    // speech  ....
+    private ImageView speak;
+    private SpeechProgressView progress;
+    private LinearLayout linearLayout;
 
 
 
@@ -78,6 +115,9 @@ public class Dashboard extends Fragment {
 
 
     private BoomMenuButton bmb ;
+    private ImageView speak_seach;
+    private EditText search_toolbar;
+    private EditText search_principal;
 
     @Nullable
     @Override
@@ -91,8 +131,37 @@ public class Dashboard extends Fragment {
         AppBarLayout appBarLayout = (AppBarLayout) view_layout.findViewById(R.id.appbar);
         appBarLayout.setExpanded(true);
 
+        context = Dashboard.this.getContext();
+
         // linear Layour for app bar
         SearchAppbar = (LinearLayout) view_layout.findViewById(R.id.linearLayout_toolbar);
+        final FloatingActionButton fab = (FloatingActionButton) view_layout.findViewById(R.id.fab);
+        dialogFrag = ChatShortcutFragment.newInstance();
+        dialogFrag.WindowsTitel = "Chats ShortCut";
+        dialogFrag.setParentFab(fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialogFrag.setCallbacks(Dashboard.this);
+                dialogFrag.show(getActivity().getSupportFragmentManager(), dialogFrag.getTag());
+            }
+        });
+
+
+        // friends Story  ...s
+        final FloatingActionButton fab_friend = (FloatingActionButton) view_layout.findViewById(R.id.fab_friend_story);
+        dialog_friends = FriendUpdateShortcutFragment.newInstance();
+        dialog_friends.WindowsTitel = "Friends Last Story";
+        dialog_friends.setParentFab(fab);
+        fab_friend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog_friends.setCallbacks(Dashboard.this);
+                dialog_friends.show(getActivity().getSupportFragmentManager(), dialog_friends.getTag());
+            }
+        });
 
         // hiding & showing the title when toolbar expanded & collapsed
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
@@ -116,6 +185,137 @@ public class Dashboard extends Fragment {
             }
         });
 
+        // create Button  floating     ...
+
+        // instaciate bmb button  ...
+        try{
+
+            //bmb.setDraggable(true);
+
+
+            // boom menu    ...
+            bmb = (BoomMenuButton) view_layout.findViewById(R.id.bmb_dash);
+            assert bmb != null;
+            bmb.setButtonEnum(ButtonEnum.Ham);
+            bmb.setPiecePlaceEnum(PiecePlaceEnum.HAM_3);
+            bmb.setButtonPlaceEnum(ButtonPlaceEnum.HAM_3);
+            bmb.setBoomEnum(BoomEnum.values()[7]); // random  boom
+            bmb.setUse3DTransformAnimation(true);
+            //bmb.setDraggable(true);
+            bmb.setDuration(600);
+
+
+
+            bmb.clearBuilders();
+
+            // first
+            HamButton.Builder builder_0_doc = new HamButton.Builder()
+                    .normalImageRes(R.mipmap.ic_chat)
+                    .normalText("Chats Shortcut")
+                    .listener(new OnBMClickListener() {
+                        @Override
+                        public void onBoomButtonClick(int index) {
+                            /*
+                            try {
+                                showDiag();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+
+                            */
+
+                            dialogFrag.setCallbacks(Dashboard.this);
+                            dialogFrag.show(getActivity().getSupportFragmentManager(), dialogFrag.getTag());
+
+
+                            //  Toasty.info(context, "We are sorry. The service you requested is currently unavailable on your location . Please try again later.", Toast.LENGTH_LONG, true).show();
+                        }
+                    });
+
+            bmb.addBuilder(builder_0_doc);
+
+
+            // first
+            HamButton.Builder builder_0_video = new HamButton.Builder()
+                    .normalImageRes(R.mipmap.ic_listener_tamtam)
+                    .normalText("Friends Update")
+                    .listener(new OnBMClickListener() {
+                        @Override
+                        public void onBoomButtonClick(int index) {
+
+                            dialog_friends.setCallbacks(Dashboard.this);
+                            dialog_friends.show(getActivity().getSupportFragmentManager(), dialog_friends.getTag());
+                            // Toasty.info(context, "We are sorry. The service you requested is currently unavailable on your location . Please try again later.", Toast.LENGTH_LONG, true).show();
+
+                        }
+                    });
+
+            bmb.addBuilder(builder_0_video);
+
+
+            // first
+            HamButton.Builder search = new HamButton.Builder()
+                    .normalImageRes(R.mipmap.ic_search)
+                    .normalText("Search or Listen a custom Service")
+                    .listener(new OnBMClickListener() {
+                        @Override
+                        public void onBoomButtonClick(int index) {
+
+                            Toasty.info(context,
+                                    "We are sorry. The service you requested is currently unavailable on your location . Please try again later.", Toast.LENGTH_LONG, true).show();
+
+                        }
+                    });
+
+            bmb.addBuilder(search);
+
+        }catch(Exception ex){
+
+            ex.printStackTrace();
+        }
+        // Init voice search    ...
+
+        Speech.init(context, getActivity().getPackageName());
+
+
+        search_toolbar = (EditText) view_layout.findViewById(R.id.search_toolbar);
+        search_principal = (EditText) view_layout.findViewById(R.id.search_principal);
+
+
+        progress = (SpeechProgressView) view_layout.findViewById(R.id.progress);
+
+        speak_seach = (ImageView) view_layout.findViewById(R.id.voice_search);
+        speak_seach.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onButtonClick();
+            }
+        });
+
+        speak = (ImageView) view_layout.findViewById(R.id.recordVoiceButton);
+        speak.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onButtonClick();
+            }
+        });
+        // speak.setOnClickListener(view -> onSpeakClick());
+
+        int[] colors = {
+                ContextCompat.getColor(context, android.R.color.black),
+                ContextCompat.getColor(context, android.R.color.darker_gray),
+                ContextCompat.getColor(context, android.R.color.black),
+                ContextCompat.getColor(context, android.R.color.holo_orange_dark),
+                ContextCompat.getColor(context, android.R.color.holo_red_dark)
+        };
+        progress.setColors(colors);
+
+        linearLayout = (LinearLayout) view_layout.findViewById(R.id.linearLayout_search);
+
+        askPermission();
+
+        // onRecordAudioPermissionGranted();
+
 
         return view_layout;
     }
@@ -125,7 +325,6 @@ public class Dashboard extends Fragment {
         super.onStart();
         mAdapter.notifyDataSetChanged();
     }
-
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -448,7 +647,6 @@ public class Dashboard extends Fragment {
 
     }
 
-
     private void  updatePostRealtime(){
         FirebaseFirestore.getInstance().collection("Posts")
                 //.whereEqualTo("userId", FirebaseAuth.getInstance().getCurrentUser().getUid())
@@ -487,6 +685,306 @@ public class Dashboard extends Fragment {
 
                     }
                 });
+    }
+
+    // reveal methode  ..
+
+    private void showDiag() throws InterruptedException {
+
+        final View dialogView = View.inflate(context,R.layout.dialog_voice_record,null);
+
+        final Dialog dialog = new Dialog(context,R.style.MyAlertDialogStyle);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(dialogView);
+
+
+
+        Thread.sleep(5);
+        ImageView imageView = (ImageView)dialog.findViewById(R.id.closeDialogImg);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                revealShow(dialogView, false, dialog);
+            }
+        });
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                revealShow(dialogView, true, null);
+            }
+        });
+
+        dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
+                if (i == KeyEvent.KEYCODE_BACK){
+
+                    revealShow(dialogView, false, dialog);
+                    return true;
+                }
+
+                return false;
+            }
+        });
+
+
+
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        dialog.show();
+    }
+
+    private void revealShow(View dialogView, boolean b, final Dialog dialog) {
+
+        final View view = dialogView.findViewById(R.id.dialog);
+
+        int w = view.getWidth();
+        int h = view.getHeight();
+
+        int endRadius = (int) Math.hypot(w, h);
+
+        int cx = (int) (bmb.getX() + (bmb.getWidth()/2));
+        int cy = (int) (bmb.getY())+ bmb.getHeight() + 56;
+
+
+        if(b){
+            Animator revealAnimator = ViewAnimationUtils.createCircularReveal(view, cx,cy, 0, endRadius);
+
+            view.setVisibility(View.VISIBLE);
+            revealAnimator.setDuration(700);
+            revealAnimator.start();
+
+        } else {
+
+            Animator anim =
+                    ViewAnimationUtils.createCircularReveal(view, cx, cy, endRadius, 0);
+
+            anim.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    dialog.dismiss();
+                    view.setVisibility(View.INVISIBLE);
+
+                }
+            });
+            anim.setDuration(700);
+            anim.start();
+        }
+
+    }
+
+     // Overiede Methode for   fabulos   Fragment
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (dialogFrag.isAdded()) {
+            dialogFrag.dismiss();
+            dialogFrag.show(getActivity().getSupportFragmentManager(), dialogFrag.getTag());
+        }
+
+        if (dialog_friends.isAdded()) {
+            dialog_friends.dismiss();
+            dialog_friends.show(getActivity().getSupportFragmentManager(), dialog_friends.getTag());
+        }
+
+    }
+
+    @Override
+    public void onOpenAnimationStart() {
+        Log.d("aah_animation", "onOpenAnimationStart: ");
+    }
+
+    @Override
+    public void onOpenAnimationEnd() {
+        Log.d("aah_animation", "onOpenAnimationEnd: ");
+
+    }
+
+    @Override
+    public void onCloseAnimationStart() {
+        Log.d("aah_animation", "onCloseAnimationStart: ");
+
+    }
+
+    @Override
+    public void onCloseAnimationEnd() {
+        Log.d("aah_animation", "onCloseAnimationEnd: ");
+
+    }
+
+
+    @Override
+    public void onResult(Object result) {
+        Log.d("k9res", "onResult: " + result.toString());
+        if (result.toString().equalsIgnoreCase("swiped_down")) {
+            //do something or nothing
+        } else {
+            //handle result
+        }
+    }
+
+
+    private void askPermission() {
+
+        Dexter.withActivity(getActivity())
+                .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.RECORD_AUDIO,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.ACCESS_NETWORK_STATE,
+                        Manifest.permission.CALL_PHONE
+
+
+                )
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        if(report.isAnyPermissionPermanentlyDenied()){
+                            Toast.makeText(context, "You have denied some permissions permanently, if the app force close try granting permission from settings.", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                    }
+                }).check();
+
+    }
+
+    private void onButtonClick() {
+        if (Speech.getInstance().isListening()) {
+            Speech.getInstance().stopListening();
+        } else {
+            onRecordAudioPermissionGranted();
+        }
+    }
+
+
+    private void onRecordAudioPermissionGranted() {
+        speak.setVisibility(View.GONE);
+        linearLayout.setVisibility(View.VISIBLE);
+
+        try {
+            Speech.getInstance().stopTextToSpeech();
+            Speech.getInstance().startListening(progress, Dashboard.this);
+
+        } catch (SpeechRecognitionNotAvailable exc) {
+            showSpeechNotSupportedDialog();
+
+        } catch (GoogleVoiceTypingDisabledException exc) {
+            showEnableGoogleVoiceTyping();
+        }
+    }
+
+    private void onSpeakClick() {
+        if (search_principal.getText().toString().trim().isEmpty()) {
+            Toast.makeText(context, R.string.input_something, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        Speech.getInstance().say(search_principal.getText().toString().trim(), new TextToSpeechCallback() {
+            @Override
+            public void onStart() {
+                Toast.makeText(context, "TTS onStart", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCompleted() {
+                Toast.makeText(context, "TTS onCompleted", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError() {
+                Toast.makeText(context, "TTS onError", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        try{
+            Speech.getInstance().shutdown();
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onStartOfSpeech() {
+    }
+
+    @Override
+    public void onSpeechRmsChanged(float value) {
+        //Log.d(getClass().getSimpleName(), "Speech recognition rms is now " + value +  "dB");
+    }
+
+    @Override
+    public void onSpeechResult(String result) {
+
+        speak.setVisibility(View.VISIBLE);
+        linearLayout.setVisibility(View.GONE);
+
+        search_principal.setText(result);
+
+        if (result.isEmpty()) {
+            Speech.getInstance().say(getString(R.string.repeat));
+
+        } else {
+            Speech.getInstance().say(result);
+        }
+    }
+
+    @Override
+    public void onSpeechPartialResults(List<String> results) {
+        search_principal.setText("");
+        for (String partial : results) {
+            search_principal.append(partial + " ");
+        }
+    }
+
+    private void showSpeechNotSupportedDialog() {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        SpeechUtil.redirectUserToGoogleAppOnPlayStore(context);
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(R.string.speech_not_available)
+                .setCancelable(false)
+                .setPositiveButton(R.string.yes, dialogClickListener)
+                .setNegativeButton(R.string.no, dialogClickListener)
+                .show();
+    }
+
+    private void showEnableGoogleVoiceTyping() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(R.string.enable_google_voice_typing)
+                .setCancelable(false)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // do nothing
+                    }
+                })
+                .show();
     }
 
 

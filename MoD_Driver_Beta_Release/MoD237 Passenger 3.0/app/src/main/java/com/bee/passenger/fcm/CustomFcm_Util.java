@@ -52,6 +52,7 @@ import static com.bee.passenger.R.id.txt;
 
 public class CustomFcm_Util {
 
+    // you can have this key on firebase console / cloud messaging settings .... this key is only valid with your app/ project on firebase .... cloud
     private static final String AUTH_KEY = "key=AAAAinoVD1o:APA91bFCvqGv9MnIPqQ0TZIGmwr93EQ4TeH-9pi0cXVowV-GFhPybWYHPWO-eb2OZJmAMJLrMcIaCPBAjhXfjdyOZP8BRyBgvceBrktnOSC2oSLk4iUORTW5B-THzV1obqmpLu7yYzIt";
     private TextView mTextView;
 

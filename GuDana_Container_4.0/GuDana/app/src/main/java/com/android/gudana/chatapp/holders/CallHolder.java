@@ -231,7 +231,15 @@ public class CallHolder extends RecyclerView.ViewHolder
                         if( dataSnapshot.child("timestamp").getValue().toString() != null) {
                             final String timestapms  = dataSnapshot.child("timestamp").getValue().toString();
 
-                            userTime.setText(new SimpleDateFormat("MMM d, HH:mm", Locale.getDefault()).format(timestapms));
+                            try{
+                                userTime.setText(new SimpleDateFormat("MMM d, HH:mm", Locale.getDefault()).format(timestapms));
+
+
+                            }catch(Exception ex){
+                                // set unknow  format
+                                userTime.setText("unknow");
+                                ex.printStackTrace();
+                            }
 
                         }else {
 

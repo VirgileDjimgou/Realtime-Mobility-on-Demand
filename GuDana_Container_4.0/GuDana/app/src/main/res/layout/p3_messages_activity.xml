@@ -91,7 +91,6 @@
                 app:bmb_buttonRadius="17dp"
                 app:bmb_highlightedColor="@color/purple"
                 app:bmb_normalColor="@color/colorPrimary"
-
                 />
 
 
@@ -231,8 +230,6 @@
 
 
     </RelativeLayout>
-
-
 
 
 </RelativeLayout>

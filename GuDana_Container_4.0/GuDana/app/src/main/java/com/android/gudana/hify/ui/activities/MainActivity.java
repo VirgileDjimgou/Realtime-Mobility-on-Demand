@@ -45,26 +45,13 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.gudana.BootNavigation.BaseActivity;
-import com.android.gudana.BootNavigation.EnableDisableItemsActivity;
-import com.android.gudana.BootNavigation.MainActivityCustomBadge;
-import com.android.gudana.BootNavigation.MainActivityCustomBehavior;
-import com.android.gudana.BootNavigation.MainActivityNoCoordinator;
-import com.android.gudana.BootNavigation.MainActivityNoHide;
-import com.android.gudana.BootNavigation.MainActivityTabletCollapsedToolbar;
 import com.android.gudana.GuDFeed.GuDFeed_Fragment;
 import com.android.gudana.GuDFeed.activities.create_post;
 // import com.android.gudana.apprtc.CallIncomingActivity_rtc;
-import com.android.gudana.GuDStory.GuDStory_Fragment;
-import com.android.gudana.apprtc.CallIncomingActivity;
-import com.android.gudana.apprtc.ConnectActivity;
 import com.android.gudana.apprtc.linphone.LinphoneManager;
-import com.android.gudana.chatapp.activities.ChatActivity;
 import com.android.gudana.chatapp.fragments.CallFragment;
 import com.android.gudana.chatapp.fragments.ChatFragment;
-import com.android.gudana.chatapp.fragments.ChatFriendsFragment;
-import com.android.gudana.chatapp.fragments.ChatRequestsFragment;
 import com.android.gudana.chatapp.models.StaticConfigUser_fromFirebase;
-import com.android.gudana.dashboard.DashboardFragment;
 import com.android.gudana.hify.adapters.DrawerAdapter;
 import com.android.gudana.hify.models.DrawerItem;
 import com.android.gudana.hify.models.SimpleItem;
@@ -78,22 +65,18 @@ import com.android.gudana.hify.ui.activities.notification.NotificationReplyActiv
 import com.android.gudana.hify.ui.activities.post.CommentsActivity;
 import com.android.gudana.hify.ui.activities.post.PostImage;
 import com.android.gudana.hify.ui.activities.post.PostText;
-import com.android.gudana.hify.ui.fragment.About;
+import com.android.gudana.hify.ui.fragment.All_ChatsFragment;
 import com.android.gudana.hify.ui.fragment.Dashboard;
-import com.android.gudana.hify.ui.fragment.FlashMessage;
 import com.android.gudana.hify.ui.fragment.FriendsFragment;
 import com.android.gudana.hify.ui.fragment.ProfileFragment;
 import com.android.gudana.hify.utils.Config;
 import com.android.gudana.hify.utils.NetworkUtil;
-import com.android.gudana.hify.utils.PermissionsCustom;
 import com.android.gudana.hify.utils.database.UserHelper;
 import com.android.gudana.R;
 // import com.android.gudana.linphone.DialerFragment;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.github.javiersantos.bottomdialogs.BottomDialog;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -478,8 +461,6 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
 
     //##############################
 
-
-
     protected void initializeBottomNavigation(final Bundle savedInstanceState) {
         if (null == savedInstanceState) {
             getBottomNavigation().setDefaultSelectedIndex(0);
@@ -547,10 +528,10 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
 
         //   inflate menu   to 5 items   ... and change background color  ..
         BottomNavigation navigation = getBottomNavigation();
+
         if (null == navigation) {
             // return 0; ... do something to avoid  Exception   ...
             navigation.inflateMenu(R.menu.bottombar_menu_5items);
-
         }else{
             navigation.inflateMenu(R.menu.bottombar_menu_5items);
         }
@@ -605,28 +586,24 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
                 case 0:
                     //  Home Dashorad
                     return  new  Dashboard();
-
-
                 case 1:
                     // ChatFragment  fragment
-                    return new ChatFragment();
+                    return new All_ChatsFragment();
 
                 case 2:
                     // Call fragment
                     return new CallFragment();
-
                   // return new HistoryListFragment();
-
                 case 3:
                     //  Story   ... like status    Whatsapp
-                    return new GuDStory_Fragment();
-
+                    // return new GuDStory_Fragment();
+                    return new FriendsFragment();
                 case 4:
                     // user profil fragment
-                    return new FriendsFragment();
+                    // return new FriendsFragment();
+                    return new ProfileFragment();
 
                     // return new GuDStory_Fragment();
-
             }
 
             return null;
@@ -637,7 +614,6 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
             return mCount;
         }
     }
-
 
 
     // ##################
@@ -1236,7 +1212,6 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
                             if (!location.equals(loc)) {
                                 Map<String, Object> userMap = new HashMap<>();
                                 userMap.put("location", loc);
-
                                 FirebaseFirestore.getInstance().collection("Users").document(userId).update(userMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {

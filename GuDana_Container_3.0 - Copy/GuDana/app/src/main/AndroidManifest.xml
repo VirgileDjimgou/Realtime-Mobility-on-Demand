@@ -362,6 +362,7 @@
                 android:name="android.provider.CONTACTS_STRUCTURE"
                 android:resource="@xml/lin_contacts" />
         </service>
+
         <service android:name=".linphone.sync.AuthenticationService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />

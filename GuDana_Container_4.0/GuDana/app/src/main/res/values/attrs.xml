@@ -13,7 +13,6 @@
     </declare-styleable>
 
 
-
     <!-- Ink page indicator. -->
     <declare-styleable name="InkPageIndicator">
         <attr name="dotDiameter" format="dimension" />
@@ -52,7 +51,6 @@
         <attr name="content" format="reference" />
         <attr name="direction" />
     </declare-styleable>
-
 
 
 </resources>

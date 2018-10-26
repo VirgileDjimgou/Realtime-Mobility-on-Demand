@@ -80,49 +80,52 @@ public class CallFragment extends Fragment
             @Override
             protected void onBindViewHolder(final CallHolder holder, int position, final Call model)
             {
-                final String Call_id_node = getRef(position).getKey();
 
                 // test  firebase function
 
                 final String UserID = FirebaseAuth.getInstance().getUid();
-
-                holder.setHolder(UserID , Call_id_node, model.getMessage(), model.getTimestamp(), model.getSeen());
-                holder.getView().setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
+                final String Call_id_node = getRef(position).getKey();
+                try{
+                    holder.setHolder(UserID , Call_id_node, model.getMessage(), model.getTimestamp(), model.getSeen());
+                    holder.getView().setOnClickListener(new View.OnClickListener()
                     {
-                        Intent chatIntent = new Intent(getContext(), ChatActivity.class);
-                        chatIntent.putExtra("userid", Call_id_node);
-                        startActivity(chatIntent);
-                    }
-                });
+                        @Override
+                        public void onClick(View view)
+                        {
+                            Intent chatIntent = new Intent(getContext(), ChatActivity.class);
+                            chatIntent.putExtra("userid", Call_id_node);
+                            startActivity(chatIntent);
+                        }
+                    });
+
+                }catch(Exception ex){
+                    ex.printStackTrace();
+                }
+
             }
 
             @Override
             public void onDataChanged()
             {
                 super.onDataChanged();
-
                 TextView text = view.findViewById(R.id.f_call_text);
+                try{
+                    if(adapter.getItemCount() == 0)
+                    {
+                        text.setVisibility(View.VISIBLE);
+                    }
+                    else
+                    {
+                        text.setVisibility(View.GONE);
+                    }
 
-                if(adapter.getItemCount() == 0)
-                {
-                    text.setVisibility(View.VISIBLE);
-                }
-                else
-                {
-                    text.setVisibility(View.GONE);
+                }catch(Exception ex){
+                    ex.printStackTrace();
                 }
             }
         };
 
-        // init flaoting action button
-
-
-
         recyclerView.setAdapter(adapter);
-
         // Test  this data base
         // CallHolder.TestFirebase__infos(FirebaseAuth.getInstance().getUid());
         return view;
@@ -132,7 +135,6 @@ public class CallFragment extends Fragment
     public void onStart()
     {
         super.onStart();
-
         adapter.startListening();
         adapter.notifyDataSetChanged();
     }
@@ -141,7 +143,6 @@ public class CallFragment extends Fragment
     public void onStop()
     {
         super.onStop();
-
         adapter.stopListening();
     }
 }
