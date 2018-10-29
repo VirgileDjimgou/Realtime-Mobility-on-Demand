@@ -304,8 +304,10 @@ public class LoginActivity extends AppCompatActivity {
 
 
                                                         mDialog.dismiss();
-                                                        MainActivity_GuDDana.startActivity(LoginActivity.this);
-                                                        finish();
+
+                                                        //MainActivity_GuDDana.startActivity(LoginActivity.this);
+                                                        LoginTindroidCredential(email_ , pass_);
+                                                        //finish();
 
                                                     }
                                                 }).addOnFailureListener(new OnFailureListener() {
@@ -608,11 +610,15 @@ public class LoginActivity extends AppCompatActivity {
 
     // login Methode tindroid  ...
 
-    public boolean LoginTindroidCredential(String loginInput , String  passwordInput) {
+    public void LoginTindroidCredential(String loginInput , String  passwordInput) {
         // final com.android.gudana.tindroid.LoginActivity parent = (com.android.gudana.tindroid.LoginActivity) getActivity();
 
         //EditText loginInput = parent.findViewById(R.id.editLogin);
         //EditText passwordInput = parent.findViewById(R.id.editPassword);
+
+        final boolean[] response = {false};
+
+        final Button signIn = (Button) findViewById(R.id.button);
 
         final String login = loginInput.toString().trim();
 
@@ -631,6 +637,8 @@ public class LoginActivity extends AppCompatActivity {
                             new PromisedReply.SuccessListener<ServerMessage>() {
                                 @Override
                                 public PromisedReply<ServerMessage> onSuccess(ServerMessage ignored) throws Exception {
+                                    Toast.makeText(LoginActivity.this, "bad Credential ... tindroid Server Response", Toast.LENGTH_SHORT).show();
+                                    
                                     return tinode.loginBasic(
                                             login,
                                             password);
@@ -641,7 +649,7 @@ public class LoginActivity extends AppCompatActivity {
                             new PromisedReply.SuccessListener<ServerMessage>() {
                                 @Override
                                 public PromisedReply<ServerMessage> onSuccess(final ServerMessage msg) {
-                                    sharedPref.edit().putString(com.android.gudana.tindroid.LoginActivity.PREFS_LAST_LOGIN, login).apply();
+                                    sharedPref.edit().putString(PREFS_LAST_LOGIN, login).apply();
 
                                     final Account acc = addAndroidAccount(
                                             tinode.getMyId(),
@@ -667,8 +675,8 @@ public class LoginActivity extends AppCompatActivity {
                                         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
                                         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
                                         ContentResolver.requestSync(acc, Utils.SYNC_AUTHORITY, bundle);
+                                        UiUtils.onLoginSuccess(LoginActivity.this, signIn);
 
-                                        UiUtils.onLoginSuccess(parent, signIn);
                                     }
                                     return null;
                                 }
@@ -677,16 +685,18 @@ public class LoginActivity extends AppCompatActivity {
                                 @Override
                                 public PromisedReply<ServerMessage> onFailure(Exception err) {
                                     Log.d(TAG, "Login failed", err);
-                                    parent.reportError(err, signIn, R.string.error_login_failed);
+                                    Toasty.error(LoginActivity.this, err.toString(), Toast.LENGTH_SHORT).show();
+                                    //parent.reportError(err, signIn, R.string.error_login_failed);
                                     return null;
                                 }
                             });
         } catch (Exception err) {
             Log.e(TAG, "Something went wrong", err);
             err.printStackTrace();
-            Toast.makeText(this, "Login  Failed ", Toast.LENGTH_SHORT).show();
+            Toasty.error(this, "Login  Failed ", Toast.LENGTH_SHORT).show();
             // parent.reportError(err, signIn, R.string.error_login_failed);
         }
+
     }
 
 

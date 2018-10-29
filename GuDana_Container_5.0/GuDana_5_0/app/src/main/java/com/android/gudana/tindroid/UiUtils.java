@@ -266,7 +266,7 @@ public class UiUtils {
     /**
      * Login successful. Show contacts activity
      */
-    static void onLoginSuccess(Activity activity, final Button button) {
+    public static void onLoginSuccess(Activity activity, final Button button) {
         if (button != null) {
             activity.runOnUiThread(new Runnable() {
                 public void run() {
