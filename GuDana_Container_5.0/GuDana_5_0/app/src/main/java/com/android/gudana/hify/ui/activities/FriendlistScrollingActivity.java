@@ -30,7 +30,6 @@ import com.android.gudana.chatapp.models.StaticConfigUser_fromFirebase;
 import com.android.gudana.hify.adapters.viewFriends.RecyclerViewTouchHelper;
 import com.android.gudana.hify.adapters.viewFriends.ViewFriendAdapter;
 import com.android.gudana.hify.models.ViewFriends;
-import com.android.gudana.hify.ui.activities.account.RegisterActivity;
 import com.android.gudana.hify.utils.AnimationUtil;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.tasks.OnCompleteListener;

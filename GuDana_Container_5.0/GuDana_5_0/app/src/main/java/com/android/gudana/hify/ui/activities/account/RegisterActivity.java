@@ -4,20 +4,25 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.transition.Fade;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.gudana.chatapp.models.StaticConfigUser_fromFirebase;
@@ -25,6 +30,12 @@ import com.android.gudana.gpslocationtracking.LocationTrack;
 import com.android.gudana.hify.utils.AnimationUtil;
 import com.android.gudana.hify.utils.database.UserHelper;
 import com.android.gudana.R;
+import com.android.gudana.tindroid.Cache;
+import com.android.gudana.tindroid.CredentialsFragment;
+import com.android.gudana.tindroid.LoginActivity;
+import com.android.gudana.tindroid.UiUtils;
+import com.android.gudana.tindroid.account.Utils;
+import com.android.gudana.tindroid.media.VxCard;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -46,16 +57,25 @@ import com.yarolegovich.lovelydialog.LovelyInfoDialog;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import co.tinode.tinodesdk.PromisedReply;
+import co.tinode.tinodesdk.ServerResponseException;
+import co.tinode.tinodesdk.Tinode;
+import co.tinode.tinodesdk.model.Credential;
+import co.tinode.tinodesdk.model.MetaSetDesc;
+import co.tinode.tinodesdk.model.ServerMessage;
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class RegisterActivity extends AppCompatActivity {
+
+    private static final String TAG = "SignUpFragment";
 
     private static final int PICK_IMAGE =100 ;
     public Uri imageUri;
@@ -261,9 +281,9 @@ public class RegisterActivity extends AppCompatActivity {
             Address obj = addresses.get(0);
             String add = obj.getAddressLine(0);
             add = add + "\n" + obj.getCountryName();
-            //add = add + "\n" + obj.getCountryCode();
+            add = add + "\n" + obj.getCountryCode();
             add = add + "\n" + obj.getAdminArea();
-            //add = add + "\n" + obj.getPostalCode();
+            add = add + "\n" + obj.getPostalCode();
             //add = add + "\n" + obj.getSubAdminArea();
             add = add + "\n" + obj.getLocality();
             //add = add + "\n" + obj.getSubThoroughfare();
@@ -318,8 +338,9 @@ public class RegisterActivity extends AppCompatActivity {
                                                                    @Override
                                                                    public void onSuccess(Uri uri) {
 
-                                                                       String token_id = FirebaseInstanceId.getInstance().getToken();
 
+
+                                                                       String token_id = FirebaseInstanceId.getInstance().getToken();
                                                                        Map<String, Object> userMap = new HashMap<>();
                                                                        userMap.put("id", userUid);
                                                                        userMap.put("name", name_);
@@ -344,7 +365,10 @@ public class RegisterActivity extends AppCompatActivity {
                                                                                FirebaseAuth.getInstance().signOut();
 
 
-                                                                               finish();
+                                                                               // after Registration on firebase ...start a Registration Tindroid Server  ...
+                                                                               onSignUp(username_ ,name_ ,email_,pass_);
+
+                                                                               // finish();
                                                                            }
                                                                        }).addOnFailureListener(new OnFailureListener() {
                                                                            @Override
@@ -534,4 +558,112 @@ public class RegisterActivity extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(intent, "Select Profile Picture"), PICK_IMAGE);
     }
 
-}
+    // add register methode   Tindroid
+
+    public void onSignUp(final String login ,final String fullName , final String email  ,final String password) {
+
+        final Button signUp = (Button) findViewById(R.id.button);
+        signUp.setEnabled(false);
+
+        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(RegisterActivity.this);
+        String hostName = sharedPref.getString(Utils.PREFS_HOST_NAME, Cache.HOST_NAME);
+        boolean tls = sharedPref.getBoolean(Utils.PREFS_USE_TLS, false);
+        final CircleImageView avatar = findViewById(R.id.profile_image);
+
+        final Tinode tinode = Cache.getTinode();
+        try {
+            // This is called on the websocket thread.
+            tinode.connect(hostName, tls)
+                    .thenApply(
+                            new PromisedReply.SuccessListener<ServerMessage>() {
+                                @Override
+                                public PromisedReply<ServerMessage> onSuccess(ServerMessage ignored_msg) throws Exception {
+                                    // Try to create a new account.
+                                    Bitmap bmp = null;
+                                    try {
+                                        bmp = ((BitmapDrawable) avatar.getDrawable()).getBitmap();
+                                    } catch (ClassCastException ignored) {
+                                        // If image is not loaded, the drawable is a vector.
+                                        // Ignore it.
+                                        ignored.printStackTrace();
+                                    }
+                                    VxCard vcard = new VxCard(fullName, bmp);
+                                    return tinode.createAccountBasic(
+                                            login, password, true, null,
+                                            new MetaSetDesc<VxCard,String>(vcard, null),
+                                            Credential.append(null, new Credential("email", email)));
+                                }
+                            }, null)
+                    .thenApply(
+                            new PromisedReply.SuccessListener<ServerMessage>() {
+                                @Override
+                                public PromisedReply<ServerMessage> onSuccess(final ServerMessage msg) {
+                                    // Flip back to login screen on success;
+                                    RegisterActivity.this.runOnUiThread(new Runnable() {
+                                        public void run() {
+                                            if (msg.ctrl.code >= 300 && msg.ctrl.text.contains("validate credentials")) {
+                                                signUp.setEnabled(true);
+                                                CredentialsFragment cf = new CredentialsFragment();
+                                                Iterator<String> it = msg.ctrl.getStringIteratorParam("cred");
+                                                if (it != null) {
+                                                    cf.setMethod(it.next());
+                                                }
+                                            } else {
+                                                // We are requesting immediate login with the new account.
+                                                // If the action succeeded, assume we have logged in.
+                                                // here we should call the login   call the login Activity with  intent to tell that
+                                                // the new users are registerde but he should chech his email to vmake a confirmation  ..
+                                                //UiUtils.onLoginSuccess(RegisterActivity.this, signUp);
+
+                                                signUp.setEnabled(true);
+                                                Intent LoginEmail = new Intent(RegisterActivity.this, com.android.gudana.hify.ui.activities.account.LoginActivity.class);
+                                                LoginEmail.putExtra("Email_Confirmation",true);
+                                                startActivity(LoginEmail);
+                                                RegisterActivity.this.finish();
+                                                //
+                                            }
+                                        }
+                                    });
+                                    Toasty.error(RegisterActivity.this, "Registration of new Account failed  ! ", Toast.LENGTH_LONG).show();
+                                    return null;
+                                }
+                            },
+                            new PromisedReply.FailureListener<ServerMessage>() {
+                                @Override
+                                public PromisedReply<ServerMessage> onFailure(Exception err) {
+                                    final String cause = ((ServerResponseException)err).getReason();
+                                    if (cause != null) {
+                                        RegisterActivity.this.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                signUp.setEnabled(true);
+                                                switch (cause) {
+                                                    case "auth":
+                                                        // Invalid login
+                                                        // ((EditText) parent.findViewById(R.id.newLogin)).setError(getText(R.string.login_rejected));
+                                                        // invalide Login
+                                                        Toasty.error(RegisterActivity.this, "Invalid Login ...please check your credentials", Toast.LENGTH_LONG).show();
+                                                        break;
+                                                    case "email":
+                                                        // Duplicate email:
+                                                        Toasty.error(RegisterActivity.this, "Invalid Email please check your Email !", Toast.LENGTH_LONG).show();
+                                                        // ((EditText) parent.findViewById(R.id.email)).setError(getText(R.string.email_rejected));
+                                                        break;
+                                                }
+                                            }
+                                        });
+                                    }
+                                    // parent.reportError(err, signUp, R.string.error_new_account_failed);
+                                    Toasty.error(RegisterActivity.this, "Registration of new Account failed  ! ", Toast.LENGTH_LONG).show();
+                                    return null;
+                                }
+                            });
+
+        } catch (Exception e) {
+            Toast.makeText(this, "hmmm ...:) Something went wrong with your registration  ", Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "Something went wrong", e);
+            signUp.setEnabled(true);
+        }
+    }
+
+

@@ -131,6 +131,25 @@ public class LoginActivity extends AppCompatActivity {
                 .build()
         );
 
+
+        // get intent  video or audio  ....
+        boolean EmailValidation  = getIntent().getBooleanExtra("Email_Confirmation", false);
+        if(EmailValidation == true){
+            // Message to the user  ...the should  chechk his Email  to valide  the confirmation  that the  server  are send
+            new LovelyInfoDialog(LoginActivity.this)
+                    .setTopColorRes(R.color.bgnew)
+                    .setIcon(R.mipmap.ic_infos)
+                    //This will add Don't show again checkbox to the dialog. You can pass any ID as argument
+                    //.setNotShowAgainOptionEnabled(0)
+                    //.setNotShowAgainOptionChecked(true)
+                    .setTitle("Email Confirmation Sent")
+                    .setMessage("please check your email for confirmation")
+                    .show();
+
+        }else{
+            // normal Start  ... without  Email Confirmation
+        }
+
         activity = this;
         mAuth= FirebaseAuth.getInstance();
         mFirestore= FirebaseFirestore.getInstance();
@@ -182,6 +201,9 @@ public class LoginActivity extends AppCompatActivity {
 
             locationTrack.showSettingsAlert();
         }
+
+
+
 
     }
 
