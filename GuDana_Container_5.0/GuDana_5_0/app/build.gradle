@@ -1,0 +1,358 @@
+apply plugin: 'com.android.application'
+//apply plugin: 'com.jakewharton.butterknife'
+
+
+android {
+
+    compileSdkVersion 27
+    buildToolsVersion '28.0.2'
+    defaultConfig {
+        applicationId 'com.android.gudana'
+        minSdkVersion 21
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath = true
+            }
+        }
+
+        vectorDrawables.useSupportLibrary = true
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
+    buildTypes {
+        release {
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+    }
+
+    configurations {
+        all*.exclude group: 'com.android.support', module: 'support-v13'
+    }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE-FIREBASE.txt'
+        exclude 'META-INF/NOTICE'
+
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+    lintOptions {
+        abortOnError false
+    }
+
+    useLibrary 'org.apache.http.legacy'
+
+
+}
+
+repositories {
+    maven {
+        url "https://jitpack.io"
+    }
+}
+
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
+
+
+ext {
+    firebaseVersion = "2.3.1"
+    mapsUtilsVersion = "0.4"
+}
+
+dependencies {
+
+    implementation 'com.android.support:support-v4:27.1.1'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
+    compile files('libs/audio_device_java.jar')
+    compile files('libs/autobanh.jar')
+    compile files('libs/base_java.jar')
+    compile files('libs/libjingle_peerconnection.jar')
+
+
+    //compile 'com.android.support:design:26.0.2'
+    testCompile 'junit:junit:4.12'
+    compile 'de.hdodenhof:circleimageview:2.1.0'
+
+    // compile 'com.yarolegovich:lovely-dialog:1.0.4'
+    compile 'com.android.support:cardview-v7:27.1.1'
+    compile 'com.android.support:percent:27.1.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.1'
+    compile 'com.google.firebase:firebase-auth:16.0.3'
+    compile 'com.google.firebase:firebase-core:16.0.1'
+    // AUTH
+    implementation 'com.google.firebase:firebase-database:16.0.1'
+    compile 'com.google.android.gms:play-services-auth:16.0.0'
+
+    implementation 'com.github.GrenderG:Toasty:1.3.0'
+
+    // Firebase
+    compile 'com.google.firebase:firebase-messaging:17.3.0'
+    compile 'com.google.firebase:firebase-config:16.0.0'
+
+    compile 'com.google.firebase:firebase-common:16.0.1'
+
+    implementation 'com.google.firebase:firebase-storage:16.0.1'
+    // implementation 'com.firebaseui:firebase-ui-database:4.1.0'
+    implementation 'com.google.firebase:firebase-messaging:16.0.1'
+    implementation 'com.google.firebase:firebase-crash:16.0.1'
+
+    // FirebaseUI
+    compile 'com.firebaseui:firebase-ui:4.1.0'
+    // FirebaseUI Auth only
+    compile 'com.firebaseui:firebase-ui-auth:4.1.0'
+    // FirebaseUI Storage only
+    compile 'com.firebaseui:firebase-ui-storage:4.1.0'
+    // Single target that includes all FirebaseUI libraries above
+
+    //Places SERVICES
+    compile 'com.google.android.gms:play-services-places:15.0.1'
+    //compile 'com.firebase:geofire-android:2.1.1'
+    //compile 'com.firebase:geofire-android:2.1.1'
+    //compile 'com.android.support:support-annotations:26.0.2'
+
+    compile 'com.github.jd-alexander:library:1.1.0'
+    compile 'com.github.clans:fab:1.6.2'
+    compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile 'me.zhanghai.android.patternlock:library:2.1.2'
+
+    // google animations
+    // compile 'com.github.aarsy.googlemapsanimations:googlemapsanimations:1.0.5'
+
+    // airbnb
+    compile 'com.airbnb.android:airmapview:1.3.0'
+    compile 'com.google.maps.android:android-maps-utils:0.4'
+    compile 'com.google.code.gson:gson:2.4'
+    compile 'com.android.support:recyclerview-v7:27.1.1'
+    compile 'com.mcxiaoke.volley:library:1.0.19'
+    compile 'com.github.jd-alexander:library:1.1.0'
+    //compile 'com.jakewharton:butterknife:6.1.0'
+
+    // interactive windows
+    compile 'com.appolica:interactive-info-window:v1.0.6'
+
+    // retrofit, gson
+    //  telephone Country  .,...
+    compile 'com.googlecode.libphonenumber:libphonenumber:6.2'
+    compile 'com.github.joielechong:countrycodepicker:2.1.5'
+
+    compile 'com.github.joielechong:countrycodepicker:2.1.5'
+
+    // compile 'com.hbb20:ccp:1.7.1'
+    // retrofit, gson
+    compile 'com.google.code.gson:gson:2.6.2'
+    compile 'com.squareup.retrofit2:retrofit:2.0.2'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
+
+    compile 'com.1gravity:android-contactpicker:1.3.2'
+    compile('com.afollestad.material-dialogs:core:0.8.6.0@aar') {
+        transitive = true
+    }
+    // compile 'ch.acra:acra:4.9.0'
+    compile 'org.osmdroid:osmdroid-android:5.2@aar'
+
+    // compile 'hani.momanii.supernova_emoji_library:supernova-emoji-library:0.0.2'
+    compile 'com.github.hani-momanii:SuperNova-Emoji:1.1'
+    compile 'me.himanshusoni.chatmessageview:chat-message-view:1.0.3'
+
+    // project 3
+    compile 'com.android.support:appcompat-v7:27.1.1'
+    testCompile 'junit:junit:4.12'
+
+    //Jackson Databind
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.7.2'
+
+    // AUTH
+    compile 'com.google.android.gms:play-services-auth:16.0.0'
+
+    //DATABASE FIREBASE,UI
+    compile('com.mikepenz:materialdrawer:5.9.1@aar') {
+        transitive = true
+    }
+
+
+    implementation 'com.github.esafirm.android-image-picker:imagepicker:1.13.1'
+    compile 'com.github.clans:fab:1.6.2'
+
+    // contact picker
+    compile 'com.1gravity:android-contactpicker:1.3.2'
+
+    // multi contact picker
+    compile 'com.github.broakenmedia:MultiContactPicker:1.7'
+
+    // multiple file picker
+    compile 'com.kbeanie:multipicker:1.1.31@aar'
+
+    // another file picker
+    compile 'com.droidninja:filepicker:2.1.5'
+
+    // import bottom navigation  ...
+    compile 'com.android.support:gridlayout-v7:27.1.1'
+    compile 'com.android.support:palette-v7:27.1.1'
+
+    compile 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:2.0.1-rc1'
+
+    // boom menu
+    compile 'com.nightonke:boommenu:2.1.1'
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.15'
+    compile 'com.facebook.android:facebook-android-sdk:4.0.0'
+    // implementation 'com.twitter.sdk.android:twitter-core:3.x'
+    implementation project(':liblinphone_legacy')
+    implementation project(':gcm')
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    //annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
+    // compile 'com.jakewharton:butterknife:9.0.0-SNAPSHOT'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+
+
+    compile 'com.squareup.okhttp:okhttp:2.5.0'
+    compile 'de.hdodenhof:circleimageview:2.2.0'
+    compile 'com.sothree.slidinguppanel:library:3.4.0'
+    compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
+    compile 'com.github.XunMengWinter:CircularAnim:0.3.4'
+    compile 'com.github.florent37:diagonallayout:1.0.8'
+    compile 'com.flaviofaria:kenburnsview:1.0.7'
+    compile 'com.ogaclejapan.smarttablayout:library:1.6.1@aar'
+    compile 'com.ogaclejapan.smarttablayout:utils-v4:1.6.1@aar'
+    compile 'me.jahirfiquitiva:FABsMenu:1.1.1'
+    compile 'ru.bartwell:exfilepicker:2.1'
+    compile 'com.droidninja:filepicker:2.1.5'
+
+    // add upes feed
+
+    compile 'pub.devrel:easypermissions:0.1.5'
+    compile 'de.hdodenhof:circleimageview:2.0.0'
+    compile 'org.apache.httpcomponents:httpcore:4.3.1'
+    compile 'org.apache.httpcomponents:httpmime:4.3.1'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.7.3'
+    compile 'fr.tvbarthel.blurdialogfragment:lib:2.2.0'
+    compile 'com.camnter.easyslidingtabs:easyslidingtabs:1.0'
+
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.commonsware.cwac:camera:0.7.0'
+    compile 'com.fenchtose.nocropper:nocropper:0.1.7'
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    //compile 'com.github.gabrielemariotti.cards:cardslib-core:2.1.0'
+    testCompile 'junit:junit:4.12'
+    compile 'com.kbeanie:multipicker:1.5'
+
+    // fabmenu
+    implementation 'com.rany.albeg.wein:spring-fab-menu:1.0.1'
+    // choce dialog
+
+
+
+
+    compile 'com.yarolegovich:lovely-dialog:1.1.0'
+
+    // flow layout with auto Spacing
+    compile 'com.nex3z:flow-layout:1.2.2'
+
+    // add project hify
+
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.google.firebase:firebase-perf:16.0.0'
+    implementation 'com.yarolegovich:sliding-root-nav:1.1.0'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'
+    implementation 'id.zelory:compressor:2.1.0'
+    //implementation 'com.github.nguyenhoanglam:ImagePicker:1.3.1'
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'com.github.jgabrielfreitas:BlurImageView:1.0.1'
+    implementation 'com.romandanylyk:pageindicatorview:1.0.1'
+    implementation 'com.karumi:dexter:4.2.0'
+    implementation 'jp.wasabeef:recyclerview-animators:2.3.0'
+    implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
+    implementation 'com.google.firebase:firebase-firestore:17.0.2'
+    implementation 'com.google.firebase:firebase-storage:16.0.1'
+    implementation "com.github.chrisbanes:PhotoView:2.1.3"
+    implementation 'com.hbb20:ccp:2.1.4'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    implementation 'com.github.pedromassango:doubleClick:v1.1'
+    implementation 'com.google.android.gms:play-services-places:15.0.1'
+    implementation "com.firebase:firebase-client-android:${firebaseVersion}"
+    implementation 'com.google.android.gms:play-services-maps:15.0.1'
+    implementation "com.google.maps.android:android-maps-utils:${mapsUtilsVersion}"
+    implementation 'com.tapadoo.android:alerter:2.0.4'
+    implementation 'com.github.javiersantos:BottomDialogs:1.2.1'
+    implementation 'com.github.rahatarmanahmed:circularprogressview:2.5.0'
+    implementation 'com.jpardogo.materialtabstrip:library:1.1.0'
+    implementation 'me.grantland:autofittextview:0.2.1'
+    implementation 'com.afollestad.material-dialogs:commons:0.8.6.1'
+    implementation 'com.github.ivbaranov:materialfavoritebutton:0.1.4'
+    implementation 'com.github.marlonlom:timeago:3.0.2'
+    implementation 'com.github.tylersuehr7:empty-state-recyclerview:1.0.4'
+    implementation 'com.google.android.gms:play-services-ads:15.0.1'
+    implementation 'com.github.yalantis:ucrop:2.2.1-native'
+
+    // video player
+    compile 'com.github.halilozercan:BetterVideoPlayer:1.2.alpha1'
+    implementation 'com.github.ybq:Android-SpinKit:1.1.0'
+
+    // file downloader with  beautiful  cache   ...
+    implementation 'com.github.kk121:File-Loader:1.2'
+
+    // fabulous filter    ...
+    compile 'com.allattentionhere:fabulousfilter:0.0.5'
+
+    // text to speech
+    compile 'net.gotev:speech:1.3.1'
+
+    // permissions
+    implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
+
+    //Jackson Databind
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.7.2'
+
+    //Glide transform old version    ..
+    compile 'jp.wasabeef:glide-transformations:2.0.1'
+    compile 'com.github.bumptech.glide:glide:4.0.0-RC1'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+
+    // record audio
+    implementation 'com.github.axet:android-audio-library:1.0.127'
+    // implementation project(':android-audio-library')
+
+    // new version glide   ...
+    //implementation 'com.github.bumptech.glide:glide:4.8.0'
+    //annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
+
+    implementation 'com.iceteck.silicompressorr:silicompressor:2.2.1'
+
+    // import module settings  stindroid
+    implementation project(path: ':tinodesdk_android')
+    implementation 'com.android.support:preference-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.android.support:support-vector-drawable:27.1.1'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'com.android.support:support-v13:27.1.1'
+    implementation 'com.android.support:cardview-v7:27.1.1'
+    implementation 'com.github.pchmn:MaterialChipsInput:1.0.8'
+    implementation 'com.google.firebase:firebase-messaging:17.3.1'
+    implementation 'com.googlecode.libphonenumber:libphonenumber:8.9.2'
+
+}
+apply plugin: 'com.google.gms.google-services'

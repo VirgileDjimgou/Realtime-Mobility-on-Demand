@@ -1,0 +1,61 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+        mavenLocal()
+        jcenter()
+        google()
+        mavenCentral()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+
+
+    }
+    dependencies {
+
+        classpath 'com.android.tools.build:gradle:3.1.4'
+        //classpath 'com.google.gms:google-services:3.1.1' // google-services plugin
+        classpath 'com.google.gms:google-services:4.0.1' // google-services plugin
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        //classpath 'com.jakewharton:butterknife-gradle-plugin:9.0.0-SNAPSHOT'
+        //classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.1'
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
+        classpath 'com.github.dcendents:android-maven-plugin:1.2'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+
+        maven {
+            url 'https://maven.fabric.io/public'
+        }
+         maven { url "https://s3.amazonaws.com/repo.commonsware.com" }
+
+        mavenLocal()
+        mavenCentral()
+        google()
+        jcenter()
+        maven { url "https://jitpack.io" }
+
+        // Required for 'com.firebaseui:firebase-ui:1.1.1'
+        maven {
+            url 'https://maven.fabric.io/public'
+        }
+
+        maven {
+            url "https://maven.google.com" // Google's Maven repository
+        }
+        maven { url "https://dl.bintray.com/hani-momanii/maven"}
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+
+
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

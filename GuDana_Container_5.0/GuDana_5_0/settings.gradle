@@ -1,0 +1,2 @@
+include ':app', ':liblinphone_legacy', ':gcm', ':tinodesdk_android'
+project(':tinodesdk_android').projectDir = new File('tinodesdk')
