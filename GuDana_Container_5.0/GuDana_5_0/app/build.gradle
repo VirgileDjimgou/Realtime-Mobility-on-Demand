@@ -90,7 +90,6 @@ dependencies {
     compile files('libs/base_java.jar')
     compile files('libs/libjingle_peerconnection.jar')
 
-
     //compile 'com.android.support:design:26.0.2'
     testCompile 'junit:junit:4.12'
     compile 'de.hdodenhof:circleimageview:2.1.0'
@@ -262,8 +261,6 @@ dependencies {
     // fabmenu
     implementation 'com.rany.albeg.wein:spring-fab-menu:1.0.1'
     // choce dialog
-
-
 
 
     compile 'com.yarolegovich:lovely-dialog:1.1.0'

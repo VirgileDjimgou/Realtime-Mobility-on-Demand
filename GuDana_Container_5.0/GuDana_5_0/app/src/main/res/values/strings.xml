@@ -199,7 +199,6 @@
     <string name="notification_channel_description">New message was received</string>
 
 
-
     <string name="settings_name" translatable="false">AppRTC Settings</string>
     <string name="disconnect_call">Disconnect Call</string>
     <string name="room_description">
@@ -2013,6 +2012,8 @@ Curiosity might have killed the cat, but it is the driving force behind all inno
     <string name="title_activity_friendlist_scrolling">FriendlistScrollingActivity</string>
     <string name="exit_group">Exit Group</string>
     <string name="group_info">Group Info</string>
+    <string name="title_activity_test__login__tinode_server_">Test_Login_Tinode_server_Activity
+    </string>
 </resources>
 
 

@@ -366,8 +366,9 @@ public class RegisterActivity extends AppCompatActivity {
 
 
                                                                                // after Registration on firebase ...start a Registration Tindroid Server  ...
-                                                                               onSignUp(username_ ,name_ ,email_,pass_);
+                                                                               // onSignUp(username_ ,name_ ,email_,pass_);
 
+                                                                               onSignUp("chichikolon","text" ,"echo","qwert");
                                                                                // finish();
                                                                            }
                                                                        }).addOnFailureListener(new OnFailureListener() {
@@ -667,3 +668,4 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 
+}

@@ -36,6 +36,7 @@ import com.android.gudana.hify.utils.database.UserHelper;
 import com.android.gudana.R;
 import com.android.gudana.tindroid.Cache;
 import com.android.gudana.tindroid.CredentialsFragment;
+import com.android.gudana.tindroid.Test_Login_Tinode_server_Activity;
 import com.android.gudana.tindroid.UiUtils;
 import com.android.gudana.tindroid.account.Utils;
 import com.github.javiersantos.bottomdialogs.BottomDialog;
@@ -175,6 +176,16 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         // settings gps
+
+        Button TestCredential = (Button) findViewById(R.id.test_credentials);
+        TestCredential.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent LoginEmail = new Intent(LoginActivity.this, Test_Login_Tinode_server_Activity.class);
+                startActivity(LoginEmail);
+                // LoginActivity.this.finish();
+            }
+        });
 
 
         askPermission();

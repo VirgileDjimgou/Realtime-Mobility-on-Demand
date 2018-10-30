@@ -20,7 +20,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
 
-
     <!-- Used for optional Applock Feature -->
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
 
@@ -46,7 +45,6 @@
         android:glEsVersion="0x00020000"
         android:required="true" />
 
-
     <supports-screens android:anyDensity="true" />
 
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -70,6 +68,7 @@
     <!-- Needed to allow Linphone to install on tablets, since android.permission.CALL_PHONE implies android.hardware.telephony is required -->
 
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -115,26 +114,21 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/api_key_google_places" />
 
-
         <activity
             android:name=".tindroid.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
-
         <activity
             android:name=".hify.ui.activities.MainActivity_GuDDana"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden">
-
-
             <intent-filter>
                 <action android:name="android.intent.action.CALL" />
                 <action android:name="android.intent.action.CALL_PRIVILEGED" />
@@ -176,8 +170,8 @@
 
         <!-- android:name="com.android.gudana.hify.ui.activities.MainActivity_GuDDana_GuDDana" -->
 
-        <!-- main Start Activity  hify  .... -->
 
+        <!-- main Start Activity  hify  .... -->
 
         <activity
             android:name=".fcm.MainActivity_fcm"
@@ -455,9 +449,11 @@
             android:launchMode="singleTop"
             android:parentActivityName=".hify.ui.activities.MainActivity_GuDDana"
             android:theme="@style/UsersTheme" />
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
         <activity
             android:name=".GuDFeed.ImagePreviewActivity"
             android:label="Image Preview"
@@ -483,49 +479,48 @@
             android:theme="@style/ChatTheme" />
         <activity
             android:name=".group_chat.ui.ManageGroupActivity"
-            android:theme="@style/ChatTheme" >
-
-        </activity>
+            android:theme="@style/ChatTheme"></activity>
 
         <!-- add tindroid client   minifest ... -->
-
 
         <activity
             android:name=".tindroid.LoginActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme">
-        </activity>
-
+            android:theme="@style/AppTheme"></activity>
         <activity
             android:name=".tindroid.MessageActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustResize">
             <intent-filter android:icon="@mipmap/ic_launcher">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="vnd.android.cursor.item/vnd.tinode.profile" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".tindroid.CreateGroupActivity"
             android:label="@string/action_new_group"
-            android:theme="@style/AppTheme">
-        </activity>
+            android:theme="@style/AppTheme"></activity>
 
-        <service android:name=".tindroid.account.TinodeAccountService"
+        <service
+            android:name=".tindroid.account.TinodeAccountService"
             android:exported="false">
+
             <!-- Required filter used by the system to launch the account service. -->
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
             <!-- This points to an XMLf ile which describes the account service. -->
-            <meta-data android:name="android.accounts.AccountAuthenticator"
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
         </service>
-
-        <service android:name=".tindroid.account.SyncService" android:exported="false">
+        <service
+            android:name=".tindroid.account.SyncService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
@@ -541,13 +536,11 @@
         <!-- FCM handling -->
         <service android:name=".tindroid.fcm.FBaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
         <!-- original file provider  tindroid  but i have conflict with  some library in gradle  to handle file -->
-
-
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -556,11 +549,13 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
 
-
-
+        <activity
+            android:name=".tindroid.Test_Login_Tinode_server_Activity"
+            android:label="@string/title_activity_test__login__tinode_server_"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
