@@ -32,6 +32,9 @@ import com.android.gudana.group_chat.utils.EmailEncoding;
 import com.android.gudana.hify.adapters.PostsAdapter;
 import com.android.gudana.hify.models.Post;
 import com.android.gudana.R;
+import com.android.gudana.hify.ui.fragment.SendMessage;
+import com.android.gudana.tindroid.Cache;
+import com.android.gudana.tindroid.MessageActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.github.javiersantos.bottomdialogs.BottomDialog;
@@ -276,7 +279,7 @@ public class FriendProfile extends AppCompatActivity {
 
         private FirebaseFirestore mFirestore;
         private FirebaseUser currentUser;
-        private String id,friend_name, friend_email, friend_image, friend_token;;
+        private String id,friend_name, friend_email, friend_image, friend_token , Friend_uid_tindroid;;
 
         private TextView name,username,email,location,post,friend,bio,created,req_sent;
         private CircleImageView profile_pic;
@@ -312,9 +315,15 @@ public class FriendProfile extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-                    Intent sendMessageIntent = new Intent(rootView.getContext(), ChatActivity.class);
-                    sendMessageIntent.putExtra("userid", id);
-                    startActivity(sendMessageIntent);
+                    // get Unique ID   Tindroid Server   to chat
+                    //String TindroidUniqueId = Friend_uid_tindroid;
+                    Intent it = new Intent(AboutFragment.this.getActivity(), MessageActivity.class);
+                    it.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    it.putExtra("topic", Friend_uid_tindroid);
+                    startActivity(it);
+                    //Intent sendMessageIntent = new Intent(rootView.getContext(), ChatActivity.class);
+                    // sendMessageIntent.putExtra("userid", id);
+                    //startActivity(sendMessageIntent);
                 }
             });
 
@@ -357,6 +366,7 @@ public class FriendProfile extends AppCompatActivity {
                             friend_email=documentSnapshot.getString("email");
                             friend_image=documentSnapshot.getString("image");
                             friend_token=documentSnapshot.getString("token_id");
+                            Friend_uid_tindroid = documentSnapshot.getString("uid_tindroid");
 
                             username.setText(String.format(Locale.ENGLISH,"@%s", documentSnapshot.getString("username")));
                             name.setText(friend_name);
@@ -382,8 +392,10 @@ public class FriendProfile extends AppCompatActivity {
                         @Override
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-                            if(documentSnapshot.exists())
+                            if(documentSnapshot.exists()){
                                 showRemoveButton();
+                                send_message.setVisibility(View.VISIBLE);
+                            }
                             else{
 
                                 mFirestore.collection("Users")
@@ -413,7 +425,7 @@ public class FriendProfile extends AppCompatActivity {
                                                                     else{
 
                                                                         showAddButton();
-                                                                        send_message.setVisibility(View.GONE);
+                                                                        //send_message.setVisibility(View.GONE);
 
                                                                     }
 
@@ -485,9 +497,8 @@ public class FriendProfile extends AppCompatActivity {
             currentUserId =  currentUser.getUid();
             otherUserId = id;
             FCM_Message_Sender = new CustomFcm_Util();
-
-
             return rootView;
+
         }
 
         private void showRequestLayout() {
@@ -629,18 +640,13 @@ public class FriendProfile extends AppCompatActivity {
                                                 public void onClick(@NonNull BottomDialog dialog) {
                                                     removeFriend();
 
-                                                    // remove friend  group chat  ...
-                                                    // removeFriend_group_chat("mailtoremove");
-
-
-                                                    // remove  on fireebase ... for chat
-
                                                     Map map = new HashMap<>();
                                                     map.put("Friends/" + otherUserId + "/" + currentUserId, null);
                                                     map.put("Friends/" + currentUserId + "/" + otherUserId, null);
 
-                                                    // remove message button
                                                     send_message.setVisibility(View.GONE);
+
+                                                    // remove message button
                                                     // Updating data
 
                                                     FirebaseDatabase.getInstance().getReference().updateChildren(map, new DatabaseReference.CompletionListener()
@@ -699,7 +705,6 @@ public class FriendProfile extends AppCompatActivity {
             Map map = new HashMap<>();
             map.put("Friends/" + otherUserId + "/" + currentUserId + "/date", ServerValue.TIMESTAMP);
             map.put("Friends/" + currentUserId + "/" + otherUserId + "/date", ServerValue.TIMESTAMP);
-
             map.put("Requests/" + otherUserId + "/" + currentUserId, null);
             map.put("Requests/" + currentUserId + "/" + otherUserId, null);
 
@@ -811,6 +816,8 @@ public class FriendProfile extends AppCompatActivity {
                                                                                                             req_layout.setVisibility(View.GONE);
                                                                                                             send_message.setVisibility(View.VISIBLE);
                                                                                                             showRemoveButton();
+                                                                                                            send_message.setVisibility(View.VISIBLE);
+
                                                                                                         }
                                                                                                     }).start();
 
@@ -1199,6 +1206,7 @@ public class FriendProfile extends AppCompatActivity {
                                                 public void onAnimationEnd(Animator animation) {
                                                     super.onAnimationEnd(animation);
                                                     remove_friend.setVisibility(View.GONE);
+                                                    send_message.setVisibility(View.GONE);
                                                     showAddButton();
                                                 }
                                             }).start();

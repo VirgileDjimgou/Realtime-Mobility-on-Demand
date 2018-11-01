@@ -170,7 +170,11 @@ public class Connection {
     }
 
     public void send(String message) {
-        mWsClient.send(message);
+        try{
+            mWsClient.send(message);
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 
     private class TinodeWSClient extends WebSocketClient {
@@ -186,12 +190,16 @@ public class Connection {
             } catch (SocketException ignored) {}
             
             backoff.reset();
-
             boolean r = reconnecting;
             reconnecting = false;
 
-            if (mListener != null) {
-                mListener.onConnect(r);
+            try{
+                if (mListener != null) {
+                    mListener.onConnect(r);
+                }
+
+            }catch (Exception ex){
+                ex.printStackTrace();
             }
         }
 

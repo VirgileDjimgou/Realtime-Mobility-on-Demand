@@ -556,6 +556,14 @@
             android:name=".tindroid.Test_Login_Tinode_server_Activity"
             android:label="@string/title_activity_test__login__tinode_server_"
             android:theme="@style/AppTheme"></activity>
+
+
+        <activity
+            android:name=".tindroid.AccountInfos_Activity"
+            android:label="@string/action_new_group"
+            android:theme="@style/ChatTheme"></activity>
+
+
     </application>
 
 </manifest>

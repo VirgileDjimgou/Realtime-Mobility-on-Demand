@@ -92,6 +92,7 @@ import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -158,7 +159,7 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
 
 
     private ChatListAdapter mChatListAdapter;
-
+    private FirebaseFirestore mFirestore;
     private MeListener mMeTopicListener = null;
     private MeTopic mMeTopic = null;
 
@@ -528,6 +529,8 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
         }
 
 
+        // update User Id Token Tindroid  Server
+        Update_Uid_Tindroid();
         // chatSeenDatabase.keepSynced(true); // For offline use
     }
 
@@ -747,6 +750,42 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
                 .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.default_user_art_g_2))
                 .load(imag)
                 .into(imageView);
+
+    }
+
+
+    private void Update_Uid_Tindroid(){
+
+        String TindroidUniqueId = Cache.getTinode().getMyId();
+        if(TindroidUniqueId.trim()!= null){
+
+            //dialog.setMessage("Updating Details....");
+            //dialog.show();
+            // userMap.put("uid_tindroid", Uid_tindroid);
+
+            mFirestore = FirebaseFirestore.getInstance();
+            final DocumentReference userDocument=mFirestore.collection("Users").document(mAuth.getCurrentUser().getUid());
+            Map<String,Object> map=new HashMap<>();
+            map.put("uid_tindroid",TindroidUniqueId);
+
+            userDocument.update(map)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(MainActivity_GuDDana.this, "User Id updated", Toast.LENGTH_SHORT).show();
+
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.i("Update","failed: "+e.getMessage());
+                            Toast.makeText(MainActivity_GuDDana.this, "User Id update failed", Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
+
+        }
 
     }
 

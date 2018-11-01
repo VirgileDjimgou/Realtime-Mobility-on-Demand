@@ -143,8 +143,8 @@ public class LoginActivity extends AppCompatActivity {
                     //This will add Don't show again checkbox to the dialog. You can pass any ID as argument
                     //.setNotShowAgainOptionEnabled(0)
                     //.setNotShowAgainOptionChecked(true)
-                    .setTitle("Email Confirmation Sent")
-                    .setMessage("please check your email for confirmation")
+                    .setTitle("a confirmation email has been sent to you")
+                    .setMessage("please check your email for confirmation and follow the link to verify your email adress")
                     .show();
 
         }else{
@@ -175,6 +175,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
 
+        /*
         // settings gps
 
         Button TestCredential = (Button) findViewById(R.id.test_credentials);
@@ -186,6 +187,8 @@ public class LoginActivity extends AppCompatActivity {
                 // LoginActivity.this.finish();
             }
         });
+
+        */
 
 
         askPermission();

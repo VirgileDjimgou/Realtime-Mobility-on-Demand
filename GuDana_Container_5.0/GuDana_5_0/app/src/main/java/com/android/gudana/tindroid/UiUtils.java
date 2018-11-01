@@ -437,6 +437,22 @@ public class UiUtils {
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public static void requestAvatar_from_Activity(Activity activity_) {
+        Activity activity = activity_;
+        if (!checkPermission(activity, android.Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            ActivityCompat.requestPermissions(activity, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
+                    READ_EXTERNAL_STORAGE_PERMISSION);
+        } else {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+
+            activity.startActivityForResult(Intent.createChooser(intent, activity.getString(R.string.select_image)),
+                    UiUtils.SELECT_PICTURE);
+        }
+    }
+
     public static Bitmap scaleSquareBitmap(Bitmap bmp) {
         int width = bmp.getWidth();
         int height = bmp.getHeight();

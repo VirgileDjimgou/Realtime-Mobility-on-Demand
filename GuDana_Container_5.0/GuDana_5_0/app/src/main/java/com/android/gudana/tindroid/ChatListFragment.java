@@ -139,7 +139,10 @@ public class ChatListFragment extends ListFragment implements AbsListView.MultiC
                 return true;
 
             case R.id.action_settings:
-                ((MainActivity_GuDDana)getActivity()).showAccountInfoFragment();
+                //((MainActivity_GuDDana)getActivity()).showAccountInfoFragment();
+                // start  Acoount
+                Intent AccountInfos = new Intent(ChatListFragment.this.getContext(), AccountInfos_Activity.class);
+                startActivity(AccountInfos);
                 return true;
 
             case R.id.action_about:

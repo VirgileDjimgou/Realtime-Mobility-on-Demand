@@ -1,5 +1,6 @@
 package com.android.gudana.tindroid;
 
+import android.Manifest;
 import android.app.DownloadManager;
 import android.app.NotificationManager;
 import android.content.ActivityNotFoundException;
@@ -22,10 +23,12 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import java.io.File;
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -35,9 +38,17 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.android.gudana.R;
+import com.android.gudana.chatapp.activities.ChatActivity;
+import com.android.gudana.fcm.CustomFcm_Util;
 import com.android.gudana.hify.ui.activities.MainActivity_GuDDana;
 import com.android.gudana.tindroid.account.Utils;
 import com.android.gudana.tindroid.media.VxCard;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+
 import co.tinode.tinodesdk.ComTopic;
 import co.tinode.tinodesdk.NotConnectedException;
 import co.tinode.tinodesdk.PromisedReply;
@@ -49,6 +60,7 @@ import co.tinode.tinodesdk.model.MsgServerPres;
 import co.tinode.tinodesdk.model.PrivateType;
 import co.tinode.tinodesdk.model.ServerMessage;
 import co.tinode.tinodesdk.model.Subscription;
+import es.dmoral.toasty.Toasty;
 
 /**
  * View to display a single conversation
@@ -56,7 +68,6 @@ import co.tinode.tinodesdk.model.Subscription;
 public class MessageActivity extends AppCompatActivity {
 
     private static final String TAG = "MessageActivity";
-
     static final String FRAGMENT_MESSAGES = "msg";
     static final String FRAGMENT_INVALID ="invalid";
     static final String FRAGMENT_INFO = "info";
@@ -77,6 +88,8 @@ public class MessageActivity extends AppCompatActivity {
 
     private DownloadManager mDownloadMgr = null;
     private long mDownloadId = -1;
+    public static CustomFcm_Util FCM_Message_Sender ;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +124,63 @@ public class MessageActivity extends AppCompatActivity {
 
         mMessageSender = new PausableSingleThreadExecutor();
         mMessageSender.pause();
+
+
+        // init
+
+        try{
+
+            // openVoiceRecorder();
+            // hide Keyboard
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
+            askPermission();
+
+            // initDatabases();
+
+            // get User Imformation from remote Database or from local Cache ...
+            // GetInformation_from_Users();
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        // appBarName.setText("GuDana User");
+        // create  fcm Utill to send call  notification and  special notification   ... to other users
+        FCM_Message_Sender = new CustomFcm_Util();
     }
+
+
+    private void askPermission() {
+
+        Dexter.withActivity(this)
+                .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.RECORD_AUDIO,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.ACCESS_NETWORK_STATE,
+                        Manifest.permission.CALL_PHONE
+
+
+                )
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        if(report.isAnyPermissionPermanentlyDenied()){
+                            Toasty.info(MessageActivity.this, "You have denied some permissions permanently, if the app force close try granting permission from settings.", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                    }
+                }).check();
+
+    }
+
 
     @Override
     @SuppressWarnings("unchecked")

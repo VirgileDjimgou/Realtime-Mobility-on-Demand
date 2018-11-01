@@ -213,11 +213,17 @@ public abstract class ImageLoader {
         // Check to see if we have retained the worker fragment.
         RetainFragment retainFragment = (RetainFragment) fm.findFragmentByTag(TAG);
 
-        // If not retained (or first time running), we need to create and add it.
-        if (retainFragment == null) {
-            retainFragment = new RetainFragment();
-            fm.beginTransaction().add(retainFragment, TAG).commit();
+        try{
+            // If not retained (or first time running), we need to create and add it.
+            if (retainFragment == null) {
+                retainFragment = new RetainFragment();
+                fm.beginTransaction().add(retainFragment, TAG).commit();
+            }
+
+        }catch(Exception ex){
+            ex.printStackTrace();
         }
+
 
         return retainFragment;
     }

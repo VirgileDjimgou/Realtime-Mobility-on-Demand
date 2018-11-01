@@ -37,6 +37,7 @@
                 android:layout_marginTop="150dp"
                 android:background="@drawable/rounded_listview"
                 android:text="Send message"
+                android:visibility="gone"
                 android:textSize="15dp"
                 android:textStyle="bold" />
 

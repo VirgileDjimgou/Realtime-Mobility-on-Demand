@@ -201,7 +201,9 @@ public class RegisterActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                                         if(!documentSnapshot.exists()){
-                                            registerUser();
+                                            //registerUser();
+                                            onSignUp(email_.trim() ,name_.trim() ,email_.trim(),pass_.trim());
+
                                         }else{
                                             //Toast.makeText(RegisterActivity.this, "Username already exists", Toast.LENGTH_SHORT).show();
                                             AnimationUtil.shakeView(username, RegisterActivity.this);
@@ -249,7 +251,6 @@ public class RegisterActivity extends AppCompatActivity {
                             .setTitle("Infos ")
                             .setMessage("We recommend you to set a profile picture")
                             .show();
-
                 }
             }
         });
@@ -304,7 +305,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    private void registerUser() {
+    private void registerUser(final String Uid_tindroid) {
 
         mAuth.createUserWithEmailAndPassword(email_, pass_).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
@@ -349,6 +350,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                                        userMap.put("bio",getString(R.string.default_bio));
                                                                        userMap.put("username", username_);
                                                                        userMap.put("location", location_);
+                                                                       userMap.put("uid_tindroid", Uid_tindroid);
                                                                        userMap.put("token_id", FirebaseInstanceId.getInstance().getToken()); // hier we must put the token id    ....   ...
 
                                                                        firebaseFirestore.collection("Users").document(userUid).set(userMap).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -366,9 +368,14 @@ public class RegisterActivity extends AppCompatActivity {
 
 
                                                                                // after Registration on firebase ...start a Registration Tindroid Server  ...
-                                                                               // onSignUp(username_ ,name_ ,email_,pass_);
 
-                                                                               onSignUp("chichikolon","text" ,"echo","qwert");
+
+                                                                               Intent LoginEmail = new Intent(RegisterActivity.this, com.android.gudana.hify.ui.activities.account.LoginActivity.class);
+                                                                               LoginEmail.putExtra("Email_Confirmation",true);
+                                                                               startActivity(LoginEmail);
+                                                                               RegisterActivity.this.finish();
+
+                                                                               //onSignUp("chichikolon","text" ,"echo","qwert");
                                                                                // finish();
                                                                            }
                                                                        }).addOnFailureListener(new OnFailureListener() {
@@ -616,11 +623,11 @@ public class RegisterActivity extends AppCompatActivity {
                                                 // the new users are registerde but he should chech his email to vmake a confirmation  ..
                                                 //UiUtils.onLoginSuccess(RegisterActivity.this, signUp);
 
-                                                signUp.setEnabled(true);
-                                                Intent LoginEmail = new Intent(RegisterActivity.this, com.android.gudana.hify.ui.activities.account.LoginActivity.class);
-                                                LoginEmail.putExtra("Email_Confirmation",true);
-                                                startActivity(LoginEmail);
-                                                RegisterActivity.this.finish();
+
+                                                // start registration on Firebase  or Firestore  ....
+                                                String TindroidUniqueId = Cache.getTinode().getMyId();
+                                                registerUser(TindroidUniqueId);
+                                                //signUp.setEnabled(true);
                                                 //
                                             }
                                         }

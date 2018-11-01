@@ -61,6 +61,7 @@ import co.tinode.tinodesdk.Topic;
 import co.tinode.tinodesdk.model.Drafty;
 import co.tinode.tinodesdk.model.MsgServerCtrl;
 import co.tinode.tinodesdk.model.ServerMessage;
+import es.dmoral.toasty.Toasty;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -418,9 +419,11 @@ public class MessagesFragment extends Fragment
                 }, mFailureListener);
             } catch (NotConnectedException ignored) {
                 Log.d(TAG, "sendMessage -- NotConnectedException", ignored);
+                Toasty.info(MessagesFragment.this.getContext(), "not connected  ", Toast.LENGTH_LONG).show();
+
             } catch (Exception ignored) {
                 Log.d(TAG, "sendMessage -- Exception", ignored);
-                Toast.makeText(getActivity(), R.string.failed_to_send_message, Toast.LENGTH_SHORT).show();
+                Toasty.info(getActivity(), ignored.toString(), Toast.LENGTH_SHORT).show();
                 return false;
             }
             return true;

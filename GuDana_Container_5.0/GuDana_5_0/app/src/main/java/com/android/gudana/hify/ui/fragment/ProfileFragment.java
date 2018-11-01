@@ -409,7 +409,6 @@ public class ProfileFragment extends Fragment {
         private FirebaseFirestore mFirestore;
         private DatabaseReference userDatabase;
         private UserHelper userHelper;
-
         private EditText name,username,email,bio,location;
         private CircleImageView profile_pic;
         private TextView updatebtn,updatepicture,updatepassbtn;
@@ -1004,7 +1003,6 @@ public class ProfileFragment extends Fragment {
                         }
 
                         Toast.makeText(rootView.getContext(),"Only your name,bio and location has been scheduled for update, when internet connection is available it will be updated.", Toast.LENGTH_LONG).show();
-
 
                     }
 
