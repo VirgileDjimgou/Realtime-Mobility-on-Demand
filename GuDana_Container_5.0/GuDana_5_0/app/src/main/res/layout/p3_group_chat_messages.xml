@@ -24,7 +24,6 @@
         tools:context="cs656.com.firebasemessengerapp.ui.ChatMessagesActivity"
         tools:showIn="@layout/p3_activity_main">
 
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:gravity="end"
@@ -178,8 +177,6 @@
 
 
         </LinearLayout>
-
-
 
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

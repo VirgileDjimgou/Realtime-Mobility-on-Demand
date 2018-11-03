@@ -460,15 +460,19 @@ public class TopicInfoFragment extends Fragment {
         }
 
         PrivateType priv = mTopic.getPriv();
-        if (!TextUtils.isEmpty(priv.getComment())) {
-            subtitle.setText(priv.getComment());
-            subtitle.setTypeface(null, Typeface.NORMAL);
-            subtitle.setTextIsSelectable(true);
-        } else {
-            subtitle.setText(R.string.placeholder_private);
-            subtitle.setTypeface(null, Typeface.ITALIC);
-            subtitle.setTextIsSelectable(false);
+        if(priv != null){
+            if (!TextUtils.isEmpty(priv.getComment())) {
+                subtitle.setText(priv.getComment());
+                subtitle.setTypeface(null, Typeface.NORMAL);
+                subtitle.setTextIsSelectable(true);
+            } else {
+                subtitle.setText(R.string.placeholder_private);
+                subtitle.setTypeface(null, Typeface.ITALIC);
+                subtitle.setTextIsSelectable(false);
+            }
+
         }
+
 
         muted.setChecked(mTopic.isMuted());
         permissions.setText(mTopic.getAccessMode().getMode());

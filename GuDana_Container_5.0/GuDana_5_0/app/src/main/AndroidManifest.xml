@@ -92,7 +92,6 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
@@ -500,10 +499,13 @@
                 <data android:mimeType="vnd.android.cursor.item/vnd.tinode.profile" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".tindroid.CreateGroupActivity"
             android:label="@string/action_new_group"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme">
+
+        </activity>
 
         <service
             android:name=".tindroid.account.TinodeAccountService"

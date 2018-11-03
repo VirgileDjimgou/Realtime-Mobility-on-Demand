@@ -799,9 +799,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
 
-
         Log.e("jhkhj", "jhkjh");
-
         switch (requestCode) {
 
             case FilePickerConst.REQUEST_CODE_DOC:

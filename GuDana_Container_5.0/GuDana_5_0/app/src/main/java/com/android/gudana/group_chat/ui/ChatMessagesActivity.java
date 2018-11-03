@@ -756,15 +756,12 @@ public class ChatMessagesActivity extends AppCompatActivity implements  View.OnC
                     int i = 0;
                     do{
 
-                        //messageEditText.setText(results.get(i).getDisplayName()+ " : " + results.get(i).getPhoneNumbers());
-                        //sendMessage("text");
                         // sendMessage_location_contact("text" , results.get(i).getDisplayName()+ " : " + results.get(i).getPhoneNumbers());
                         sendMessage_contact(results.get(i).getDisplayName()+ "  Tel: " + results.get(i).getPhoneNumbers());
-
                         ContactResult element = results.get(i);
                         i++;
-                    }
-                    while (i < results.size());
+                    } while (i < results.size());
+
                 } else if(resultCode == RESULT_CANCELED){
                     System.out.println("User closed the picker without selecting items.");
                 }
