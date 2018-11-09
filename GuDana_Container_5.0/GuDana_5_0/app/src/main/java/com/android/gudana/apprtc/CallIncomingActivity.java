@@ -36,7 +36,6 @@ import android.widget.Toast;
 import com.android.gudana.R;
 import com.android.gudana.apprtc.compatibility.Compatibility;
 import com.android.gudana.apprtc.linphone.LinphoneManager;
-import com.android.gudana.chatapp.activities.ChatActivity;
 import com.android.gudana.hify.ui.activities.MainActivity_GuDDana;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;

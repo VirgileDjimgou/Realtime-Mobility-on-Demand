@@ -25,14 +25,11 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.android.gudana.chatapp.activities.ChatActivity;
 import com.android.gudana.hify.adapters.UploadListAdapter;
 import com.android.gudana.hify.utils.AnimationUtil;
 import com.android.gudana.R;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -49,7 +46,6 @@ import com.google.firebase.storage.UploadTask;
 //import com.nguyenhoanglam.imagepicker.model.Image;
 //import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImagePicker;
 import com.yarolegovich.lovelydialog.LovelyInfoDialog;
-import com.yarolegovich.lovelydialog.LovelyStandardDialog;
 
 import java.io.File;
 import java.util.ArrayList;

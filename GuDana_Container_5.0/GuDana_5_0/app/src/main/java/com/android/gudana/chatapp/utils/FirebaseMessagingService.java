@@ -12,7 +12,6 @@ import android.support.v4.app.NotificationCompat;
 import com.android.gudana.R;
 import com.android.gudana.apprtc.CallFragment;
 import com.android.gudana.apprtc.CallIncomingActivity;
-import com.android.gudana.chatapp.activities.ChatActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

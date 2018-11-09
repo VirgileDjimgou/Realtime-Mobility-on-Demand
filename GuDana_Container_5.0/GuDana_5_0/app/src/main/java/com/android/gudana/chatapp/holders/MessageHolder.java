@@ -1,6 +1,5 @@
 package com.android.gudana.chatapp.holders;
 
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -18,10 +17,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.gudana.R;
-import com.android.gudana.chatapp.activities.ChatActivity;
 import com.android.gudana.chatapp.activities.FullScreenActivity;
 import com.android.gudana.chatapp.utils.FileOpen;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -50,15 +47,8 @@ import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import com.nightonke.boommenu.Animation.BoomEnum;
-import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
-import com.nightonke.boommenu.BoomButtons.HamButton;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
-import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
 import com.nightonke.boommenu.BoomButtons.TextOutsideCircleButton;
-import com.nightonke.boommenu.BoomMenuButton;
-import com.nightonke.boommenu.ButtonEnum;
-import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 public class MessageHolder extends RecyclerView.ViewHolder
 {

@@ -16,9 +16,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
-import com.android.gudana.chatapp.activities.ChatActivity;
-import com.android.gudana.chatapp.activities.WelcomeActivity;
-
 import static java.lang.System.exit;
 
 

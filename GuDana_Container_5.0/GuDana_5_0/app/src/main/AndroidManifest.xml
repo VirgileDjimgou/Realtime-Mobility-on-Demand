@@ -382,15 +382,6 @@
             android:parentActivityName=".hify.ui.activities.MainActivity_GuDDana"
             android:theme="@style/UsersTheme" />
         <activity
-            android:name=".chatapp.activities.ChatActivity"
-            android:theme="@style/ChatTheme">
-            <intent-filter>
-                <action android:name="com.android.gudana.chatapp.chatapp_CHAT_TARGET_NOTIFICATION" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".hify.ui.activities.FriendlistScrollingActivity"
             android:theme="@style/ChatTheme">
             <intent-filter>

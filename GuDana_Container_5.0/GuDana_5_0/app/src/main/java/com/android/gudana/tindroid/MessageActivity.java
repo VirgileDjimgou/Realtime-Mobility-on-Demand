@@ -26,7 +26,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -45,7 +44,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -55,7 +53,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import com.android.gudana.R;
 import com.android.gudana.apprtc.CallFragment;
 import com.android.gudana.apprtc.ConnectActivity;
-import com.android.gudana.chatapp.activities.ChatActivity;
 import com.android.gudana.chatapp.adapters.MessageAdapter;
 import com.android.gudana.chatapp.models.Message;
 import com.android.gudana.chatapp.models.StaticConfigUser_fromFirebase;
@@ -82,9 +79,6 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.nightonke.boommenu.BoomMenuButton;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
 
 import co.tinode.tinodesdk.ComTopic;
 import co.tinode.tinodesdk.NotConnectedException;
@@ -532,7 +526,7 @@ public class MessageActivity extends AppCompatActivity {
                 if (CallFragment.running == true) {
                     Toasty.warning(MessageActivity.this.getApplicationContext(), "you can not start  two calls at the same time  ! ", Toast.LENGTH_LONG).show();
                 } else {
-                    //call_infos_notification(ChatActivity.this.context ,"audio");
+                    call_infos_notification(MessageActivity.this.context ,"audio");
                     // call Button
 
                 }
@@ -545,7 +539,7 @@ public class MessageActivity extends AppCompatActivity {
                 if (CallFragment.running == true) {
                     Toasty.warning(MessageActivity.this.getApplicationContext(), "you can not start  two calls at the same time  ! ", Toast.LENGTH_LONG).show();
                 } else {
-                    //call_infos_notification(ChatActivity.this.context ,"video");
+                    call_infos_notification(MessageActivity.this.context ,"video");
                     // disable call Button  ...
 
                 }

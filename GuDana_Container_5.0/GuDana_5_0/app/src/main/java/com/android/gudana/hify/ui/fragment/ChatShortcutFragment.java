@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.android.gudana.chatapp.activities.ChatActivity;
 import com.android.gudana.chatapp.holders.ChatHolder;
 import com.android.gudana.chatapp.models.Chat;
 import com.google.firebase.auth.FirebaseAuth;

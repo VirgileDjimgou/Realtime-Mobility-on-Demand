@@ -18,7 +18,6 @@ import android.widget.TextView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.android.gudana.R;
-import com.android.gudana.chatapp.activities.ChatActivity;
 import com.android.gudana.chatapp.activities.ProfileActivity;
 import com.android.gudana.chatapp.holders.FriendHolder;
 import com.android.gudana.chatapp.models.Friend;

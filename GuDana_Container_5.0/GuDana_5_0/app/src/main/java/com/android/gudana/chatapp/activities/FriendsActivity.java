@@ -16,41 +16,18 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.android.gudana.R;
-import com.android.gudana.chatapp.holders.UserHolder;
-import com.android.gudana.chatapp.models.User;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
 
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.android.gudana.R;
-import com.android.gudana.chatapp.activities.ChatActivity;
-import com.android.gudana.chatapp.activities.ProfileActivity;
 import com.android.gudana.chatapp.holders.FriendHolder;
 import com.android.gudana.chatapp.models.Friend;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 /**
  * This is a part of ChatApp Project (https://github.com/h01d/ChatApp)

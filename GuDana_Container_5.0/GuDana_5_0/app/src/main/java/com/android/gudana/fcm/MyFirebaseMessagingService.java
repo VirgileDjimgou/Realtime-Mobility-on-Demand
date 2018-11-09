@@ -17,7 +17,6 @@ import android.util.Log;
 import com.android.gudana.R;
 import com.android.gudana.apprtc.CallFragment;
 import com.android.gudana.apprtc.CallIncomingActivity;
-import com.android.gudana.chatapp.activities.ChatActivity;
 import com.android.gudana.hify.ui.activities.MainActivity_GuDDana;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
