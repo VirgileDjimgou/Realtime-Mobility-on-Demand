@@ -584,7 +584,7 @@ public class MessageActivity extends AppCompatActivity {
                 if(databaseError != null)
                 {
                     //Log.d("error", "sendMessage(): updateChildren failed: " + databaseError.getMessage());
-                    Toasty.info(context_call, "sendMessage(): updateChildren failed: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toasty.info(MessageActivity.this, "sendMessage(): updateChildren failed: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                     // Toast.makeText(CreateGroupChatActivity.this.getApplicationContext(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                 }else{
                     // we can  start the call intent  ....
@@ -705,11 +705,11 @@ public class MessageActivity extends AppCompatActivity {
                 if(task.isSuccessful())
                 {
 
-                    Toast.makeText(context_call, "Initialisation with GuDana Voice Cloud successful ", Toast.LENGTH_LONG).show();
+                   Toast.makeText(MessageActivity.this, "Initialisation with GuDana Voice Cloud successful ", Toast.LENGTH_LONG).show();
                 }
                 else
                 {
-                    Toast.makeText(context_call, "sorry GuDana Voice Cloud  is unreachable right now ! .... please try again later ", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MessageActivity.this, "sorry GuDana Voice Cloud  is unreachable right now ! .... please try again later ", Toast.LENGTH_LONG).show();
 
                 }
             }
