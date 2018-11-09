@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.android.gudana.R;
 import com.android.gudana.apprtc.linphone.LinphoneManager;
+import com.android.gudana.tindroid.MessageActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -44,7 +45,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
 
 import static com.android.gudana.apprtc.ConnectActivity.room_is_voice_Server;
-import static com.android.gudana.chatapp.activities.ChatActivity.callmelder_notification;
+import static com.android.gudana.tindroid.MessageActivity.callmelder_notification;
 
 /**
  * Fragment for call control.
@@ -279,7 +280,7 @@ public class CallFragment extends Fragment {
 
             }catch(Exception ex){
 
-              ChatActivity.resetCallparameter(context ,
+              MessageActivity.resetCallparameter(context ,
                       room_is_voice_Server ,
                       this.getClass().getName() + "chehcCorrespondant",
               "your correspondant  ist not available ", 0);
@@ -302,7 +303,7 @@ public class CallFragment extends Fragment {
 
     }catch(Exception ex){
 
-      ChatActivity.resetCallparameter(context , room_is_voice_Server,
+      MessageActivity.resetCallparameter(context , room_is_voice_Server,
               this.getClass().getName() + "chehcCorrespondant",
               "your correspndant ist not available ", 1);
       CallRoomDb.child("Call_room").child(room_is_voice_Server).removeEventListener(mListener);
@@ -361,7 +362,7 @@ public class CallFragment extends Fragment {
       callEvents.onCallHangUp();
       // send notification ...to tell that your are not available anymore ....
       // i think ..we should start this  operation in  a backgroung thread  before to  close this activity  ...
-      ChatActivity.resetCallparameter(controlView.getContext() ,
+      MessageActivity.resetCallparameter(controlView.getContext() ,
               room_is_voice_Server ,
               getClass().getName()+" CallFragment  : onDestroy",
               "Call End",0);

@@ -18,6 +18,7 @@ import com.android.gudana.R;
 import com.android.gudana.apprtc.CallFragment;
 import com.android.gudana.apprtc.CallIncomingActivity;
 import com.android.gudana.hify.ui.activities.MainActivity_GuDDana;
+import com.android.gudana.tindroid.MessageActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -94,7 +95,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 					// If it's a message notification
 					// Checking if CreateGroupChatActivity is not open or if its, it should have a different userId from current
 
-					if(!ChatActivity.running || ChatActivity.running && !ChatActivity.otherUserId.equals(senderID))
+					if(!MessageActivity.running || MessageActivity.running && !MessageActivity.otherUserId.equals(senderID))
 					{
 							sendNotification( data);
 
@@ -254,7 +255,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 												sendNotification(data);
 												// or  for missed call  in history   ...
 												// send unavailibilty notfication  to another user  ...s
-												ChatActivity.missedCallNotification(getApplication(),
+												MessageActivity.missedCallNotification(getApplication(),
 														room_call,
 														"video",
 														senderID ,
@@ -269,7 +270,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 											// or  for missed call  in history   ...
 											// send unavailibilty notfication  to another user  ...s
 
-											ChatActivity.missedCallNotification(getApplication(),
+											MessageActivity.missedCallNotification(getApplication(),
 													room_call,
 											"video",
 													senderID ,

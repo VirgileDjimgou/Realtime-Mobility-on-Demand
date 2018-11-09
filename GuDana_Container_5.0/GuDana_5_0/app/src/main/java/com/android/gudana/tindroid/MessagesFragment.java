@@ -73,9 +73,8 @@ import java.util.UUID;
 
 import com.android.gudana.R;
 import com.android.gudana.fcm.CustomFcm_Util;
-import com.android.gudana.group_chat.model.Message;
-import com.android.gudana.group_chat.utils.OpenNavi;
 import com.android.gudana.hify.ui.activities.MainActivity_GuDDana;
+import com.android.gudana.hify.utils.OpenNavi;
 import com.android.gudana.tindroid.db.BaseDb;
 import com.android.gudana.tindroid.db.StoredTopic;
 import com.android.gudana.tindroid.media.VxCard;
@@ -178,7 +177,6 @@ public class MessagesFragment extends Fragment
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mMessageDatabaseReference;
     private DatabaseReference mUsersDatabaseReference;
-    private FirebaseListAdapter<Message> mMessageListAdapter;
     private FirebaseAuth mFirebaseAuth;
     public static CustomFcm_Util FCM_Message_Sender ;
 

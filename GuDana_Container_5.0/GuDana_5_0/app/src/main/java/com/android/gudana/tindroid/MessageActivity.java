@@ -53,9 +53,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import com.android.gudana.R;
 import com.android.gudana.apprtc.CallFragment;
 import com.android.gudana.apprtc.ConnectActivity;
-import com.android.gudana.chatapp.adapters.MessageAdapter;
-import com.android.gudana.chatapp.models.Message;
-import com.android.gudana.chatapp.models.StaticConfigUser_fromFirebase;
 import com.android.gudana.fcm.CustomFcm_Util;
 import com.android.gudana.hify.ui.activities.MainActivity_GuDDana;
 import com.android.gudana.hify.utils.database.UserHelper;
@@ -115,8 +112,6 @@ public class MessageActivity extends AppCompatActivity {
     private Query messagesDatabase;
     private ChildEventListener messagesListener;
 
-    private MessageAdapter messagesAdapter;
-    private final List<Message> messagesList = new ArrayList<>();
 
     // User data
     public static  String currentUserId;
@@ -636,7 +631,7 @@ public class MessageActivity extends AppCompatActivity {
         String notificationId = notificationRef.getKey();
 
         String type = "call";
-        String message = StaticConfigUser_fromFirebase.USER_NAME+" try to call you";
+        String message = " Xshaka try to call you";
         Map messageMap = new HashMap();
         messageMap.put("message", message);
         messageMap.put("type", type);
@@ -710,11 +705,11 @@ public class MessageActivity extends AppCompatActivity {
                 if(task.isSuccessful())
                 {
 
-                    Toasty.info(context_call, "Initialisation with GuDana Voice Cloud successful ", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context_call, "Initialisation with GuDana Voice Cloud successful ", Toast.LENGTH_LONG).show();
                 }
                 else
                 {
-                    Toasty.error(context_call, "sorry GuDana Voice Cloud  is unreachable right now ! .... please try again later ", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context_call, "sorry GuDana Voice Cloud  is unreachable right now ! .... please try again later ", Toast.LENGTH_LONG).show();
 
                 }
             }

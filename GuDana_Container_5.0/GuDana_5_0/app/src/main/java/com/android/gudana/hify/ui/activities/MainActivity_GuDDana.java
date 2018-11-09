@@ -49,9 +49,6 @@ import com.android.gudana.GuDFeed.GuDFeed_Fragment;
 import com.android.gudana.GuDFeed.activities.create_post;
 // import com.android.gudana.apprtc.CallIncomingActivity_rtc;
 import com.android.gudana.apprtc.linphone.LinphoneManager;
-import com.android.gudana.chatapp.fragments.CallFragment;
-import com.android.gudana.chatapp.fragments.ChatFragment;
-import com.android.gudana.chatapp.models.StaticConfigUser_fromFirebase;
 import com.android.gudana.hify.adapters.DrawerAdapter;
 import com.android.gudana.hify.models.DrawerItem;
 import com.android.gudana.hify.models.SimpleItem;
@@ -667,7 +664,7 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
 
                 case 2:
                     // Call fragment
-                    return new CallFragment();
+                    return new FriendsFragment();
                   // return new HistoryListFragment();
                 case 3:
                     //  Story   ... like status    Whatsapp
@@ -879,7 +876,7 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
 
                 this.invalidateOptionsMenu();
                 mState=false;
-                selectedScreen = new ChatFragment();
+                selectedScreen = new FriendsFragment();
                 showFragment(selectedScreen);
                 slidingRootNav.closeMenu(true);
                 }catch (Exception e){
@@ -1280,7 +1277,7 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
 
 
                             if (!image.equals(imag)) {
-                                StaticConfigUser_fromFirebase.USER_URL_IMAGE = image;
+                                String url_image = image;
                                 // firebase  ...
                                 storageReference.putFile(Uri.parse(imag)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                     @Override
@@ -1344,7 +1341,6 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
                                 Map<String, Object> userMap = new HashMap<>();
                                 userMap.put("name", nam);
                                 // save data  on satic config
-                                StaticConfigUser_fromFirebase.USER_NAME = name;
                                 FirebaseFirestore.getInstance().collection("Users").document(userId).update(userMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
@@ -1356,7 +1352,6 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
                             }
 
                             if (!currentuser.getEmail().equals(emai)) {
-                                StaticConfigUser_fromFirebase.STR_EXTRA_EMAIL = email;
 
 
                                 credential = EmailAuthProvider

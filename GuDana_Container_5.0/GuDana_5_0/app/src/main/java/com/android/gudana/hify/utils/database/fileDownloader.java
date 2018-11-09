@@ -1,23 +1,17 @@
 package com.android.gudana.hify.utils.database;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.android.gudana.chatapp.utils.FileOpen;
-import com.android.gudana.video_player.FullscreenActivity;
 import com.krishna.fileloader.FileLoader;
 import com.krishna.fileloader.listener.FileRequestListener;
 import com.krishna.fileloader.pojo.FileResponse;
 import com.krishna.fileloader.request.FileLoadRequest;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 
 import pl.droidsonroids.gif.GifImageView;
 

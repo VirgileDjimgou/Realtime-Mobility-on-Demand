@@ -8,14 +8,12 @@ import android.net.Uri;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.android.gudana.chatapp.utils.FileOpen;
+import com.android.gudana.hify.utils.FileOpen;
 import com.android.gudana.hify.models.MultipleImage;
 import com.android.gudana.hify.ui.activities.notification.ImagePreviewSave;
 import com.android.gudana.hify.ui.views.HifyImageView;
@@ -24,10 +22,6 @@ import com.android.gudana.hify.utils.database.fileDownloader;
 import com.android.gudana.video_player.FullscreenActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.krishna.fileloader.FileLoader;
-import com.krishna.fileloader.listener.FileRequestListener;
-import com.krishna.fileloader.pojo.FileResponse;
-import com.krishna.fileloader.request.FileLoadRequest;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,8 +30,6 @@ import java.util.Random;
 
 import id.zelory.compressor.Compressor;
 import pl.droidsonroids.gif.GifImageView;
-
-import static com.mikepenz.iconics.Iconics.TAG;
 
 
 public class PostPhotosAdapter extends PagerAdapter {

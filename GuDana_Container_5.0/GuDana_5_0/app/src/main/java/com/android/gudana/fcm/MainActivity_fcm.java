@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.android.gudana.R;
-import com.android.gudana.chatapp.models.StaticConfigUser_fromFirebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;

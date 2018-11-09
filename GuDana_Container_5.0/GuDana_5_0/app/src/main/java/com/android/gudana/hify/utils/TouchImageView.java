@@ -1,4 +1,4 @@
-package com.android.gudana.chatapp.utils;
+package com.android.gudana.hify.utils;
 
 /**
  * This is a part of ChatApp Project (https://github.com/h01d/ChatApp)

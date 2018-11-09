@@ -1,4 +1,4 @@
-package com.android.gudana.group_chat.utils;
+package com.android.gudana.hify.utils;
 
 import java.text.DateFormat;
 import java.util.Date;

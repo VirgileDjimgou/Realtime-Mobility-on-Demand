@@ -12,8 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.gudana.R;
-import com.android.gudana.chatapp.fragments.ChatFragment;
-import com.android.gudana.group_chat.ui.ChatListFragment;
 import com.android.gudana.hify.ui.activities.friends.SearchUsersActivity;
 
 /**
@@ -37,17 +35,17 @@ public class All_ChatsFragment extends Fragment {
 
 
        // floating action button ....  -----  ....
-        loadFragment(new ChatFragment()); /// Friends Fragment may cause a bug  with parse of firebase data
+        //loadFragment(new ChatFragment()); /// Friends Fragment may cause a bug  with parse of firebase data
         BottomNavigationView bottomNavigationView=mView.findViewById(R.id.bottom_nav_allchat);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_single_chat:
-                        loadFragment(new ChatFragment()); // for single Chats
+                        //loadFragment(new ChatFragment()); // for single Chats
                         break;
                     case R.id.action_group_chat:
-                        loadFragment(new ChatListFragment()); // for group Chats
+                        //loadFragment(new ChatListFragment()); // for group Chats
                         break;
                     default:
 

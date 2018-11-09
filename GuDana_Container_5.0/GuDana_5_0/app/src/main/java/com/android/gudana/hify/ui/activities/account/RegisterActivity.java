@@ -25,7 +25,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.android.gudana.chatapp.models.StaticConfigUser_fromFirebase;
 import com.android.gudana.gpslocationtracking.LocationTrack;
 import com.android.gudana.hify.utils.AnimationUtil;
 import com.android.gudana.hify.utils.database.UserHelper;
@@ -417,7 +416,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                                                                            // Uploading user data
                                                                            // beause of final dig .... :) ;
-                                                                           StaticConfigUser_fromFirebase.USER_URL_IMAGE = uri.toString();
+                                                                           //StaticConfigUser_fromFirebase.USER_URL_IMAGE = uri.toString();
 
 
                                                                            FirebaseDatabase.getInstance().getReference().child("Users").child(userid).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>()
@@ -432,10 +431,10 @@ public class RegisterActivity extends AppCompatActivity {
 
                                                                                        // after  save the   User data on Device  for later Use  ....   ...
                                                                                        // StaticConfigUser_fromFirebase.STR_EXTRA_USERNAME = username_;
-                                                                                       StaticConfigUser_fromFirebase.STR_EXTRA_EMAIL = email_;
-                                                                                       StaticConfigUser_fromFirebase.STR_USER_ID = userUid;
-                                                                                       StaticConfigUser_fromFirebase.USER_NAME = name_;
-                                                                                       StaticConfigUser_fromFirebase.STR_USER_TOKEN_FCM = FirebaseInstanceId.getInstance().getToken();
+                                                                                       //StaticConfigUser_fromFirebase.STR_EXTRA_EMAIL = email_;
+                                                                                       //StaticConfigUser_fromFirebase.STR_USER_ID = userUid;
+                                                                                       //StaticConfigUser_fromFirebase.USER_NAME = name_;
+                                                                                       //StaticConfigUser_fromFirebase.STR_USER_TOKEN_FCM = FirebaseInstanceId.getInstance().getToken();
                                                                                    }
                                                                                    else
                                                                                    {

@@ -13,7 +13,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.android.gudana.chatapp.utils.TouchImageView
+    <com.android.gudana.chatapp.utils_v2.TouchImageView
         android:id="@+id/a_fullscreen_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

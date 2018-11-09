@@ -20,8 +20,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.android.gudana.chatapp.holders.ChatHolder;
-import com.android.gudana.chatapp.models.Chat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -79,53 +77,6 @@ public class ChatShortcutFragment extends AAH_FabulousFragment {
 
         // Initializing adapter
 
-        FirebaseRecyclerOptions<Chat> options = new FirebaseRecyclerOptions.Builder<Chat>().setQuery(chatDatabase.orderByChild("timestamp"), Chat.class).build();
-
-        adapter = new FirebaseRecyclerAdapter<Chat, ChatHolder>(options)
-        {
-            @Override
-            public ChatHolder onCreateViewHolder(ViewGroup parent, int viewType)
-            {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ca_user, parent, false);
-
-                return new ChatHolder(getActivity(), view, getContext());
-            }
-
-            @Override
-            protected void onBindViewHolder(final ChatHolder holder, int position, final Chat model)
-            {
-                final String userid = getRef(position).getKey();
-
-                holder.setHolder(userid, model.getMessage(), model.getTimestamp(), model.getSeen());
-                holder.getView().setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        Intent chatIntent = new Intent(getContext(), ChatActivity.class);
-                        chatIntent.putExtra("userid", userid);
-                        startActivity(chatIntent);
-                    }
-                });
-            }
-
-            @Override
-            public void onDataChanged()
-            {
-                super.onDataChanged();
-
-                TextView text = contentView.findViewById(R.id.f_chat_text);
-
-                if(adapter.getItemCount() == 0)
-                {
-                    text.setVisibility(View.VISIBLE);
-                }
-                else
-                {
-                    text.setVisibility(View.GONE);
-                }
-            }
-        };
 
         // init flaoting action button
 

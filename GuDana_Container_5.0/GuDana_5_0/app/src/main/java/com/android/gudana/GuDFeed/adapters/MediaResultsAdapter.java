@@ -12,8 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.gudana.chatapp.utils.FileOpen;
-import com.android.gudana.hify.ui.activities.notification.ImagePreview;
 import com.android.gudana.video_player.FullscreenActivity;
 import com.bumptech.glide.Glide;
 import com.kbeanie.multipicker.api.entity.ChosenAudio;
@@ -24,7 +22,6 @@ import com.android.gudana.GuDFeed.ImagePreviewActivity;
 import com.android.gudana.R;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import es.dmoral.toasty.Toasty;

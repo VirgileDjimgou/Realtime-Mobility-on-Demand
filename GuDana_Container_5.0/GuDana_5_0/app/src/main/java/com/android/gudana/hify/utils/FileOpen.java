@@ -1,4 +1,4 @@
-package com.android.gudana.chatapp.utils;
+package com.android.gudana.hify.utils;
 
 import android.content.Context;
 import android.content.Intent;

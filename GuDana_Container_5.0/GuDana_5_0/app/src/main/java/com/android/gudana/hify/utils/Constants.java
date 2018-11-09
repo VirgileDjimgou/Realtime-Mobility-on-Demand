@@ -1,6 +1,5 @@
-package com.android.gudana.group_chat.utils;
+package com.android.gudana.hify.utils;
 
-import com.android.gudana.group_chat.model.Chat;
 
 public final class Constants {
 
@@ -16,5 +15,4 @@ public final class Constants {
 
     public static String picture_chat_url = "Chat_profil_picture";
 
-    public static final Chat CHAT_OBJECT  = null;
 }

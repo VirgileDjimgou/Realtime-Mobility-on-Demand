@@ -28,7 +28,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.gudana.chatapp.models.StaticConfigUser_fromFirebase;
 import com.android.gudana.gpslocationtracking.LocationTrack;
 import com.android.gudana.hify.ui.activities.MainActivity_GuDDana;
 import com.android.gudana.hify.utils.AnimationUtil;
@@ -335,9 +334,8 @@ public class LoginActivity extends AppCompatActivity {
                                                          // i need  something  sorry
                                                         //  im principe we need to save the data   ..  also in
                                                         //save  the  current user data ...
-                                                        StaticConfigUser_fromFirebase.USER_NAME = documentSnapshot.getString("username");
-                                                        StaticConfigUser_fromFirebase.STR_EXTRA_EMAIL = documentSnapshot.getString("email");
-
+                                                        //StaticConfigUser_fromFirebase.USER_NAME = documentSnapshot.getString("username");
+                                                        //StaticConfigUser_fromFirebase.STR_EXTRA_EMAIL = documentSnapshot.getString("email");
 
                                                         mDialog.dismiss();
 
