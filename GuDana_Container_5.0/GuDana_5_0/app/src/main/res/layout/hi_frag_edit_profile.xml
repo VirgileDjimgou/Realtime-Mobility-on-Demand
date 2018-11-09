@@ -51,19 +51,23 @@
                         android:layout_marginStart="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/round_background"
                         android:text=" Save details "
                         android:layout_marginEnd="10dp"
                         android:onClick="SelectImage"
                         android:padding="10dp"
+                        android:background="@drawable/input_backgtound"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorPrimaryy"
                         />
 
                     <TextView
                         android:id="@+id/picture"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/round_background"
                         android:text=" Change profile picture "
+                        android:background="@drawable/input_backgtound"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorPrimaryy"
                         android:padding="10dp"
                         />
 
@@ -73,10 +77,12 @@
                         android:layout_marginEnd="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/round_background"
                         android:text=" Change password "
                         android:onClick="SelectImage"
                         android:padding="10dp"
+                        android:background="@drawable/input_backgtound"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorPrimaryy"
                         />
 
 

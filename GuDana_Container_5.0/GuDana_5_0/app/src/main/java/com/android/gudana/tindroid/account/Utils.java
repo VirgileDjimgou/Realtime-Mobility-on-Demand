@@ -68,11 +68,19 @@ public class Utils {
                 ContactsContract.CommonDataKinds.Im.CONTENT_ITEM_TYPE,
         };
 
-        // ok, let's work...
-        Cursor cursor = resolver.query(uri, projection, selection, selectionArgs, null);
-        if (cursor == null) {
-            return map;
+        Cursor cursor = null;
+        try{
+            // ok, let's work...
+            cursor= resolver.query(uri, projection, selection, selectionArgs, null);
+            if (cursor == null) {
+                return map;
+            }
+
+
+        }catch (Exception ex){
+            ex.printStackTrace();
         }
+
 
         final int contactIdIdx = cursor.getColumnIndex(Data.CONTACT_ID);
         final int mimeTypeIdx = cursor.getColumnIndex(Data.MIMETYPE);

@@ -1658,13 +1658,10 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     private void initDatabases()
     {
         // Initialize/Update realtime other user data such as name and online status
-
-
         if(userDatabase != null && userListener != null)
         {
             userDatabase.removeEventListener(userListener);
         }
-
 
         userDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(otherUserId);
         userListener = new ValueEventListener()

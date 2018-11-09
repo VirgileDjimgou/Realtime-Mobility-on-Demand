@@ -84,7 +84,6 @@ public class AccountInfos_Activity extends AppCompatActivity {
         MeTopic<VxCard> me = Cache.getTinode().getMeTopic();
         if (me != null) {
             final AppCompatActivity activity = AccountInfos_Activity.this;
-
             final AppCompatImageView avatar = activity.findViewById(R.id.imageAvatar);
             final TextView title = activity.findViewById(R.id.topicTitle);
             title.setOnClickListener(new View.OnClickListener() {
@@ -220,6 +219,7 @@ public class AccountInfos_Activity extends AppCompatActivity {
                         UiUtils.updateTitle(AccountInfos_Activity.this, me, titleEditor.getText().toString(), null);
                     }
                 })
+
                 .setNegativeButton(android.R.string.cancel, null)
                 .show();
     }

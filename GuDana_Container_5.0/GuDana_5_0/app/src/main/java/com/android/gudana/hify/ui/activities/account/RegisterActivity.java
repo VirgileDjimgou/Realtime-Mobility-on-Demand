@@ -45,6 +45,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -201,8 +202,8 @@ public class RegisterActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                                         if(!documentSnapshot.exists()){
-                                            //registerUser();
-                                            onSignUp(email_.trim() ,name_.trim() ,email_.trim(),pass_.trim());
+                                            registerUser("xxxxxxwwwwwwwww");
+                                            // onSignUp(email_.trim() ,name_.trim() ,email_.trim(),pass_.trim());
 
                                         }else{
                                             //Toast.makeText(RegisterActivity.this, "Username already exists", Toast.LENGTH_SHORT).show();
@@ -356,7 +357,6 @@ public class RegisterActivity extends AppCompatActivity {
                                                                        firebaseFirestore.collection("Users").document(userUid).set(userMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                            @Override
                                                                            public void onSuccess(Void aVoid) {
-                                                                               mDialog.dismiss();
                                                                                //Toast.makeText(RegisterActivity.this, "Verification email sent", Toast.LENGTH_SHORT).show();
                                                                                Toasty.warning(RegisterActivity.this, "A Verification Link has been sent to your email Account . " +
                                                                                        "Please Click on the link to continue the validation process", Toast.LENGTH_SHORT).show();
@@ -367,13 +367,12 @@ public class RegisterActivity extends AppCompatActivity {
                                                                                FirebaseAuth.getInstance().signOut();
 
 
-                                                                               // after Registration on firebase ...start a Registration Tindroid Server  ...
+                                                                               // after Registration on firebase ...start a Registration Tindroid Server  ..
+                                                                               // .
+
+                                                                               onSignUp(email_.trim() ,name_.trim() ,email_.trim(),pass_.trim() , userUid);
 
 
-                                                                               Intent LoginEmail = new Intent(RegisterActivity.this, com.android.gudana.hify.ui.activities.account.LoginActivity.class);
-                                                                               LoginEmail.putExtra("Email_Confirmation",true);
-                                                                               startActivity(LoginEmail);
-                                                                               RegisterActivity.this.finish();
 
                                                                                //onSignUp("chichikolon","text" ,"echo","qwert");
                                                                                // finish();
@@ -428,7 +427,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                                                {
                                                                                    if(task.isSuccessful())
                                                                                    {
-
+                                                                                       mDialog.dismiss();
                                                                                        Toast.makeText(getApplicationContext(), "User registered .", Toast.LENGTH_LONG).show();
 
                                                                                        // after  save the   User data on Device  for later Use  ....   ...
@@ -440,6 +439,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                                                    }
                                                                                    else
                                                                                    {
+                                                                                       mDialog.dismiss();
                                                                                        Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_LONG).show();
 
                                                                                    }
@@ -468,6 +468,7 @@ public class RegisterActivity extends AppCompatActivity {
                                             .addOnFailureListener(new OnFailureListener() {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
+                                                    mDialog.dismiss();
                                                     task.getResult().getUser().delete();
                                                 }
                                             });
@@ -476,6 +477,7 @@ public class RegisterActivity extends AppCompatActivity {
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
+                                    mDialog.dismiss();
                                     Log.e("Error",e.getMessage());
                                 }
                             });
@@ -504,6 +506,8 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        // we must cimpresse the image here ....
 
         if(requestCode==PICK_IMAGE){
             if(resultCode==RESULT_OK){
@@ -568,7 +572,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     // add register methode   Tindroid
 
-    public void onSignUp(final String login ,final String fullName , final String email  ,final String password) {
+    public void onSignUp(final String login ,final String fullName , final String email  ,final String password , final String User_uid) {
 
         final Button signUp = (Button) findViewById(R.id.button);
         signUp.setEnabled(false);
@@ -595,7 +599,10 @@ public class RegisterActivity extends AppCompatActivity {
                                         // Ignore it.
                                         ignored.printStackTrace();
                                     }
-                                    VxCard vcard = new VxCard(fullName, bmp);
+
+                                    // cocat user name  with some information   firestore user usi
+                                    String UserFullname_and_firebase_uid = fullName + "#####" +User_uid;
+                                    VxCard vcard = new VxCard(UserFullname_and_firebase_uid, bmp);
                                     return tinode.createAccountBasic(
                                             login, password, true, null,
                                             new MetaSetDesc<VxCard,String>(vcard, null),
@@ -617,16 +624,23 @@ public class RegisterActivity extends AppCompatActivity {
                                                     cf.setMethod(it.next());
                                                 }
                                             } else {
+
+
                                                 // We are requesting immediate login with the new account.
                                                 // If the action succeeded, assume we have logged in.
                                                 // here we should call the login   call the login Activity with  intent to tell that
                                                 // the new users are registerde but he should chech his email to vmake a confirmation  ..
-                                                //UiUtils.onLoginSuccess(RegisterActivity.this, signUp);
-
-
+                                                // UiUtils.onLoginSuccess(RegisterActivity.this, signUp);
                                                 // start registration on Firebase  or Firestore  ....
+
+
+                                                mDialog.dismiss();
                                                 String TindroidUniqueId = Cache.getTinode().getMyId();
-                                                registerUser(TindroidUniqueId);
+                                                //registerUser(TindroidUniqueId);
+                                                Intent LoginEmail = new Intent(RegisterActivity.this, com.android.gudana.hify.ui.activities.account.LoginActivity.class);
+                                                LoginEmail.putExtra("Email_Confirmation",true);
+                                                startActivity(LoginEmail);
+                                                RegisterActivity.this.finish();
                                                 //signUp.setEnabled(true);
                                                 //
                                             }
@@ -650,10 +664,12 @@ public class RegisterActivity extends AppCompatActivity {
                                                         // Invalid login
                                                         // ((EditText) parent.findViewById(R.id.newLogin)).setError(getText(R.string.login_rejected));
                                                         // invalide Login
+                                                        mDialog.dismiss();
                                                         Toasty.error(RegisterActivity.this, "Invalid Login ...please check your credentials", Toast.LENGTH_LONG).show();
                                                         break;
                                                     case "email":
                                                         // Duplicate email:
+                                                        mDialog.dismiss();
                                                         Toasty.error(RegisterActivity.this, "Invalid Email please check your Email !", Toast.LENGTH_LONG).show();
                                                         // ((EditText) parent.findViewById(R.id.email)).setError(getText(R.string.email_rejected));
                                                         break;
@@ -662,16 +678,50 @@ public class RegisterActivity extends AppCompatActivity {
                                         });
                                     }
                                     // parent.reportError(err, signUp, R.string.error_new_account_failed);
+                                    mDialog.dismiss();
                                     Toasty.error(RegisterActivity.this, "Registration of new Account failed  ! ", Toast.LENGTH_LONG).show();
                                     return null;
                                 }
                             });
 
         } catch (Exception e) {
+            mDialog.dismiss();
             Toast.makeText(this, "hmmm ...:) Something went wrong with your registration  ", Toast.LENGTH_SHORT).show();
             Log.e(TAG, "Something went wrong", e);
             signUp.setEnabled(true);
         }
+    }
+
+
+    public  static void update_tindroid_on_firebase_uid(String uid){
+
+        FirebaseFirestore mFirestore;
+        FirebaseAuth mAuth;
+
+
+        mAuth = FirebaseAuth.getInstance();
+        mFirestore = FirebaseFirestore.getInstance();
+        final DocumentReference userDocument=mFirestore.collection("Users").document(mAuth.getCurrentUser().getUid());
+
+        Map<String,Object> map=new HashMap<>();
+            map.put("uid_tindroid",uid.trim());
+
+            userDocument.update(map)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.i("Update","success");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.i("Update","failed: "+e.getMessage());
+
+                        }
+                    });
+
+
     }
 
 

@@ -315,15 +315,28 @@ public class FriendProfile extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
+
+
+                    // ######## tindroid chat
+
                     // get Unique ID   Tindroid Server   to chat
                     //String TindroidUniqueId = Friend_uid_tindroid;
+
                     Intent it = new Intent(AboutFragment.this.getActivity(), MessageActivity.class);
                     it.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     it.putExtra("topic", Friend_uid_tindroid);
                     startActivity(it);
-                    //Intent sendMessageIntent = new Intent(rootView.getContext(), ChatActivity.class);
-                    // sendMessageIntent.putExtra("userid", id);
-                    //startActivity(sendMessageIntent);
+
+
+
+                    /*
+                    /// ######### Firebase Chat  ####
+
+                    Intent sendMessageIntent = new Intent(rootView.getContext(), ChatActivity.class);
+                    sendMessageIntent.putExtra("userid", id);
+                    startActivity(sendMessageIntent);
+                    */
+
                 }
             });
 

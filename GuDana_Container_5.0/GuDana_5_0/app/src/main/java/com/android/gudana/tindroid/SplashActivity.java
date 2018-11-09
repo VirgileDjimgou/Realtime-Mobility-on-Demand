@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 
+import com.android.gudana.hify.ui.activities.MainActivity_GuDDana;
 import com.android.gudana.hify.ui.activities.account.LoginActivity;
 import com.android.gudana.tindroid.account.Utils;
 import com.android.gudana.tindroid.db.BaseDb;
@@ -44,7 +45,8 @@ public class SplashActivity extends AppCompatActivity {
         }
 
         // her we should start the hify   loginActivity   ...not the tindroid Activity
-        startActivity(new Intent(this, LoginActivity.class));
+        // startActivity(new Intent(this, LoginActivity.class));
+        startActivity(new Intent(this, MainActivity_GuDDana.class));
         finish();
     }
 }

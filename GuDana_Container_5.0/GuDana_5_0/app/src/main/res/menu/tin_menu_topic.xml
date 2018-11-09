@@ -2,6 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
+
+
     <group
         android:id="@+id/offline"
         android:visible="false">
@@ -12,6 +14,19 @@
             android:icon="@drawable/ic_offline"
             app:showAsAction="always" />
     </group>
+
+
+
+    <item android:id="@+id/action_call_audio"
+        android:icon="@drawable/ic_call_black_24dp"
+        app:showAsAction="always"/>
+
+
+    <item android:id="@+id/action_call_video"
+        android:icon="@drawable/ic_videocam_black_24dp"
+        app:showAsAction="always"/>
+
+
     
     <item
         android:id="@+id/action_view_contact"

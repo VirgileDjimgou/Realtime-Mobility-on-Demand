@@ -94,7 +94,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_gravity="center_vertical"
-                android:background="@mipmap/ic_send" />
+                android:background="@drawable/ic_send_black_24dp" />
 
             <com.nightonke.boommenu.BoomMenuButton
                 android:id="@+id/bmb"
@@ -110,7 +110,7 @@
                 app:bmb_buttonEnum="textOutsideCircle"
                 app:bmb_buttonRadius="17dp"
                 app:bmb_highlightedColor="@color/purple"
-                app:bmb_normalColor="@color/colorPrimary" />
+                app:bmb_normalColor="@color/bgnew" />
 
             <ImageButton
                 android:id="@+id/recordVoiceButton"
@@ -123,7 +123,7 @@
                 android:layout_centerVertical="true"
                 android:layout_gravity="center_vertical"
                 android:layout_marginTop="1dp"
-                android:background="@mipmap/ic_mic_round" />
+                android:background="@drawable/ic_keyboard_voice_black_24dp" />
 
         </LinearLayout>
 

@@ -673,8 +673,11 @@ public class LoginActivity extends AppCompatActivity {
                             new PromisedReply.SuccessListener<ServerMessage>() {
                                 @Override
                                 public PromisedReply<ServerMessage> onSuccess(ServerMessage ignored) throws Exception {
-                                    Toast.makeText(LoginActivity.this, "bad Credential ... tindroid Server Response", Toast.LENGTH_SHORT).show();
-                                    
+
+                                    Intent StartActivity = new Intent(LoginActivity.this, MainActivity_GuDDana.class);
+                                    startActivity(StartActivity);
+
+                                    // Toast.makeText(LoginActivity.this, "bad Credential ... tindroid Server Response", Toast.LENGTH_SHORT).show();
                                     return tinode.loginBasic(
                                             login,
                                             password);

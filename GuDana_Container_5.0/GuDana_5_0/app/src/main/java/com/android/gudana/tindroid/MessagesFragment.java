@@ -70,6 +70,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -84,6 +85,8 @@ import com.android.gudana.hify.ui.activities.MainActivity_GuDDana;
 import com.android.gudana.tindroid.db.BaseDb;
 import com.android.gudana.tindroid.db.StoredTopic;
 import com.android.gudana.tindroid.media.VxCard;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
 import com.firebase.ui.database.FirebaseListAdapter;
@@ -95,11 +98,15 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -147,6 +154,8 @@ public class MessagesFragment extends Fragment
     // Maximum size of file to upload. 8MB.
     private static final long MAX_ATTACHMENT_SIZE = 1 << 23;
     private static final int READ_DELAY = 1000;
+    private static String Sender_uid = "";
+    private static String Name_Sender = "unknow";
     protected ComTopic<VxCard> mTopic;
 
     private LinearLayoutManager mMessageViewLayoutManager;
@@ -166,6 +175,7 @@ public class MessagesFragment extends Fragment
     private int number_of_files_to_send = 0;
     private ProgressBar update_work_background ;
     private String messageId;
+    private static String url_image = "";
 
 
     // add
@@ -205,7 +215,7 @@ public class MessagesFragment extends Fragment
     private boolean activate_correspondant_sound = false;
     //File
     private File filePathImageCamera;
-    String filePath = Environment.getExternalStorageDirectory() + "/recorded_audio.wav";
+    String filePath = Environment.getExternalStorageDirectory() + "/voice_mail.wav";
     //String filePaths_doc =  Environment.getExternalStorageDirectory().getPath();
     private ArrayList<String> docPaths = new ArrayList<>();
     private ArrayList<String> photoPaths = new ArrayList<>();
@@ -215,12 +225,16 @@ public class MessagesFragment extends Fragment
     private boolean permissionToWriteAccepted = false;
     private String [] permissions = {"android.permission.RECORD_AUDIO", "android.permission.WRITE_EXTERNAL_STORAGE"};
     private ImageView btEmoji;
-    private MediaPlayer mediaPlayer_song_out;
-    private MediaPlayer mediaPlayer_song_in;
+    public static MediaPlayer mediaPlayer_song_out;
+    public static  MediaPlayer mediaPlayer_song_in;
     private String Chat_uid;
     private String Chat_picture;
     MessageActivity activity;
     private RecyclerView ml;
+    private static  String  TokenFCM_OtherUser = "";
+
+    private static FirebaseFirestore mFirestore;
+    private static FirebaseUser currentUser;
 
 
     public MessagesFragment() {
@@ -381,7 +395,7 @@ public class MessagesFragment extends Fragment
                                     .setActivityTheme(R.style.LibAppTheme)
                                     .pickFile(MessagesFragment.this);
 
-                            openFileSelector("*/*", R.string.select_file, ACTION_ATTACH_FILE);
+                            //openFileSelector("*/*", R.string.select_file, ACTION_ATTACH_FILE);
 
                         }
                     });
@@ -510,13 +524,39 @@ public class MessagesFragment extends Fragment
 
         mrecordVoiceButton =(ImageButton) getActivity().findViewById(R.id.recordVoiceButton);
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-        mFileName += "/recorded_audio.3gp";
+        mFileName += "/voice_mail.3gp";
         mrecordVoiceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                // test notificaton
+                //TestSendNotification();
                 showDiag(mrecordVoiceButton);
             }
         });
+
+        // init Media Player
+
+        mediaPlayer_song_out = MediaPlayer.create(MessagesFragment.this.getContext(), R.raw.hify_sound);
+        mediaPlayer_song_in = MediaPlayer.create(MessagesFragment.this.getContext(), R.raw.stairs);
+
+
+        // get Topic Name and slit that to extract  firebase uid
+
+        Bundle bundle = getArguments();
+        String name = bundle.getString("topic");
+        ComTopic<VxCard> mTopic_name = (ComTopic<VxCard>) Cache.getTinode().getTopic(name);
+        Log.d("test", mTopic_name.toString());
+
+        // init fireabse  notifier
+        FCM_Message_Sender = new CustomFcm_Util();
+
+        //  init  firebase  and firestore initialisation
+
+        mFirestore = FirebaseFirestore.getInstance();
+        currentUser= FirebaseAuth.getInstance().getCurrentUser();
+
+        GetCorrespondantInformation_and_your_profile();
 
     }
 
@@ -601,6 +641,8 @@ public class MessagesFragment extends Fragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
+
+        // her i must implement some kind of filters to hide  a  video call feature whenn  it is  group chat    ....
         inflater.inflate(R.menu.tin_menu_topic, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -722,7 +764,7 @@ public class MessagesFragment extends Fragment
                         Uri uri_file = Uri.fromFile(new File(file.getPath()));
                         final Bundle args = new Bundle();
                         args.putParcelable("uri", uri_file);
-                        args.putInt("requestCode", ACTION_ATTACH_IMAGE); // image picker   request code   ....
+                        args.putInt("requestCode", ACTION_ATTACH_FILE); // image picker   request code   ....
                         args.putString("topic", mTopicName);
                         final FragmentActivity activity = getActivity();
                         if (activity == null) {
@@ -858,6 +900,24 @@ public class MessagesFragment extends Fragment
             if (sendMessage(Drafty.parse(message))) {
                 // Message is successfully queued, clear text from the input field and redraw the list.
                 inputField.setText("");
+
+                // send Notification
+
+                try{
+
+                    FCM_Message_Sender.sendWithOtherThread("token" ,
+                            TokenFCM_OtherUser ,
+                            "Message",
+                            FirebaseAuth.getInstance().getUid(),
+                            Name_Sender,
+                            url_image,
+                            getDateAndTime(),
+                            "room_disable",
+                            message);
+
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
             }
         }
     }
@@ -871,6 +931,22 @@ public class MessagesFragment extends Fragment
             if (sendMessage(Drafty.parse(message))) {
                 // Message is successfully queued, clear text from the input field and redraw the list.
                 // inputField.setText("");
+                try{
+
+                    FCM_Message_Sender.sendWithOtherThread("token" ,
+                            TokenFCM_OtherUser ,
+                            "Message",
+                            FirebaseAuth.getInstance().getUid(),
+                            Name_Sender,
+                            url_image,
+                            getDateAndTime(),
+                            "room_disable",
+                            message);
+
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
+
             }
         }
     }
@@ -884,6 +960,21 @@ public class MessagesFragment extends Fragment
             if (sendMessage(Drafty.parse(message))) {
                 // Message is successfully queued, clear text from the input field and redraw the list.
                 // inputField.setText("");
+                try{
+
+                    FCM_Message_Sender.sendWithOtherThread("token" ,
+                            TokenFCM_OtherUser ,
+                            "Message",
+                            FirebaseAuth.getInstance().getUid(),
+                            Name_Sender,
+                            url_image,
+                            getDateAndTime(),
+                            "room_disable",
+                            message);
+
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
             }
         }
     }
@@ -898,6 +989,7 @@ public class MessagesFragment extends Fragment
                     public PromisedReply<ServerMessage> onSuccess(ServerMessage result) {
                         // Updates message list with "delivered" icon.
                         runMessagesLoader();
+                        Play_Song_out_message();
                         return null;
                     }
                 }, mFailureListener);
@@ -919,6 +1011,25 @@ public class MessagesFragment extends Fragment
     public static Drafty draftyImage(String mimeType, byte[] bits, int width, int height, String fname) {
         Drafty content = Drafty.parse(" ");
         content.insertImage(0, mimeType, bits, width, height, fname);
+        Play_Song_out_message();
+
+
+
+        try{
+
+            FCM_Message_Sender.sendWithOtherThread("token" ,
+                    TokenFCM_OtherUser ,
+                    "Message",
+                    FirebaseAuth.getInstance().getUid(),
+                    Name_Sender,
+                    url_image,
+                    getDateAndTime(),
+                    "room_disable",
+                    "new Image");
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
         return content;
     }
 
@@ -926,6 +1037,24 @@ public class MessagesFragment extends Fragment
     public static Drafty draftyFile(String mimeType, byte[] bits, String fname) {
         Drafty content = new Drafty();
         content.attachFile(mimeType, bits, fname);
+
+        Play_Song_out_message();
+
+        try{
+
+            FCM_Message_Sender.sendWithOtherThread("token" ,
+                    TokenFCM_OtherUser ,
+                    "Message",
+                    FirebaseAuth.getInstance().getUid(),
+                    Name_Sender,
+                    url_image,
+                    getDateAndTime(),
+                    "room_disable",
+                    "new File ");
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
         return content;
     }
 
@@ -933,9 +1062,28 @@ public class MessagesFragment extends Fragment
     public static Drafty draftyAttachment(String mimeType, String fname, String refUrl, long size) {
         Drafty content = new Drafty();
         content.attachFile(mimeType, fname, refUrl, size);
+
+        // to play sund for  nification
+        Play_Song_out_message();
+
+        // send notification
+        try{
+
+            FCM_Message_Sender.sendWithOtherThread("token" ,
+                    TokenFCM_OtherUser ,
+                    "Message",
+                    FirebaseAuth.getInstance().getUid(),
+                    Name_Sender,
+                    url_image,
+                    getDateAndTime(),
+                    "room_disable",
+                    "new Attachment ");
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
         return content;
     }
-
 
     public void sendReadNotification() {
         if (mTopic != null) {
@@ -1308,7 +1456,7 @@ public class MessagesFragment extends Fragment
         boolean onProgress(final int loaderId, final long msgId, final long progress, final long total) {
             // DEBUG -- slow down the upload progress.
             try {
-                Thread.sleep(500);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -1345,6 +1493,10 @@ public class MessagesFragment extends Fragment
             return true;
         }
     }
+
+
+
+
 
 
     // ################################################## Voice Message   ####################################################
@@ -1707,54 +1859,25 @@ public class MessagesFragment extends Fragment
     private void stopRecording_and_send_voice_msg() {
 
         try {
-
-
                         mRecorder.stop();
                         mRecorder.release();
                         mRecorder = null;
                         record_time_voice.stop();
 
-
                         // get  uri msg   ...
-                        mStorage = FirebaseStorage.getInstance().getReference();
-                        Uri uri = Uri.fromFile(new File(mFileName));
-                        //Keep all voice for a specific chat grouped together
-                        final String voiceLocation = "Voice" + "/" + messageId;
-                        final String voiceLocationId = voiceLocation + "/" + uri.getLastPathSegment();
-                        final String uniqueId = UUID.randomUUID().toString();
-                        final StorageReference filepath = mStorage.child(voiceLocation).child(uniqueId + "/audio_message.3gp");
-                        final String downloadURl = filepath.getPath();
+                        Uri uri_voice_msg = Uri.fromFile(new File(mFileName));
 
-                        update_work_background.setVisibility(View.VISIBLE);
-                        UploadTask uploadTask = filepath.putFile(uri);
-                        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                            @Override
-                            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                                if (!task.isSuccessful()) {
-                                    throw task.getException();
-                                }
-
-                                // Continue with the task to get the download URL
-                                return filepath.getDownloadUrl();
-                                }
-                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Uri> task) {
-                                if (task.isSuccessful()) {
-                                    Uri downloadUri = task.getResult();
-                                    addVoiceToMessages(downloadUri.toString());
-
-                                    //generale_senderToMessages(downloadUri.toString());
-
-                                } else {
-                                    // Handle failures
-                                    // ...
-                                }
-                                 }
-                        });
-
-
-                        // send voice to  file handler  ... 
+                        //Uri uri_file = Uri.fromFile(new File(file.getPath()));
+                        final Bundle args = new Bundle();
+                        args.putParcelable("uri", uri_voice_msg);
+                        args.putInt("requestCode", ACTION_ATTACH_FILE); // image picker   request code   ....
+                        args.putString("topic", mTopicName);
+                        final FragmentActivity activity = getActivity();
+                        if (activity == null) {
+                            return;
+                        }
+                        // Must use unique ID for each upload. Otherwise trouble.
+                        activity.getSupportLoaderManager().initLoader(Cache.getUniqueCounter(), args, this);
 
             // uploadAudio();
         }catch (Exception ex){
@@ -1776,19 +1899,82 @@ public class MessagesFragment extends Fragment
     }
 
 
-
-    public void Play_Song_out_message() {
+    public static void Play_Song_out_message() {
 
         try {
 
             mediaPlayer_song_out.start();
+
+            // after that send notification
 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    public void Play_Song_in_message() {
+    public  void TestSendNotification(){
+        try{
+            Log.d("send", "send");
+
+            FCM_Message_Sender.sendWithOtherThread("token" ,
+                    TokenFCM_OtherUser ,
+                    "Message",
+                    "u2j7FkqofqV7EqNW5mqhmwmBUn73",
+                    "chicikolon user",
+                    url_image,
+                    getDateAndTime(),
+                    "room_disable",
+                    "test message  ");
+
+            Log.d("send", "send");
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+    }
+
+
+
+    public static void   GetCorrespondantInformation_and_your_profile(){
+
+        try{
+
+            // get Users Informations
+            mFirestore.collection("Users")
+                    .document(MessageActivity.otherUserId)
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                            TokenFCM_OtherUser =documentSnapshot.getString("token_id");
+
+                        }
+                    });
+
+
+            // get your information
+            mFirestore.collection("Users")
+                    .document(FirebaseAuth.getInstance().getUid())
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            url_image =documentSnapshot.getString("image");
+                            Sender_uid = documentSnapshot.getString("id");
+                            Name_Sender = documentSnapshot.getString("name");
+
+                        }
+                    });
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+
+
+    }
+    public static void Play_Song_in_message() {
 
         try {
 
@@ -1797,8 +1983,6 @@ public class MessagesFragment extends Fragment
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
-
 
 
     }

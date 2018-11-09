@@ -76,9 +76,7 @@ public class MessagesListAdapter
     private static final String TAG = "MessagesListAdapter";
 
     private static final int MESSAGES_TO_LOAD = 20;
-
     private static final int MESSAGES_QUERY_ID = 100;
-
     private static final int VIEWTYPE_FULL_LEFT = 0;
     private static final int VIEWTYPE_SIMPLE_LEFT = 1;
     private static final int VIEWTYPE_FULL_AVATAR = 2;
@@ -96,7 +94,6 @@ public class MessagesListAdapter
 
     private MessageActivity mActivity;
     private RecyclerView mRecyclerView;
-
     private Cursor mCursor;
     private String mTopicName = null;
     private ActionMode.Callback mSelectionModeCallback;
@@ -657,6 +654,8 @@ public class MessagesListAdapter
             mProgressBar = itemView.findViewById(R.id.attachmentProgressBar);
             mCancelProgress = itemView.findViewById(R.id.attachmentProgressCancel);
             mProgressResult = itemView.findViewById(R.id.progressResult);
+
+            // voice mail
         }
     }
 

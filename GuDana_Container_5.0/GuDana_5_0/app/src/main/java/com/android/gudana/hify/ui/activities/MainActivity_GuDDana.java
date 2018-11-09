@@ -425,7 +425,7 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
         if (currentuser == null) {
 
             LoginActivity.startActivityy(this);
-            finish();
+            this.finish();
 
         } else {
 
@@ -516,22 +516,21 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
                 }
             });
 
+
+            // set offline capiblities    ...
+            try{
+                FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+
+            // update User Id Token Tindroid  Server
+            Update_Uid_Tindroid();
+            // chatSeenDatabase.keepSynced(true); // For offline use
+
         }
 
-
-        // set offline capiblities    ...
-
-        try{
-            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
-
-
-        // update User Id Token Tindroid  Server
-        Update_Uid_Tindroid();
-        // chatSeenDatabase.keepSynced(true); // For offline use
     }
 
     //##############################
