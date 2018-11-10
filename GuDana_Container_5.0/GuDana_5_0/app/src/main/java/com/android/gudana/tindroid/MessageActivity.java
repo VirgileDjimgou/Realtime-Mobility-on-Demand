@@ -59,6 +59,7 @@ import com.android.gudana.hify.utils.database.UserHelper;
 import com.android.gudana.tindroid.account.Utils;
 import com.android.gudana.tindroid.media.VxCard;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -69,6 +70,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.storage.StorageReference;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -92,6 +94,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
+
+import static com.android.gudana.tindroid.MessagesFragment.GetCorrespondantInformation_and_your_profile;
 
 /**
  * View to display a single conversation
@@ -284,7 +288,9 @@ public class MessageActivity extends AppCompatActivity {
         // init Firebase users
 
         currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        otherUserId = getIntent().getStringExtra("userid");
+        //otherUserId = getIntent().getStringExtra("userid");
+
+        GetCorrespondantInformation_and_your_profile();
 
     }
 
@@ -378,6 +384,9 @@ public class MessageActivity extends AppCompatActivity {
         NameUser = parts[0].trim(); // 004
         otherUserId = parts[1].trim(); // 034556
 
+        // get all information users
+        GetCorrespondantInformation_and_your_profile();
+
         if (mTopic != null) {
             UiUtils.setupToolbar(this, mTopic.getPub(), mTopicName, mTopic.getOnline());
             showFragment(FRAGMENT_MESSAGES, false, null);
@@ -398,6 +407,8 @@ public class MessageActivity extends AppCompatActivity {
             fragmsg.topicSubscribed();
         }
     }
+
+
 
     @Override
     public void onPause() {
@@ -549,6 +560,8 @@ public class MessageActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+
     // call  methode  ...
     public   void call_infos_notification(final Context context_call ,final  String CallType){
 
@@ -681,7 +694,7 @@ public class MessageActivity extends AppCompatActivity {
         // send notification    ...
 
         FCM_Message_Sender.sendWithOtherThread("token" ,
-                TokenFCM_OtherUser ,
+                MessagesFragment.TokenFCM_OtherUser ,
                 "call" ,
                 currentUserId ,
                 NameCurrentUser,
@@ -892,44 +905,6 @@ public class MessageActivity extends AppCompatActivity {
 
 
 
-    }
-
-
-    private void GetInformation_from_Users(){
-
-        userDB_current = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId);
-        // Set the  Driver Response to true ...
-        //HashMap map = new HashMap();
-        //map.put("Authentified" , "await");
-        //userDB.updateChildren(map);
-        userDB_current.keepSynced(true);
-        userDB_current.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
-                    try{
-                        Map<String, Object> user_data = (Map<String, Object>) dataSnapshot.getValue();
-                        // test if the recors Phone already exist  ...if not than
-                        // than you are a new user   ...
-                        NameCurrentUser   =  user_data.get("name").toString();
-                        url_Icon_currentUser =  user_data.get("image").toString();
-
-
-
-                    }catch(Exception ex){
-                        Toasty.error(getApplicationContext(), ex.toString() , Toast.LENGTH_LONG).show();
-                        ex.printStackTrace();
-                    }
-
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Toasty.error(getApplicationContext(),databaseError.toString(), Toast.LENGTH_LONG).show();
-
-            }
-        });
     }
 
 

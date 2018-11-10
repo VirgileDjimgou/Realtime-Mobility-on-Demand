@@ -216,14 +216,8 @@
             android:screenOrientation="fullUser"
             android:theme="@style/CallActivityTheme" />
 
-        <service
-            android:name=".hify.receivers.FCMService"
-            android:permission="com.google.android.c2dm.permission.SEND">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-            </intent-filter>
-        </service>
+
+
         <service android:name=".hify.receivers.InstanceIdService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
@@ -362,54 +356,7 @@
 
         <!-- add linphone   minifest ... -->
         <activity
-            android:name=".chatapp.activities.PhoneAuthActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".chatapp.activities.WelcomeActivity"
-            android:theme="@style/WelcomeTheme" />
-        <activity
-            android:name=".chatapp.activities.ProfileActivity"
-            android:theme="@style/ProfileTheme">
-            <intent-filter>
-                <action android:name="com.android.gudana.chatapp.chatapp_PROFILE_TARGET_NOTIFICATION" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".chatapp.activities.UsersActivity"
-            android:parentActivityName=".hify.ui.activities.MainActivity_GuDDana"
-            android:theme="@style/UsersTheme" />
-        <activity
             android:name=".hify.ui.activities.FriendlistScrollingActivity"
-            android:theme="@style/ChatTheme">
-            <intent-filter>
-                <action android:name="com.android.gudana.chatapp.chatapp_CHAT_TARGET_NOTIFICATION" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".group_chat.ui.CreateGroupChatActivity"
-            android:theme="@style/ChatTheme">
-            <intent-filter>
-                <action android:name="com.android.gudana.chatapp.chatapp_CHAT_TARGET_NOTIFICATION" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".group_chat.ui.ChatMessagesActivity"
-            android:theme="@style/ChatTheme">
-            <intent-filter>
-                <action android:name="com.android.gudana.chatapp.chatapp_CHAT_TARGET_NOTIFICATION" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".group_chat.ui.FriendsListActivity"
             android:theme="@style/ChatTheme">
             <intent-filter>
                 <action android:name="com.android.gudana.chatapp.chatapp_CHAT_TARGET_NOTIFICATION" />
@@ -426,19 +373,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".chatapp.activities.FullScreenActivity"
-            android:theme="@style/ProfileTheme" />
-        <activity
-            android:name=".chatapp.activities.FriendsActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName=".hify.ui.activities.MainActivity_GuDDana"
-            android:theme="@style/UsersTheme" />
-        <activity
-            android:name=".chatapp.activities.RequestActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName=".hify.ui.activities.MainActivity_GuDDana"
-            android:theme="@style/UsersTheme" />
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -467,9 +401,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_friend_updates"
             android:theme="@style/ChatTheme" />
-        <activity
-            android:name=".group_chat.ui.ManageGroupActivity"
-            android:theme="@style/ChatTheme"></activity>
+
 
         <!-- add tindroid client   minifest ... -->
 
@@ -526,12 +458,15 @@
                 android:resource="@xml/contacts_source" />
         </service>
 
-        <!-- FCM handling -->
+        <!-- FCM handling
         <service android:name=".tindroid.fcm.FBaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+          -->
+
 
         <!-- original file provider  tindroid  but i have conflict with  some library in gradle  to handle file -->
 

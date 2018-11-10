@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -71,24 +72,6 @@ public class CustomFcm_Util {
                 JSONObject jData = new JSONObject();
                 try {
 
-                    // jNotification.put("title", "yX Realtime Mobility on Demand 2018");
-                    // jNotification.put("body", "Firebase Cloud Messaging  from yX Realtime Mobility on Demand");
-
-                    /*
-                    jNotification.put("title", Titel);
-                    jNotification.put("body", message);
-                    jNotification.put("picture", Sender_Icon_URL);
-                    jNotification.put("SenderID", SenderID);
-                    jNotification.put("SenderName", SenderName);
-                    jNotification.put("Sender_Icon_URL", Sender_Icon_URL);
-                    jNotification.put("TimeSend", TimeSend);
-                    jNotification.put("msg", message);
-                    jNotification.put("sound", "default");
-                    jNotification.put("badge", "1");
-                    jNotification.put("click_action", ".MainActivity");
-                    jNotification.put("icon", "ic_bee");
-                    */
-
                     // https://firebasestorage.googleapis.com/v0/b/beewallet-114e7.appspot.com/o/logo_message_2.jpg?alt=media&token=655833c9-3073-4792-9a8a-e68246e80c0b
                     jData.put("title", Titel);
                     jData.put("body", message);
@@ -122,7 +105,6 @@ public class CustomFcm_Util {
                     jPayload.put("priority", "high");
                     //jPayload.put("notification", jNotification);
                     jPayload.put("data", jData);
-
                     URL url = new URL("https://fcm.googleapis.com/fcm/send");
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("POST");
@@ -142,7 +124,7 @@ public class CustomFcm_Util {
                     h.post(new Runnable() {
                         @Override
                         public void run() {
-                            //  mTextView.setText(resp);
+                            System.out.println("notification sended  ....");
                         }
                     });
                 } catch (JSONException | IOException e) {

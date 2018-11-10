@@ -216,7 +216,7 @@ public class MessagesFragment extends Fragment
     private String Chat_picture;
     MessageActivity activity;
     private RecyclerView ml;
-    private static  String  TokenFCM_OtherUser = "";
+    public static  String  TokenFCM_OtherUser = "";
 
     private static FirebaseFirestore mFirestore;
     private static FirebaseUser currentUser;
@@ -515,8 +515,8 @@ public class MessagesFragment extends Fragment
             public void onClick(View v) {
 
                 // test notificaton
-                //TestSendNotification();
-                showDiag(mrecordVoiceButton);
+                TestSendNotification();
+                //showDiag(mrecordVoiceButton);
             }
         });
 
@@ -1902,7 +1902,7 @@ public class MessagesFragment extends Fragment
             Log.d("send", "send");
 
             FCM_Message_Sender.sendWithOtherThread("token" ,
-                    TokenFCM_OtherUser ,
+                    "dxMe6uz1_24:APA91bFWSsrlu_R526UOgqRADnHeFtODdDeUG2OFYiMrMwgtbQtaihuVJoUuWeqXAHt6CvsO3eAIMmMNe-mZHnJYIAKtqhhYrsKJAQfXmpVSlPxbeYXFaV7pOCIUGYYI1epcj0L2oha9" , // token OtherUser
                     "Message",
                     "u2j7FkqofqV7EqNW5mqhmwmBUn73",
                     "chicikolon user",
@@ -1933,7 +1933,7 @@ public class MessagesFragment extends Fragment
                         @Override
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-                            TokenFCM_OtherUser =documentSnapshot.getString("token_id");
+                            MessageActivity.TokenFCM_OtherUser = TokenFCM_OtherUser =documentSnapshot.getString("token_id");
 
                         }
                     });
@@ -1946,9 +1946,9 @@ public class MessagesFragment extends Fragment
                     .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                         @Override
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            url_image =documentSnapshot.getString("image");
-                            Sender_uid = documentSnapshot.getString("id");
-                            Name_Sender = documentSnapshot.getString("name");
+                            MessageActivity.url_Icon_currentUser = url_image =documentSnapshot.getString("image");
+                            MessageActivity.currentUserId =Sender_uid = documentSnapshot.getString("id");
+                            MessageActivity.NameCurrentUser =Name_Sender = documentSnapshot.getString("name");
 
                         }
                     });
@@ -1959,6 +1959,8 @@ public class MessagesFragment extends Fragment
 
 
     }
+
+
     public static void Play_Song_in_message() {
 
         try {
