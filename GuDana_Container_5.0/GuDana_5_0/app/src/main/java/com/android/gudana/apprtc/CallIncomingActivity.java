@@ -300,7 +300,6 @@ public class CallIncomingActivity extends Activity{
 			// put the  call  dispo enable
 			SanityChechCall_Db.child("Call_room").child(room_id).removeEventListener(mListener);
 
-
 			// reset call
 			MessageActivity.resetCallparameter(CallIncomingActivity.this , room_id , "CallIncomming : Decline ",
 					"your correspondant ist not available",1

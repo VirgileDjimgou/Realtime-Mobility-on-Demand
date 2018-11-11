@@ -205,6 +205,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
 	private void ManageCall(final Map<String, String> data){
+    	String  System_echo_  = "hello jeune ";
+    	String ferreadi = "accept und  ";
+    	String hello = "helloprint system infos ";
 
 		try{
 
@@ -250,8 +253,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 												}
 
 											}else{ // if not you will get a notification
-												EventListener = null;
-												CallRoom.child("Call_room").child(room_call).removeEventListener(EventListener);
+												try{
+													CallRoom.child("Call_room").child(room_call).removeEventListener(EventListener);
+													EventListener = null;
+
+												}catch (Exception Ex){
+													Ex.printStackTrace();
+												}
 												sendNotification(data);
 												// or  for missed call  in history   ...
 												// send unavailibilty notfication  to another user  ...s
@@ -264,8 +272,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 											}
 
 										}else{
-											EventListener = null;
-											CallRoom.child("Call_room").child(room_call).removeEventListener(EventListener);
+
 											sendNotification(data);
 											// or  for missed call  in history   ...
 											// send unavailibilty notfication  to another user  ...s

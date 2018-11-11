@@ -252,7 +252,7 @@ public class CallFragment extends Fragment {
                           "your correspondant ist not available");
                           */
                   CallRoomDb.child("Call_room").child(room_is_voice_Server).removeEventListener(mListener);
-                  getActivity().finish();
+                  CallFragment.this.getActivity().finish();
                 }
 
               }

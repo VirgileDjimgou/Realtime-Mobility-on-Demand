@@ -5,13 +5,12 @@
 	android:id="@+id/topLayout"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-
-	android:background="@drawable/bg_gradient">
+	android:background="@color/white">
 
 
 	<RelativeLayout
 		android:id="@+id/top_bar"
-		android:background="@drawable/bg_gradient"
+		android:background="@color/white"
 		android:layout_width="match_parent"
 		android:layout_height="60dp"
 		android:layout_below="@id/status">
@@ -19,7 +18,7 @@
 		<TextView
 			android:text="@string/incoming_call"
 			style="@style/font1"
-			android:textColor="@color/white"
+			android:textColor="@color/black"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:gravity="center"/>
@@ -31,7 +30,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:layout_below="@id/top_bar"
-		android:background="@drawable/bg_gradient"
+		android:background="@color/white"
 		android:paddingTop="10dp"
 		android:layout_above="@+id/menu">
 
@@ -42,7 +41,7 @@
 			android:layout_height="wrap_content"
 			android:layout_alignParentTop="true"
 			android:layout_centerHorizontal="true"
-			android:textColor="@color/white"
+			android:textColor="@color/black"
 			android:gravity="center_vertical|center_horizontal"
 			android:paddingTop="5dp"/>
 
@@ -51,7 +50,7 @@
 			style="@style/font2"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:textColor="@color/white"
+			android:textColor="@color/black"
 			android:layout_below="@id/contact_name"
 			android:layout_centerHorizontal="true"
 			android:paddingBottom="10dp"
@@ -88,24 +87,24 @@
 
 		<Button
 			android:id="@+id/decline"
-			android:src="@drawable/call_hangup"
-			android:background="@drawable/hangup"
+			android:textColor="@color/white"
+			android:background="@drawable/input_backgtound"
 			android:text="@string/content_description_decline"
-			android:layout_width="match_parent"
+			android:textStyle="bold"
+			android:layout_width="183dp"
 			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:padding="12dp"/>
+			/>
 
 		<Button
 			android:id="@+id/accept"
-			android:src="@drawable/call_audio_start"
-			android:textColor="@color/white"
-			android:background="@drawable/rounded_accept_button"
-			android:text="@string/content_description_accept"
-			android:layout_width="match_parent"
+			android:layout_width="183dp"
 			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:padding="12dp"/>
+			android:layout_gravity="right"
+			android:background="@drawable/input_light_white"
+			android:text="@string/content_description_accept"
+			android:textColor="@color/black"
+			android:textSize="15dp"
+			android:textStyle="bold" />
 
 	</LinearLayout>
 

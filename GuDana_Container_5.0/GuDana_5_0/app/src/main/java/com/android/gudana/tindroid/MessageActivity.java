@@ -292,6 +292,8 @@ public class MessageActivity extends AppCompatActivity {
 
         GetCorrespondantInformation_and_your_profile();
 
+        // to avoid notification  when  the  message ist activated
+       running = true;
     }
 
 
@@ -814,15 +816,12 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-
     }
 
     public static  void missedCallNotification(final Context context_call , final String CallType , final String missedCallerId , final String Room_Id , String ClassName_func , final String reason){
 
 
+        currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Toasty.info(context_call, "Call Reset Parameter  : " + ClassName_func, Toast.LENGTH_LONG).show();
         Map<String, Object> map = null;
         map = new HashMap<>();
@@ -844,14 +843,14 @@ public class MessageActivity extends AppCompatActivity {
                 if(task.isSuccessful())
                 {
 
-                    //Toasty.info(context_call, "interrupted call ...", Toast.LENGTH_LONG).show();
+                    Toasty.info(context_call, "interrupted call ...", Toast.LENGTH_LONG).show();
                     // Call enabledb
 
                 }
                 else
                 {
 
-                    //Toasty.error(context_call, "sorry GuDana Voice Cloud  is unreachable right now ! .... please try again later ", Toast.LENGTH_LONG).show();
+                    Toasty.error(context_call, "sorry GuDana Voice Cloud  is unreachable right now ! .... please try again later ", Toast.LENGTH_LONG).show();
 
                 }
 
@@ -900,9 +899,6 @@ public class MessageActivity extends AppCompatActivity {
                 }
             }
         });
-
-
-
 
 
     }

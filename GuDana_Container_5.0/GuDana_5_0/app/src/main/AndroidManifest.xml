@@ -102,7 +102,7 @@
     <application
         android:name=".tindroid.TindroidApp"
         android:allowBackup="true"
-        android:icon="@drawable/xshaka_icon"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:manageSpaceActivity="com.android.gudana.hify.ui.activities.ManageSpace"
         android:roundIcon="@drawable/xshaka_icon"

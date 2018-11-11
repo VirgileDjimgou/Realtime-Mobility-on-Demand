@@ -515,8 +515,8 @@ public class MessagesFragment extends Fragment
             public void onClick(View v) {
 
                 // test notificaton
-                TestSendNotification();
-                //showDiag(mrecordVoiceButton);
+                //TestSendNotification();
+                showDiag(mrecordVoiceButton);
             }
         });
 
@@ -1618,7 +1618,6 @@ public class MessagesFragment extends Fragment
         }
 
     }
-
 
 
     private void showDiag(final ImageButton Startposition) {
