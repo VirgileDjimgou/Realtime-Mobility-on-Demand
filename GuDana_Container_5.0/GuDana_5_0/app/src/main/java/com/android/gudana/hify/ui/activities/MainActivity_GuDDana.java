@@ -49,6 +49,7 @@ import com.android.gudana.GuDFeed.GuDFeed_Fragment;
 import com.android.gudana.GuDFeed.activities.create_post;
 // import com.android.gudana.apprtc.CallIncomingActivity_rtc;
 import com.android.gudana.apprtc.linphone.LinphoneManager;
+import com.android.gudana.chatapp.fragments.CallFragment;
 import com.android.gudana.hify.adapters.DrawerAdapter;
 import com.android.gudana.hify.models.DrawerItem;
 import com.android.gudana.hify.models.SimpleItem;
@@ -664,8 +665,8 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
 
                 case 2:
                     // Call fragment
-                    return new FriendsFragment();
-                  // return new HistoryListFragment();
+                    //return new FriendsFragment();
+                    return new CallFragment();
                 case 3:
                     //  Story   ... like status    Whatsapp
                     // return new GuDStory_Fragment();
@@ -753,33 +754,37 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
     private void Update_Uid_Tindroid(){
 
         String TindroidUniqueId = Cache.getTinode().getMyId();
-        if(TindroidUniqueId.trim()!= null){
+        if(TindroidUniqueId != null){
 
-            //dialog.setMessage("Updating Details....");
-            //dialog.show();
-            // userMap.put("uid_tindroid", Uid_tindroid);
+            if(TindroidUniqueId.trim()!= null){
 
-            mFirestore = FirebaseFirestore.getInstance();
-            final DocumentReference userDocument=mFirestore.collection("Users").document(mAuth.getCurrentUser().getUid());
-            Map<String,Object> map=new HashMap<>();
-            map.put("uid_tindroid",TindroidUniqueId);
+                //dialog.setMessage("Updating Details....");
+                //dialog.show();
+                // userMap.put("uid_tindroid", Uid_tindroid);
 
-            userDocument.update(map)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Toast.makeText(MainActivity_GuDDana.this, "User Id updated", Toast.LENGTH_SHORT).show();
+                mFirestore = FirebaseFirestore.getInstance();
+                final DocumentReference userDocument=mFirestore.collection("Users").document(mAuth.getCurrentUser().getUid());
+                Map<String,Object> map=new HashMap<>();
+                map.put("uid_tindroid",TindroidUniqueId);
 
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.i("Update","failed: "+e.getMessage());
-                            Toast.makeText(MainActivity_GuDDana.this, "User Id update failed", Toast.LENGTH_SHORT).show();
+                userDocument.update(map)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(MainActivity_GuDDana.this, "User Id updated", Toast.LENGTH_SHORT).show();
 
-                        }
-                    });
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.i("Update","failed: "+e.getMessage());
+                                Toast.makeText(MainActivity_GuDDana.this, "User Id update failed", Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
+
+            }
 
         }
 

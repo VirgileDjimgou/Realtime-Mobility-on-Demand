@@ -13,8 +13,8 @@ package com.android.gudana.apprtc;
 import android.os.Handler;
 import android.util.Log;
 
-import com.android.gudana.apprtc.util.AsyncHttpURLConnection;
-import com.android.gudana.apprtc.util.AsyncHttpURLConnection.AsyncHttpEvents;
+import com.android.gudana.apprtc.util.AsyncHttpURLConnection_Originale;
+import com.android.gudana.apprtc.util.AsyncHttpURLConnection_Originale.AsyncHttpEvents;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -216,8 +216,8 @@ public class WebSocketChannelClient {
   private void sendWSSMessage(final String method, final String message) {
     String postUrl = postServerUrl + "/" + roomID + "/" + clientID;
     Log.d(TAG, "WS " + method + " : " + postUrl + " : " + message);
-    AsyncHttpURLConnection httpConnection =
-        new AsyncHttpURLConnection(method, postUrl, message, new AsyncHttpEvents() {
+    AsyncHttpURLConnection_Originale httpConnection =
+        new AsyncHttpURLConnection_Originale(method, postUrl, message, new AsyncHttpEvents() {
           @Override
           public void onHttpError(String errorMessage) {
             reportError("WS " + method + " error: " + errorMessage);

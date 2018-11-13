@@ -8,9 +8,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -21,6 +25,8 @@ import com.android.gudana.hify.ui.activities.MainActivity_GuDDana;
 import com.android.gudana.tindroid.MessageActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -97,7 +103,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 					if(!MessageActivity.running || MessageActivity.running && !MessageActivity.otherUserId.equals(senderID))
 					{
-							sendNotification( data);
+
+						sendNotification( data);
 
 					}
 				}
@@ -132,7 +139,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 	}
 
-	private void sendNotification(Map<String, String> data) {
+	public void sendNotification(Map<String, String> data) {
 		Bundle bundle = new Bundle();
 		bundle.putString(FCM_ICON_SENDER, data.get(FCM_ICON_SENDER));
 
@@ -152,7 +159,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 			if (picture_url != null && !"".equals(picture_url)) {
 				// download image with glide  ...
 				RequestOptions cropOptions = new RequestOptions();
-				bigPicture = Glide.with(this).asBitmap().load(picture_url).apply(RequestOptions.circleCropTransform()).into(100,100).get();
+				bigPicture = Glide.with(MyFirebaseMessagingService.this)
+						.asBitmap()
+						.load(picture_url)
+						.apply(RequestOptions.circleCropTransform())
+						.into(100,100).get();
+
 
 			}
 		} catch (InterruptedException e) {
@@ -260,7 +272,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 												}catch (Exception Ex){
 													Ex.printStackTrace();
 												}
-												sendNotification(data);
+												new MyAsyncTask(MyFirebaseMessagingService.this, data).execute();
+
+												// sendNotification(data);
 												// or  for missed call  in history   ...
 												// send unavailibilty notfication  to another user  ...s
 												MessageActivity.missedCallNotification(getApplication(),
@@ -273,9 +287,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 										}else{
 
-											sendNotification(data);
+											new MyAsyncTask(MyFirebaseMessagingService.this, data).execute();
+
+											// sendNotification(data);
 											// or  for missed call  in history   ...
 											// send unavailibilty notfication  to another user  ...s
+											MessageActivity.missedCallNotification(getApplication(),
+													"video",
+													senderID,
+													room_call ,
+													"Firebase messaging  notification" ,
+													"missed call");
 
 											MessageActivity.missedCallNotification(getApplication(),
 													room_call,
@@ -314,6 +336,60 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 		}catch(Exception ex){
 			ex.printStackTrace();
+		}
+	}
+
+
+	// to start some task in background
+	public class MyAsyncTask extends AsyncTask<Void, Void, String> {
+
+		private Context context;
+		private Map<String, String> datal;
+
+		MyAsyncTask(Context context, Map<String, String> data) {
+			this.context = context;
+			this.datal = data;
+		}
+
+		@Override
+		protected String doInBackground(Void... params) {
+			try {
+
+				sendNotification(datal);
+
+				/*
+				return Glide.with(context)
+						.asBitmap()
+						.load(url)
+						.apply(RequestOptions.circleCropTransform())
+						.into(100,100).get();
+
+				return Glide.with(context)
+						.load(url)
+						.asBitmap()
+						.into(256, 256)
+						.get();
+
+						*/
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+			return  "hello";
+
+		}
+
+		@Override
+		protected void onPostExecute(String bitmap) {
+			super.onPostExecute(bitmap);
+
+			if (null != bitmap) {
+				Log.d("test", "test");
+				// show notification using bitmap
+			} else {
+				// couldn't fetch the bitmap
+			}
 		}
 	}
 

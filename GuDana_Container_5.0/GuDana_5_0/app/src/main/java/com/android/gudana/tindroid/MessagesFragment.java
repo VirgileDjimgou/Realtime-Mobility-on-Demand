@@ -1924,6 +1924,7 @@ public class MessagesFragment extends Fragment
 
         try{
 
+            mFirestore = FirebaseFirestore.getInstance();
             // get Users Informations
             mFirestore.collection("Users")
                     .document(MessageActivity.otherUserId)

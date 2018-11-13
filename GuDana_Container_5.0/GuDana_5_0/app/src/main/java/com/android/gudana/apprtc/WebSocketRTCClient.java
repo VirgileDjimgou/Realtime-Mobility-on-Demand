@@ -15,8 +15,8 @@ import android.os.HandlerThread;
 import android.util.Log;
 
 import com.android.gudana.apprtc.RoomParametersFetcher.RoomParametersFetcherEvents;
-import com.android.gudana.apprtc.util.AsyncHttpURLConnection;
-import com.android.gudana.apprtc.util.AsyncHttpURLConnection.AsyncHttpEvents;
+import com.android.gudana.apprtc.util.AsyncHttpURLConnection_Originale;
+import com.android.gudana.apprtc.util.AsyncHttpURLConnection_Originale.AsyncHttpEvents;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -384,8 +384,8 @@ public class WebSocketRTCClient implements AppRTCClient, WebSocketChannelClient.
       logInfo += ". Message: " + message;
     }
     Log.d(TAG, "C->GAE: " + logInfo);
-    AsyncHttpURLConnection httpConnection =
-        new AsyncHttpURLConnection("POST", url, message, new AsyncHttpEvents() {
+    AsyncHttpURLConnection_Originale httpConnection =
+        new AsyncHttpURLConnection_Originale("POST", url, message, new AsyncHttpEvents() {
           @Override
           public void onHttpError(String errorMessage) {
             reportError("GAE POST error: " + errorMessage);

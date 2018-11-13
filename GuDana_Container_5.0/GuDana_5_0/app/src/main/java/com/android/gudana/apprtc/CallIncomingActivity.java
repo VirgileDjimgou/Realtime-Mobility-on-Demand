@@ -125,6 +125,7 @@ public class CallIncomingActivity extends Activity{
 
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		isScreenActive = Compatibility.isScreenOn(pm);
+		isScreenActive = true;
 
 		final int screenWidth = getResources().getDisplayMetrics().widthPixels;
 
@@ -135,8 +136,10 @@ public class CallIncomingActivity extends Activity{
 			public void onClick(View v) {
 				if(isScreenActive) {
 					answer();
+
 				} else {
-					decline.setVisibility(View.GONE);
+					decline.setEnabled(false);
+					//decline.setVisibility(View.GONE);
 				}
 			}
 		});
@@ -150,7 +153,9 @@ public class CallIncomingActivity extends Activity{
 					ViCall.stopRinging();
 					decline();
 				} else {
-					accept.setVisibility(View.GONE);
+					accept.setEnabled(false);
+					//accept.setEnabled(false);
+					//accept.setVisibility(View.GONE);
 				}
 			}
 		});
@@ -296,6 +301,7 @@ public class CallIncomingActivity extends Activity{
 	private void decline() {
 		try{
 
+			decline.setEnabled(false);
 			ViCall.stopRinging();
 			// put the  call  dispo enable
 			SanityChechCall_Db.child("Call_room").child(room_id).removeEventListener(mListener);
@@ -317,14 +323,14 @@ public class CallIncomingActivity extends Activity{
 		finish();
 	}
 
-
 	private void answer() {
 
 		try{
 
+			accept.setEnabled(false);
 			ViCall.stopRinging();
 
-			SanityChechCall_Db.keepSynced(true);
+			//SanityChechCall_Db.keepSynced(true);
 			SanityChechCall_Db = FirebaseDatabase.getInstance().getReference().child("Call_room").child(room_id);
 				// add listeners for single Value
 			SanityChechCall_Db.keepSynced(true);
@@ -493,9 +499,6 @@ public class CallIncomingActivity extends Activity{
 
 	}
 
-
-
-	
 	private void checkAndRequestCallPermissions() {
 		ArrayList<String> permissionsList = new ArrayList<String>();
 		

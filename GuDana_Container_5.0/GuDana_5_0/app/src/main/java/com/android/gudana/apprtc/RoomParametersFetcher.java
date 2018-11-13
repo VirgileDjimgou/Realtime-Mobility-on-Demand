@@ -13,8 +13,8 @@ package com.android.gudana.apprtc;
 import android.util.Log;
 
 import com.android.gudana.apprtc.AppRTCClient.SignalingParameters;
-import com.android.gudana.apprtc.util.AsyncHttpURLConnection;
-import com.android.gudana.apprtc.util.AsyncHttpURLConnection.AsyncHttpEvents;
+import com.android.gudana.apprtc.util.AsyncHttpURLConnection_Originale;
+import com.android.gudana.apprtc.util.AsyncHttpURLConnection_Originale.AsyncHttpEvents;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,7 +40,7 @@ public class RoomParametersFetcher {
   private final RoomParametersFetcherEvents events;
   private final String roomUrl;
   private final String roomMessage;
-  private AsyncHttpURLConnection httpConnection;
+  private AsyncHttpURLConnection_Originale httpConnection;
 
   /**
    * Room parameters fetcher callbacks.
@@ -68,7 +68,7 @@ public class RoomParametersFetcher {
   public void makeRequest() {
     Log.d(TAG, "Connecting to room: " + roomUrl);
     httpConnection =
-        new AsyncHttpURLConnection("POST", roomUrl, roomMessage, new AsyncHttpEvents() {
+        new AsyncHttpURLConnection_Originale("POST", roomUrl, roomMessage, new AsyncHttpEvents() {
           @Override
           public void onHttpError(String errorMessage) {
             Log.e(TAG, "Room connection error: " + errorMessage);

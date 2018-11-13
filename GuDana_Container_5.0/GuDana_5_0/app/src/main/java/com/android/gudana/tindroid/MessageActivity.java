@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Timer;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -340,6 +341,7 @@ public class MessageActivity extends AppCompatActivity {
     @SuppressWarnings("unchecked")
     public void onResume() {
         super.onResume();
+        running = true;
 
         final Tinode tinode = Cache.getTinode();
         tinode.setListener(new MessageEventListener(tinode.isConnected()));
@@ -416,6 +418,9 @@ public class MessageActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         mMessageSender.pause();
+
+        // enable notification
+        running = false;
         if (mTypingAnimationTimer != null) {
             mTypingAnimationTimer.cancel();
             mTypingAnimationTimer = null;
@@ -496,6 +501,7 @@ public class MessageActivity extends AppCompatActivity {
     public void onDestroy() {
         super.onDestroy();
 
+        running = false;
         mMessageSender.shutdownNow();
         unregisterReceiver(onComplete);
         unregisterReceiver(onNotificationClick);
@@ -519,15 +525,28 @@ public class MessageActivity extends AppCompatActivity {
 
         int id = item.getItemId();
         switch (id) {
+
+            case android.R.id.home: {
+
+                //MainActivity_with_Drawer.tabLayout.getTabAt(3);
+                //MainActivity_with_Drawer.mViewPager.setCurrentItem(3);
+                //play_sound();
+                MessageActivity.this.finish();
+                // NavUtils.navigateUpFromSameTask(this);
+                break;
+            }
+
+
             case R.id.action_view_contact: {
                 showFragment(FRAGMENT_INFO, false, null);
                 return true;
             }
+
+
             case R.id.action_topic_edit: {
                 showFragment(FRAGMENT_ADD_TOPIC, false, null);
                 return true;
             }
-
 
             case R.id.action_call_audio: {
 
@@ -542,6 +561,7 @@ public class MessageActivity extends AppCompatActivity {
                 //Toasty.info(getApplicationContext(), R.string.not_imp6565lemented, Toast.LENGTH_SHORT).show();
                 break;
             }
+
             case R.id.action_call_video: {
 
                 if (CallFragment.running == true) {
@@ -572,6 +592,8 @@ public class MessageActivity extends AppCompatActivity {
 
         DatabaseReference Call_Room = FirebaseDatabase.getInstance().getReference().child("Call_room").child(currentUserId).child(otherUserId).push();
         pushId_callRoom = Call_Room.getKey();
+        //pushId_callRoom = "gudana"+currentUserId + Integer.toString(getRandomNumber());
+
 
         Map callroom_map = new HashMap();
         callroom_map.put("room_id", pushId_callRoom);
@@ -736,7 +758,7 @@ public class MessageActivity extends AppCompatActivity {
 
     public static  void resetCallparameter(final Context context_call , final String Room_Id , String ClassName_func , String reason , int call_attribut){
 
-
+        currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Toasty.info(context_call, "Call Reset Parameter  : " + ClassName_func, Toast.LENGTH_LONG).show();
 
         Map<String, Object> map = null;
@@ -816,9 +838,48 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
 
+        // update call availability
+        Map<String, Object> map_dispo = null;
+        map_dispo = new HashMap<>();
+        map_dispo.put("call_availability", true); // not available anymore to take another call
+        //userDB.updateChildren(map);
+
+
+        FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId).updateChildren(map_dispo).addOnCompleteListener(new OnCompleteListener<Void>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<Void> task)
+            {
+                if(task.isSuccessful())
+                {
+
+                    Toast.makeText(context_call, "user available to take amother call  ", Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    Toast.makeText(context_call, "sorry GuDana Voice Cloud  is unreachable right now ! ... ", Toast.LENGTH_LONG).show();
+
+                }
+            }
+        });
+
+
     }
 
-    public static  void missedCallNotification(final Context context_call , final String CallType , final String missedCallerId , final String Room_Id , String ClassName_func , final String reason){
+    // randomnumber
+    // generate random number
+    private int getRandomNumber(){
+        Random rand = new Random();
+        int value = rand.nextInt(100000);
+        return  value;
+    }
+
+    public static  void missedCallNotification(final Context context_call ,
+                                               final String CallType ,
+                                               final String missedCallerId ,
+                                               final String Room_Id ,
+                                               String ClassName_func ,
+                                               final String reason){
 
 
         currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -870,13 +931,15 @@ public class MessageActivity extends AppCompatActivity {
         callroom_map.put("room_status", false); //
         callroom_map.put("call_type", CallType);
         callroom_map.put("call_duration", "1:62");
-        callroom_map.put("call_attribut", "missed call"); // incomming Call ...outgoing Call ... missed Call
+        callroom_map.put("call_attribut", 0); // incomming Call ...outgoing Call ... missed Call
         callroom_map.put("reason_interrupted_call", reason);
         // the end of call extremely important    ..
 
 
+
         Map callroom_map_messages = new HashMap();
-        callroom_map_messages.put("Call_room//" + pushId_callRoom, callroom_map);
+        callroom_map_messages.put("Call_room//" + Room_Id, callroom_map);
+
 
 
         FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId).child("call_History").updateChildren(callroom_map_messages).addOnCompleteListener(new OnCompleteListener<Void>()
@@ -895,6 +958,32 @@ public class MessageActivity extends AppCompatActivity {
                 {
                     Toasty.error(context_call, "sorry GuDana Voice Cloud  is unreachable right now ! .... " +
                             "please check your internet connection or try again later ", Toast.LENGTH_LONG).show();
+
+                }
+            }
+        });
+
+
+        // update call availability
+        Map<String, Object> map_dispo = null;
+        map_dispo = new HashMap<>();
+        map_dispo.put("call_availability", true); // not available anymore to take another call
+        //userDB.updateChildren(map);
+
+
+        FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId).updateChildren(map_dispo).addOnCompleteListener(new OnCompleteListener<Void>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<Void> task)
+            {
+                if(task.isSuccessful())
+                {
+
+                    Toast.makeText(context_call, "user available to take amother call  ", Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    Toast.makeText(context_call, "sorry GuDana Voice Cloud  is unreachable right now ! ... ", Toast.LENGTH_LONG).show();
 
                 }
             }

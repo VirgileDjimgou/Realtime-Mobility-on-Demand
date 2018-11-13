@@ -18,10 +18,13 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.Scanner;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+
 /**
  * Asynchronous http requests implementation.
  */
-public class AsyncHttpURLConnection {
+public class AsyncHttpURLConnection_Originale {
   private static final int HTTP_TIMEOUT_MS = 8000;
   private static final String HTTP_ORIGIN = "https://appr.tc";
   private final String method;
@@ -29,6 +32,12 @@ public class AsyncHttpURLConnection {
   private final String message;
   private final AsyncHttpEvents events;
   private String contentType;
+  public static SSLContext sslContext;
+
+
+
+
+
 
   /**
    * Http requests callbacks.
@@ -38,12 +47,14 @@ public class AsyncHttpURLConnection {
     void onHttpComplete(String response);
   }
 
-  public AsyncHttpURLConnection(String method, String url, String message, AsyncHttpEvents events) {
+  public AsyncHttpURLConnection_Originale(String method, String url, String message, AsyncHttpEvents events) {
     this.method = method;
     this.url = url;
     this.message = message;
     this.events = events;
   }
+
+
 
   public void setContentType(String contentType) {
     this.contentType = contentType;
@@ -58,9 +69,19 @@ public class AsyncHttpURLConnection {
     new Thread(runHttp).start();
   }
 
+  public static void  setSSLContext(SSLContext sslContext_param) {
+    sslContext = sslContext_param;
+  }
+
   private void sendHttpMessage() {
     try {
       HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+      // added
+      if (connection instanceof HttpsURLConnection) {
+        ((HttpsURLConnection) connection).setSSLSocketFactory(sslContext.getSocketFactory());
+      }
+
+
       byte[] postData = new byte[0];
       if (message != null) {
         postData = message.getBytes("UTF-8");

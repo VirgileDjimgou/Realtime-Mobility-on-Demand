@@ -73,10 +73,6 @@ public class CallFragment extends Fragment {
   public static boolean running = false;
 
 
-
-
-
-
   /**
    * Call control interface for container activity.
    */
@@ -121,8 +117,16 @@ public class CallFragment extends Fragment {
                 "your correspondent is not available "
         );
         */
-        getActivity().finish();
-      }
+        try{
+
+          if(CallFragment.this.getActivity() != null){
+            CallFragment.this.getActivity().finish();
+
+          }
+
+        }catch (Exception ex){
+          ex.printStackTrace();
+        }      }
     });
 
     cameraSwitchButton.setOnClickListener(new View.OnClickListener() {
@@ -169,6 +173,9 @@ public class CallFragment extends Fragment {
 
     ViCall = new LinphoneManager(controlView.getContext());
 
+
+    /*
+    // Outgoing Call Ringtone methode
     if(ConnectActivity.received_call.equalsIgnoreCase("caller")){
       /// start ringing  and vibrate
       try{
@@ -182,6 +189,8 @@ public class CallFragment extends Fragment {
       }
 
     }
+
+    */
 
     // set the running method  to tell that you can not take another call
     running = true;
@@ -252,7 +261,16 @@ public class CallFragment extends Fragment {
                           "your correspondant ist not available");
                           */
                   CallRoomDb.child("Call_room").child(room_is_voice_Server).removeEventListener(mListener);
-                  CallFragment.this.getActivity().finish();
+                  try{
+
+                    if(CallFragment.this.getActivity() != null){
+                      CallFragment.this.getActivity().finish();
+
+                    }
+
+                  }catch (Exception ex){
+                    ex.printStackTrace();
+                  }
                 }
 
               }
@@ -263,16 +281,12 @@ public class CallFragment extends Fragment {
                 if(room_Status == false) {
                   // than we must stop the call  ...
                   ViCall.stopRinging();
-                  // put the  call  dispo enable
-                  /*
-                  CreateGroupChatActivity.resetCallparameter(context ,
-                          room_is_voice_Server,
-                          this.getClass().getName() + "chehcCorrespondant",
-                          "your correspondent ist not available ");
 
-                          */
                   CallRoomDb.child("Call_room").child(room_is_voice_Server).removeEventListener(mListener);
-                  getActivity().finish();
+                  if(CallFragment.this.getActivity() != null){
+                    CallFragment.this.getActivity().finish();
+
+                  }
                 }
 
               }

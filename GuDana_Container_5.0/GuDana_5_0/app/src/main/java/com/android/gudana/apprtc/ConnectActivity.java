@@ -16,6 +16,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -37,6 +38,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.gudana.R;
+import com.android.gudana.apprtc.util.AsyncHttpURLConnection_Originale;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -46,9 +48,25 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
+
+import static com.android.gudana.apprtc.ConnectActivity.room_url;
 
 /**
  * Handles the initial setup where the user selects which room to join.
@@ -108,10 +126,21 @@ public class ConnectActivity extends Activity {
   private String CallChannel = "";
   public static  String  received_call = "receive"; // to tell that  the personn call another  user or  receive a call
   public static  String room_is_voice_Server = "";
+  public static String  room_url = "";
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    // trust Certifcat
+    String roomUrl = getString(R.string.default_server);
+    try {
+      AsyncHttpURLConnection  TrustHttp = new AsyncHttpURLConnection(trustCert());
+      TrustHttp.sendHttpMessage(roomUrl);
+    } catch (CertificateException | IOException | NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
+      e.printStackTrace();
+    }
+
 
     // Get setting keys.
     PreferenceManager.setDefaultValues(this, R.xml.rtc_preferences, false);
@@ -201,11 +230,12 @@ public class ConnectActivity extends Activity {
     user_id = getIntent().getStringExtra("user_id");
     // Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
     // generate your id apprtc ...
-    // id_server_app_rtc = "gudana"+user_id + Integer.toString(getRandomNumber());
+    //id_server_app_rtc = "gudana"+user_id + Integer.toString(getRandomNumber());
 
     //call channel intentaudio.putExtra("call_channel", call_server_id );
     room_is_voice_Server = getIntent().getStringExtra("room_id");
     try{
+
       CallChannel =  getIntent().getStringExtra("call_channel");
       if(CallChannel.length() >= 7){
         room_is_voice_Server = CallChannel;
@@ -213,6 +243,12 @@ public class ConnectActivity extends Activity {
 
     }catch(Exception ex){
       ex.printStackTrace();
+    }
+
+    try {
+      AsyncHttpURLConnection_Originale.setSSLContext(trustCert());
+    } catch (CertificateException | IOException | NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
+      e.printStackTrace();
     }
 
 
@@ -293,6 +329,14 @@ public class ConnectActivity extends Activity {
   @Override
   public void onResume() {
     super.onResume();
+    // Trsust Certficat
+
+    try {
+      AsyncHttpURLConnection_Originale.setSSLContext(trustCert());
+    } catch (CertificateException | IOException | NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
+      e.printStackTrace();
+    }
+
     String room = sharedPref.getString(keyprefRoom, "");
     roomEditText.setText(room);
     roomList = new ArrayList<String>();
@@ -411,17 +455,43 @@ public class ConnectActivity extends Activity {
     }
   }
 
+    private SSLContext trustCert() throws CertificateException,IOException,KeyStoreException,
+            NoSuchAlgorithmException,KeyManagementException {
+        AssetManager assetManager = getAssets();
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        Certificate ca = cf.generateCertificate(assetManager.open("COMODORSADomainValidationSecureServerCA.crt"));
+
+        // Create a KeyStore containing our trusted CAs
+        String keyStoreType = KeyStore.getDefaultType();
+        KeyStore keyStore = KeyStore.getInstance(keyStoreType);
+        keyStore.load(null, null);
+        keyStore.setCertificateEntry("ca", ca);
+
+        // Create a TrustManager that trusts the CAs in our KeyStore
+        String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
+        tmf.init(keyStore);
+
+        // Create an SSLContext that uses our TrustManager
+        SSLContext context = SSLContext.getInstance("TLS");
+        context.init(null, tmf.getTrustManagers(), null);
+        return context;
+    }
+
   public  void connectToRoom(String roomId, boolean commandLineRun, boolean loopback,
                              boolean useValuesFromIntent, int runTimeMs , boolean video_or_not) {
     this.commandLineRun = commandLineRun;
 
-    // roomId is random for loopback.
+
+      // roomId is random for loopback.
     if (loopback) {
       roomId = Integer.toString((new Random()).nextInt(100000000));
     }
 
-    String roomUrl = sharedPref.getString(
-        keyprefRoomServerUrl, getString(R.string.pref_room_server_url_default));
+    String roomUrl = sharedPref.getString(keyprefRoomServerUrl, getString(R.string.pref_room_server_url_default));
+
+    room_url = sharedPref.getString(
+              keyprefRoomServerUrl, getString(R.string.pref_room_server_url_default));
 
     /*
     // Video call enabled flag. to decide if that is a video call or audio call ...
@@ -679,6 +749,12 @@ public class ConnectActivity extends Activity {
 
   private boolean validateUrl(String url) {
     if (URLUtil.isHttpsUrl(url) || URLUtil.isHttpUrl(url)) {
+      try {
+        AsyncHttpURLConnection  TrustHttp = new AsyncHttpURLConnection(trustCert());
+        TrustHttp.sendHttpMessage(url);
+      } catch (CertificateException | IOException | NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
+        e.printStackTrace();
+      }
       return true;
     }
 
@@ -723,4 +799,30 @@ public class ConnectActivity extends Activity {
       connectToRoom(roomEditText.getText().toString(), false, false, false, 0 , true);
     }
   };
+}
+
+class AsyncHttpURLConnection {
+    private static SSLContext sslContext;
+
+    public AsyncHttpURLConnection(SSLContext sslContext) {
+        this.sslContext = sslContext;
+    }
+
+    void sendHttpMessage(String url) {
+        try {
+
+            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+
+            if (connection instanceof HttpsURLConnection) {
+                ((HttpsURLConnection) connection).setSSLSocketFactory(sslContext.getSocketFactory());
+            }
+
+            // Get response.
+            int responseCode = connection.getResponseCode();
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
 }

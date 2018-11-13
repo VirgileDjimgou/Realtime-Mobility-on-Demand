@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.net.Uri;
@@ -35,6 +36,7 @@ import android.widget.Toast;
 
 import com.android.gudana.R;
 import com.android.gudana.apprtc.linphone.LinphoneManager;
+import com.android.gudana.apprtc.util.AsyncHttpURLConnection_Originale;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -59,9 +61,23 @@ import org.webrtc.VideoFileRenderer;
 import org.webrtc.VideoRenderer;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
+import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
 
 import es.dmoral.toasty.Toasty;
 
@@ -188,6 +204,14 @@ public class CallActivity extends Activity implements AppRTCClient.SignalingEven
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Thread.setDefaultUncaughtExceptionHandler(new UnhandledExceptionHandler(this));
+
+    // trust Certificat   https://github.com/webrtc/apprtc/issues/586
+    try {
+      AsyncHttpURLConnection_Originale.setSSLContext(trustCert());
+    } catch (CertificateException | IOException | NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
+      e.printStackTrace();
+    }
+
 
     // Set window styles for fullscreen-window size. Needs to be done before
     // adding content.
@@ -382,6 +406,17 @@ public class CallActivity extends Activity implements AppRTCClient.SignalingEven
     // ViCall.PlayRingBack(CallActivity.this.getApplicationContext());
 
     askPermission();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    // trust Certificat   https://github.com/webrtc/apprtc/issues/586
+    try {
+      AsyncHttpURLConnection_Originale.setSSLContext(trustCert());
+    } catch (CertificateException | IOException | NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
+      e.printStackTrace();
+    }
   }
 
   @TargetApi(17)
@@ -719,7 +754,7 @@ public class CallActivity extends Activity implements AppRTCClient.SignalingEven
         if (!isError) {
           isError = true;
           //disconnectWithErrorMessage(description);
-          //Log.e(TAG, "Critical error: " + errorMessage);
+          Log.e(TAG, "Critical error: " + description);
           disconnect();
           Toasty.error(CallActivity.this, description, Toast.LENGTH_SHORT).show();
         }
@@ -974,4 +1009,34 @@ public class CallActivity extends Activity implements AppRTCClient.SignalingEven
   public void onPeerConnectionError(final String description) {
     reportError(description);
   }
+
+
+  // trust Certificat   Session
+  private SSLContext trustCert() throws CertificateException,IOException,KeyStoreException,
+          NoSuchAlgorithmException,KeyManagementException {
+    AssetManager assetManager = getAssets();
+    CertificateFactory cf = CertificateFactory.getInstance("X.509");
+    Certificate ca = cf.generateCertificate(assetManager.open("COMODORSADomainValidationSecureServerCA.crt"));
+
+    // Create a KeyStore containing our trusted CAs
+    String keyStoreType = KeyStore.getDefaultType();
+    KeyStore keyStore = KeyStore.getInstance(keyStoreType);
+    keyStore.load(null, null);
+    keyStore.setCertificateEntry("ca", ca);
+
+    // Create a TrustManager that trusts the CAs in our KeyStore
+    String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
+    TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
+    tmf.init(keyStore);
+
+    // Create an SSLContext that uses our TrustManager
+    SSLContext context = SSLContext.getInstance("TLS");
+    context.init(null, tmf.getTrustManagers(), null);
+    return context;
+  }
+
+
 }
+
+
+
