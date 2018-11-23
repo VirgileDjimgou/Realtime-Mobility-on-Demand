@@ -1,0 +1,26 @@
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:paddingBottom="6dp"
+    android:paddingTop="6dp"
+    tools:context=".tindroid.ChatListFragment"
+    tools:showIn="@layout/tin_activity_contacts">
+
+    <ListView
+        android:id="@+id/android:list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <!-- This is a view shown when no contacts are found. -->
+    <TextView
+        android:id="@id/android:empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/no_contacts"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+</FrameLayout>

@@ -1,0 +1,11 @@
+<fragment android:id="@+id/fragment"
+    android:name="com.android.gudana.BootNavigation.MainActivityFragment"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/bbn_bottom_navigation_width"
+    android:layout_marginStart="@dimen/bbn_bottom_navigation_width"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:layout="@layout/bn_fragment_main" />

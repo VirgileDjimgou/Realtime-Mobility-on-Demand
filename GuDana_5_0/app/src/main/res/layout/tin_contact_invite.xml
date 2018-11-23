@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?android:attr/activatedBackgroundIndicator"
+    android:orientation="horizontal"
+    android:paddingBottom="2dp"
+    android:paddingTop="2dp"
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp">
+
+    <ImageView
+        android:id="@android:id/icon"
+        android:layout_width="48sp"
+        android:layout_height="48sp"
+        app:srcCompat="@drawable/ic_person_circle"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="5dp" />
+
+    <Button
+        android:id="@+id/buttonInvite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:focusable="false"
+        android:text="@string/invite"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        style="@style/Widget.AppCompat.Button.Small"/>
+
+    <TextView
+            android:id="@android:id/text1"
+            android:layout_toRightOf="@android:id/icon"
+            android:layout_toLeftOf="@id/buttonInvite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:paddingEnd="16sp"
+            android:paddingRight="16sp"
+            android:layout_alignParentTop="true"
+            android:maxLines="1"
+            tools:text="Contact title"
+            android:textAppearance="@style/contactListTextPrimary"/>
+
+    <TextView
+            android:id="@android:id/text2"
+            android:layout_toRightOf="@android:id/icon"
+            android:layout_toLeftOf="@id/buttonInvite"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:maxWidth="240sp"
+            android:layout_below="@android:id/text1"
+            tools:text="Dolorem ipsum quia dolor sit amet consectetur adipisci velit"
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+</RelativeLayout>

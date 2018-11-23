@@ -756,7 +756,13 @@ public class MessageActivity extends AppCompatActivity {
     }
 
 
-    public static  void resetCallparameter(final Context context_call , final String Room_Id , String ClassName_func , String reason , int call_attribut){
+    public static  void resetCallparameter(final Context context_call ,
+                                           final String Room_Id ,
+                                           String ClassName_func ,
+                                           String reason ,
+                                           int call_attribut,
+                                           final String missedCallerId
+                                           ){
 
         currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Toasty.info(context_call, "Call Reset Parameter  : " + ClassName_func, Toast.LENGTH_LONG).show();
@@ -799,9 +805,9 @@ public class MessageActivity extends AppCompatActivity {
         // and Update Call History    ....
 
         Map callroom_map = new HashMap();
-        callroom_map.put("room_id", pushId_callRoom);
-        callroom_map.put("id_caller", currentUserId);
-        callroom_map.put("id_receiver", otherUserId);
+        callroom_map.put("room_id", Room_Id);
+        callroom_map.put("id_caller", FirebaseAuth.getInstance().getCurrentUser().getUid());
+        callroom_map.put("id_receiver", missedCallerId);
         callroom_map.put("timestamp", ServerValue.TIMESTAMP);
         callroom_map.put("available_caller", true);
         callroom_map.put("available_receiver", false);
@@ -814,7 +820,7 @@ public class MessageActivity extends AppCompatActivity {
 
 
         Map callroom_map_messages = new HashMap();
-        callroom_map_messages.put("Call_room//" + pushId_callRoom, callroom_map);
+        callroom_map_messages.put("Call_room//" + Room_Id, callroom_map);
 
 
         FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId).child("call_History").updateChildren(callroom_map_messages).addOnCompleteListener(new OnCompleteListener<Void>()
@@ -988,7 +994,6 @@ public class MessageActivity extends AppCompatActivity {
                 }
             }
         });
-
 
     }
 

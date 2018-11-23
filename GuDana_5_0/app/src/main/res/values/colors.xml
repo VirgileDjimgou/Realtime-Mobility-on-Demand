@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="white">#FFFFFF</color>
+    <color name="grey">#9e9e9e</color>
+
+    <color name="colorButtonNormal">#d6d7d7</color>
+
+    <color name="colorTextPrimary">#212121</color>
+    <color name="colorTextSecondary">#616161</color>
+
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+
+    <color name="colorAccent">#334081</color>
+    <color name="colorDanger">#E57373</color>
+    <color name="colorDangerDark">#B71C1C</color>
+
+    <color name="colorLightGray">#eeeeee</color>
+    <color name="colorGray">#cccccc</color>
+
+    <color name="colorFacebookPrimary">#3B5998</color>
+    <color name="colorFacebookDark">#2f4779</color>
+    <color name="colorFacebookLight">#627aac</color>
+    <color name="colorGooglePrimary">#dd4b39</color>
+    <color name="colorGoogleDark">#dd4b39</color>
+    <color name="colorGoogleLight">#dd4b39</color>
+
+    <color name="colorPillCounter">#FF98AFC7</color>
+    <color name="colorUserOnline">#FF40C040</color>
+    <color name="colorUserOnlineH1">#FF30D030</color>
+    <color name="colorUserOnlineH2">#FF10EE10</color>
+    <color name="colorUserOnlineH3">#FF00FF00</color>
+    <color name="colorUserOffline">#FFC0C0C0</color>
+
+    <color name="colorAvatarLight">#66000000</color>
+    <color name="colorSplashScreenBackground">#FF3949AB</color>
+
+    <color name="colorNotificationBackground">#3949AB</color>
+
+    <color name="colorOffline">#FFFFFF66</color>
+
+    <color name="colorMessageSelected">#2f3F51B5</color>
+
+    <color name="colorDivider">#66000000</color>
+
+    <color name="colorBorderGreen">#4CAF50</color>
+    <color name="colorBorderGray">#9E9E9E</color>
+    <color name="colorBorderBlue">#2196F3</color>
+    <color name="colorBorderRed">#E57373</color>
+    <color name="colorBorderYellow">#FFCA28</color>
+
+    <color name="colorMessageBubble">#c5e1a5</color>
+    <color name="colorMessageMetaBubble">#CFD8DC</color>
+
+
+    <!-- Background colors for LetterTileDrawables. -->
+    <array name="letter_tile_colors_light">
+        <item>#ef9a9a</item>
+        <item>#90caf9</item>
+        <item>#b0bec5</item>
+        <item>#b39ddb</item>
+        <item>#ffab91</item>
+        <item>#a5d6a7</item>
+        <item>#dddddd</item>
+        <item>#e6ee9c</item>
+        <item>#c5e1a5</item>
+        <item>#fff59d</item>
+        <item>#f48fb1</item>
+        <item>#9fa8da</item>
+        <item>#ffe082</item>
+        <item>#bcaaa4</item>
+        <item>#80deea</item>
+        <item>#ce93d8</item>
+    </array>
+    <color name="letter_tile_text_color_light">#f0f0f0</color>
+
+    <!-- Darker versions of letter_tile_colors, two shades darker. -->
+    <array name="letter_tile_colors_dark">
+        <item>#C62828</item>
+        <item>#AD1457</item>
+        <item>#6A1B9A</item>
+        <item>#4527A0</item>
+        <item>#283593</item>
+        <item>#1565C0</item>
+        <item>#0277BD</item>
+        <item>#00838F</item>
+        <item>#00695C</item>
+        <item>#2E7D32</item>
+        <item>#558B2F</item>
+        <item>#9E9D24</item>
+        <item>#F9A825</item>
+        <item>#FF8F00</item>
+        <item>#EF6C00</item>
+        <item>#D84315</item>
+    </array>
+    <color name="letter_tile_text_color_dark">#dedede</color>
+
+
+
+
+
+    <color name="black_overlay">#66000000</color>
+    <color name="bgnew">#464756</color>
+
+    <color name="bg_gradient_start">#31244e</color>
+    <color name="bg_gradient_end">#6b394c</color>
+
+    <color name="colorPrimaryy">#FFFFFF</color>
+    <color name="colorPrimaryDarkk">#FFFFFF</color>
+    <color name="colorAccentt">#464756</color>
+
+
+    <color name="textTabBright">#a2a2a2</color>
+    <color name="textTabLight">#c2c2c2</color>
+    <color name="blackOverlay">#80000000</color>
+    <color name="blackDarkOverlay">#20000000</color>
+
+    <color name="lightPrimary_1">#cfebf0</color>
+    <color name="lightPrimary_2">#b6e3e7</color>
+    <color name="lightPrimary_3">#96d6db</color>
+    <color name="lightPrimary_4">#7ac7d3</color>
+    <color name="lightPrimary_5">#75becb</color>
+
+    <color name="darkPrimary_1">#4b5073</color>
+    <color name="darkPrimary_2">#343851</color>
+    <color name="darkPrimary_3">#2c2f43</color>
+    <color name="darkPrimary_4">#20222f</color>
+    <color name="darkPrimary_5">#1a1b22</color>
+
+
+    <color name="colorLine">#f1f1f1</color>
+    <color name="colorRoot">#fafafa</color>
+    <color name="colorTextTitle">@color/colorTextDark</color>
+    <color name="colorTextContent">@color/colorTextDark2nd</color>
+    <color name="colorTextSubtitle">@color/colorTextGrey2nd</color>
+    <color name="colorTextAlert">#fcc96b</color>
+
+    <color name="colorTextDark">#424242</color>
+    <color name="colorTextDark2nd">#757575</color>
+    <color name="colorTextGrey">#9e9e9e</color>
+    <color name="colorTextGrey2nd">#bdbdbd</color>
+    <color name="colorTextLight">#fafafa</color>
+    <color name="colorTextLight2nd">#f5f5f5</color>
+
+    <color name="colorLevel_4">#e52f35</color>
+    <color name="colorLevel_5">#99004c</color>
+    <color name="colorLevel_6">#7e0023</color>
+
+    <color name="primary">#2196F3</color>
+    <color name="primaryDark">#1976D2</color>
+    <color name="accent">#FF4081</color>
+    <color name="accentLight">#FF4081</color>
+
+    <color name="background">#eeeeee</color>
+    <color name="lightGray">#e6e6e6</color>
+    <color name="textLightGray">#8f8f8f</color>
+    <color name="textGreyHeader">#ff818181</color>
+    <color name="notificationContentText">#737373</color>
+    <color name="error">#da1b21</color>
+    <color name="iconTint">#8e8e8e</color>
+    <color name="default_colour_grey">#8e8e8e</color>
+    <color name="emptyColour">#bababa</color>
+    <color name="NotificationTitle">#ffffff</color>
+
+    //world360
+    <color name="blue_grey_900">#263238</color>
+    <color name="blue_grey_800">#37474F</color>
+    <color name="blue_grey_600">#59737F</color>
+    <color name="status_bar_color">#3C263238</color>
+    <color name="foreground">#F5F5F5</color>
+    <color name="backgroundd">@color/blue_grey_900</color>
+    <color name="theme_accent">#FF3D00</color>
+    <color name="ripple">#33FFFFFF</color>
+    <color name="textColorSecondary">#757575</color>
+    <color name="textColorPrimary">#212121</color>
+    <color name="text_like_counter">#2b5a83</color>
+    <color name="green">#4caf50</color>
+    <color name="orange">#ff5722</color>
+    <color name="purple">#464756</color>
+    <color name="blue">#2196f3</color>
+    <color name="pink">#e91e63</color>
+    <color name="feed">#47abff</color>
+    <color name="friend">#FD1745</color>
+    <color name="flash">#ffcf44</color>
+    <color name="permission">#F44236</color>
+    <color name="done">#CDFF90</color>
+
+
+    <color name="colorRed">#ef5350</color>
+    <color name="colorDarkRed">#b61827</color>
+
+    <color name="colorGreen">#66bb6a</color>
+    <color name="colorGreenDark">#338a3e</color>
+
+    <color name="colorBlue">#42a5f5</color>
+    <color name="colorBlueDark">#0077c2</color>
+
+    <color name="colorPurple">#464756</color>
+    <color name="colorPurpleDark">#4d2c91</color>
+
+    <color name="colorPink">#ec407a</color>
+    <color name="colorPinkDark">#b4004e</color>
+
+    <color name="colorGrayDark">#8d8d8d</color>
+
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorTransperent">#b3000000</color>
+
+
+    <color name="colorIndivateTab">#FFFFFF</color>
+    <color name="transparent">#00000000</color>
+    <color name="colorCardView">#f7f7f7</color>
+    <color name="grey_200">#EEEEEE</color>
+    <color name="grey_500">#a4a4a4</color>
+    <color name="grey_100">#F5F5F5</color>
+    <color name="grey_800">#212121</color>
+    <color name="tabIndicator">#d2d7de</color>
+    <color name="violet">#551a8b</color>
+
+    <color name="viewBg">#f1f5f8</color>
+    <color name="album_title">#4c4c4c</color>
+
+
+    <color name="colorButton">#991041</color>
+
+    <color name="colorTextDisable">#66FFFFFF</color>
+
+    <color name="sinch_purple">#ff63029d</color>
+    <color name="off_white">#fffafafa</color>
+    <color name="dark_gray">#ffb3b3b3</color>
+    <color name="very_dark_gray">#636363</color>
+
+
+    <!-- Light colors -->
+    <color name="colorPrimary_light">#FFE0B2</color>
+    <color name="colorPrimaryDark_light">#FFA726</color>
+    <color name="colorAccent_light">#424242</color>
+    <color name="background_light">#FFF3E0</color>
+
+    <!-- Dark colors -->
+    <color name="colorPrimary_dark">#2E7D32</color>
+    <color name="colorPrimaryDark_dark">#1B5E20</color>
+    <color name="colorAccent_dark">#FAFAFA</color>
+    <color name="background_dark">#263238</color>
+
+
+    <color name="backgroundcolor">#fcfcfc</color>
+    <color name="lightgray">#ededed</color>
+    <color name="deeppurple">#7c4dff</color>
+    <color name="yello">#ffb300</color>
+    <color name="darkblue">#23283a</color>
+    <color name="testcolorblue">#152b38</color>
+
+
+    <!-- add GuD Passenger  -->
+
+
+    <color name="secondary_text">#727272</color>
+
+
+    <color name="colorAccent2">#9cacbf</color>
+
+    <color name="etherReceived">#d22a8031</color>
+    <color name="etherSpent">#d2a63f40</color>
+    <color name="normalBlack">#222222</color>
+    <color name="unconfirmed">#b6b6b6</color>
+    <color name="unconfirmedNew">#a3a3a3</color>
+
+    <color name="color_green">#14808d</color>
+    <color name="color_brown">#343838</color>
+    <color name="divider_grey">#e4e4e5</color>
+
+    <color name="grey_300">#E0E0E0</color>
+    <color name="bg_row_background">#fa315b</color>
+    <color name="item_name">#535353</color>
+    <color name="description">#a9a9a9</color>
+
+
+    <color name="theme_primary">#8BC34A</color>
+    <color name="theme_primary_dark">#689F38</color>
+    <color name="theme_primary_light">#DCEDC8</color>
+    <color name="theme_primary_accent">#CDDC39</color>
+    <color name="theme_primary_text_icons">#212121</color>
+    <color name="theme_primary_text">#212121</color>
+    <color name="theme_primary_secondary_text">#727272</color>
+    <color name="theme_primary_divider">#B6B6B6</color>
+
+    <color name="disabled">#b6b6b6</color>
+    <color name="text_attention">#ff5252</color>
+
+    <color name="material_dialog_background">@android:color/white</color>
+    <color name="material_dialog_content">@color/theme_primary_secondary_text</color>
+    <color name="material_dialog_title">@color/theme_primary_secondary_text</color>
+    <color name="material_dialog_buttons">@color/theme_primary</color>
+
+    <color name="refresh_progress_1">@color/theme_primary_accent</color>
+    <color name="refresh_progress_2">@color/theme_primary_dark</color>
+    <color name="refresh_progress_3">@color/theme_primary</color>
+
+
+    <color name="bg_login">#26ae90</color>
+    <color name="bg_register">#2e3237</color>
+    <color name="input_login">#222222</color>
+    <color name="input_login_hint">#999999</color>
+    <color name="input_register">#888888</color>
+    <color name="input_register_bg">#3b4148</color>
+    <color name="input_register_hint">#5e6266</color>
+    <color name="btn_login">#26ae90</color>
+    <color name="btn_login_bg">#eceef1</color>
+    <color name="lbl_name">#333333</color>
+    <color name="btn_logut_bg">#ff6861</color>
+
+
+    <color name="gomalan_bule_bg">#00b1c7</color>
+    <color name="gomalan_green_bg">#19c594</color>
+    <color name="gomalon_dark_blue">#0097a9</color>
+
+
+    <color name="windowBackground">#EEEEEE</color>
+    <color name="navigationBarColor">#44424242</color>
+
+    <color name="white_opaque">#FFFFFFFF</color>
+    <color name="white_transparent">#99FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="filter_bg">#eeffffff</color>
+    <color name="red">#990000</color>
+    <color name="yellow">#ffbf00</color>
+    <color name="filter_red">#ff5240</color>
+    <color name="header_color">#080808</color>
+    <color name="setup_store_bg">#787878</color>
+    <color name="g_bule_bg">#00b1c7</color>
+    <color name="g_green_bg">#19c594</color>
+    <color name="g_dark_blue">#0097a9</color>
+    <color name="featured_dots_active">#9D9D9D</color>
+
+    <color name="primary_dark">#0097A7</color>
+    <color name="primary_light">#B2EBF2</color>
+    <color name="primary_text">#212121</color>
+    <color name="icons">#FFFFFF</color>
+    <color name="divider">#B6B6B6</color>
+
+
+    <color name="style_color_primary">#2d5d82</color>
+    <color name="style_color_primary_dark">#21425d</color>
+    <color name="style_color_accent">#01bcd5</color>
+    <color name="primary_transparent">#103F51B5</color>
+
+    <color name="material_deep_purple_50">#EDE7F6</color>
+    <color name="material_deep_purple_500">#673AB7</color>
+    <color name="material_deep_purple_700">#512DA8</color>
+    <color name="material_deep_purple_a200">#E040FB</color>
+
+    <color name="material_green_50">#E8F5E9</color>
+    <color name="material_green_500">#4CAF50</color>
+    <color name="material_green_700">#388E3C</color>
+    <color name="material_green_a200">#69F0AE</color>
+
+    <color name="material_lime_a700">#AEEA00</color>
+
+    <color name="material_purple_50">#F3E5F5</color>
+    <color name="material_purple_a700">#AA00FF</color>
+
+    <color name="material_red_a200">#FF5252</color>
+
+
+    <color name="fab_color_pressed">#007787</color>
+    <color name="fab_color_shadow">#44000000</color>
+
+    <color name="btn_default_light_normal">#00000000</color>
+    <color name="btn_default_light_pressed">#40ffffff</color>
+    <color name="btn_send_normal">#02c754</color>
+    <color name="btn_send_pressed">#006633</color>
+    <color name="btn_context_menu_normal">#ffffff</color>
+    <color name="btn_context_menu_pressed">#40000000</color>
+    <color name="btn_context_menu_text_red">#ffff0000</color>
+
+
+    <color name="bg_comments">#ffffff</color>
+
+
+    <color name="blue_grey_500">#607D8B</color>
+
+    <color name="user_detail_separator">#007787</color>
+
+    <!-- week view -->
+    <color name="event_color_01">#59dbe0</color>
+    <color name="event_color_02">#f57f68</color>
+    <color name="event_color_03">#87d288</color>
+    <color name="event_color_04">#f8b552</color>
+    <color name="toolbar">#efefef</color>
+    <color name="toolbar_text">#8f000000</color>
+
+    <color name="body_text_1">#de000000</color>
+    <color name="body_text_2">#8a000000</color>
+    <color name="body_text_3">#60000000</color>
+    <color name="body_text_disabled">#44000000</color>
+
+    <color name="body_text_1_inverse">#deffffff</color>
+    <color name="body_text_2_inverse">#8affffff</color>
+    <color name="flat_button_text">#ff0097a7</color>
+    <color name="list_dropdown_divider_color">#92a3a3a3</color>
+    <color name="navview_icon">#ff444444</color>
+    <color name="video_title">#de07434d</color>
+    <color name="filter_text">#ff0097a7</color>
+    <color name="my_schedule_conflict">#dd2c00</color>
+    <color name="my_schedule_past">#95a1a6</color>
+    <color name="my_schedule_hour_header_default">#de455a64</color>
+    <color name="my_schedule_hour_header_finished">#b8455a64</color>
+    <color name="my_schedule_icon_default">#ff07434d</color>
+    <color name="my_schedule_icon_finished">#ff49757c</color>
+    <color name="my_schedule_session_title_default">#de07434d</color>
+    <color name="my_schedule_session_title_finished">#b807434d</color>
+
+
+</resources>

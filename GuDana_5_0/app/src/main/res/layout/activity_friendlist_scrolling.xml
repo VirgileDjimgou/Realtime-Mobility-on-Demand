@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".hify.ui.activities.FriendlistScrollingActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        android:layout_height="40dp">
+        <EditText
+            android:id="@+id/group_name"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_horizontal|center_vertical"
+            android:background="@drawable/rounded_listview"
+            android:hint="Enter a Group Name"/>
+
+        <Button
+            android:id="@+id/creategroup__button"
+            android:layout_width="170dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_gravity="right"
+            android:background="@drawable/rounded_accept_button"
+            android:text="Create new group"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:visibility="visible" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_height="wrap_content">
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="25dp"
+            android:onClick="setProfilepic"
+            android:src="@drawable/default_user_art_g_2"
+            app:civ_border_color="#ffffff"
+            app:civ_border_width="0dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="press on the Icon to Select your group Picture"
+            android:textStyle="bold"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+    <com.tylersuehr.esr.EmptyStateRecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_marginTop="270dp"
+        android:layout_height="match_parent"
+        />
+
+
+</android.support.design.widget.CoordinatorLayout>

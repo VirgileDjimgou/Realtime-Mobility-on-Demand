@@ -145,13 +145,6 @@
                 <data android:scheme="sip" />
                 <data android:scheme="imto" />
             </intent-filter>
-            <intent-filter>
-                <data android:mimeType="@string/sync_mimetype" /> <!-- Change package in res/values/non_localizable_custom.xml ! -->
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
         </activity>
 
         <meta-data
@@ -414,13 +407,6 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize">
-            <intent-filter android:icon="@mipmap/ic_launcher">
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="vnd.android.cursor.item/vnd.tinode.profile" />
-            </intent-filter>
         </activity>
 
         <activity

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/purple"
+    app:bbn_alwaysShowLabels="false"
+    app:bbn_itemColorActive="@android:color/white"
+    app:bbn_itemColorDisabled="#33ffffff"
+    app:bbn_itemColorInactive="#99ffffff"
+    app:bbn_rippleColor="#ccffffff">
+
+    <item
+        android:id="@+id/bbn_item1"
+        android:enabled="true"
+        android:icon="@drawable/ic_home_white_24dp"
+        android:title="Home" />
+    <item
+        android:id="@+id/bbn_item2"
+        android:enabled="true"
+        android:icon="@drawable/ic_chat_white_24dp"
+        android:title="Chats" />
+    <item
+        android:id="@+id/bbn_item3"
+        android:enabled="true"
+        android:icon="@drawable/ic_local_phone_phone_24dp"
+        android:background="@android:color/transparent"
+        android:title="Calls" />
+    <item
+        android:id="@+id/bbn_item4"
+        android:enabled="true"
+        android:icon="@drawable/ic_people_white_24dp"
+        android:background="#CCFF0088"
+        android:title="Friend" />
+    <item
+        android:id="@+id/bbn_item5"
+        android:enabled="true"
+        android:icon="@drawable/ic_person_white_24dp"
+        android:background="#80000000"
+        android:title="My Profile" />
+</menu>
