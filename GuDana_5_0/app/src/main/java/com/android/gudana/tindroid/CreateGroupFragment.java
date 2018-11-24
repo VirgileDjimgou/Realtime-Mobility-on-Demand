@@ -16,15 +16,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.android.gudana.R;
 import com.android.gudana.hify.ui.activities.MainActivity_GuDDana;
+import com.android.gudana.tindroid.media.VxCard;
 import com.pchmn.materialchips.ChipsInput;
 import com.pchmn.materialchips.model.Chip;
 import com.pchmn.materialchips.model.ChipInterface;
 
 import java.util.List;
 
-import com.android.gudana.tindroid.media.VxCard;
+import com.android.gudana.R;
 import co.tinode.tinodesdk.ComTopic;
 import co.tinode.tinodesdk.NotConnectedException;
 import co.tinode.tinodesdk.PromisedReply;
@@ -40,7 +40,7 @@ public class CreateGroupFragment extends Fragment implements UiUtils.ContactsLoa
 
     private static final String TAG = "CreateGroupFragment";
 
-    private ImageLoader mImageLoader; // Handles loading the tin_contact image in a background thread
+    private ImageLoader mImageLoader; // Handles loading the contact image in a background thread
 
     private PromisedReply.FailureListener<ServerMessage> mFailureListener;
 
@@ -188,7 +188,7 @@ public class CreateGroupFragment extends Fragment implements UiUtils.ContactsLoa
                         topic.invite((String) chip.getId(), null /* use default */);
                     }
 
-                    Intent intent = new Intent(activity, MessageActivity.class);
+                    Intent intent = new Intent(activity, MessageActivity_fire_tinode.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     intent.putExtra("topic", topic.getName());
                     startActivity(intent);

@@ -23,12 +23,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.gudana.R;
-import com.android.gudana.hify.ui.activities.MainActivity_GuDDana;
-
 import java.io.IOException;
 
-import es.dmoral.toasty.Toasty;
+import com.android.gudana.R;
+import com.android.gudana.hify.ui.activities.MainActivity_GuDDana;
 
 /**
  * View with contacts.
@@ -44,7 +42,7 @@ public class ChatListFragment extends ListFragment implements AbsListView.MultiC
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -66,7 +64,7 @@ public class ChatListFragment extends ListFragment implements AbsListView.MultiC
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String topic = mAdapter.getTopicNameFromView(view);
-                Intent intent = new Intent(getActivity(), MessageActivity.class);
+                Intent intent = new Intent(getActivity(), MessageActivity_fire_tinode.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 intent.putExtra("topic", topic);
                 startActivity(intent);
@@ -88,15 +86,13 @@ public class ChatListFragment extends ListFragment implements AbsListView.MultiC
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
         // super.onCreateOptionsMenu(menu, inflater);
-        //menu.clear();
-        //inflater.inflate(R.menu.tin_menu_chat_list, menu);
+        menu.clear();
+        inflater.inflate(R.menu.tin_menu_chat_list, menu);
     }
 
     /**
      * This menu is shown when no items are selected
      */
-
-    /*
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -126,7 +122,7 @@ public class ChatListFragment extends ListFragment implements AbsListView.MultiC
                                     final Activity activity = getActivity();
                                     String id = editor.getText().toString();
                                     if (!TextUtils.isEmpty(id)) {
-                                        Intent it = new Intent(activity, MessageActivity.class);
+                                        Intent it = new Intent(activity, MessageActivity_fire_tinode.class);
                                         it.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                                         it.putExtra("topic", id);
                                         startActivity(it);
@@ -143,10 +139,7 @@ public class ChatListFragment extends ListFragment implements AbsListView.MultiC
                 return true;
 
             case R.id.action_settings:
-                //((MainActivity_GuDDana)getActivity()).showAccountInfoFragment();
-                // start  Acoount
-                Intent AccountInfos = new Intent(ChatListFragment.this.getContext(), AccountInfos_Activity.class);
-                startActivity(AccountInfos);
+                ((MainActivity_GuDDana)getActivity()).showAccountInfoFragment();
                 return true;
 
             case R.id.action_about:
@@ -161,15 +154,13 @@ public class ChatListFragment extends ListFragment implements AbsListView.MultiC
                     Log.d(TAG, "Reconnect failure", ex);
                     String cause = ex.getCause().getMessage();
                     Activity activity = getActivity();
-                    Toasty.error(activity, activity.getString(R.string.error_connection_failed) + cause,
+                    Toast.makeText(activity, activity.getString(R.string.error_connection_failed) + cause,
                             Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
         return false;
     }
-
-    /*
 
     /**
      * This menu is shown when one or more items are selected from the list

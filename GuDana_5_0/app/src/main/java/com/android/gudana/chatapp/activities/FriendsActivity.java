@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.android.gudana.R;
-import com.android.gudana.tindroid.MessageActivity;
+import com.android.gudana.tindroid.MessageActivity_fire_tinode;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -112,7 +112,7 @@ public class FriendsActivity extends AppCompatActivity
                                         startActivity(userProfileIntent);
                                         return true;
                                     case 2:
-                                        Intent sendMessageIntent = new Intent(FriendsActivity.this, MessageActivity.class);
+                                        Intent sendMessageIntent = new Intent(FriendsActivity.this, MessageActivity_fire_tinode.class);
                                         sendMessageIntent.putExtra("userid", userid);
                                         startActivity(sendMessageIntent);
                                         return true;

@@ -1,5 +1,70 @@
 package com.android.gudana.tindroid;
 
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.OpenableColumns;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.gudana.tindroid.db.BaseDb;
+import com.android.gudana.tindroid.db.StoredTopic;
+import com.android.gudana.tindroid.media.VxCard;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.ref.WeakReference;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import com.android.gudana.R;
+import co.tinode.tinodesdk.ComTopic;
+import co.tinode.tinodesdk.LargeFileHelper;
+import co.tinode.tinodesdk.NotConnectedException;
+import co.tinode.tinodesdk.PromisedReply;
+import co.tinode.tinodesdk.Storage;
+import co.tinode.tinodesdk.Topic;
+import co.tinode.tinodesdk.model.Drafty;
+import co.tinode.tinodesdk.model.MsgServerCtrl;
+import co.tinode.tinodesdk.model.ServerMessage;
+
+import static android.app.Activity.RESULT_OK;
+
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
@@ -69,19 +134,16 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.UUID;
 
 import com.android.gudana.R;
 import com.android.gudana.fcm.CustomFcm_Util;
 import com.android.gudana.hify.ui.activities.MainActivity_GuDDana;
-import com.android.gudana.hify.utils.Config;
 import com.android.gudana.hify.utils.OpenNavi;
 import com.android.gudana.tindroid.db.BaseDb;
 import com.android.gudana.tindroid.db.StoredTopic;
 import com.android.gudana.tindroid.media.VxCard;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
-import com.firebase.ui.database.FirebaseListAdapter;
 import com.github.javiersantos.bottomdialogs.BottomDialog;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -129,14 +191,16 @@ import io.reactivex.schedulers.Schedulers;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
+
 /**
  * Fragment handling message display and message sending.
  */
-public class MessagesFragment extends Fragment
-        implements LoaderManager.LoaderCallbacks<MessagesFragment.UploadResult> {
+public class MessagesFragment_fire_tinode extends Fragment
+        implements LoaderManager.LoaderCallbacks<MessagesFragment_fire_tinode.UploadResult> {
     private static final String TAG = "MessageFragment";
 
     private static final int MESSAGES_TO_LOAD = 20;
+
     private static final int ACTION_ATTACH_FILE = 100;
     private static final int ACTION_ATTACH_IMAGE = 101;
 
@@ -144,9 +208,8 @@ public class MessagesFragment extends Fragment
     private static final long MAX_INBAND_ATTACHMENT_SIZE = 1 << 17;
     // Maximum size of file to upload. 8MB.
     private static final long MAX_ATTACHMENT_SIZE = 1 << 23;
+
     private static final int READ_DELAY = 1000;
-    private static String Sender_uid = "";
-    private static String Name_Sender = "unknow";
     protected ComTopic<VxCard> mTopic;
 
     private LinearLayoutManager mMessageViewLayoutManager;
@@ -156,10 +219,18 @@ public class MessagesFragment extends Fragment
     // It cannot be local.
     @SuppressWarnings("FieldCanBeLocal")
     private UploadProgress mUploadProgress;
+
     private String mTopicName = null;
     private Timer mNoteTimer = null;
     private String mMessageToSend = null;
+
     private PromisedReply.FailureListener<ServerMessage> mFailureListener;
+
+    // added
+    private static String Sender_uid = "";
+    private static String Name_Sender = "unknow";
+    // It cannot be local.
+    @SuppressWarnings("FieldCanBeLocal")
     private BoomMenuButton bmb ;
     private static final int CONTACT_PICKER_REQUEST = 23 ;
     private static final int PLACE_PICKER_REQUEST = 3;
@@ -219,7 +290,7 @@ public class MessagesFragment extends Fragment
     public static  MediaPlayer mediaPlayer_song_in;
     private String Chat_uid;
     private String Chat_picture;
-    MessageActivity activity;
+    MessageActivity_fire_tinode activity;
     private RecyclerView ml;
     public static  String  TokenFCM_OtherUser = "";
 
@@ -227,8 +298,7 @@ public class MessagesFragment extends Fragment
     private static FirebaseUser currentUser;
 
 
-    public MessagesFragment() {
-
+    public MessagesFragment_fire_tinode() {
     }
 
     @Override
@@ -239,7 +309,6 @@ public class MessagesFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         return inflater.inflate(R.layout.tin_fragment_messages, container, false);
     }
 
@@ -247,7 +316,7 @@ public class MessagesFragment extends Fragment
     public void onActivityCreated(Bundle savedInstance) {
         super.onActivityCreated(savedInstance);
 
-        activity = (MessageActivity) getActivity();
+        final MessageActivity_fire_tinode activity = (MessageActivity_fire_tinode) getActivity();
 
         mMessageViewLayoutManager = new LinearLayoutManager(activity) {
             @Override
@@ -266,7 +335,7 @@ public class MessagesFragment extends Fragment
         // mMessageViewLayoutManager.setStackFromEnd(true);
         mMessageViewLayoutManager.setReverseLayout(true);
 
-        ml = activity.findViewById(R.id.messages_container);
+        final RecyclerView ml = activity.findViewById(R.id.messages_container);
         ml.setLayoutManager(mMessageViewLayoutManager);
 
         // Creating a strong reference from this Fragment, otherwise it will be immediately garbage collected.
@@ -319,9 +388,7 @@ public class MessagesFragment extends Fragment
         });
 
 
-
-        // Send Message  when you press Enter Key
-        EmojiconEditText editor = activity.findViewById(R.id.editMessage);
+        EditText editor = activity.findViewById(R.id.editMessage);
         // Send message on Enter
         editor.setOnEditorActionListener(
                 new TextView.OnEditorActionListener() {
@@ -348,9 +415,9 @@ public class MessagesFragment extends Fragment
 
             @Override
             public void afterTextChanged(Editable editable) {
-
             }
         });
+
 
 
         // bmb Button ...
@@ -383,7 +450,7 @@ public class MessagesFragment extends Fragment
                                     .enableSelectAll(true)
                                     .showFolderView(true)
                                     .setActivityTheme(R.style.LibAppTheme)
-                                    .pickFile(MessagesFragment.this);
+                                    .pickFile(MessagesFragment_fire_tinode.this);
 
                             //openFileSelector("*/*", R.string.select_file, ACTION_ATTACH_FILE);
 
@@ -411,7 +478,7 @@ public class MessagesFragment extends Fragment
                                     .enableSelectAll(true)
                                     .showFolderView(true)
                                     .setActivityTheme(R.style.LibAppTheme)
-                                    .pickPhoto(MessagesFragment.this);
+                                    .pickPhoto(MessagesFragment_fire_tinode.this);
 
                             //openFileSelector("image/*", R.string.select_image, ACTION_ATTACH_IMAGE);
                         }
@@ -426,7 +493,7 @@ public class MessagesFragment extends Fragment
                     .listener(new OnBMClickListener() {
                         @Override
                         public void onBoomButtonClick(int index) {
-                            ImagePicker.cameraOnly().start(MessagesFragment.this); // Could be Activity, Fragment, Support Fragment
+                            ImagePicker.cameraOnly().start(MessagesFragment_fire_tinode.this); // Could be Activity, Fragment, Support Fragment
                         }
                     });
 
@@ -504,7 +571,7 @@ public class MessagesFragment extends Fragment
 
 
         btEmoji = (ImageView) getActivity().findViewById(R.id.buttonEmoji);
-        emojIcon = new EmojIconActions(MessagesFragment.this.getContext(),root,  mMessageField,btEmoji);
+        emojIcon = new EmojIconActions(MessagesFragment_fire_tinode.this.getContext(),root,  mMessageField,btEmoji);
         emojIcon.ShowEmojIcon();
 
         // ######################### /// ###########
@@ -527,8 +594,8 @@ public class MessagesFragment extends Fragment
 
         // init Media Player
 
-        mediaPlayer_song_out = MediaPlayer.create(MessagesFragment.this.getContext(), R.raw.hify_sound);
-        mediaPlayer_song_in = MediaPlayer.create(MessagesFragment.this.getContext(), R.raw.stairs);
+        mediaPlayer_song_out = MediaPlayer.create(MessagesFragment_fire_tinode.this.getContext(), R.raw.hify_sound);
+        mediaPlayer_song_in = MediaPlayer.create(MessagesFragment_fire_tinode.this.getContext(), R.raw.stairs);
 
 
         // get Topic Name and slit that to extract  firebase uid
@@ -547,15 +614,15 @@ public class MessagesFragment extends Fragment
         currentUser= FirebaseAuth.getInstance().getCurrentUser();
 
         GetCorrespondantInformation_and_your_profile();
-
     }
+
 
 
     // location intent    ...
     private void locationPlacesIntent(){
         try {
             PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-            startActivityForResult(builder.build(MessagesFragment.this.getActivity()), PLACE_PICKER_REQUEST);
+            startActivityForResult(builder.build(MessagesFragment_fire_tinode.this.getActivity()), PLACE_PICKER_REQUEST);
         } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
             e.printStackTrace();
         }
@@ -564,17 +631,18 @@ public class MessagesFragment extends Fragment
     // pick contact    ...
     private void pickContact(){
 
-        new MultiContactPicker.Builder(MessagesFragment.this) //Activity/fragment context
+        new MultiContactPicker.Builder(MessagesFragment_fire_tinode.this) //Activity/fragment context
                 // .theme(R.style.MyCustomPickerTheme) //Optional - default: MultiContactPicker.Azure
                 .hideScrollbar(false) //Optional - default: false
                 .showTrack(true) //Optional - default: true
                 .searchIconColor(Color.WHITE) //Option - default: White
                 .setChoiceMode(MultiContactPicker.CHOICE_MODE_MULTIPLE) //Optional - default: CHOICE_MODE_MULTIPLE
-                .handleColor(ContextCompat.getColor(MessagesFragment.this.getContext() , R.color.colorPrimary)) //Optional - default: Azure Blue
-                .bubbleColor(ContextCompat.getColor(MessagesFragment.this.getContext(), R.color.colorPrimary)) //Optional - default: Azure Blue
+                .handleColor(ContextCompat.getColor(MessagesFragment_fire_tinode.this.getContext() , R.color.colorPrimary)) //Optional - default: Azure Blue
+                .bubbleColor(ContextCompat.getColor(MessagesFragment_fire_tinode.this.getContext(), R.color.colorPrimary)) //Optional - default: Azure Blue
                 .bubbleTextColor(Color.WHITE) //Optional - default: White
                 .showPickerForResult(CONTACT_PICKER_REQUEST);
     }
+
 
     @Override
     @SuppressWarnings("unchecked")
@@ -631,8 +699,6 @@ public class MessagesFragment extends Fragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
-
-        // her i must implement some kind of filters to hide  a  video call feature whenn  it is  group chat    ....
         inflater.inflate(R.menu.tin_menu_topic, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -702,15 +768,12 @@ public class MessagesFragment extends Fragment
         intent.setType(mimeType);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         try {
-
-            startActivityForResult(Intent.createChooser(intent, getActivity().getString(title)), resultCode);
-
+            startActivityForResult(
+                    Intent.createChooser(intent, getActivity().getString(title)), resultCode);
         } catch (ActivityNotFoundException ex) {
             Toast.makeText(getActivity(), R.string.file_manager_not_found, Toast.LENGTH_SHORT).show();
         }
     }
-
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -788,7 +851,7 @@ public class MessagesFragment extends Fragment
                         // doc_file__upload_images_to_firebase(Uri.fromFile(new File(object.toString())), ext , filename);
                         Uri uri_file = Uri.fromFile(new File(file.getPath()));
 
-                        new Compressor(MessagesFragment.this.getContext())
+                        new Compressor(MessagesFragment_fire_tinode.this.getContext())
                                 .compressToFileAsFlowable(new File(file.getPath()))
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
@@ -808,7 +871,7 @@ public class MessagesFragment extends Fragment
                                             return;
                                         }
                                         // Must use unique ID for each upload. Otherwise trouble.
-                                        activity.getSupportLoaderManager().initLoader(Cache.getUniqueCounter(), args, MessagesFragment.this);
+                                        activity.getSupportLoaderManager().initLoader(Cache.getUniqueCounter(), args, MessagesFragment_fire_tinode.this);
 
 
                                     }
@@ -816,7 +879,7 @@ public class MessagesFragment extends Fragment
                                     @Override
                                     public void accept(Throwable throwable) {
                                         throwable.printStackTrace();
-                                        Toasty.error(MessagesFragment.this.getContext(), throwable.getMessage().toString(), Toast.LENGTH_SHORT).show();
+                                        Toasty.error(MessagesFragment_fire_tinode.this.getContext(), throwable.getMessage().toString(), Toast.LENGTH_SHORT).show();
                                         //showError(throwable.getMessage());
                                     }
                                 });
@@ -829,7 +892,7 @@ public class MessagesFragment extends Fragment
             }
 
 
-                // contact
+            // contact
             // contact  ...  if
             case CONTACT_PICKER_REQUEST: {
                 if (resultCode == RESULT_OK) {
@@ -853,7 +916,7 @@ public class MessagesFragment extends Fragment
 
             case PLACE_PICKER_REQUEST: {
                 if (resultCode == RESULT_OK) {
-                    Place place = PlacePicker.getPlace(MessagesFragment.this.getContext(), data);
+                    Place place = PlacePicker.getPlace(MessagesFragment_fire_tinode.this.getContext(), data);
                     if (place != null) {
                         LatLng latLng = place.getLatLng();
                         sendText_Location(latLng.latitude + ":" + latLng.longitude);
@@ -884,7 +947,7 @@ public class MessagesFragment extends Fragment
                 final Uri uri_file = Uri.fromFile(new File(uri_img.getPath()));
                 // compress Images
                 //new UploadImagesToServer(files.get(i).getOriginalPath(), Config.IMAGES_UPLOAD_URL,i).execute();
-                new Compressor(MessagesFragment.this.getContext())
+                new Compressor(MessagesFragment_fire_tinode.this.getContext())
                         .compressToFileAsFlowable(new File(uri_img.getPath()))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -904,7 +967,7 @@ public class MessagesFragment extends Fragment
                                     return;
                                 }
                                 // Must use unique ID for each upload. Otherwise trouble.
-                                activity.getSupportLoaderManager().initLoader(Cache.getUniqueCounter(), args, MessagesFragment.this);
+                                activity.getSupportLoaderManager().initLoader(Cache.getUniqueCounter(), args, MessagesFragment_fire_tinode.this);
 
 
                             }
@@ -912,16 +975,14 @@ public class MessagesFragment extends Fragment
                             @Override
                             public void accept(Throwable throwable) {
                                 throwable.printStackTrace();
-                                Toasty.error(MessagesFragment.this.getContext(), throwable.getMessage().toString(), Toast.LENGTH_SHORT).show();
+                                Toasty.error(MessagesFragment_fire_tinode.this.getContext(), throwable.getMessage().toString(), Toast.LENGTH_SHORT).show();
                                 //showError(throwable.getMessage());
                             }
                         });
 
-
             }
 
         }
-
 
     }
 
@@ -1014,57 +1075,37 @@ public class MessagesFragment extends Fragment
         }
     }
 
-    private boolean sendMessage(Drafty content) {
-        if (mTopic != null) {
-            try {
-                PromisedReply<ServerMessage> reply = mTopic.publish(content);
-                runMessagesLoader(); // Shows pending message
-                reply.thenApply(new PromisedReply.SuccessListener<ServerMessage>() {
-                    @Override
-                    public PromisedReply<ServerMessage> onSuccess(ServerMessage result) {
-                        // Updates message list with "delivered" icon.
-                        runMessagesLoader();
-                        Play_Song_out_message();
-                        return null;
-                    }
-                }, mFailureListener);
-            } catch (NotConnectedException ignored) {
-                Log.d(TAG, "sendMessage -- NotConnectedException", ignored);
-                Toasty.info(MessagesFragment.this.getContext(), "not connected  ", Toast.LENGTH_LONG).show();
-
-            } catch (Exception ignored) {
-                Log.d(TAG, "sendMessage -- Exception", ignored);
-                Toasty.info(getActivity(), ignored.toString(), Toast.LENGTH_SHORT).show();
-                return false;
-            }
-            return true;
+    boolean sendMessage(Drafty content) {
+        MessageActivity_fire_tinode activity = (MessageActivity_fire_tinode) getActivity();
+        if (activity != null) {
+            return activity.sendMessage(content);
         }
         return false;
     }
+    /*
+
+    void sendText() {
+        final Activity activity = getActivity();
+        if (activity == null) {
+            return;
+        }
+        final TextView inputField = activity.findViewById(R.id.editMessage);
+        String message = inputField.getText().toString().trim();
+        // notifyDataSetChanged();
+        if (!message.equals("")) {
+            if (sendMessage(Drafty.parse(message))) {
+                // Message is successfully queued, clear text from the input field and redraw the list.
+                inputField.setText("");
+            }
+        }
+    }
+
+    */
 
     // Send image in-band
     public static Drafty draftyImage(String mimeType, byte[] bits, int width, int height, String fname) {
         Drafty content = Drafty.parse(" ");
         content.insertImage(0, mimeType, bits, width, height, fname);
-        Play_Song_out_message();
-
-
-
-        try{
-
-            FCM_Message_Sender.sendWithOtherThread("token" ,
-                    TokenFCM_OtherUser ,
-                    "Message",
-                    FirebaseAuth.getInstance().getUid(),
-                    Name_Sender,
-                    url_image,
-                    getDateAndTime(),
-                    "room_disable",
-                    "new Image");
-
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
         return content;
     }
 
@@ -1072,24 +1113,6 @@ public class MessagesFragment extends Fragment
     public static Drafty draftyFile(String mimeType, byte[] bits, String fname) {
         Drafty content = new Drafty();
         content.attachFile(mimeType, bits, fname);
-
-        Play_Song_out_message();
-
-        try{
-
-            FCM_Message_Sender.sendWithOtherThread("token" ,
-                    TokenFCM_OtherUser ,
-                    "Message",
-                    FirebaseAuth.getInstance().getUid(),
-                    Name_Sender,
-                    url_image,
-                    getDateAndTime(),
-                    "room_disable",
-                    "new File ");
-
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
         return content;
     }
 
@@ -1097,28 +1120,9 @@ public class MessagesFragment extends Fragment
     public static Drafty draftyAttachment(String mimeType, String fname, String refUrl, long size) {
         Drafty content = new Drafty();
         content.attachFile(mimeType, fname, refUrl, size);
-
-        // to play sund for  nification
-        Play_Song_out_message();
-
-        // send notification
-        try{
-
-            FCM_Message_Sender.sendWithOtherThread("token" ,
-                    TokenFCM_OtherUser ,
-                    "Message",
-                    FirebaseAuth.getInstance().getUid(),
-                    Name_Sender,
-                    url_image,
-                    getDateAndTime(),
-                    "room_disable",
-                    "new Attachment ");
-
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
         return content;
     }
+
 
     public void sendReadNotification() {
         if (mTopic != null) {
@@ -1491,7 +1495,7 @@ public class MessagesFragment extends Fragment
         boolean onProgress(final int loaderId, final long msgId, final long progress, final long total) {
             // DEBUG -- slow down the upload progress.
             try {
-                Thread.sleep(100);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -1529,8 +1533,7 @@ public class MessagesFragment extends Fragment
         }
     }
 
-
-
+    //  addedd
 
 
 
@@ -1552,9 +1555,9 @@ public class MessagesFragment extends Fragment
 
     private void showDiag_navigation(final ImageButton Startposition , final String message_location_parsed) {
 
-        final View dialogView = View.inflate(MessagesFragment.this.getContext(),R.layout.dialog_gps_navi_choice,null);
+        final View dialogView = View.inflate(MessagesFragment_fire_tinode.this.getContext(),R.layout.dialog_gps_navi_choice,null);
 
-        final Dialog dialog = new Dialog(MessagesFragment.this.getContext(),R.style.MyAlertDialogStyle);
+        final Dialog dialog = new Dialog(MessagesFragment_fire_tinode.this.getContext(),R.style.MyAlertDialogStyle);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         dialog.setContentView(dialogView);
@@ -1572,7 +1575,7 @@ public class MessagesFragment extends Fragment
             @Override
             public void onClick(View v) {
                 revealShow_navigation(dialogView, false, dialog , Startposition);
-                OpenNavi.Open_Street_View(MessagesFragment.this.getContext() , message_location_parsed );
+                OpenNavi.Open_Street_View(MessagesFragment_fire_tinode.this.getContext() , message_location_parsed );
 
             }
         });
@@ -1582,7 +1585,7 @@ public class MessagesFragment extends Fragment
             @Override
             public void onClick(View v) {
                 revealShow_navigation(dialogView, false, dialog , Startposition);
-                OpenNavi.Open_map(MessagesFragment.this.getContext() , message_location_parsed);
+                OpenNavi.Open_map(MessagesFragment_fire_tinode.this.getContext() , message_location_parsed);
             }
         });
 
@@ -1592,7 +1595,7 @@ public class MessagesFragment extends Fragment
             @Override
             public void onClick(View v) {
                 revealShow_navigation(dialogView, false, dialog , Startposition);
-                OpenNavi.Open_navi(MessagesFragment.this.getContext() , message_location_parsed);
+                OpenNavi.Open_navi(MessagesFragment_fire_tinode.this.getContext() , message_location_parsed);
 
             }
         });
@@ -1672,9 +1675,9 @@ public class MessagesFragment extends Fragment
 
     private void showDiag(final ImageButton Startposition) {
 
-        final View dialogView = View.inflate(MessagesFragment.this.getContext(),R.layout.dialog_voice_record,null);
+        final View dialogView = View.inflate(MessagesFragment_fire_tinode.this.getContext(),R.layout.dialog_voice_record,null);
 
-        final Dialog dialog = new Dialog(MessagesFragment.this.getContext(),R.style.MyAlertDialogStyle);
+        final Dialog dialog = new Dialog(MessagesFragment_fire_tinode.this.getContext(),R.style.MyAlertDialogStyle);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         dialog.setContentView(dialogView);
@@ -1721,7 +1724,7 @@ public class MessagesFragment extends Fragment
 
                 // maybe  a confirmation dialog her ???  to ask user if  he want to close this dialog windows  ...
 
-                new BottomDialog.Builder(MessagesFragment.this.getContext())
+                new BottomDialog.Builder(MessagesFragment_fire_tinode.this.getContext())
                         .setTitle("voice Mail")
                         .setContent("Your message will be deleted !")
                         .setPositiveText("are you sure ? ")
@@ -1759,7 +1762,7 @@ public class MessagesFragment extends Fragment
 
                 // maybe  a confirmation dialog her ???  to ask user if  he want to close this dialog windows  ...
 
-                new BottomDialog.Builder(MessagesFragment.this.getContext())
+                new BottomDialog.Builder(MessagesFragment_fire_tinode.this.getContext())
                         .setTitle("voice Mail")
                         .setContent("Your message will be deleted !")
                         .setPositiveText("are you sure ? ")
@@ -1893,25 +1896,25 @@ public class MessagesFragment extends Fragment
     private void stopRecording_and_send_voice_msg() {
 
         try {
-                        mRecorder.stop();
-                        mRecorder.release();
-                        mRecorder = null;
-                        record_time_voice.stop();
+            mRecorder.stop();
+            mRecorder.release();
+            mRecorder = null;
+            record_time_voice.stop();
 
-                        // get  uri msg   ...
-                        Uri uri_voice_msg = Uri.fromFile(new File(mFileName));
+            // get  uri msg   ...
+            Uri uri_voice_msg = Uri.fromFile(new File(mFileName));
 
-                        //Uri uri_file = Uri.fromFile(new File(file.getPath()));
-                        final Bundle args = new Bundle();
-                        args.putParcelable("uri", uri_voice_msg);
-                        args.putInt("requestCode", ACTION_ATTACH_FILE); // image picker   request code   ....
-                        args.putString("topic", mTopicName);
-                        final FragmentActivity activity = getActivity();
-                        if (activity == null) {
-                            return;
-                        }
-                        // Must use unique ID for each upload. Otherwise trouble.
-                        activity.getSupportLoaderManager().initLoader(Cache.getUniqueCounter(), args, this);
+            //Uri uri_file = Uri.fromFile(new File(file.getPath()));
+            final Bundle args = new Bundle();
+            args.putParcelable("uri", uri_voice_msg);
+            args.putInt("requestCode", ACTION_ATTACH_FILE); // image picker   request code   ....
+            args.putString("topic", mTopicName);
+            final FragmentActivity activity = getActivity();
+            if (activity == null) {
+                return;
+            }
+            // Must use unique ID for each upload. Otherwise trouble.
+            activity.getSupportLoaderManager().initLoader(Cache.getUniqueCounter(), args, this);
 
             // uploadAudio();
         }catch (Exception ex){
@@ -1977,13 +1980,13 @@ public class MessagesFragment extends Fragment
             mFirestore = FirebaseFirestore.getInstance();
             // get Users Informations
             mFirestore.collection("Users")
-                    .document(MessageActivity.otherUserId)
+                    .document(MessageActivity_fire_tinode.otherUserId)
                     .get()
                     .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                         @Override
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-                            MessageActivity.TokenFCM_OtherUser = TokenFCM_OtherUser =documentSnapshot.getString("token_id");
+                            MessageActivity_fire_tinode.TokenFCM_OtherUser = TokenFCM_OtherUser =documentSnapshot.getString("token_id");
 
                         }
                     });
@@ -1996,9 +1999,9 @@ public class MessagesFragment extends Fragment
                     .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                         @Override
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            MessageActivity.url_Icon_currentUser = url_image =documentSnapshot.getString("image");
-                            MessageActivity.currentUserId =Sender_uid = documentSnapshot.getString("id");
-                            MessageActivity.NameCurrentUser =Name_Sender = documentSnapshot.getString("name");
+                            MessageActivity_fire_tinode.url_Icon_currentUser = url_image =documentSnapshot.getString("image");
+                            MessageActivity_fire_tinode.currentUserId =Sender_uid = documentSnapshot.getString("id");
+                            MessageActivity_fire_tinode.NameCurrentUser =Name_Sender = documentSnapshot.getString("name");
 
                         }
                     });

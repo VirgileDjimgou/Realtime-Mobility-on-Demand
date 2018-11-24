@@ -35,7 +35,7 @@ import com.android.gudana.hify.utils.database.UserHelper;
 import com.android.gudana.R;
 import com.android.gudana.tindroid.Cache;
 import com.android.gudana.tindroid.CredentialsFragment;
-import com.android.gudana.tindroid.Test_Login_Tinode_server_Activity;
+//import com.android.gudana.tindroid.Test_Login_Tinode_server_Activity;
 import com.android.gudana.tindroid.UiUtils;
 import com.android.gudana.tindroid.account.Utils;
 import com.github.javiersantos.bottomdialogs.BottomDialog;

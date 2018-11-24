@@ -8,13 +8,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -22,11 +19,9 @@ import com.android.gudana.R;
 import com.android.gudana.apprtc.CallFragment;
 import com.android.gudana.apprtc.CallIncomingActivity;
 import com.android.gudana.hify.ui.activities.MainActivity_GuDDana;
-import com.android.gudana.tindroid.MessageActivity;
+import com.android.gudana.tindroid.MessageActivity_fire_tinode;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -101,7 +96,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 					// If it's a message notification
 					// Checking if CreateGroupChatActivity is not open or if its, it should have a different userId from current
 
-					if(!MessageActivity.running || MessageActivity.running && !MessageActivity.otherUserId.equals(senderID))
+					if(!MessageActivity_fire_tinode.running || MessageActivity_fire_tinode.running && !MessageActivity_fire_tinode.otherUserId.equals(senderID))
 					{
 
 						sendNotification( data);
@@ -277,7 +272,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 												// sendNotification(data);
 												// or  for missed call  in history   ...
 												// send unavailibilty notfication  to another user  ...s
-												MessageActivity.missedCallNotification(getApplication(),
+												MessageActivity_fire_tinode.missedCallNotification(getApplication(),
 														room_call,
 														"video",
 														senderID ,
@@ -292,14 +287,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 											// sendNotification(data);
 											// or  for missed call  in history   ...
 											// send unavailibilty notfication  to another user  ...s
-											MessageActivity.missedCallNotification(getApplication(),
+											MessageActivity_fire_tinode.missedCallNotification(getApplication(),
 													"video",
 													senderID,
 													room_call ,
 													"Firebase messaging  notification" ,
 													"missed call");
 
-											MessageActivity.missedCallNotification(getApplication(),
+											MessageActivity_fire_tinode.missedCallNotification(getApplication(),
 													room_call,
 											"video",
 													senderID ,

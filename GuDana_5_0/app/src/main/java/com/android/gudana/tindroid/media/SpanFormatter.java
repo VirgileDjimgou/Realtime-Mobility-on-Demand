@@ -3,9 +3,11 @@ package com.android.gudana.tindroid.media;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v7.content.res.AppCompatResources;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -15,6 +17,8 @@ import android.text.style.CharacterStyle;
 import android.text.style.ClickableSpan;
 import android.text.style.ImageSpan;
 import android.text.style.LeadingMarginSpan;
+import android.text.style.LineHeightSpan;
+import android.text.style.ParagraphStyle;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.SubscriptSpan;
@@ -24,20 +28,9 @@ import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-
-import java.util.Map;
+import android.widget.TextView;
 
 import com.android.gudana.R;
-import co.tinode.tinodesdk.model.Drafty;
-
-/**
- * Convert Drafty object into a Spanned object
- */
-import android.graphics.Paint;
-import android.support.annotation.NonNull;
-import android.text.style.LineHeightSpan;
-import android.text.style.ParagraphStyle;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +58,7 @@ public class SpanFormatter implements Drafty.Formatter<SpanFormatter.TreeNode> {
     }
 
     public static Spanned toSpanned(final TextView container, final Drafty content,
-                                    final ClickListener clicker) {
+                                     final ClickListener clicker) {
         if (content == null) {
             return new SpannedString("");
         }
@@ -330,7 +323,7 @@ public class SpanFormatter implements Drafty.Formatter<SpanFormatter.TreeNode> {
     }
 
     public interface ClickListener {
-        void onClick(String type, Map<String,Object> data);
+        void onClick(String type, Map<String, Object> data);
     }
 
     // Structure representing Drafty as a tree of formatting nodes.

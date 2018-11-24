@@ -26,7 +26,7 @@ import com.android.gudana.fcm.CustomFcm_Util;
 import com.android.gudana.hify.adapters.PostsAdapter;
 import com.android.gudana.hify.models.Post;
 import com.android.gudana.R;
-import com.android.gudana.tindroid.MessageActivity;
+import com.android.gudana.tindroid.MessageActivity_fire_tinode;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.github.javiersantos.bottomdialogs.BottomDialog;
@@ -58,8 +58,8 @@ import es.dmoral.toasty.Toasty;
 import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
-import static com.android.gudana.tindroid.MessageActivity.FCM_Message_Sender;
-import static com.android.gudana.tindroid.MessagesFragment.getDateAndTime;
+import static com.android.gudana.tindroid.MessageActivity_fire_tinode.FCM_Message_Sender;
+import static com.android.gudana.tindroid.MessagesFragment_fire_tinode.getDateAndTime;
 
 public class FriendProfile extends AppCompatActivity {
 
@@ -264,7 +264,7 @@ public class FriendProfile extends AppCompatActivity {
 
                     // String UserFullname_and_firebase_uid = fullName + "#####" +User_uid;
 
-                    Intent it = new Intent(AboutFragment.this.getActivity(), MessageActivity.class);
+                    Intent it = new Intent(AboutFragment.this.getActivity(), MessageActivity_fire_tinode.class);
                     it.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     it.putExtra("topic", Friend_uid_tindroid);
                     startActivity(it);

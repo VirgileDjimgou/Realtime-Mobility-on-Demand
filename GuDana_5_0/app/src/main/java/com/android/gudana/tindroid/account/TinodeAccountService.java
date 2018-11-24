@@ -13,7 +13,7 @@ import android.os.IBinder;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.android.gudana.tindroid.LoginActivity;
+import com.android.gudana.hify.ui.activities.account.LoginActivity;
 
 /**
  * Authenticator service: make Tinode login work nicely with the Android authentication system.

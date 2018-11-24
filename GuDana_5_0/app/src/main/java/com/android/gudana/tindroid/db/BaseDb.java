@@ -8,9 +8,9 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 import android.util.Log;
 
+import com.android.gudana.tindroid.TindroidApp;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import com.android.gudana.tindroid.TindroidApp;
 import co.tinode.tinodesdk.Tinode;
 import co.tinode.tinodesdk.model.Acs;
 import co.tinode.tinodesdk.model.Defacs;
@@ -24,9 +24,9 @@ public class BaseDb extends SQLiteOpenHelper {
     /**
      * Content provider authority.
      */
-    public static final String CONTENT_AUTHORITY = "com.android.gudana.provider";
+    public static final String CONTENT_AUTHORITY = "co.tinode.tindroid.provider";
     /**
-     * Base content URI. (content://com.android.gudana)
+     * Base content URI. (content://co.tinode.tindroid)
      */
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + BaseDb.CONTENT_AUTHORITY);
 

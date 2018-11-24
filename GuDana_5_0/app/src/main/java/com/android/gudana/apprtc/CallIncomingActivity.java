@@ -37,7 +37,7 @@ import com.android.gudana.R;
 import com.android.gudana.apprtc.compatibility.Compatibility;
 import com.android.gudana.apprtc.linphone.LinphoneManager;
 import com.android.gudana.hify.ui.activities.MainActivity_GuDDana;
-import com.android.gudana.tindroid.MessageActivity;
+import com.android.gudana.tindroid.MessageActivity_fire_tinode;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -307,7 +307,7 @@ public class CallIncomingActivity extends Activity{
 			SanityChechCall_Db.child("Call_room").child(room_id).removeEventListener(mListener);
 
 			// reset call
-			MessageActivity.resetCallparameter(CallIncomingActivity.this , room_id , "CallIncomming : Decline ",
+			MessageActivity_fire_tinode.resetCallparameter(CallIncomingActivity.this , room_id , "CallIncomming : Decline ",
 					"your correspondant ist not available",1,
 					user_id
 			);

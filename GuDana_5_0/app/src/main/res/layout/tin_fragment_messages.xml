@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:id="@+id/chat_root"
     android:background="@drawable/message_view_bkg"
-    tools:context=".tindroid.MessagesFragment">
+    tools:context=".tindroid.MessagesFragment_fire_tinode">
 
     <FrameLayout
         android:id="@+id/sendMessageFragment"

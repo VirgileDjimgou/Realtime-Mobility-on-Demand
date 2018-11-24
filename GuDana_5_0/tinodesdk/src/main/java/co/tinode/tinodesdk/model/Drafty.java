@@ -847,7 +847,7 @@ public class Drafty implements Serializable {
     }
 
     public interface Formatter<T> {
-        T apply(String tp, Map<String, Object> attr, Object content);
+        T apply(String tp, Map<String,Object> attr, Object content);
     }
 
     // ================

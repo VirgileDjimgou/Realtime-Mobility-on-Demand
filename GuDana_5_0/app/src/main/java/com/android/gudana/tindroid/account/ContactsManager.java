@@ -19,13 +19,15 @@ import android.provider.ContactsContract.Settings;
 import android.provider.ContactsContract.StatusUpdates;
 import android.util.Log;
 
+import com.android.gudana.R;
+import com.android.gudana.tindroid.media.AvatarPhoto;
+import com.android.gudana.tindroid.media.VxCard;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import com.android.gudana.R;
-import com.android.gudana.tindroid.media.AvatarPhoto;
-import com.android.gudana.tindroid.media.VxCard;
 import co.tinode.tinodesdk.model.Subscription;
 
 /**
@@ -91,7 +93,7 @@ public class ContactsManager {
     /**
      * Update the status messages for a list of users.  This is typically called
      * for contacts we've just added to the system, since we can't monkey with
-     * the tin_contact's status until they have a profileId.
+     * the contact's status until they have a profileId.
      *
      * @param context     The context of Authenticator Activity
      * @param rawContacts The list of users we want to update
@@ -105,13 +107,13 @@ public class ContactsManager {
     }
 
     /**
-     * Adds a single tin_contact to the platform contacts provider.
-     * This can be used to respond to a new tin_contact found as part
+     * Adds a single contact to the platform contacts provider.
+     * This can be used to respond to a new contact found as part
      * of sync information returned from the server, or because a
-     * user added a new tin_contact.
+     * user added a new contact.
      *
      * @param context        the Authenticator Activity context
-     * @param account        the account the tin_contact belongs to
+     * @param account        the account the contact belongs to
      * @param rawContact     the sample SyncAdapter User object
      * @param batchOperation allow us to batch together multiple operations
      *                       into a single provider call
@@ -146,9 +148,9 @@ public class ContactsManager {
     }
 
     /**
-     * Updates a single tin_contact to the platform contacts provider.
-     * This method can be used to update a tin_contact from a sync
-     * operation or as a result of a user editing a tin_contact
+     * Updates a single contact to the platform contacts provider.
+     * This method can be used to update a contact from a sync
+     * operation or as a result of a user editing a contact
      * record.
      * <p>
      * This operation is actually relatively complex.  We query
@@ -160,7 +162,7 @@ public class ContactsManager {
      *
      * @param context        the Authenticator Activity context
      * @param resolver       the ContentResolver to use
-     * @param rawContact     the sample SyncAdapter tin_contact object
+     * @param rawContact     the sample SyncAdapter contact object
      * @param rawContactId   the unique Id for this rawContact in contacts
      *                       provider
      * @param batchOperation allow us to batch together multiple operations
@@ -272,7 +274,7 @@ public class ContactsManager {
     /**
      * When we first add a sync adapter to the system, the contacts from that
      * sync adapter will be hidden unless they're merged/grouped with an existing
-     * tin_contact.  But typically we want to actually show those contacts, so we
+     * contact.  But typically we want to actually show those contacts, so we
      * need to mess with the Settings table to get them to show up.
      *
      * @param context the Authenticator Activity context
@@ -288,7 +290,7 @@ public class ContactsManager {
 
     /**
      * Create a contacts group to store group topics as contacts. This will make them invisible to the in the
-     * user in tin_contact applications but they can still be fetched by name when needed.
+     * user in contact applications but they can still be fetched by name when needed.
      *
      * @param context the Authenticator Activity context
      * @param account the Account which will own the group
@@ -317,17 +319,17 @@ public class ContactsManager {
     }
 
     /**
-     * Return a Subscription object with data extracted from a tin_contact stored
+     * Return a Subscription object with data extracted from a contact stored
      * in the local contacts database.
      * <p>
-     * Because a tin_contact is actually stored over several rows in the
+     * Because a contact is actually stored over several rows in the
      * database, our query will return those multiple rows of information.
      * We then iterate over the rows and build the User structure from
      * what we find.
      *
      * @param resolver     ContentResolver to use to access the database
-     * @param rawContactId the unique ID for the local tin_contact
-     * @return a User object containing info on that tin_contact
+     * @param rawContactId the unique ID for the local contact
+     * @return a User object containing info on that contact
      */
     private static Subscription<VxCard,?> getRawContact(ContentResolver resolver, long rawContactId) {
         if (rawContactId <= 0) {
@@ -383,11 +385,11 @@ public class ContactsManager {
     /**
      * Update the status message associated with the specified user.  The status
      * message would be something that is likely to be used by IM or social
-     * networking sync providers, and less by a straightforward tin_contact provider.
+     * networking sync providers, and less by a straightforward contact provider.
      * But it's a useful demo to see how it's done.
      *
      * @param context        the Authenticator Activity context
-     * @param rawContact     the tin_contact whose status we should update
+     * @param rawContact     the contact whose status we should update
      * @param batchOperation allow us to batch together multiple operations
      */
     private static void updateContactStatus(Context context, Subscription rawContact,
@@ -415,7 +417,7 @@ public class ContactsManager {
     }
 
     /**
-     * Deletes a tin_contact from the platform contacts provider. This method is used
+     * Deletes a contact from the platform contacts provider. This method is used
      * both for contacts that were deleted locally and then that deletion was synced
      * to the server, and for contacts that were deleted on the server and the
      * deletion was synced to the client.
@@ -428,7 +430,7 @@ public class ContactsManager {
     }
 
     /**
-     * Returns the RawContact id for a sample SyncAdapter tin_contact, or 0 if the
+     * Returns the RawContact id for a sample SyncAdapter contact, or 0 if the
      * sample SyncAdapter user isn't found.
      *
      * @param resolver the content resolver to use
@@ -458,11 +460,11 @@ public class ContactsManager {
     }
 
     /**
-     * Returns the Data id for a sample SyncAdapter tin_contact's profile row, or 0
+     * Returns the Data id for a sample SyncAdapter contact's profile row, or 0
      * if the sample SyncAdapter user isn't found.
      *
      * @param resolver a content resolver
-     * @param uid      server-issued unique iD of the tin_contact
+     * @param uid      server-issued unique iD of the contact
      * @return the profile Data row id, or 0 if not found
      */
     private static long lookupProfile(ContentResolver resolver, String uid) {
@@ -487,7 +489,7 @@ public class ContactsManager {
 
 
     /**
-     * Constants for a query to find a tin_contact given a sample SyncAdapter user
+     * Constants for a query to find a contact given a sample SyncAdapter user
      * ID.
      */
     final private static class ProfileQuery {
@@ -502,7 +504,7 @@ public class ContactsManager {
     }
 
     /**
-     * Constants for a query to find a tin_contact given a sample SyncAdapter user
+     * Constants for a query to find a contact given a sample SyncAdapter user
      * ID.
      */
     final private static class UserIdQuery {
@@ -521,7 +523,7 @@ public class ContactsManager {
     }
 
     /**
-     * Constants for a query to get tin_contact data for a given rawContactId
+     * Constants for a query to get contact data for a given rawContactId
      */
     final private static class DataQuery {
         static final String[] PROJECTION =

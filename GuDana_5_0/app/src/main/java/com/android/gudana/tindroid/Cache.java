@@ -3,16 +3,20 @@ package com.android.gudana.tindroid;
 import android.os.Build;
 import android.util.Log;
 
+import com.android.gudana.tindroid.db.BaseDb;
+import com.android.gudana.tindroid.media.VxCard;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
 import java.util.Locale;
 
-import com.android.gudana.tindroid.db.BaseDb;
-import com.android.gudana.tindroid.media.VxCard;
+import co.tinode.tinodesdk.MeTopic;
+import co.tinode.tinodesdk.PromisedReply;
 import co.tinode.tinodesdk.Tinode;
+import co.tinode.tinodesdk.Topic;
 import co.tinode.tinodesdk.model.PrivateType;
+import co.tinode.tinodesdk.model.ServerMessage;
 
 /**
  * Shared resources.
@@ -49,10 +53,7 @@ public class Cache {
             // Keep in app to prevent garbage collection.
             TindroidApp.retainTinodeCache(sTinode);
         }
-        /*
-        sTinode.setDeviceToken(FirebaseInstanceId.getInstance().getToken());
-        // getToken is deprecated. Replacing with the following monstrosity.
-        */
+
         FirebaseInstanceId
                 .getInstance()
                 .getInstanceId()
@@ -66,14 +67,36 @@ public class Cache {
     }
 
     // Invalidate existing cache.
-    public static void invalidate() {
+    static void invalidate() {
         if (sTinode != null) {
             sTinode.logout();
             sTinode = null;
         }
     }
 
-    public static int getUniqueCounter() {
+    static int getUniqueCounter() {
         return ++sUniqueCounter;
+    }
+
+    // Connect to 'me' topic.
+    @SuppressWarnings("unchecked")
+    static PromisedReply<ServerMessage> attachMeTopic(Topic.Listener l) throws Exception {
+        Tinode tinode = getTinode();
+        MeTopic me = tinode.getMeTopic();
+        if (me == null) {
+            // The very first launch of the app.
+            me = new MeTopic<>(tinode, l);
+        } else if (l != null) {
+            me.setListener(l);
+        }
+
+        if (!me.isAttached()) {
+            return me.subscribe(null, me
+                    .getMetaGetBuilder()
+                    .withGetDesc()
+                    .withGetSub().build());
+        } else {
+            return new PromisedReply<>((ServerMessage) null);
+        }
     }
 }

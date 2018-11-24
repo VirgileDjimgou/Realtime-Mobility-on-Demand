@@ -68,19 +68,11 @@ public class Utils {
                 ContactsContract.CommonDataKinds.Im.CONTENT_ITEM_TYPE,
         };
 
-        Cursor cursor = null;
-        try{
-            // ok, let's work...
-            cursor= resolver.query(uri, projection, selection, selectionArgs, null);
-            if (cursor == null) {
-                return map;
-            }
-
-
-        }catch (Exception ex){
-            ex.printStackTrace();
+        // ok, let's work...
+        Cursor cursor = resolver.query(uri, projection, selection, selectionArgs, null);
+        if (cursor == null) {
+            return map;
         }
-
 
         final int contactIdIdx = cursor.getColumnIndex(Data.CONTACT_ID);
         final int mimeTypeIdx = cursor.getColumnIndex(Data.MIMETYPE);
@@ -109,23 +101,23 @@ public class Utils {
             switch (mimeType) {
                 case ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE:
                     // This is an email
-                    //Log.d(TAG, "Adding email '" + data + "' to tin_contact=" + contact_id);
+                    //Log.d(TAG, "Adding email '" + data + "' to contact=" + contact_id);
                     holder.putEmail(data);
                     break;
                 case ContactsContract.CommonDataKinds.Im.CONTENT_ITEM_TYPE:
                     int protocol = cursor.getInt(imProtocolIdx);
                     String protocolName = cursor.getString(imProtocolNameIdx);
-                    // Log.d(TAG, "Possibly adding IM '" + data + "' to tin_contact=" + contact_id);
+                    // Log.d(TAG, "Possibly adding IM '" + data + "' to contact=" + contact_id);
                     if (protocol == ContactsContract.CommonDataKinds.Im.PROTOCOL_CUSTOM &&
                             protocolName.equals(IM_PROTOCOL)) {
                         holder.putIm(data);
-                        // Log.d(TAG, "Added IM '" + data + "' to tin_contact=" + contact_id);
+                        // Log.d(TAG, "Added IM '" + data + "' to contact=" + contact_id);
                     }
                     break;
                 default:
                     // This is a phone number. Use mobile phones only.
                     if (type == ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE) {
-                        // Log.d(TAG, "Adding mobile phone '" + data + "' to tin_contact=" + contact_id);
+                        // Log.d(TAG, "Adding mobile phone '" + data + "' to contact=" + contact_id);
                         try {
                             // Normalize phone number format
                             data = phoneUtil.format(phoneUtil.parse(data, country),

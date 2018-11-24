@@ -2,10 +2,12 @@ package com.android.gudana.tindroid;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -21,9 +23,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import java.util.Iterator;
-import com.android.gudana.R;
+
+import com.android.gudana.hify.ui.activities.account.LoginActivity;
 import com.android.gudana.tindroid.account.Utils;
+
+import java.util.Iterator;
+
+import com.android.gudana.R;
 import co.tinode.tinodesdk.PromisedReply;
 import co.tinode.tinodesdk.Tinode;
 import co.tinode.tinodesdk.model.AuthScheme;
@@ -40,11 +46,17 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         setHasOptionsMenu(true);
 
-        final ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (activity == null) {
+            return null;
+        }
+
+        final ActionBar bar = activity.getSupportActionBar();
         if (bar != null) {
             bar.setDisplayHomeAsUpEnabled(false);
         }
@@ -52,7 +64,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         View fragment = inflater.inflate(R.layout.tin_fragment_login, container, false);
 
         final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String login = pref.getString(LoginActivity.PREFS_LAST_LOGIN, null);
+        String login = pref.getString("fjhf", null);
 
         if (!TextUtils.isEmpty(login)) {
             TextView loginView = fragment.findViewById(R.id.editLogin);
@@ -62,6 +74,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         }
 
         fragment.findViewById(R.id.signIn).setOnClickListener(this);
+        //fragment.findViewById(R.id.forgotPassword).setOnClickListener(this);
 
         return fragment;
     }
@@ -75,11 +88,23 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
     /**
-     * Login button pressed.
+     * Either [Signin] or [Forgot password] pressed.
      * @param v ignored
      */
     public void onClick(View v) {
         final LoginActivity parent = (LoginActivity) getActivity();
+        if (parent == null) {
+            return;
+        }
+
+
+        /*
+
+        if (v.getId() == R.id.forgotPassword) {
+            parent.showFragment(LoginActivity.FRAGMENT_RESET);
+            return;
+        }
+        */
 
         EditText loginInput = parent.findViewById(R.id.editLogin);
         EditText passwordInput = parent.findViewById(R.id.editPassword);
@@ -99,11 +124,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         signIn.setEnabled(false);
 
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(parent);
-        String hostName = sharedPref.getString(Utils.PREFS_HOST_NAME, Cache.HOST_NAME);
+        final String hostName = sharedPref.getString(Utils.PREFS_HOST_NAME, Cache.HOST_NAME);
         boolean tls = sharedPref.getBoolean(Utils.PREFS_USE_TLS, false);
         final Tinode tinode = Cache.getTinode();
         try {
-            Log.d(TAG, "CONNECTING");
             // This is called on the websocket thread.
             tinode.connect(hostName, tls)
                     .thenApply(
@@ -120,7 +144,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                             new PromisedReply.SuccessListener<ServerMessage>() {
                                 @Override
                                 public PromisedReply<ServerMessage> onSuccess(final ServerMessage msg) {
-                                    sharedPref.edit().putString(LoginActivity.PREFS_LAST_LOGIN, login).apply();
+                                   // sharedPref.edit().putString(LoginActivity.PREFS_LAST_LOGIN, login).apply();
 
                                     final Account acc = addAndroidAccount(
                                             tinode.getMyId(),
@@ -157,19 +181,23 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                                 @Override
                                 public PromisedReply<ServerMessage> onFailure(Exception err) {
                                     Log.d(TAG, "Login failed", err);
-                                    parent.reportError(err, signIn, R.string.error_login_failed);
+                                    //parent.reportError(err, signIn, 0, R.string.error_login_failed);
                                     return null;
                                 }
                             });
         } catch (Exception err) {
             Log.e(TAG, "Something went wrong", err);
-            parent.reportError(err, signIn, R.string.error_login_failed);
+            //parent.reportError(err, signIn, 0, R.string.error_login_failed);
         }
     }
 
 
     private Account addAndroidAccount(final String uid, final String secret, final String token) {
-        final AccountManager am = AccountManager.get(getActivity().getBaseContext());
+        final Activity a = getActivity();
+        if (a == null) {
+            return null;
+        }
+        final AccountManager am = AccountManager.get(a.getBaseContext());
         final Account acc = Utils.createAccount(uid);
         am.addAccountExplicitly(acc, secret, null);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatImageView;
@@ -27,13 +28,14 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Collection;
-
-import com.android.gudana.R;
 import com.android.gudana.tindroid.db.StoredSubscription;
 import com.android.gudana.tindroid.media.VxCard;
 import com.android.gudana.tindroid.widgets.LetterTileDrawable;
 import com.android.gudana.tindroid.widgets.RoundImageDrawable;
+
+import java.util.Collection;
+
+import com.android.gudana.R;
 import co.tinode.tinodesdk.ComTopic;
 import co.tinode.tinodesdk.NotConnectedException;
 import co.tinode.tinodesdk.PromisedReply;
@@ -199,7 +201,7 @@ public class TopicInfoFragment extends Fragment {
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ((MessageActivity) activity).showFragment(MessageActivity.FRAGMENT_EDIT_MEMBERS,
+                        ((MessageActivity_fire_tinode) activity).showFragment(MessageActivity_fire_tinode.FRAGMENT_EDIT_MEMBERS,
                                 true, null);
                     }
                 });
@@ -421,6 +423,9 @@ public class TopicInfoFragment extends Fragment {
 
     void notifyContentChanged() {
         final Activity activity = getActivity();
+        if (activity == null) {
+            return;
+        }
 
         final AppCompatImageView avatar = activity.findViewById(R.id.imageAvatar);
         final TextView title = activity.findViewById(R.id.topicTitle);
@@ -460,19 +465,15 @@ public class TopicInfoFragment extends Fragment {
         }
 
         PrivateType priv = mTopic.getPriv();
-        if(priv != null){
-            if (!TextUtils.isEmpty(priv.getComment())) {
-                subtitle.setText(priv.getComment());
-                subtitle.setTypeface(null, Typeface.NORMAL);
-                subtitle.setTextIsSelectable(true);
-            } else {
-                subtitle.setText(R.string.placeholder_private);
-                subtitle.setTypeface(null, Typeface.ITALIC);
-                subtitle.setTextIsSelectable(false);
-            }
-
+        if (priv != null && !TextUtils.isEmpty(priv.getComment())) {
+            subtitle.setText(priv.getComment());
+            subtitle.setTypeface(null, Typeface.NORMAL);
+            subtitle.setTextIsSelectable(true);
+        } else {
+            subtitle.setText(R.string.placeholder_private);
+            subtitle.setTypeface(null, Typeface.ITALIC);
+            subtitle.setTextIsSelectable(false);
         }
-
 
         muted.setChecked(mTopic.isMuted());
         permissions.setText(mTopic.getAccessMode().getMode());
@@ -483,16 +484,18 @@ public class TopicInfoFragment extends Fragment {
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         // Execution has to be delayed because the topic is not yet subscribed:
-        // The image selection activity was on top while MessageActivity was paused. It just got
+        // The image selection activity was on top while MessageActivity_fire_tinode was paused. It just got
         // unpaused and did not have time to re-subscribe.
         if (requestCode == UiUtils.SELECT_PICTURE && resultCode == RESULT_OK) {
-            final MessageActivity activity = (MessageActivity) getActivity();
-            activity.submitForExecution(new Runnable() {
-                @Override
-                public void run() {
-                UiUtils.updateAvatar(activity, mTopic, data);
-                }
-            });
+            final MessageActivity_fire_tinode activity = (MessageActivity_fire_tinode) getActivity();
+            if (activity != null) {
+                activity.submitForExecution(new Runnable() {
+                    @Override
+                    public void run() {
+                        UiUtils.updateAvatar(activity, mTopic, data);
+                    }
+                });
+            }
         }
     }
 
@@ -562,15 +565,16 @@ public class TopicInfoFragment extends Fragment {
             return StoredSubscription.getId(mItems[i]);
         }
 
+        @NonNull
         @Override
-        public MemberViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public MemberViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             // create a new view
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.tin_group_member, parent, false);
             return new MemberViewHolder(v);
         }
 
         @Override
-        public void onBindViewHolder(final MemberViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull final MemberViewHolder holder, int position) {
             final Subscription<VxCard,PrivateType> sub = mItems[position];
             final StoredSubscription ss = (StoredSubscription) sub.getLocal();
             final Activity activity = getActivity();

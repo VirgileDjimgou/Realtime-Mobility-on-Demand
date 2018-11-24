@@ -14,7 +14,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.android.gudana.R;
-
 import co.tinode.tinodesdk.Tinode;
 
 /**
@@ -78,7 +77,6 @@ public class TindroidApp extends Application {
                     getString(R.string.notification_channel_name), NotificationManager.IMPORTANCE_DEFAULT);
             channel.setDescription(getString(R.string.notification_channel_description));
             NotificationManager nm = getSystemService(NotificationManager.class);
-
             if (nm != null) {
                 nm.createNotificationChannel(channel);
             }

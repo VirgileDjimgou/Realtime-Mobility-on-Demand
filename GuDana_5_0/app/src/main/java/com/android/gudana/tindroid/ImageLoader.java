@@ -14,7 +14,6 @@ import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.android.gudana.BuildConfig;
 import com.android.gudana.tindroid.widgets.RoundImageDrawable;
 import com.google.android.gms.common.util.IOUtils;
 
@@ -23,7 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 
-import com.android.gudana.tindroid.widgets.RoundImageDrawable;
+import com.android.gudana.BuildConfig;
 
 /**
  * This class wraps up completing some arbitrary long running work when loading a bitmap to an
@@ -33,6 +32,8 @@ import com.android.gudana.tindroid.widgets.RoundImageDrawable;
 public abstract class ImageLoader {
     private static final String TAG = "ImageLoader";
     private static final float MEMORY_PERCENT = 0.1f;
+    private static final int DEFAULT_IMAGE_SIZE = 24;
+
     private final Object mPauseWorkLock = new Object();
     private Bitmap mLoadingBitmap;
     private boolean mPauseWork = false;
@@ -43,7 +44,7 @@ public abstract class ImageLoader {
 
     ImageLoader(Context context, int imageSize, FragmentManager fm) {
         mResources = context.getResources();
-        mImageSize = imageSize;
+        mImageSize = imageSize > 0 ? imageSize : DEFAULT_IMAGE_SIZE;
 
         final RetainFragment mRetainFragment = findOrCreateRetainFragment(fm);
 
@@ -89,7 +90,7 @@ public abstract class ImageLoader {
      * Returns false if the work in progress deals with the same data. The work is not
      * stopped in that case.
      */
-    public static boolean cancelPotentialWork(Object data, ImageView imageView) {
+    private static boolean cancelPotentialWork(Object data, ImageView imageView) {
         final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
 
         if (bitmapWorkerTask != null) {
@@ -213,17 +214,15 @@ public abstract class ImageLoader {
         // Check to see if we have retained the worker fragment.
         RetainFragment retainFragment = (RetainFragment) fm.findFragmentByTag(TAG);
 
-        try{
-            // If not retained (or first time running), we need to create and add it.
-            if (retainFragment == null) {
+        // If not retained (or first time running), we need to create and add it.
+        if (retainFragment == null) {
+            try{
                 retainFragment = new RetainFragment();
                 fm.beginTransaction().add(retainFragment, TAG).commit();
+            }catch(Exception ex){
+                ex.printStackTrace();
             }
-
-        }catch(Exception ex){
-            ex.printStackTrace();
         }
-
 
         return retainFragment;
     }

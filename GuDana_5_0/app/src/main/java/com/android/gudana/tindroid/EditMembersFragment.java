@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.android.gudana.R;
+import com.android.gudana.tindroid.media.VxCard;
 import com.pchmn.materialchips.ChipsInput;
 import com.pchmn.materialchips.model.Chip;
 import com.pchmn.materialchips.model.ChipInterface;
@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import com.android.gudana.tindroid.media.VxCard;
+import com.android.gudana.R;
 import co.tinode.tinodesdk.NotConnectedException;
 import co.tinode.tinodesdk.PromisedReply;
 import co.tinode.tinodesdk.Topic;
@@ -128,7 +128,7 @@ public class EditMembersFragment extends Fragment implements UiUtils.ContactsLoa
                 mTopic.invite((String) chip.getId(), null /* use default */).thenApply(null, mFailureListener);
             }
 
-            ((MessageActivity) activity).showFragment(MessageActivity.FRAGMENT_INFO, false, null);
+            ((MessageActivity_fire_tinode) activity).showFragment(MessageActivity_fire_tinode.FRAGMENT_INFO, false, null);
 
         } catch (NotConnectedException ignored) {
             Toast.makeText(activity, R.string.no_connection, Toast.LENGTH_SHORT).show();

@@ -59,16 +59,19 @@ import android.widget.SearchView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
-import java.util.Locale;
-import com.android.gudana.R;
+
 import com.android.gudana.hify.ui.activities.MainActivity_GuDDana;
 import com.android.gudana.tindroid.account.PhoneEmailImLoader;
 import com.android.gudana.tindroid.account.Utils;
 import com.android.gudana.tindroid.widgets.LetterTileDrawable;
 
+import java.util.Locale;
+
+import com.android.gudana.R;
+
 /**
  * This fragment displays a list of contacts stored in the Contacts Provider. Each item in the list
- * shows the tin_contact's thumbnail photo and display name. On devices with large screens, this
+ * shows the contact's thumbnail photo and display name. On devices with large screens, this
  * fragment's UI appears as part of a two-pane layout, along with the UI of. On smaller screens,
  * this fragment's UI appears as a single pane.
  * <p>
@@ -93,19 +96,19 @@ public class ContactListFragment extends ListFragment {
 
     // Bundle key for saving previously selected search result item
     private static final String STATE_PREVIOUSLY_SELECTED_KEY =
-            "com.android.gudana.SELECTED_ITEM";
+            "co.tinode.tindroid.SELECTED_ITEM";
 
     private ContactsAdapter mAdapter; // The main query adapter
-    private ImageLoader mImageLoader; // Handles loading the tin_contact image in a background thread
+    private ImageLoader mImageLoader; // Handles loading the contact image in a background thread
     private String mSearchTerm; // Stores the current search query term
 
     // Contact selected listener that allows the activity holding this fragment to be notified of
-    // a tin_contact being selected
+    // a contact being selected
     private OnContactsInteractionListener mOnContactSelectedListener;
 
     // Callback which receives notifications of contacts loding status;
     private ContactsLoaderCallback mContactsLoaderCallback;
-    // Callback for handling notifications of Phone, Email, IM tin_contact loading;
+    // Callback for handling notifications of Phone, Email, IM contact loading;
     private PhEmImLoaderCallback mPhEmImLoaderCallback;
     private SparseArray<Utils.ContactHolder> mPhEmImData;
 
@@ -238,7 +241,7 @@ public class ContactListFragment extends ListFragment {
             if (holder != null) {
                 String address = holder.getIm();
                 if (address != null) {
-                    Intent it = new Intent(getActivity(), MessageActivity.class);
+                    Intent it = new Intent(getActivity(), MessageActivity_fire_tinode.class);
                     it.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     it.putExtra("topic", address);
                     startActivity(it);
@@ -305,9 +308,9 @@ public class ContactListFragment extends ListFragment {
 
         try {
             // Assign callback listener which the holding activity must implement. This is used
-            // so that when a tin_contact item is interacted with (selected by the user) the holding
-            // activity will be notified and can take further action such as populating the tin_contact
-            // detail pane (if in multi-pane layout) or starting a new activity with the tin_contact
+            // so that when a contact item is interacted with (selected by the user) the holding
+            // activity will be notified and can take further action such as populating the contact
+            // detail pane (if in multi-pane layout) or starting a new activity with the contact
             // details (single pane layout).
             mOnContactSelectedListener = (OnContactsInteractionListener) context;
         } catch (ClassCastException e) {
@@ -350,7 +353,7 @@ public class ContactListFragment extends ListFragment {
     /**
      * Called when ListView selection is cleared, for example
      * when search mode is finished and the currently selected
-     * tin_contact should no longer be selected.
+     * contact should no longer be selected.
      */
     private void onSelectionCleared() {
         // Uses callback to notify activity this contains this fragment
@@ -466,7 +469,7 @@ public class ContactListFragment extends ListFragment {
             // Saves the current search string
             outState.putString(SearchManager.QUERY, mSearchTerm);
 
-            // Saves the currently selected tin_contact
+            // Saves the currently selected contact
             outState.putInt(STATE_PREVIOUSLY_SELECTED_KEY, getListView().getCheckedItemPosition());
         }
     }
@@ -474,7 +477,7 @@ public class ContactListFragment extends ListFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            // Sends a request to the People app to display the create tin_contact screen
+            // Sends a request to the People app to display the create contact screen
             case R.id.action_add_contact:
                 final Intent intent = new Intent(Intent.ACTION_INSERT, Contacts.CONTENT_URI);
                 startActivity(intent);
@@ -528,15 +531,15 @@ public class ContactListFragment extends ListFragment {
      */
     public interface OnContactsInteractionListener {
         /**
-         * Called when a tin_contact is selected from the ListView.
+         * Called when a contact is selected from the ListView.
          *
-         * @param contactUri The tin_contact Uri.
+         * @param contactUri The contact Uri.
          */
         void onContactSelected(Uri contactUri);
 
         /**
          * Called when the ListView selection is cleared like when
-         * a tin_contact search is taking place or is finishing.
+         * a contact search is taking place or is finishing.
          */
         void onSelectionCleared();
     }
@@ -547,7 +550,7 @@ public class ContactListFragment extends ListFragment {
      */
     public interface ContactsQuery {
 
-        // An identifier for the base loader -- just tin_contact names
+        // An identifier for the base loader -- just contact names
         int CORE_QUERY_ID = 1;
         // ID of the loader for fetching emails, phones, and Tinode IM handles
         int PHEMIM_QUERY_ID = 2;
@@ -576,16 +579,16 @@ public class ContactListFragment extends ListFragment {
         @SuppressLint("InlinedApi")
         String[] PROJECTION = {
 
-                // The tin_contact's row id
+                // The contact's row id
                 Contacts._ID,
 
-                // A pointer to the tin_contact that is guaranteed to be more permanent than _ID. Given
-                // a tin_contact's current _ID value and LOOKUP_KEY, the Contacts Provider can generate
-                // a "permanent" tin_contact URI.
+                // A pointer to the contact that is guaranteed to be more permanent than _ID. Given
+                // a contact's current _ID value and LOOKUP_KEY, the Contacts Provider can generate
+                // a "permanent" contact URI.
                 Contacts.LOOKUP_KEY,
 
                 // In platform version 3.0 and later, the Contacts table contains
-                // DISPLAY_NAME_PRIMARY, which either contains the tin_contact's displayable name or
+                // DISPLAY_NAME_PRIMARY, which either contains the contact's displayable name or
                 // some other useful identifier such as an email address.
                 Contacts.DISPLAY_NAME_PRIMARY,
 
@@ -634,7 +637,7 @@ public class ContactListFragment extends ListFragment {
             // applicable.
             final String alphabet = context.getString(R.string.alphabet);
 
-            // Instantiates a new AlphabetIndexer bound to the column used to sort tin_contact names.
+            // Instantiates a new AlphabetIndexer bound to the column used to sort contact names.
             // The cursor is left null, because it has not yet been retrieved.
             mAlphabetIndexer = new AlphabetIndexer(null, ContactsQuery.SORT_KEY, alphabet);
 
@@ -648,7 +651,7 @@ public class ContactListFragment extends ListFragment {
          * E.g. If displayName was "Adam" and search query (mSearchTerm) was "da" this would
          * return 1.
          *
-         * @param displayName The tin_contact display name.
+         * @param displayName The contact display name.
          * @return The starting position of the search string in the display name, 0-based. The
          * method returns -1 if the string is not found in the display name, or if the search
          * string is empty or null.
@@ -701,7 +704,7 @@ public class ContactListFragment extends ListFragment {
             // Gets handles to individual view resources
             final ViewHolder holder = (ViewHolder) view.getTag();
 
-            // ID of the tin_contact
+            // ID of the contact
             holder.contact_id = cursor.getInt(ContactsQuery.ID);
 
             // Get the thumbnail image Uri from the current Cursor row.
@@ -712,16 +715,6 @@ public class ContactListFragment extends ListFragment {
             final int startIndex = indexOfSearchQuery(displayName);
 
             Utils.ContactHolder extra = (mPhEmImData != null ? mPhEmImData.get(holder.contact_id) : null);
-
-            /*
-            if (mPhEmImData == null) {
-                Log.d(TAG, "mPhEmImData is NULL while processing " + holder.contact_id);
-            } else if (extra == null) {
-                Log.d(TAG, "Extra is NULL while processing " + holder.contact_id);
-            } else if (extra.getImCount() <= 0) {
-                Log.d(TAG, "extra.getImCount() <= 0 while processing " + holder.contact_id);
-            }
-            */
 
             if (extra != null && extra.getImCount() > 0) {
                 holder.inviteButton.setVisibility(View.GONE);

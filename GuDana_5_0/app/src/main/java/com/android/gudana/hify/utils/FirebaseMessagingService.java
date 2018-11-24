@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.android.gudana.R;
 import com.android.gudana.apprtc.CallFragment;
 import com.android.gudana.apprtc.CallIncomingActivity;
-import com.android.gudana.tindroid.MessageActivity;
+import com.android.gudana.tindroid.MessageActivity_fire_tinode;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -117,7 +117,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                                         if(map_call.get("correspondant")!=null){
                                             // than this user is already registered ...
                                             String  Call_availibilty  =  map_call.get("correspondant").toString();
-                                            if(Call_availibilty == MessageActivity.currentUserId) {
+                                            if(Call_availibilty == MessageActivity_fire_tinode.currentUserId) {
 
                                                 // once after that we  can start  the  call oder
                                                 // and of cour se remove the listener     ..  otherwise  we will startoo many listeners    ....
@@ -138,7 +138,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                                                 }else{ // if not you will get a notification
 
 
-                                                    if(!MessageActivity.running || MessageActivity.running && !MessageActivity.otherUserId.equals(senderID))
+                                                    if(!MessageActivity_fire_tinode.running || MessageActivity_fire_tinode.running && !MessageActivity_fire_tinode.otherUserId.equals(senderID))
                                                     {
                                                         // Creating the notification
 
@@ -205,7 +205,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                     // If it's a message notification
                     // Checking if CreateGroupChatActivity is not open or if its, it should have a different userId from current
 
-                    if(!MessageActivity.running || MessageActivity.running && !MessageActivity.otherUserId.equals(senderID))
+                    if(!MessageActivity_fire_tinode.running || MessageActivity_fire_tinode.running && !MessageActivity_fire_tinode.otherUserId.equals(senderID))
                     {
                         Bitmap IconImage = null;
                         try {

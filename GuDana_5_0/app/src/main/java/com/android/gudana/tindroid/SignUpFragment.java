@@ -19,11 +19,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.android.gudana.hify.ui.activities.account.LoginActivity;
+import com.android.gudana.tindroid.account.Utils;
+import com.android.gudana.tindroid.media.VxCard;
+
 import java.util.Iterator;
 
 import com.android.gudana.R;
-import com.android.gudana.tindroid.account.Utils;
-import com.android.gudana.tindroid.media.VxCard;
 import co.tinode.tinodesdk.PromisedReply;
 import co.tinode.tinodesdk.ServerResponseException;
 import co.tinode.tinodesdk.Tinode;
@@ -97,6 +99,9 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
 
     public void onSignUp() {
         final LoginActivity parent = (LoginActivity) getActivity();
+        if (parent == null) {
+            return;
+        }
 
         final String login = ((EditText) parent.findViewById(R.id.newLogin)).getText().toString().trim();
         if (login.isEmpty()) {
@@ -143,7 +148,6 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
                                     } catch (ClassCastException ignored) {
                                         // If image is not loaded, the drawable is a vector.
                                         // Ignore it.
-                                        ignored.printStackTrace();
                                     }
                                     VxCard vcard = new VxCard(fullName, bmp);
                                     return tinode.createAccountBasic(
@@ -201,7 +205,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
                                             }
                                         });
                                     }
-                                    parent.reportError(err, signUp, R.string.error_new_account_failed);
+                                    //parent.reportError(err, signUp, 0, R.string.error_new_account_failed);
                                     return null;
                                 }
                             });

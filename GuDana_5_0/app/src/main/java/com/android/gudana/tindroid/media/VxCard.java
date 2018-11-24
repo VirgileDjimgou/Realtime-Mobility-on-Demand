@@ -8,7 +8,7 @@ import co.tinode.tinodesdk.model.VCard;
 
 
 /**
- * VxCard - tin_contact descriptor.
+ * VxCard - contact descriptor.
  * Adds avatar conversion from bits to Android bitmap and back.
  */
 public class VxCard extends VCard {

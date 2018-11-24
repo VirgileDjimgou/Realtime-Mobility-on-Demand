@@ -36,7 +36,7 @@ public class MessageDb implements BaseColumns {
     static final String TABLE_NAME = "messages";
 
     /**
-     * Content URI for retrieving messages (content://com.android.gudana/messages)
+     * Content URI for retrieving messages (content://co.tinode.tindroid/messages)
      */
     static final Uri CONTENT_URI = Uri.withAppendedPath(BaseDb.BASE_CONTENT_URI, TABLE_NAME);
 
@@ -77,9 +77,9 @@ public class MessageDb implements BaseColumns {
             "CREATE TABLE " + TABLE_NAME + " (" +
                     _ID + " INTEGER PRIMARY KEY," +
                     COLUMN_NAME_TOPIC_ID
-                    + " REFERENCES " + TopicDb.TABLE_NAME + "(" + TopicDb._ID + ")," +
+                    + " REFERENCES " + TopicDb.TABLE_NAME + "(" + _ID + ")," +
                     COLUMN_NAME_USER_ID
-                    + " REFERENCES " + UserDb.TABLE_NAME + "(" + UserDb._ID + ")," +
+                    + " REFERENCES " + UserDb.TABLE_NAME + "(" + _ID + ")," +
                     COLUMN_NAME_STATUS + " INT," +
                     COLUMN_NAME_SENDER + " TEXT," +
                     COLUMN_NAME_TS + " INT," +

@@ -1305,6 +1305,7 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
         slidingRootNav.closeMenu(true);
     }
 
+    /*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -1407,6 +1408,7 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
                 return super.onOptionsItemSelected(item);
         }
     }
+    */
 
     // get profil get  ...
 

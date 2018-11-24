@@ -29,10 +29,12 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.gudana.R;
+import com.android.gudana.hify.ui.activities.account.LoginActivity;
 import com.android.gudana.tindroid.db.BaseDb;
 import com.android.gudana.tindroid.media.VxCard;
 import com.android.gudana.tindroid.widgets.RoundImageDrawable;
+
+import com.android.gudana.R;
 import co.tinode.tinodesdk.MeTopic;
 import co.tinode.tinodesdk.NotConnectedException;
 
@@ -162,8 +164,7 @@ public class AccountInfoFragment extends Fragment {
                                     if (editor != null) {
                                         String password = editor.getText().toString();
                                         if (!TextUtils.isEmpty(password)) {
-                                            changePassword(pref.getString(LoginActivity.PREFS_LAST_LOGIN, null),
-                                                    password);
+                                            //changePassword(pref.getString(LoginActivity.PREFS_LAST_LOGIN, null), password);
                                         } else {
                                             Toast.makeText(activity, R.string.failed_empty_password,
                                                     Toast.LENGTH_SHORT).show();

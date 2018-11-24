@@ -20,7 +20,7 @@ import com.android.gudana.R;
 
 /**
  * A drawable that encapsulates all the functionality needed to display a letter tile to
- * represent a tin_contact image. Slightly modified from
+ * represent a contact image. Slightly modified from
  * com/android/contacts/common/lettertiles/LetterTileDrawable.java
  */
 public class LetterTileDrawable extends Drawable {
@@ -196,7 +196,7 @@ public class LetterTileDrawable extends Drawable {
     }
 
     /**
-     * Returns a deterministic color based on the provided tin_contact identifier string.
+     * Returns a deterministic color based on the provided contact identifier string.
      */
     private int pickColor() {
         if (mHashCode == 0) {
@@ -225,7 +225,7 @@ public class LetterTileDrawable extends Drawable {
 
     @Override
     public int getIntrinsicWidth() {
-        // This has to be set otherwise it does not show in tin_toolbar
+        // This has to be set otherwise it does not show in toolbar
         return INTRINSIC_SIZE;
     }
 

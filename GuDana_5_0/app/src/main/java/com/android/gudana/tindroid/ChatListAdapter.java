@@ -12,15 +12,16 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.android.gudana.tindroid.db.StoredTopic;
+import com.android.gudana.tindroid.media.VxCard;
+
 import java.util.List;
 
 import com.android.gudana.R;
-import com.android.gudana.tindroid.db.StoredTopic;
-import com.android.gudana.tindroid.media.VxCard;
 import co.tinode.tinodesdk.ComTopic;
 
 /**
- * Handling tin_contact list.
+ * Handling contact list.
  */
 public class ChatListAdapter extends BaseAdapter {
     private static final String TAG = "ChatListAdapter";
@@ -94,29 +95,43 @@ public class ChatListAdapter extends BaseAdapter {
 
         holder.topic = topic.getName();
         VxCard pub = topic.getPub();
-        if (pub != null) {
-            holder.name.setText(pub.fn);
-            holder.name.setTypeface(null, Typeface.NORMAL);
-        } else {
-            holder.name.setText(R.string.placeholder_contact_title);
-            holder.name.setTypeface(null, Typeface.ITALIC);
+
+        try{
+
+
+            if (pub != null) {
+                try{
+
+                    holder.name.setText(pub.fn);
+                    holder.name.setTypeface(null, Typeface.NORMAL);
+
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
+            } else {
+                holder.name.setText(R.string.placeholder_contact_title);
+                holder.name.setTypeface(null, Typeface.ITALIC);
+            }
+            holder.contactPriv.setText(topic.getComment());
+
+            int unread = topic.getUnreadCount();
+            if (unread > 0) {
+                holder.unreadCount.setText(unread > 9 ? "9+" : String.valueOf(unread));
+                holder.unreadCount.setVisibility(View.VISIBLE);
+            } else {
+                holder.unreadCount.setVisibility(View.INVISIBLE);
+            }
+
+            UiUtils.assignBitmap(mContext, holder.icon,
+                    pub != null ? pub.getBitmap() : null,
+                    pub != null ? pub.fn : null,
+                    holder.topic);
+
+            holder.online.setColorFilter(topic.getOnline() ? UiUtils.COLOR_ONLINE : UiUtils.COLOR_OFFLINE);
+
+        }catch(Exception ex){
+            ex.printStackTrace();
         }
-        holder.contactPriv.setText(topic.getComment());
-
-        int unread = topic.getUnreadCount();
-        if (unread > 0) {
-            holder.unreadCount.setText(unread > 9 ? "9+" : String.valueOf(unread));
-            holder.unreadCount.setVisibility(View.VISIBLE);
-        } else {
-            holder.unreadCount.setVisibility(View.INVISIBLE);
-        }
-
-        UiUtils.assignBitmap(mContext, holder.icon,
-                pub != null ? pub.getBitmap() : null,
-                pub != null ? pub.fn : null,
-                holder.topic);
-
-        holder.online.setColorFilter(topic.getOnline() ? UiUtils.COLOR_ONLINE : UiUtils.COLOR_OFFLINE);
         // Log.d(TAG, "User " + topic.getName() + " is " + (topic.getOnline() ? "online" : "offline"));
     }
 

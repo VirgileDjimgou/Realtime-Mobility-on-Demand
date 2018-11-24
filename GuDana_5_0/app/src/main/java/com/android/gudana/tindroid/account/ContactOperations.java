@@ -29,13 +29,13 @@ public class ContactOperations {
     private int mBackReference;
     private boolean mIsNewContact;
     /**
-     * Since we're sending a lot of tin_contact provider operations in a single
+     * Since we're sending a lot of contact provider operations in a single
      * batched operation, we want to make sure that we "yield" periodically
      * so that the Contact Provider can write changes to the DB, and can
      * open a new transaction.  This prevents ANR (application not responding)
      * errors.  The recommended time to specify that a yield is permitted is
-     * with the first operation on a particular tin_contact.  So if we're updating
-     * multiple fields for a single tin_contact, we make sure that we call
+     * with the first operation on a particular contact.  So if we're updating
+     * multiple fields for a single contact, we make sure that we call
      * withYieldAllowed(true) on the first field that we update. We use
      * mIsYieldAllowed to keep track of what value we should pass to
      * withYieldAllowed().
@@ -43,11 +43,11 @@ public class ContactOperations {
     private boolean mIsYieldAllowed;
 
     /**
-     * Returns an instance of ContactOperations instance for adding new tin_contact
+     * Returns an instance of ContactOperations instance for adding new contact
      * to the platform contacts provider.
      *
      * @param context     the Authenticator Activity context
-     * @param uid         the unique id of the tin_contact
+     * @param uid         the unique id of the contact
      * @param accountName the username for the SyncAdapter account
      * @return instance of ContactOperations
      */
@@ -57,7 +57,7 @@ public class ContactOperations {
     }
 
     /**
-     * Returns an instance of ContactOperations for updating existing tin_contact in
+     * Returns an instance of ContactOperations for updating existing contact in
      * the platform contacts provider.
      *
      * @param context      the Authenticator Activity context
@@ -97,14 +97,14 @@ public class ContactOperations {
     }
 
     /**
-     * Adds a tin_contact name. We can take either a full name ("Bob Smith") or separated
+     * Adds a contact name. We can take either a full name ("Bob Smith") or separated
      * first-name and last-name ("Bob" and "Smith").
      *
-     * @param fullName  The full name of the tin_contact - typically from an edit form
+     * @param fullName  The full name of the contact - typically from an edit form
      *                  Can be null if firstName/lastName are specified.
-     * @param firstName The first name of the tin_contact - can be null if fullName
+     * @param firstName The first name of the contact - can be null if fullName
      *                  is specified.
-     * @param lastName  The last name of the tin_contact - can be null if fullName
+     * @param lastName  The last name of the contact - can be null if fullName
      *                  is specified.
      * @return instance of ContactOperations
      */
@@ -149,7 +149,7 @@ public class ContactOperations {
     /**
      * Adds a phone number
      *
-     * @param phone     new phone number for the tin_contact
+     * @param phone     new phone number for the contact
      * @param phoneType the type: cell, home, etc.
      * @return instance of ContactOperations
      */
@@ -234,10 +234,10 @@ public class ContactOperations {
     }
 
     /**
-     * Updates tin_contact's email
+     * Updates contact's email
      *
      * @param email email id of the sample SyncAdapter user
-     * @param uri   Uri for the existing raw tin_contact to be updated
+     * @param uri   Uri for the existing raw contact to be updated
      * @return instance of ContactOperations
      */
     public ContactOperations updateEmail(String email, String existingEmail, Uri uri) {
@@ -250,10 +250,10 @@ public class ContactOperations {
     }
 
     /**
-     * Updates tin_contact's name. The caller can either provide first-name
+     * Updates contact's name. The caller can either provide first-name
      * and last-name fields or a full-name field.
      *
-     * @param uri               Uri for the existing raw tin_contact to be updated
+     * @param uri               Uri for the existing raw contact to be updated
      * @param existingFirstName the first name stored in provider
      * @param existingLastName  the last name stored in provider
      * @param existingFullName  the full name stored in provider
@@ -289,11 +289,11 @@ public class ContactOperations {
     }
 
     /**
-     * Updates tin_contact's phone
+     * Updates contact's phone
      *
      * @param existingNumber phone number stored in contacts provider
-     * @param phone          new phone number for the tin_contact
-     * @param uri            Uri for the existing raw tin_contact to be updated
+     * @param phone          new phone number for the contact
+     * @param uri            Uri for the existing raw contact to be updated
      * @return instance of ContactOperations
      */
     public ContactOperations updatePhone(String existingNumber, String phone, Uri uri) {
@@ -316,10 +316,10 @@ public class ContactOperations {
     }
 
     /**
-     * Updates tin_contact's note
+     * Updates contact's note
      *
      * @param note note of the SyncAdapter user
-     * @param uri  Uri for the existing raw tin_contact to be updated
+     * @param uri  Uri for the existing raw contact to be updated
      * @return instance of ContactOperations
      */
     public ContactOperations updateNote(String note, String oldNote, Uri uri) {

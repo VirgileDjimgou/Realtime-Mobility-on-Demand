@@ -41,16 +41,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import com.android.gudana.R;
 import com.android.gudana.tindroid.db.BaseDb;
 import com.android.gudana.tindroid.db.MessageDb;
 import com.android.gudana.tindroid.db.StoredMessage;
@@ -58,12 +48,25 @@ import com.android.gudana.tindroid.media.SpanFormatter;
 import com.android.gudana.tindroid.media.VxCard;
 import com.android.gudana.tindroid.widgets.LetterTileDrawable;
 import com.android.gudana.tindroid.widgets.RoundImageDrawable;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.android.gudana.R;
 import co.tinode.tinodesdk.ComTopic;
 import co.tinode.tinodesdk.LargeFileHelper;
 import co.tinode.tinodesdk.NotConnectedException;
 import co.tinode.tinodesdk.PromisedReply;
 import co.tinode.tinodesdk.Storage;
 import co.tinode.tinodesdk.Topic;
+import co.tinode.tinodesdk.model.Drafty;
 import co.tinode.tinodesdk.model.ServerMessage;
 import co.tinode.tinodesdk.model.Subscription;
 
@@ -76,7 +79,9 @@ public class MessagesListAdapter
     private static final String TAG = "MessagesListAdapter";
 
     private static final int MESSAGES_TO_LOAD = 20;
+
     private static final int MESSAGES_QUERY_ID = 100;
+
     private static final int VIEWTYPE_FULL_LEFT = 0;
     private static final int VIEWTYPE_SIMPLE_LEFT = 1;
     private static final int VIEWTYPE_FULL_AVATAR = 2;
@@ -92,8 +97,9 @@ public class MessagesListAdapter
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
-    private MessageActivity mActivity;
+    private MessageActivity_fire_tinode mActivity;
     private RecyclerView mRecyclerView;
+
     private Cursor mCursor;
     private String mTopicName = null;
     private ActionMode.Callback mSelectionModeCallback;
@@ -110,7 +116,7 @@ public class MessagesListAdapter
 
     private SpanClicker mSpanFormatterClicker;
 
-    public MessagesListAdapter(MessageActivity context, SwipeRefreshLayout refresher) {
+    public MessagesListAdapter(MessageActivity_fire_tinode context, SwipeRefreshLayout refresher) {
         super();
 
         mActivity = context;
@@ -368,10 +374,6 @@ public class MessagesListAdapter
         mSpanFormatterClicker.setPosition(position);
         holder.mText.setText(SpanFormatter.toSpanned(holder.mText, m.content,
                 disableEnt ? null : mSpanFormatterClicker));
-        /*
-        holder.mText.setText(SpanFormatter.toSpanned(mActivity, m.content, holder.mText.getMaxWidth(),
-                disableEnt ? null : mSpanFormatterClicker));
-                */
         if (SpanFormatter.hasClickableSpans(m.content)) {
             holder.mText.setLinksClickable(true);
             holder.mText.setFocusable(true);
@@ -658,8 +660,6 @@ public class MessagesListAdapter
             mProgressBar = itemView.findViewById(R.id.attachmentProgressBar);
             mCancelProgress = itemView.findViewById(R.id.attachmentProgressCancel);
             mProgressResult = itemView.findViewById(R.id.progressResult);
-
-            // voice mail
         }
     }
 
@@ -725,7 +725,7 @@ public class MessagesListAdapter
 
             } else {
                 Object ref = data.get("ref");
-                if (ref != null && ref instanceof String) {
+                if (ref instanceof String) {
                     LargeFileHelper lfh = Cache.getTinode().getFileUploader();
                     mActivity.startDownload(Uri.parse(new URL(Cache.getTinode().getBaseUrl(), (String) ref).toString()),
                             fname, mimeType, lfh.headers());
@@ -768,21 +768,18 @@ public class MessagesListAdapter
 
             switch (type) {
                 case "LN":
-                    String url = null;
+                    // Click on an URL
                     try {
                         if (data != null) {
-                            url = (String) data.get("url");
-                        }
-                    } catch (ClassCastException ignored) {}
-                    if (url != null) {
-                        try {
-                            url = new URL(Cache.getTinode().getBaseUrl(), url).toString();
+                            String url = new URL(Cache.getTinode().getBaseUrl(), (String) data.get("url")).toString();
                             mActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-                        } catch (MalformedURLException ignored) {}
+                        }
+                    } catch (ClassCastException | MalformedURLException | NullPointerException ignored) {
                     }
                     break;
 
                 case "IM":
+                    // Image
                     Bundle args = new Bundle();
                     if (data != null) {
                         try {
@@ -797,6 +794,14 @@ public class MessagesListAdapter
                     }
 
                     if (args.getByteArray("image") != null) {
+                        // start Images loade
+
+                        /*
+                        Intent intent = new Intent(this, DisplayMessageActivity.class);
+                        intent.putExtra("hello", "test");
+                        mActivity.startActivity(intent);
+                        */
+
                         mActivity.showFragment("view_image", true, args);
                     } else {
                         Toast.makeText(mActivity, R.string.broken_image, Toast.LENGTH_SHORT).show();
@@ -805,6 +810,7 @@ public class MessagesListAdapter
                     break;
 
                 case "EX":
+                    // Attachment
                     verifyStoragePermissions();
 
                     String fname = null;
@@ -812,13 +818,57 @@ public class MessagesListAdapter
                     try {
                         fname = (String) data.get("name");
                         mimeType = (String) data.get("mime");
-                    } catch (ClassCastException ignored) {}
+                    } catch (ClassCastException ignored) {
+                    }
 
                     if (TextUtils.isEmpty(fname)) {
                         fname = mActivity.getString(R.string.default_attachment_name);
                     }
 
                     downloadAttachment(data, fname, mimeType);
+                    break;
+
+                case "BN":
+                    // Button
+                    if (data != null) {
+                        try {
+                            String actionType = (String) data.get("act");
+                            String actionValue = (String) data.get("val");
+                            String name = (String) data.get("name");
+                            StoredMessage msg = getMessage(mPosition);
+                            if ("pub".equals(actionType)) {
+                                Drafty newMsg = new Drafty((String) data.get("title"));
+                                Map<String,Object> json = new HashMap<>();
+                                // {"seq":6,"resp":{"yes":1}}
+                                if (!TextUtils.isEmpty(name)) {
+                                    Map<String,Object> resp = new HashMap<>();
+                                    resp.put(name, TextUtils.isEmpty(actionValue) ? 1 : actionValue);
+                                    json.put("resp", resp);
+                                }
+                                if (msg != null) {
+                                    json.put("seq", "" + msg.seq);
+                                }
+                                if (!json.isEmpty()) {
+                                    newMsg.attachJSON(json);
+                                }
+                                mActivity.sendMessage(newMsg);
+
+                            } else if ("url".equals(actionType)) {
+                                String url = new URL(Cache.getTinode().getBaseUrl(), (String) data.get("ref")).toString();
+                                Uri uri =  Uri.parse(url);
+                                Uri.Builder builder = uri.buildUpon();
+                                if (!TextUtils.isEmpty(name)) {
+                                    builder = builder.appendQueryParameter(name,
+                                            TextUtils.isEmpty(actionValue) ? "1" : actionValue);
+                                }
+                                if (msg != null) {
+                                    builder = builder.appendQueryParameter("seq", "" + msg.seq);
+                                }
+                                builder = builder.appendQueryParameter("uid", Cache.getTinode().getMyId());
+                                mActivity.startActivity(new Intent(Intent.ACTION_VIEW, builder.build()));
+                            }
+                        } catch(ClassCastException | MalformedURLException | NullPointerException ignored){ }
+                    }
                     break;
             }
         }

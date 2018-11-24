@@ -12,15 +12,13 @@ import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.android.gudana.tindroid.Cache;
+import com.android.gudana.tindroid.media.VxCard;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-
-import com.android.gudana.tindroid.Cache;
-import com.android.gudana.tindroid.media.VxCard;
-import com.android.gudana.tindroid.Cache;
-import com.android.gudana.tindroid.media.VxCard;
 
 import co.tinode.tinodesdk.PromisedReply;
 import co.tinode.tinodesdk.Tinode;
@@ -42,8 +40,8 @@ import co.tinode.tinodesdk.model.Subscription;
 class SyncAdapter extends AbstractThreadedSyncAdapter {
     public static final String TAG = "SyncAdapter";
 
-    private static final String ACCKEY_SYNC_MARKER = "com.android.gudana.sync_marker_contacts";
-    private static final String ACCKEY_INVISIBLE_GROUP = "com.android.gudana.invisible_group_id";
+    private static final String ACCKEY_SYNC_MARKER = "co.tinode.tindroid.sync_marker_contacts";
+    private static final String ACCKEY_INVISIBLE_GROUP = "co.tinode.tindroid.invisible_group_id";
 
     // Context for loading preferences
     private final Context mContext;
@@ -117,7 +115,7 @@ class SyncAdapter extends AbstractThreadedSyncAdapter {
                 Collection<Subscription<VxCard,?>> updated = new ArrayList<>();
                 for (Subscription<VxCard,?> sub : pkt.meta.sub) {
                     if (Topic.getTopicTypeByName(sub.user) == Topic.TopicType.P2P) {
-                        //Log.d(TAG, "tin_contact " + sub.topic + "/" + sub.with + " added to list");
+                        //Log.d(TAG, "contact " + sub.topic + "/" + sub.with + " added to list");
                         updated.add(sub);
                     }
                 }

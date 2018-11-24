@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
@@ -15,9 +14,7 @@ import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -26,21 +23,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.gudana.gpslocationtracking.LocationTrack;
-import com.android.gudana.hify.ui.activities.MainActivity_GuDDana;
-import com.android.gudana.hify.ui.activities.post.PostImage;
 import com.android.gudana.hify.utils.AnimationUtil;
-import com.android.gudana.hify.utils.Config;
 import com.android.gudana.hify.utils.PathUtil;
 import com.android.gudana.hify.utils.database.UserHelper;
 import com.android.gudana.R;
 import com.android.gudana.tindroid.Cache;
 import com.android.gudana.tindroid.CredentialsFragment;
-import com.android.gudana.tindroid.LoginActivity;
-import com.android.gudana.tindroid.UiUtils;
 import com.android.gudana.tindroid.account.Utils;
 import com.android.gudana.tindroid.media.VxCard;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -68,7 +59,6 @@ import com.yalantis.ucrop.UCrop;
 import com.yarolegovich.lovelydialog.LovelyInfoDialog;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -241,7 +231,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                         if(pass_.equals(pass_2)){
 
-                            mDialog.show();
+                            // mDialog.show();
                             register.setEnabled(false);
                             firebaseFirestore.collection("Usernames")
                                     .document(username_)
@@ -478,7 +468,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                                                {
                                                                                    if(task.isSuccessful())
                                                                                    {
-                                                                                       mDialog.dismiss();
+                                                                                       //mDialog.dismiss();
                                                                                        Toast.makeText(getApplicationContext(), "User registered .", Toast.LENGTH_LONG).show();
 
                                                                                        // after  save the   User data on Device  for later Use  ....   ...
@@ -573,10 +563,7 @@ public class RegisterActivity extends AppCompatActivity {
                         Manifest.permission.GET_ACCOUNTS,
                         Manifest.permission.READ_CONTACTS,
                         Manifest.permission.WRITE_CONTACTS,
-                        Manifest.permission.RECORD_AUDIO,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.ACCESS_NETWORK_STATE,
-                        Manifest.permission.CALL_PHONE
+                        Manifest.permission.ACCESS_NETWORK_STATE
 
 
                 )
@@ -724,6 +711,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         final Button signUp = (Button) findViewById(R.id.button);
         signUp.setEnabled(false);
+        register.setEnabled(false);
 
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(RegisterActivity.this);
         String hostName = sharedPref.getString(Utils.PREFS_HOST_NAME, Cache.HOST_NAME);
@@ -846,7 +834,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         FirebaseFirestore mFirestore;
         FirebaseAuth mAuth;
-
 
         mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();

@@ -25,7 +25,7 @@ import android.widget.Toast;
 
 import com.android.gudana.R;
 import com.android.gudana.apprtc.linphone.LinphoneManager;
-import com.android.gudana.tindroid.MessageActivity;
+import com.android.gudana.tindroid.MessageActivity_fire_tinode;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -45,7 +45,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
 
 import static com.android.gudana.apprtc.ConnectActivity.room_is_voice_Server;
-import static com.android.gudana.tindroid.MessageActivity.callmelder_notification;
 
 /**
  * Fragment for call control.
@@ -98,7 +97,6 @@ public class CallFragment extends Fragment {
     toggleMuteButton = (ImageButton) controlView.findViewById(R.id.button_call_toggle_mic);
     captureFormatText = (TextView) controlView.findViewById(R.id.capture_format_text_call);
     captureFormatSlider = (SeekBar) controlView.findViewById(R.id.capture_format_slider_call);
-
     contactPicture = (CircleImageView) controlView.findViewById(R.id.image);
 
 
@@ -294,7 +292,7 @@ public class CallFragment extends Fragment {
 
             }catch(Exception ex){
 
-              MessageActivity.resetCallparameter(context ,
+              MessageActivity_fire_tinode.resetCallparameter(context ,
                       room_is_voice_Server ,
                       this.getClass().getName() + "chehcCorrespondant",
               "your correspondant  ist not available ", 0, ConnectActivity.user_id);
@@ -318,7 +316,7 @@ public class CallFragment extends Fragment {
 
     }catch(Exception ex){
 
-      MessageActivity.resetCallparameter(context , room_is_voice_Server,
+      MessageActivity_fire_tinode.resetCallparameter(context , room_is_voice_Server,
               this.getClass().getName() + "chehcCorrespondant",
               "your correspndant ist not available ", 1, ConnectActivity.user_id);
       CallRoomDb.child("Call_room").child(room_is_voice_Server).removeEventListener(mListener);
@@ -377,7 +375,7 @@ public class CallFragment extends Fragment {
       callEvents.onCallHangUp();
       // send notification ...to tell that your are not available anymore ....
       // i think ..we should start this  operation in  a backgroung thread  before to  close this activity  ...
-      MessageActivity.resetCallparameter(controlView.getContext() ,
+      MessageActivity_fire_tinode.resetCallparameter(controlView.getContext() ,
               room_is_voice_Server ,
               getClass().getName()+" CallFragment  : onDestroy",
               "Call End",0,ConnectActivity.user_id );

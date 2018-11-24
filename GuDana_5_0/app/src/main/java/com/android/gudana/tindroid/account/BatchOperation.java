@@ -49,7 +49,7 @@ final public class BatchOperation {
                 }
             }
         } catch (final OperationApplicationException | RemoteException e) {
-            Log.e(TAG, "storing tin_contact data failed", e);
+            Log.e(TAG, "storing contact data failed", e);
         }
         mOperations.clear();
         return resultUris;

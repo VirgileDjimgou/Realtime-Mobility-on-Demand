@@ -22,7 +22,6 @@ import com.android.gudana.R;
 import com.android.gudana.chatapp.activities.ChatActivity;
 import com.android.gudana.chatapp.activities.FullScreenActivity;
 import com.android.gudana.chatapp.utils_v2.FileOpen;
-import com.android.gudana.tindroid.MessageActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -688,7 +687,7 @@ public class MessageHolder extends RecyclerView.ViewHolder
                     newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(newIntent);
                     */
-                    //MessageActivity.getDateAndTime().data_processing.setVisibility(View.GONE);
+                    //MessageActivity_fire_tinode.getDateAndTime().data_processing.setVisibility(View.GONE);
                     FileOpen.openFile(context,localFile);
                 } catch (Exception e) {
                     ChatActivity.data_processing.setVisibility(View.GONE);

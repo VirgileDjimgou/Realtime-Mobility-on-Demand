@@ -1,5 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
+    <string name="asset_statements" translatable="false">[{ \"include\": \"https://api.tinode.co/.well-known/assetlinks.json\" }]</string>
+    <string name="validated_address_to_use">Validated %1$s to use</string>
+    <string name="enter_valid_address">Enter valid %1$s</string>
+    <string name="invalid_or_unknown_credential">Invalid or unknown address</string>
+    <string name="password_reset_message_sent">Message with instructions sent</string>
+
+
     <string name="app_name_full">GuDana Messenger</string>
     <string name="app_version">Version</string>
     <string name="copyright">© 2014 – 2018 GuDana</string>
@@ -12,7 +19,6 @@
     <string name="send_image_button_hint">Send image</string>
     <string name="send_file_button_hint">Send file</string>
 
-    <string name="tinode_url">https://github.com/GuDana/</string>
     <string name="action_signup">Sign Up</string>
     <string name="sign_up">Sign Up</string>
     <string name="login_new">Login</string>
@@ -2016,6 +2022,9 @@ Curiosity might have killed the cat, but it is the driving force behind all inno
     <string name="group_info">Group Info</string>
     <string name="title_activity_test__login__tinode_server_">Test_Login_Tinode_server_Activity
     </string>
+    <string name="request_pass_reset">reset password</string>
+    <string name="request">request</string>
+    <string name="title_activity_image_viewer">Image_viewer</string>
 </resources>
 
 

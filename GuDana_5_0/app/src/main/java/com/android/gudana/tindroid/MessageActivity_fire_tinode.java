@@ -1,5 +1,58 @@
 package com.android.gudana.tindroid;
 
+import android.app.DownloadManager;
+import android.app.NotificationManager;
+import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.FileProvider;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
+
+import com.android.gudana.R;
+import com.android.gudana.tindroid.account.Utils;
+
+import java.io.File;
+import java.net.URI;
+import java.util.Map;
+import java.util.Timer;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
+
+
+import com.android.gudana.tindroid.media.VxCard;
+import co.tinode.tinodesdk.ComTopic;
+import co.tinode.tinodesdk.NotConnectedException;
+import co.tinode.tinodesdk.PromisedReply;
+import co.tinode.tinodesdk.Tinode;
+import co.tinode.tinodesdk.model.Description;
+import co.tinode.tinodesdk.model.Drafty;
+import co.tinode.tinodesdk.model.MsgServerData;
+import co.tinode.tinodesdk.model.MsgServerInfo;
+import co.tinode.tinodesdk.model.MsgServerPres;
+import co.tinode.tinodesdk.model.PrivateType;
+import co.tinode.tinodesdk.model.ServerMessage;
+import co.tinode.tinodesdk.model.Subscription;
+
+
 import android.Manifest;
 import android.app.DownloadManager;
 import android.app.NotificationManager;
@@ -43,7 +96,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Timer;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -60,18 +112,15 @@ import com.android.gudana.hify.utils.database.UserHelper;
 import com.android.gudana.tindroid.account.Utils;
 import com.android.gudana.tindroid.media.VxCard;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.storage.StorageReference;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -96,16 +145,47 @@ import es.dmoral.toasty.Toasty;
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 
-import static com.android.gudana.tindroid.MessagesFragment.GetCorrespondantInformation_and_your_profile;
+import static com.android.gudana.tindroid.MessagesFragment_fire_tinode.GetCorrespondantInformation_and_your_profile;
+
 
 /**
  * View to display a single conversation
  */
-public class MessageActivity extends AppCompatActivity {
+public class MessageActivity_fire_tinode extends AppCompatActivity {
+
+
+    //added
+    private static final String TAG = "MessageActivity";
+
+    static final String FRAGMENT_MESSAGES = "msg";
+    static final String FRAGMENT_INVALID ="invalid";
+    static final String FRAGMENT_INFO = "info";
+    static final String FRAGMENT_ADD_TOPIC = "add_topic";
+    static final String FRAGMENT_EDIT_MEMBERS = "edit_members";
+    static final String FRAGMENT_VIEW_IMAGE ="view_image";
+
+    // How long a typing indicator should play its animation, milliseconds.
+    private static final int TYPING_INDICATOR_DURATION = 4000;
+    private Timer mTypingAnimationTimer;
+
+    private String mMessageText = null;
+
+    private String mTopicName = null;
+    private ComTopic<VxCard> mTopic = null;
+
+    private PausableSingleThreadExecutor mMessageSender = null;
+
+    private DownloadManager mDownloadMgr = null;
+    private long mDownloadId = -1;
+
+    // added
+
+
+
+
 
 
     public  static String pushId_callRoom = "";
-    private final String TAG = "CA/ChatActivity";
 
     // Will handle all changes happening in database
 
@@ -199,7 +279,7 @@ public class MessageActivity extends AppCompatActivity {
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
-    private Context mContext=MessageActivity.this;
+    private Context mContext=MessageActivity_fire_tinode.this;
     private static final int EX_FILE_PICKER_RESULT = 55;
 
 
@@ -214,28 +294,10 @@ public class MessageActivity extends AppCompatActivity {
     // public static Context mContext;
 
 
-    static final String FRAGMENT_MESSAGES = "msg";
-    static final String FRAGMENT_INVALID ="invalid";
-    static final String FRAGMENT_INFO = "info";
-    static final String FRAGMENT_ADD_TOPIC = "add_topic";
-    static final String FRAGMENT_EDIT_MEMBERS = "tin_edit_members";
-    static final String FRAGMENT_VIEW_IMAGE ="view_image";
-
-    // How long a typing indicator should play its animation, milliseconds.
-    private static final int TYPING_INDICATOR_DURATION = 4000;
-    private Timer mTypingAnimationTimer;
-
-    private String mMessageText = null;
-
-    private String mTopicName = null;
-    private ComTopic<VxCard> mTopic = null;
-
-    private PausableSingleThreadExecutor mMessageSender = null;
-
-    private DownloadManager mDownloadMgr = null;
-    private long mDownloadId = -1;
     public  static String NameUser = "";
     public static String otherUserId = "";
+
+
 
 
     @Override
@@ -250,8 +312,6 @@ public class MessageActivity extends AppCompatActivity {
             ab.setDisplayHomeAsUpEnabled(true);
             ab.setDisplayShowHomeEnabled(true);
         }
-
-
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -260,7 +320,7 @@ public class MessageActivity extends AppCompatActivity {
                 } else if (!isFragmentVisible(FRAGMENT_MESSAGES) && !isFragmentVisible(FRAGMENT_INVALID)) {
                     showFragment(FRAGMENT_MESSAGES, false, null);
                 } else {
-                    Intent intent = new Intent(MessageActivity.this, MainActivity_GuDDana.class);
+                    Intent intent = new Intent(MessageActivity_fire_tinode.this, MainActivity_GuDDana.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(intent);
                 }
@@ -270,9 +330,9 @@ public class MessageActivity extends AppCompatActivity {
         mDownloadMgr = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
         registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
         registerReceiver(onNotificationClick, new IntentFilter(DownloadManager.ACTION_NOTIFICATION_CLICKED));
+
         mMessageSender = new PausableSingleThreadExecutor();
         mMessageSender.pause();
-
 
         try{
 
@@ -294,9 +354,8 @@ public class MessageActivity extends AppCompatActivity {
         GetCorrespondantInformation_and_your_profile();
 
         // to avoid notification  when  the  message ist activated
-       running = true;
+        running = true;
     }
-
 
     private void askPermission() {
 
@@ -324,7 +383,7 @@ public class MessageActivity extends AppCompatActivity {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         if(report.isAnyPermissionPermanentlyDenied()){
-                            Toasty.info(MessageActivity.this, "You have denied some permissions permanently, if the app force close try granting permission from settings.", Toast.LENGTH_LONG).show();
+                            Toasty.info(MessageActivity_fire_tinode.this, "You have denied some permissions permanently, if the app force close try granting permission from settings.", Toast.LENGTH_LONG).show();
                         }
                     }
 
@@ -336,18 +395,17 @@ public class MessageActivity extends AppCompatActivity {
 
     }
 
-
     @Override
     @SuppressWarnings("unchecked")
     public void onResume() {
         super.onResume();
-        running = true;
 
         final Tinode tinode = Cache.getTinode();
         tinode.setListener(new MessageEventListener(tinode.isConnected()));
 
         final Intent intent = getIntent();
 
+        // usrtOfsxhDEkfM
         // Check if the activity was launched by internally-generated intent.
         mTopicName = intent.getStringExtra("topic");
 
@@ -380,34 +438,37 @@ public class MessageActivity extends AppCompatActivity {
         mMessageText = intent.getStringExtra(Intent.EXTRA_TEXT);
 
         // Get a known topic.
-        String IdUserfirebase = null ;
-        try{
-
-            // usrtOfsxhDEkfM
-            mTopic = (ComTopic<VxCard>) tinode.getTopic(mTopicName);
-            IdUserfirebase = mTopic.getPub().fn;
-
-        }catch(Exception ex){
-            ex.printStackTrace();
-        }
-
-        if(IdUserfirebase== null){
-            Toasty.error(context, "error parse id User or invalid Id ", Toast.LENGTH_SHORT).show();
-            MessageActivity.this.finish();
-            // back to main Programm    
-        }
-
-        // split methode
-        String[] parts = IdUserfirebase.split("#####");
-        NameUser = parts[0].trim(); // 004
-        otherUserId = parts[1].trim(); // 034556
-
-        // get all information users
-        GetCorrespondantInformation_and_your_profile();
-
+        mTopic = (ComTopic<VxCard>) tinode.getTopic(mTopicName);
         if (mTopic != null) {
             UiUtils.setupToolbar(this, mTopic.getPub(), mTopicName, mTopic.getOnline());
             showFragment(FRAGMENT_MESSAGES, false, null);
+
+            // Get a known topic.
+            //String IdUserfirebase = null ;
+            String IdUserfirebase = "hjkgkjjjjjjjjjgjkvghvtcrtcv";
+            try{
+
+                mTopic = (ComTopic<VxCard>) tinode.getTopic(mTopicName);
+                IdUserfirebase = mTopic.getPub().fn;
+
+                if(IdUserfirebase== null){
+                    Toasty.error(context, " invalid Id ", Toast.LENGTH_SHORT).show();
+                    //MessageActivity_fire_tinode.this.finish();
+                    // back to main Programm
+                }
+
+                // split methode
+                String[] parts = IdUserfirebase.split("#####");
+                NameUser = parts[0].trim(); // 004
+                otherUserId = parts[1].trim(); // 034556
+                // get all information users
+                GetCorrespondantInformation_and_your_profile();
+
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
+
+
         } else {
             // New topic by name, either an actual grp* or p2p* topic name or a usr*
             Log.i(TAG, "Attempt to instantiate an unknown topic: " + mTopicName);
@@ -415,26 +476,22 @@ public class MessageActivity extends AppCompatActivity {
             mTopic = (ComTopic<VxCard>) tinode.newTopic(mTopicName, null);
             showFragment(FRAGMENT_INVALID, false, null);
         }
+
         mTopic.setListener(new TListener());
 
         if (!mTopic.isAttached()) {
             topicAttach();
         } else {
-            MessagesFragment fragmsg = (MessagesFragment) getSupportFragmentManager()
+            MessagesFragment_fire_tinode fragmsg = (MessagesFragment_fire_tinode) getSupportFragmentManager()
                     .findFragmentByTag(FRAGMENT_MESSAGES);
             fragmsg.topicSubscribed();
         }
     }
 
-
-
     @Override
     public void onPause() {
         super.onPause();
         mMessageSender.pause();
-
-        // enable notification
-        running = false;
         if (mTypingAnimationTimer != null) {
             mTypingAnimationTimer.cancel();
             mTypingAnimationTimer = null;
@@ -453,147 +510,6 @@ public class MessageActivity extends AppCompatActivity {
                 }
             }
         }
-    }
-
-    private void topicAttach() {
-
-        try {
-            setProgressIndicator(true);
-            mTopic.subscribe(null,
-                    mTopic.getMetaGetBuilder()
-                            .withGetDesc()
-                            .withGetSub()
-                            .withGetData()
-                            .withGetDel()
-                            .build()).thenApply(new PromisedReply.SuccessListener<ServerMessage>() {
-                @Override
-                public PromisedReply<ServerMessage> onSuccess(ServerMessage result) {
-                    UiUtils.setupToolbar(MessageActivity.this, mTopic.getPub(),
-                            mTopicName, mTopic.getOnline());
-                    showFragment(FRAGMENT_MESSAGES, false, null);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            setProgressIndicator(false);
-                            MessagesFragment fragmsg = (MessagesFragment) getSupportFragmentManager()
-                                    .findFragmentByTag(FRAGMENT_MESSAGES);
-                            fragmsg.topicSubscribed();
-                        }
-                    });
-                    mMessageSender.resume();
-                    // Submit pending messages for processing: publish queued, delete marked for deletion.
-                    mMessageSender.submit(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                mTopic.syncAll();
-                            } catch (Exception ignored) {
-                            }
-                        }
-                    });
-                    return null;
-                }
-            }, new PromisedReply.FailureListener<ServerMessage>() {
-                @Override
-                public PromisedReply<ServerMessage> onFailure(Exception err) {
-                    setProgressIndicator(false);
-                    showFragment(FRAGMENT_INVALID, false, null);
-                    return null;
-                }
-            });
-        } catch (NotConnectedException ignored) {
-            Log.d(TAG, "Offline mode, ignore");
-            setProgressIndicator(false);
-        } catch (Exception ex) {
-            setProgressIndicator(false);
-            Toast.makeText(this, R.string.action_failed, Toast.LENGTH_SHORT).show();
-            Log.e(TAG, "something went wrong", ex);
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        running = false;
-        mMessageSender.shutdownNow();
-        unregisterReceiver(onComplete);
-        unregisterReceiver(onNotificationClick);
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        setIntent(intent);
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        UiUtils.setVisibleTopic(hasFocus ? mTopicName : null);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (mTopic == null || !mTopic.isValid()) {
-            return false;
-        }
-
-        int id = item.getItemId();
-        switch (id) {
-
-            case android.R.id.home: {
-
-                //MainActivity_with_Drawer.tabLayout.getTabAt(3);
-                //MainActivity_with_Drawer.mViewPager.setCurrentItem(3);
-                //play_sound();
-                MessageActivity.this.finish();
-                // NavUtils.navigateUpFromSameTask(this);
-                break;
-            }
-
-
-            case R.id.action_view_contact: {
-                showFragment(FRAGMENT_INFO, false, null);
-                return true;
-            }
-
-
-            case R.id.action_topic_edit: {
-                showFragment(FRAGMENT_ADD_TOPIC, false, null);
-                return true;
-            }
-
-            case R.id.action_call_audio: {
-
-                if (CallFragment.running == true) {
-                    Toasty.warning(MessageActivity.this.getApplicationContext(), "you can not start  two calls at the same time  ! ", Toast.LENGTH_LONG).show();
-                } else {
-                    call_infos_notification(MessageActivity.this.context ,"audio");
-                    // call Button
-
-                }
-
-                //Toasty.info(getApplicationContext(), R.string.not_imp6565lemented, Toast.LENGTH_SHORT).show();
-                break;
-            }
-
-            case R.id.action_call_video: {
-
-                if (CallFragment.running == true) {
-                    Toasty.warning(MessageActivity.this.getApplicationContext(), "you can not start  two calls at the same time  ! ", Toast.LENGTH_LONG).show();
-                } else {
-                    call_infos_notification(MessageActivity.this.context ,"video");
-                    // disable call Button  ...
-
-                }
-
-                break;
-            }
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
 
@@ -635,7 +551,7 @@ public class MessageActivity extends AppCompatActivity {
                 if(databaseError != null)
                 {
                     //Log.d("error", "sendMessage(): updateChildren failed: " + databaseError.getMessage());
-                    Toasty.info(MessageActivity.this, "sendMessage(): updateChildren failed: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toasty.info(MessageActivity_fire_tinode.this, "sendMessage(): updateChildren failed: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                     // Toast.makeText(CreateGroupChatActivity.this.getApplicationContext(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                 }else{
                     // we can  start the call intent  ....
@@ -649,7 +565,7 @@ public class MessageActivity extends AppCompatActivity {
 
                         callmelder_notification = true;  // send a notification for  to registread the call
                         call_type = "video";
-                        Intent intentvideo = new Intent(MessageActivity.this.getBaseContext(), ConnectActivity.class);
+                        Intent intentvideo = new Intent(MessageActivity_fire_tinode.this.getBaseContext(), ConnectActivity.class);
                         intentvideo.putExtra("vid_or_aud", call_type);
                         intentvideo.putExtra("user_id", currentUserId);
                         intentvideo.putExtra("room_id", pushId_callRoom);
@@ -661,10 +577,11 @@ public class MessageActivity extends AppCompatActivity {
                         callmelder_notification = true;  // send a notification for  to registread the call
                         // make web rtc call
                         call_type = "audio";
-                        Intent intentaudio = new Intent(MessageActivity.this.getBaseContext(), ConnectActivity.class);
+                        Intent intentaudio = new Intent(MessageActivity_fire_tinode.this.getBaseContext(), ConnectActivity.class);
                         ConnectActivity.received_call = "caller";
                         intentaudio.putExtra("vid_or_aud", call_type);
                         intentaudio.putExtra("user_id", currentUserId);
+                        intentaudio.putExtra("room_id", pushId_callRoom);
                         startActivity(intentaudio);
 
                     }
@@ -732,12 +649,12 @@ public class MessageActivity extends AppCompatActivity {
         // send notification    ...
 
         FCM_Message_Sender.sendWithOtherThread("token" ,
-                MessagesFragment.TokenFCM_OtherUser ,
+                MessagesFragment_fire_tinode.TokenFCM_OtherUser ,
                 "call" ,
                 currentUserId ,
                 NameCurrentUser,
                 url_Icon_currentUser,
-                MessagesFragment.getDateAndTime(),
+                MessagesFragment_fire_tinode.getDateAndTime(),
                 pushId_callRoom,
                 " missed call ");
 
@@ -756,11 +673,11 @@ public class MessageActivity extends AppCompatActivity {
                 if(task.isSuccessful())
                 {
 
-                   Toast.makeText(MessageActivity.this, "Initialisation with GuDana Voice Cloud successful ", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MessageActivity_fire_tinode.this, "Initialisation with GuDana Voice Cloud successful ", Toast.LENGTH_LONG).show();
                 }
                 else
                 {
-                    Toast.makeText(MessageActivity.this, "sorry GuDana Voice Cloud  is unreachable right now ! .... please try again later ", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MessageActivity_fire_tinode.this, "sorry GuDana Voice Cloud  is unreachable right now ! .... please try again later ", Toast.LENGTH_LONG).show();
 
                 }
             }
@@ -776,7 +693,7 @@ public class MessageActivity extends AppCompatActivity {
                                            String reason ,
                                            int call_attribut,
                                            final String missedCallerId
-                                           ){
+    ){
 
         currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Toasty.info(context_call, "Call Reset Parameter  : " + ClassName_func, Toast.LENGTH_LONG).show();
@@ -884,14 +801,6 @@ public class MessageActivity extends AppCompatActivity {
         });
 
 
-    }
-
-    // randomnumber
-    // generate random number
-    private int getRandomNumber(){
-        Random rand = new Random();
-        int value = rand.nextInt(100000);
-        return  value;
     }
 
     public static  void missedCallNotification(final Context context_call ,
@@ -1012,6 +921,147 @@ public class MessageActivity extends AppCompatActivity {
     }
 
 
+    private void topicAttach() {
+        try {
+            setProgressIndicator(true);
+            mTopic.subscribe(null,
+                    mTopic.getMetaGetBuilder()
+                            .withGetDesc()
+                            .withGetSub()
+                            .withGetData()
+                            .withGetDel()
+                            .build()).thenApply(new PromisedReply.SuccessListener<ServerMessage>() {
+                @Override
+                public PromisedReply<ServerMessage> onSuccess(ServerMessage result) {
+                    UiUtils.setupToolbar(MessageActivity_fire_tinode.this, mTopic.getPub(),
+                            mTopicName, mTopic.getOnline());
+                    showFragment(FRAGMENT_MESSAGES, false, null);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            setProgressIndicator(false);
+                            MessagesFragment_fire_tinode fragmsg = (MessagesFragment_fire_tinode) getSupportFragmentManager()
+                                    .findFragmentByTag(FRAGMENT_MESSAGES);
+                            fragmsg.topicSubscribed();
+                        }
+                    });
+                    mMessageSender.resume();
+                    // Submit pending messages for processing: publish queued, delete marked for deletion.
+                    mMessageSender.submit(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                mTopic.syncAll();
+                            } catch (Exception ignored) {
+                            }
+                        }
+                    });
+                    return null;
+                }
+            }, new PromisedReply.FailureListener<ServerMessage>() {
+                @Override
+                public PromisedReply<ServerMessage> onFailure(Exception err) {
+                    setProgressIndicator(false);
+                    showFragment(FRAGMENT_INVALID, false, null);
+                    return null;
+                }
+            });
+        } catch (NotConnectedException ignored) {
+            Log.d(TAG, "Offline mode, ignore");
+            setProgressIndicator(false);
+        } catch (Exception ex) {
+            Log.e(TAG, "something went wrong", ex);
+            setProgressIndicator(false);
+            Toast.makeText(this, R.string.action_failed, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        mMessageSender.shutdownNow();
+        unregisterReceiver(onComplete);
+        unregisterReceiver(onNotificationClick);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        UiUtils.setVisibleTopic(hasFocus ? mTopicName : null);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (mTopic == null || !mTopic.isValid()) {
+            return false;
+        }
+
+        int id = item.getItemId();
+        switch (id) {
+
+            case android.R.id.home: {
+
+                //MainActivity_with_Drawer.tabLayout.getTabAt(3);
+                //MainActivity_with_Drawer.mViewPager.setCurrentItem(3);
+                //play_sound();
+                MessageActivity_fire_tinode.this.finish();
+                // NavUtils.navigateUpFromSameTask(this);
+                break;
+            }
+
+
+            case R.id.action_view_contact: {
+                showFragment(FRAGMENT_INFO, false, null);
+                return true;
+            }
+
+
+            case R.id.action_topic_edit: {
+                showFragment(FRAGMENT_ADD_TOPIC, false, null);
+                return true;
+            }
+
+            case R.id.action_call_audio: {
+
+                if (CallFragment.running == true) {
+                    Toasty.warning(MessageActivity_fire_tinode.this.getApplicationContext(), "you can not start  two calls at the same time  ! ", Toast.LENGTH_LONG).show();
+                } else {
+                    call_infos_notification(MessageActivity_fire_tinode.this.context ,"audio");
+                    // call Button
+
+                }
+
+                //Toasty.info(getApplicationContext(), R.string.not_imp6565lemented, Toast.LENGTH_SHORT).show();
+                break;
+            }
+
+            case R.id.action_call_video: {
+
+                if (CallFragment.running == true) {
+                    Toasty.warning(MessageActivity_fire_tinode.this.getApplicationContext(), "you can not start  two calls at the same time  ! ", Toast.LENGTH_LONG).show();
+                } else {
+                    call_infos_notification(MessageActivity_fire_tinode.this.context ,"video");
+                    // disable call Button  ...
+
+                }
+
+                break;
+            }
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
     private boolean isFragmentVisible(String tag) {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
         return fragment != null && fragment.isVisible();
@@ -1023,7 +1073,7 @@ public class MessageActivity extends AppCompatActivity {
         if (fragment == null) {
             switch (tag) {
                 case FRAGMENT_MESSAGES:
-                    fragment = new MessagesFragment();
+                    fragment = new MessagesFragment_fire_tinode();
                     break;
                 case FRAGMENT_INFO:
                     fragment = new TopicInfoFragment();
@@ -1065,9 +1115,42 @@ public class MessageActivity extends AppCompatActivity {
         }
     }
 
+    boolean sendMessage(Drafty content) {
+        if (mTopic != null) {
+            try {
+                PromisedReply<ServerMessage> reply = mTopic.publish(content);
+                runMessagesLoader(); // Shows pending message
+                reply.thenApply(new PromisedReply.SuccessListener<ServerMessage>() {
+                    @Override
+                    public PromisedReply<ServerMessage> onSuccess(ServerMessage result) {
+                        // Updates message list with "delivered" icon.
+                        runMessagesLoader();
+                        return null;
+                    }
+                }, new UiUtils.ToastFailureListener(this));
+            } catch (NotConnectedException ex) {
+                Log.d(TAG, "sendMessage -- NotConnectedException", ex);
+            } catch (Exception ex) {
+                Log.d(TAG, "sendMessage -- Exception", ex);
+                Toast.makeText(this, R.string.failed_to_send_message, Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
     public void sendKeyPress() {
         if (mTopic != null) {
             mTopic.noteKeyPress();
+        }
+    }
+
+    void runMessagesLoader() {
+        final MessagesFragment_fire_tinode fragment = (MessagesFragment_fire_tinode) getSupportFragmentManager().
+                findFragmentByTag(FRAGMENT_MESSAGES);
+        if (fragment != null && fragment.isVisible()) {
+            fragment.runMessagesLoader();
         }
     }
 
@@ -1090,13 +1173,13 @@ public class MessageActivity extends AppCompatActivity {
         mDownloadId = mDownloadMgr.enqueue(
                 req.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI |
                         DownloadManager.Request.NETWORK_MOBILE)
-                .setMimeType(mime)
-                .setAllowedOverRoaming(false)
-                .setTitle(fname)
-                .setDescription(getString(R.string.download_title))
-                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                .setVisibleInDownloadsUi(true)
-                .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fname));
+                        .setMimeType(mime)
+                        .setAllowedOverRoaming(false)
+                        .setTitle(fname)
+                        .setDescription(getString(R.string.download_title))
+                        .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                        .setVisibleInDownloadsUi(true)
+                        .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fname));
     }
 
     /**
@@ -1110,7 +1193,7 @@ public class MessageActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                MessagesFragment fragMsg = (MessagesFragment) getSupportFragmentManager()
+                MessagesFragment_fire_tinode fragMsg = (MessagesFragment_fire_tinode) getSupportFragmentManager()
                         .findFragmentByTag(FRAGMENT_MESSAGES);
                 if (fragMsg != null) {
                     fragMsg.setProgressIndicator(active);
@@ -1122,7 +1205,7 @@ public class MessageActivity extends AppCompatActivity {
     BroadcastReceiver onComplete=new BroadcastReceiver() {
         public void onReceive(Context ctx, Intent intent) {
             if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(intent.getAction()) &&
-                intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0) == mDownloadId) {
+                    intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0) == mDownloadId) {
                 DownloadManager.Query query = new DownloadManager.Query();
                 query.setFilterById(mDownloadId);
                 Cursor c = mDownloadMgr.query(query);
@@ -1131,9 +1214,9 @@ public class MessageActivity extends AppCompatActivity {
                         URI fileUri = URI.create(c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)));
                         String mimeType = c.getString(c.getColumnIndex(DownloadManager.COLUMN_MEDIA_TYPE));
                         intent = new Intent();
-                        intent.setAction(Intent.ACTION_VIEW);
-                        intent.setDataAndType(FileProvider.getUriForFile(MessageActivity.this,
-                                "com.android.gudana.provider", new File(fileUri)), mimeType);
+                        intent.setAction(android.content.Intent.ACTION_VIEW);
+                        intent.setDataAndType(FileProvider.getUriForFile(MessageActivity_fire_tinode.this,
+                                "co.tinode.tindroid.provider", new File(fileUri)), mimeType);
                         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         try {
                             startActivity(intent);
@@ -1166,15 +1249,7 @@ public class MessageActivity extends AppCompatActivity {
 
         @Override
         public void onData(MsgServerData data) {
-            final MessagesFragment fragment = (MessagesFragment) getSupportFragmentManager().
-                    findFragmentByTag(FRAGMENT_MESSAGES);
-            if (fragment != null && fragment.isVisible()) {
-
-                // play some music here to tell to other user that a new message are availabale ...
-
-                fragment.Play_Song_in_message();
-                fragment.runMessagesLoader();
-            }
+            runMessagesLoader();
         }
 
         @Override
@@ -1190,7 +1265,7 @@ public class MessageActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            MessagesFragment fragment = (MessagesFragment) getSupportFragmentManager().
+                            MessagesFragment_fire_tinode fragment = (MessagesFragment_fire_tinode) getSupportFragmentManager().
                                     findFragmentByTag(FRAGMENT_MESSAGES);
                             if (fragment != null && fragment.isVisible()) {
                                 fragment.notifyDataSetChanged();
@@ -1202,8 +1277,8 @@ public class MessageActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            // Show typing indicator as animation over avatar in tin_toolbar
-                            mTypingAnimationTimer = UiUtils.toolbarTypingIndicator(MessageActivity.this,
+                            // Show typing indicator as animation over avatar in toolbar
+                            mTypingAnimationTimer = UiUtils.toolbarTypingIndicator(MessageActivity_fire_tinode.this,
                                     mTypingAnimationTimer, TYPING_INDICATOR_DURATION);
                         }
                     });
@@ -1233,7 +1308,7 @@ public class MessageActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    UiUtils.setupToolbar(MessageActivity.this, mTopic.getPub(), mTopic.getName(),
+                    UiUtils.setupToolbar(MessageActivity_fire_tinode.this, mTopic.getPub(), mTopic.getName(),
                             mTopic.getOnline());
 
                     TopicInfoFragment fragment = (TopicInfoFragment) getSupportFragmentManager().
@@ -1255,7 +1330,7 @@ public class MessageActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    UiUtils.toolbarSetOnline(MessageActivity.this, mTopic.getOnline());
+                    UiUtils.toolbarSetOnline(MessageActivity_fire_tinode.this, mTopic.getOnline());
                 }
             });
 
@@ -1272,10 +1347,11 @@ public class MessageActivity extends AppCompatActivity {
         private ReentrantLock pauseLock = new ReentrantLock();
         private Condition unpaused = pauseLock.newCondition();
 
-        public PausableSingleThreadExecutor() {
+        PausableSingleThreadExecutor() {
             super(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
         }
 
+        @Override
         protected void beforeExecute(Thread t, Runnable r) {
             super.beforeExecute(t, r);
             pauseLock.lock();
@@ -1288,7 +1364,7 @@ public class MessageActivity extends AppCompatActivity {
             }
         }
 
-        public void pause() {
+        void pause() {
             pauseLock.lock();
             try {
                 isPaused = true;
@@ -1297,7 +1373,7 @@ public class MessageActivity extends AppCompatActivity {
             }
         }
 
-        public void resume() {
+        void resume() {
             pauseLock.lock();
             try {
                 isPaused = false;
@@ -1310,12 +1386,14 @@ public class MessageActivity extends AppCompatActivity {
 
     private class MessageEventListener extends UiUtils.EventListener {
         MessageEventListener(boolean online) {
-            super(MessageActivity.this, online);
+            super(MessageActivity_fire_tinode.this, online);
         }
 
         @Override
         public void onLogin(int code, String txt) {
             super.onLogin(code, txt);
+
+            UiUtils.attachMeTopic(MessageActivity_fire_tinode.this, null);
             topicAttach();
         }
     }

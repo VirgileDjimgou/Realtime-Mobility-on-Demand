@@ -14,18 +14,19 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+//import com.android.gudana.tindroid.ContactsActivity;
 import com.android.gudana.hify.ui.activities.MainActivity_GuDDana;
+import com.android.gudana.tindroid.MessageActivity_fire_tinode;
+import com.android.gudana.tindroid.UiUtils;
+import com.android.gudana.tindroid.account.ContactsManager;
+import com.android.gudana.tindroid.media.VxCard;
+import com.android.gudana.tindroid.widgets.RoundImageDrawable;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Map;
 
-import com.android.gudana.tindroid.MessageActivity;
 import com.android.gudana.R;
-import com.android.gudana.tindroid.UiUtils;
-import com.android.gudana.tindroid.account.ContactsManager;
-import com.android.gudana.tindroid.media.VxCard;
-import com.android.gudana.tindroid.widgets.RoundImageDrawable;
 import co.tinode.tinodesdk.Topic;
 import co.tinode.tinodesdk.model.Subscription;
 
@@ -116,7 +117,7 @@ public class FBaseMessagingService extends FirebaseMessagingService {
                 title = "User Name";
                 body = "Invite: " + data.get("content");
             } else if (tp == Topic.TopicType.FND) {
-                // TODO(gene): implement tin_contact found notification
+                // TODO(gene): implement contact found notification
                 // Someone joined Tinode
                 title = "User Name has joined";
                 body = data.get("content");
@@ -149,7 +150,7 @@ public class FBaseMessagingService extends FirebaseMessagingService {
             intent = new Intent(this, MainActivity_GuDDana.class);
         } else {
             // Communication on a known topic
-            intent = new Intent(this, MessageActivity.class);
+            intent = new Intent(this, MessageActivity_fire_tinode.class);
             intent.putExtra("topic", topic);
         }
 
@@ -181,7 +182,7 @@ public class FBaseMessagingService extends FirebaseMessagingService {
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
 
-        // MessageActivity will cancel all notifications by tag, which is just topic name.
+        // MessageActivity_fire_tinode will cancel all notifications by tag, which is just topic name.
         // All notifications receive the same id 0 because id is not used.
         NotificationManager nm =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -201,6 +202,6 @@ public class FBaseMessagingService extends FirebaseMessagingService {
         intent.putExtra("token", refreshedToken);
         lbm.sendBroadcast(intent);
 
-        // The token is currently retrieved in com.android.gudana.Cache.
+        // The token is currently retrieved in Cache.
     }
 }
