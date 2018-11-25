@@ -40,7 +40,7 @@
     <string name="settings_host_name_summary">Change server address</string>
     <string name="settings_use_tls_summary">Use secure connection</string>
     <string name="settings_wire_transport_summary">Select wire transport</string>
-    <string name="default_host_name">35.243.225.95:6060</string>
+    <string name="default_host_name">35.237.197.121:6060</string>
 
     <!-- access mode definitions -->
     <string name="modeReadable">can join</string>

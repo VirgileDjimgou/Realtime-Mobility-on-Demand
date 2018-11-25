@@ -60,7 +60,7 @@ public class Image_viewer extends AppCompatActivity {
         // or load with glide
         BigImageViewer.initialize(GlideImageLoader.with(Image_viewer.this));
         // show Images
-        bigImageView.showImage(Uri.parse(url));
+        // bigImageView.showImage(Uri.parse(url));
 
     }
 
