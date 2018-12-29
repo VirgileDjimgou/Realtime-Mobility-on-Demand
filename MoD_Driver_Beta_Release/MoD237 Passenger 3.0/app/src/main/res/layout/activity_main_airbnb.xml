@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    tools:context="com.bee.passenger.airbnbmapexample.ui.activity.MainActivity">
+    tools:context="com.gudana.mod.airbnbmapexample.ui.activity.MainActivity">
 
 
     <FrameLayout

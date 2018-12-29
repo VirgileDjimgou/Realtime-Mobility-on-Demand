@@ -339,7 +339,7 @@ dependencies {
     implementation 'com.iceteck.silicompressorr:silicompressor:2.2.1'
 
     // import module settings  stindroid
-    implementation project(path: ':tinodesdk_android')
+    //implementation project(path: ':tinodesdk_android')
     implementation 'com.android.support:preference-v7:27.1.1'
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support:support-vector-drawable:27.1.1'

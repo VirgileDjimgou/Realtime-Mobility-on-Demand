@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.android.gudana.group_chat.ui.CreateGroupChatActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="1dp">
+
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_height="55dp">
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:paddingLeft="15dp"
+                android:paddingTop="1dp"
+                android:ems="10"
+                android:layout_gravity="left|center_horizontal|center_vertical"
+                android:background="@drawable/rounded_listview"
+                android:hint="Enter a Group Name"
+                android:id="@+id/chat_name"
+                android:layout_weight="1" />
+
+            <Button
+                android:layout_marginRight="15dp"
+                android:id="@+id/createButton"
+                android:layout_width="170dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_gravity="right"
+                android:background="@drawable/rounded_bg_global_theme"
+                android:text="Create new group"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:visibility="visible" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="1dp"
+            android:layout_height="wrap_content">
+
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_image"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="25dp"
+                android:onClick="setProfilepic"
+                android:src="@drawable/default_user_art_g_2"
+                app:civ_border_color="#ffffff"
+                app:civ_border_width="0dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="press on the Icon to Select your group Picture"
+                android:textStyle="bold"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/content_main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:context="cs656.com.firebasemessengerapp.MainActivity"
+            tools:showIn="@layout/p3_activity_main">
+
+            <TextView
+                android:paddingTop="10dp"
+                android:paddingLeft="15dp"
+                android:text="User added to chat: "
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                android:layout_alignParentStart="true"
+                android:id="@+id/friendsInChat"
+                android:layout_alignParentEnd="true" />
+            <ListView
+                android:id="@+id/conversationListView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:stackFromBottom="false"
+                android:transcriptMode="alwaysScroll"
+                tools:listitem="@layout/p3_friend_item"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="5dp" />
+
+        </RelativeLayout>
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

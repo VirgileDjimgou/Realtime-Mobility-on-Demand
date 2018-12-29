@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="540dp"
+        android:background="#FFF" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp">
+
+            <TextView
+                android:id="@+id/welcome_msg"
+                fontPath="fonts/bold.ttf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginTop="30dp"
+                android:gravity="center"
+                android:text="GuDDana"
+                android:textStyle="bold"
+                android:textColor="@color/purple"
+                android:textSize="42sp"
+                tools:ignore="MissingPrefix" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/welcome_msg">
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="175dp"
+                    android:background="@drawable/card_gradient"
+                    android:paddingBottom="30dp">
+
+
+
+                    <Button
+                        android:id="@+id/connect_with_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/password"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="30dp"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/input_backgtound"
+                        android:onClick="onLogin"
+                        android:text="Login with Email"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorPrimaryy"
+                        android:textSize="16sp" />
+
+
+                    <Button
+                        android:id="@+id/PhoneLogin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/connect_with_email"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="40dp"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="30dp"
+                        android:layout_marginTop="80dp"
+                        android:background="@drawable/border_button"
+                        android:onClick="onRegister"
+                        android:text="login with your  Phone Number"
+                        android:textAllCaps="false"
+                        android:textColor="@color/purple"
+                        android:textSize="16sp" />
+
+
+                </RelativeLayout>
+
+
+                <ImageView
+                    android:id="@+id/profile_image"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="25dp"
+                    android:src="@drawable/xshaka_icon"
+                    />
+
+            </FrameLayout>
+
+
+        </RelativeLayout>
+
+
+
+</FrameLayout>

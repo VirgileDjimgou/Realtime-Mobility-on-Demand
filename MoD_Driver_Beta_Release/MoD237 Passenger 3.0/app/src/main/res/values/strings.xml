@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">GuDana</string>
+    <string name="app_name">GuDana MoD</string>
 
 
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBb7F-tT5vbdBNFsUdrr8kwPJh6SkEeUiI</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false"> AIzaSyBe3TveakbVr4_AKk4BzE2aVCpNp85jpGY</string>
 
     <!-- Navigation Drawer menu labels -->
     <string name="nav_home">Home</string>
@@ -340,4 +340,5 @@
     <string name="back_menu">back in Main Menu</string>
     <string name="wait_driver_response">waiting driver response .....</string>
     <string name="wait_your_response">waiting your response ....</string>
+    <string name="mod_gudana_live_sharing">Live Location  Sharing</string>
 </resources>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.bee.passenger">
+    package="com.gudana.mod">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -43,7 +43,7 @@
     <supports-screens android:anyDensity="true" />
 
     <application
-        android:name="com.bee.passenger.promotions_swipe.MyApplication"
+        android:name="com.gudana.mod.promotions_swipe.MyApplication"
         android:allowBackup="true"
         android:label="@string/app_name"
         android:icon="@mipmap/ic_gudana"
@@ -53,7 +53,7 @@
         android:screenOrientation="portrait"
         android:resizeableActivity="true"
         android:theme="@style/AppTheme">
-        <service android:name="com.bee.passenger.onAppKilled" android:stopWithTask="false"/>
+        <service android:name="com.gudana.mod.onAppKilled" android:stopWithTask="false"/>
 
 
         <!-- mULTIWINDOWS  -->
@@ -99,7 +99,7 @@
             android:resource="@color/colorAccent" />
 
         <service
-            android:name="com.bee.passenger.fcm.MyFirebaseMessagingService"
+            android:name="com.gudana.mod.fcm.MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
@@ -107,7 +107,7 @@
         </service>
 
         <service
-            android:name="com.bee.passenger.fcm.MyFirebaseInstanceIDService"
+            android:name="com.gudana.mod.fcm.MyFirebaseInstanceIDService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
@@ -118,7 +118,7 @@
 
 
         <activity
-            android:name="com.bee.passenger.activity.MainActivity_App">
+            android:name="com.gudana.mod.activity.MainActivity_App">
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             <intent-filter>
@@ -131,119 +131,96 @@
         </activity>
 
 
-
-
         <activity
-            android:name="com.bee.passenger.fcm.MainActivity_fcm"
+            android:name="com.gudana.mod.fcm.MainActivity_fcm"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/TranslucentBackground">
         </activity>
 
 
-        <activity android:name="com.bee.passenger.activity.MainActivity"
+        <activity android:name="com.gudana.mod.activity.MainActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/TranslucentBackground">
-        <intent-filter>
-            <action android:name="Start_Main"/>
-            <category android:name="android.intent.category.DEFAULT"/>
-        </intent-filter>>
+            <intent-filter>
+                <action android:name="Start_Main"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>>
         </activity>
 
 
         <activity
-            android:name="com.bee.passenger.activity.RegisterActivity"
+            android:name="com.gudana.mod.activity.RegisterActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Translucent" />
 
         <activity
-            android:name="com.bee.passenger.activity.AboutUsActivity"
+            android:name="com.gudana.mod.activity.AboutUsActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:label="@string/nav_about" />
 
         <activity
-            android:name="com.bee.passenger.activity.EmailLoginActivity"
+            android:name="com.gudana.mod.activity.EmailLoginActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
 
 
         <activity
-            android:name="com.bee.passenger.activity.PhoneAuthActivity"
+            android:name="com.gudana.mod.activity.PhoneAuthActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.bee.passenger.activity.PhoneRegistrationActivity"
+            android:name="com.gudana.mod.activity.PhoneRegistrationActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
 
 
-        <activity android:name="com.bee.passenger.promotions_swipe.PromotionsActivity"
+        <activity android:name="com.gudana.mod.promotions_swipe.PromotionsActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
 
 
         <activity
-            android:name="com.bee.passenger.cardview.History_CardView"
+            android:name="com.gudana.mod.cardview.History_CardView"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
 
 
 
         <activity
-            android:name="com.bee.passenger.activity.PrivacyPolicyActivity"
+            android:name="com.gudana.mod.activity.PrivacyPolicyActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:label="@string/activity_title_privacy_policy" />
 
 
-        <activity android:name="com.bee.passenger.activity.Facebook_Activity"
+        <activity android:name="com.gudana.mod.activity.Facebook_Activity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:label="@string/app_name" />
 
-        <activity android:name="com.bee.passenger.activity.SplaschScreen"
+        <activity android:name="com.gudana.mod.activity.SplaschScreen"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
 
-        <activity android:name="com.bee.passenger.CustomerSettingsActivity"/>
-        <activity android:name="com.bee.passenger.HistorySingleActivity"/>
-        <activity android:name="com.bee.passenger.HistoryActivity"/>
-
-
-        <activity android:name="com.facebook.FacebookActivity"
-
-            android:configChanges=
-                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name" />
-
+        <activity android:name="com.gudana.mod.CustomerSettingsActivity"/>
+        <activity android:name="com.gudana.mod.HistorySingleActivity"/>
+        <activity android:name="com.gudana.mod.HistoryActivity"/>
 
 
         <activity
-            android:name="com.bee.passenger.airbnbmapexample.ui.activity.MapsActivity"
+            android:name="com.gudana.mod.airbnbmapexample.ui.activity.MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name="com.bee.passenger.airbnbmapexample.ui.activity.SearchPlaceOnMapActivity" />
-        <activity android:name="com.bee.passenger.airbnbmapexample.ui.activity.ShowDirectionActivity" />
-        <activity android:name="com.bee.passenger.airbnbmapexample.ui.activity.MovingMarkerActivity" />
-        <activity android:name="com.bee.passenger.airbnbmapexample.ui.activity.ListViewActivity" />
-        <activity android:name="com.bee.passenger.airbnbmapexample.ui.activity.RecyclerViewLiteModeMapActivity"></activity>
+        <activity android:name="com.gudana.mod.airbnbmapexample.ui.activity.SearchPlaceOnMapActivity" />
+        <activity android:name="com.gudana.mod.airbnbmapexample.ui.activity.ShowDirectionActivity" />
+        <activity android:name="com.gudana.mod.airbnbmapexample.ui.activity.MovingMarkerActivity" />
+        <activity android:name="com.gudana.mod.MoD_PassengerMap_Activity" />
 
-
-
-        <activity
-            android:name="com.facebook.CustomTabActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="@string/facebook_app_id"/>
-            </intent-filter>
-        </activity>
+        <activity android:name="com.gudana.mod.airbnbmapexample.ui.activity.ListViewActivity" />
+        <activity android:name="com.gudana.mod.airbnbmapexample.ui.activity.RecyclerViewLiteModeMapActivity"></activity>
 
 
     </application>
