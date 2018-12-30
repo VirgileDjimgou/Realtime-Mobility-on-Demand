@@ -29,14 +29,12 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -117,6 +115,7 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -125,6 +124,11 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import droidninja.filepicker.FilePickerBuilder;
@@ -142,19 +146,10 @@ import io.socket.emitter.Emitter;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-import org.json.JSONArray;
-
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import java.util.Random;
-
 import static io.opencensus.tags.TagValue.MAX_LENGTH;
 
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity_backup extends AppCompatActivity {
     private static final String TAG = "activities/ChatActivity";
     public static final int CodeLiveLocation = 500;
 
@@ -265,7 +260,7 @@ public class ChatActivity extends AppCompatActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
-    private Context mContext=ChatActivity.this;
+    private Context mContext=ChatActivity_backup.this;
     private static final int EX_FILE_PICKER_RESULT = 55;
 
 
@@ -316,7 +311,7 @@ public class ChatActivity extends AppCompatActivity {
     private String room_uid = "";
 
     public static void startActivity(Context context){
-        Intent intent = new Intent(context,ChatActivity.class);
+        Intent intent = new Intent(context,ChatActivity_backup.class);
         context.startActivity(intent);
     }
 
@@ -338,8 +333,8 @@ public class ChatActivity extends AppCompatActivity {
                     permissionToWriteAccepted  = grantResults[1] == PackageManager.PERMISSION_GRANTED;
                     break;
             }
-            if (!permissionToRecordAccepted ) ChatActivity.super.finish();
-            if (!permissionToWriteAccepted ) ChatActivity.super.finish();
+            if (!permissionToRecordAccepted ) ChatActivity_backup.super.finish();
+            if (!permissionToWriteAccepted ) ChatActivity_backup.super.finish();
 
 
             if (requestCode == MY_CAMERA_PERMISSION_CODE) {
@@ -398,7 +393,7 @@ public class ChatActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(room_name);
 
         // init sqlite helper
-        message_db = new user_room_message_db(ChatActivity.this);
+        message_db = new user_room_message_db(ChatActivity_backup.this);
 
         /*
         ActionBar actionBar = getSupportActionBar();
@@ -454,7 +449,7 @@ public class ChatActivity extends AppCompatActivity {
 
             eventListeners.put("received message", onMessageReceive);
             eventListeners.put("broadcast", onBroadcast);
-            //eventListeners.put("history", onHistory);
+            eventListeners.put("history", onHistory);
             eventListeners.put("typing", onTyping);
             eventListeners.put("stop typing", onStopTyping);
             setListeningToEvents(true);
@@ -465,7 +460,7 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         mSocket.emit("join", info);
-       // mSocket.emit("fetch messages", info);
+        mSocket.emit("fetch messages", info);
         first_message_history_lock = true;
 
         listViewMessages = (ListView) findViewById(R.id.listView_messages);
@@ -477,7 +472,7 @@ public class ChatActivity extends AppCompatActivity {
         usersTypingTextView = (TextView) footerView.findViewById(R.id.users_typing);
         isTypingTextView = (TextView) footerView.findViewById(R.id.is_typing);
 
-        adapter = new MessageAdapter(ChatActivity.this, username);
+        adapter = new MessageAdapter(ChatActivity_backup.this, username);
 
         listViewMessages.setAdapter(adapter);
 
@@ -507,9 +502,7 @@ public class ChatActivity extends AppCompatActivity {
                                     json.put("before_msg_id", adapter.getFirstID());
                                     json.put("after_msg_id", adapter.getLastID());
                                 }
-
-                                // get message  on local datasore  sqlite  ...
-                                //mSocket.emit("fetch messages", json);
+                                mSocket.emit("fetch messages", json);
                                 first_message_history_lock = true;
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -671,7 +664,7 @@ public class ChatActivity extends AppCompatActivity {
             requestPermissions(permissions, requestCode);
         }
 
-        context = ChatActivity.this.getApplicationContext();
+        context = ChatActivity_backup.this.getApplicationContext();
         //initializeScreen();
         // mToolBar.setTitle(chatName);
         //showMessages();
@@ -697,8 +690,6 @@ public class ChatActivity extends AppCompatActivity {
         FCM_Message_Sender = new CustomFcm_Util();
 
         // enable offline capaibilities
-        // get All message
-        getAllmessage();
 
     }
 
@@ -812,7 +803,7 @@ public class ChatActivity extends AppCompatActivity {
                       * Proper way is to sort messages by their IDs in ascending order
                       **/
 
-                    ChatActivity.this.runOnUiThread(new Runnable() {
+                    ChatActivity_backup.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             MessageAdapter.MessageItem msg_item = (MessageAdapter.MessageItem) adapter.getItem(not_on_server_indices.get(0));
@@ -829,7 +820,7 @@ public class ChatActivity extends AppCompatActivity {
                 } else {
                     final MessageAdapter.MessageItem msgItem = new MessageAdapter.MessageItem(message_id, user_id, msg_username, message_contents, datetimeutc);
 
-                    ChatActivity.this.runOnUiThread(new Runnable() {
+                    ChatActivity_backup.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             adapter.addItem(msgItem);
@@ -842,99 +833,8 @@ public class ChatActivity extends AppCompatActivity {
         }
     };
 
-    public void getAllmessage(){
-
-        int Numb_Event = 0;
-        Numb_Event = message_db.getNumberOfmessage();
-        Cursor rs = message_db.getData_message(Numb_Event);
-        rs.moveToFirst();
-
-        if(Numb_Event > 0){
-
-
-            for(int i=0; i<Numb_Event; i++){
-                String room_uid =rs.getString(rs.getColumnIndex(user_room_message_db.ROOM_UID));
-                String content = rs.getString(rs.getColumnIndex(user_room_message_db.CONTENT));
-                String room_id = rs.getString(rs.getColumnIndex(user_room_message_db.ROOM_ID));
-                System.out.println("The value of message  is: "+content);
-                //rs.moveToNext();
-                //Toasty.info(context,"Live Location : "+Integer.toString(i)+"  : "+room_uid +"  "+ content+"   "+room_id , Toast.LENGTH_SHORT).show();
-            }
-
-
-            // get all  Raw from Table   ...
-            //Cursor  cursor = live_location.rawQuery("select * from table",null);
-            List<message> data = message_db.getAllMessage();
-            for(message msg : data){
-                System.out.println("message on local db  :"+msg);
-
-                try {
-                    JSONObject jsonObj = new JSONObject(msg.getCONTENT());
-                    parse_offline_message(jsonObj);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                // System.out.println(" #### ");
-            }
-            rs.close();
-
-        }else{
-            // keine  Event registered ..
-
-        }
-
-
-    }
-
-
-    public void parse_offline_message(JSONObject json) {
-        final int msg_user_id, message_id;
-        final String msg_username, message_contents, datetimeutc;
-        try {
-            //json = (JSONObject) args[0];
-
-            msg_user_id = json.getInt("user_id");
-            message_id = json.getInt("message_id");
-            msg_username = json.getString("username");
-            message_contents = json.getString("message");
-            datetimeutc = json.getString("datetimeutc");
-
-            // save message  on local  database  for offline use  ...
-            new Save_offline_MessageTask (json).execute();
-
-            if(user_id == msg_user_id && not_on_server_indices.size() > 0) {
-                /** TODO: remove assumption that messages are received in order
-                 * Proper way is to sort messages by their IDs in ascending order
-                 **/
-
-                ChatActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        MessageAdapter.MessageItem msg_item = (MessageAdapter.MessageItem) adapter.getItem(not_on_server_indices.get(0));
-                        msg_item.savedToServer(message_id, datetimeutc);
-
-                        // In case there are messages that were sent to server before this one,
-                        // move it to the end of the list.
-                        // adapter.moveItemToEndOfList(not_on_server_indices.get(0));
-
-                        listViewMessages.setAdapter(listViewMessages.getAdapter());
-                        not_on_server_indices.remove(0);
-                    }
-                });
-            } else {
-                final MessageAdapter.MessageItem msgItem = new MessageAdapter.MessageItem(message_id, user_id, msg_username, message_contents, datetimeutc);
-
-                ChatActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        adapter.addItem(msgItem);
-                    }
-                });
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    private void getAllmessage(){
+        
     }
 
     private final Emitter.Listener onTyping = new Emitter.Listener() {
@@ -942,7 +842,7 @@ public class ChatActivity extends AppCompatActivity {
         public void call(Object... args) {
             usersTyping.add((String) args[0]);
 
-            ChatActivity.this.runOnUiThread(new Runnable() {
+            ChatActivity_backup.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     try{
@@ -974,7 +874,7 @@ public class ChatActivity extends AppCompatActivity {
             usersTyping.remove((String) args[0]);
 
             if (usersTyping.isEmpty()) {
-                ChatActivity.this.runOnUiThread(new Runnable() {
+                ChatActivity_backup.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         String usersTypingStr = usersTyping.toString();
@@ -1004,7 +904,7 @@ public class ChatActivity extends AppCompatActivity {
         public void call(Object... args) {
             final MessageAdapter.BroadcastItem broadcastItem = new MessageAdapter.BroadcastItem((String) args[0]);
 
-            ChatActivity.this.runOnUiThread(new Runnable() {
+            ChatActivity_backup.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     adapter.addItem(broadcastItem);
@@ -1057,7 +957,7 @@ public class ChatActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            ChatActivity.this.runOnUiThread(new Runnable() {
+            ChatActivity_backup.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     try{
@@ -1203,7 +1103,7 @@ public class ChatActivity extends AppCompatActivity {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         if(report.isAnyPermissionPermanentlyDenied()){
-                            Toasty.info(ChatActivity.this, "You have denied some permissions permanently, if the app force close try granting permission from settings.", Toast.LENGTH_LONG).show();
+                            Toasty.info(ChatActivity_backup.this, "You have denied some permissions permanently, if the app force close try granting permission from settings.", Toast.LENGTH_LONG).show();
                         }
                     }
 
@@ -1891,14 +1791,14 @@ public class ChatActivity extends AppCompatActivity {
 
     private void pickContact(){
 
-        new MultiContactPicker.Builder(ChatActivity.this) //Activity/fragment context
+        new MultiContactPicker.Builder(ChatActivity_backup.this) //Activity/fragment context
                 // .theme(R.style.MyCustomPickerTheme) //Optional - default: MultiContactPicker.Azure
                 .hideScrollbar(false) //Optional - default: false
                 .showTrack(true) //Optional - default: true
                 .searchIconColor(Color.WHITE) //Option - default: White
                 .setChoiceMode(MultiContactPicker.CHOICE_MODE_MULTIPLE) //Optional - default: CHOICE_MODE_MULTIPLE
-                .handleColor(ContextCompat.getColor(ChatActivity.this, R.color.purple)) //Optional - default: Azure Blue
-                .bubbleColor(ContextCompat.getColor(ChatActivity.this, R.color.purple)) //Optional - default: Azure Blue
+                .handleColor(ContextCompat.getColor(ChatActivity_backup.this, R.color.purple)) //Optional - default: Azure Blue
+                .bubbleColor(ContextCompat.getColor(ChatActivity_backup.this, R.color.purple)) //Optional - default: Azure Blue
                 .bubbleTextColor(Color.WHITE) //Optional - default: White
                 .showPickerForResult(CONTACT_PICKER_REQUEST);
     }
@@ -2213,7 +2113,7 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 revealShow(dialogView, false, dialog , Startposition);
-                Intent LiveLocationSharing = new Intent(ChatActivity.this , MoD_Live_Location_sharing_Activity.class);
+                Intent LiveLocationSharing = new Intent(ChatActivity_backup.this , MoD_Live_Location_sharing_Activity.class);
                 startActivityForResult(LiveLocationSharing, CodeLiveLocation);
                 //startActivity(LiveLocationSharing);
                 //Toasty.info(context, "live Tracking ist  not enable on this Release", Toast.LENGTH_SHORT).show();
@@ -2225,7 +2125,38 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                Toasty.info(context, "Only for Test purpose .. ", Toast.LENGTH_SHORT).show();
+                //Cursor rs = live_location.getData(1);
+                //rs.moveToFirst();
+                //int Number_of_live_event = live_location.getRownumber(rs,"id");
+                int Numb_Event = 0;
+                Numb_Event = message_db.getNumberOfmessage();
+                Toast.makeText(context, "Number of message: " + Integer.toString(Numb_Event), Toast.LENGTH_SHORT).show();
+                Cursor rs = message_db.getData_message(Numb_Event);
+                rs.moveToFirst();
 
+                if(Numb_Event > 0){
+                    for(int i=0; i<Numb_Event; i++){
+                        String room_uid =rs.getString(rs.getColumnIndex(user_room_message_db.ROOM_UID));
+                        String content = rs.getString(rs.getColumnIndex(user_room_message_db.CONTENT));
+                        String room_id = rs.getString(rs.getColumnIndex(user_room_message_db.ROOM_ID));
+                        System.out.println("The value of i is: "+content);
+                        Toasty.info(context,"Live Location : "+Integer.toString(i)+"  : "+room_uid +"  "+ content+"   "+room_id , Toast.LENGTH_SHORT).show();
+                    }
+
+                    // get all  Raw from Table   ...
+                    //Cursor  cursor = live_location.rawQuery("select * from table",null);
+                    List<message> data = message_db.getAllMessage();
+                    for(message msg : data){
+                        System.out.println("message on local db  :"+msg);
+                        System.out.println(" #### ");
+                    }
+                    rs.close();
+
+                }else{
+                    // keine  Event registered ..
+
+                }
             }
         });
 
@@ -2264,7 +2195,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 revealShow(dialogView, false, dialog , Startposition);
 
-                ImagePicker.create(ChatActivity.this)
+                ImagePicker.create(ChatActivity_backup.this)
                         .start(); // start image picker activity with request code
 
 
@@ -2289,7 +2220,7 @@ public class ChatActivity extends AppCompatActivity {
                         .enableSelectAll(true)
                         .showFolderView(true)
                         // .setActivityTheme(R.style.LibAppTheme)
-                        .pickFile(ChatActivity.this);            }
+                        .pickFile(ChatActivity_backup.this);            }
         });
 
         ImageView camera = (ImageView)dialog.findViewById(R.id.camera);
@@ -2307,7 +2238,7 @@ public class ChatActivity extends AppCompatActivity {
                         //Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                         //startActivityForResult(cameraIntent, CAMERA_REQUEST);
                         revealShow(dialogView, false, dialog , Startposition);
-                        ImagePicker.cameraOnly().start(ChatActivity.this); // Could be Activity, Fragment, Support Fragment
+                        ImagePicker.cameraOnly().start(ChatActivity_backup.this); // Could be Activity, Fragment, Support Fragment
                     }
                 }
             }
@@ -2350,7 +2281,7 @@ public class ChatActivity extends AppCompatActivity {
                         .enableSelectAll(true)
                         .showFolderView(true)
                         // .setActivityTheme(R.style.LibAppTheme)
-                        .pickPhoto(ChatActivity.this);
+                        .pickPhoto(ChatActivity_backup.this);
             }
         });
 
@@ -2467,7 +2398,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 // maybe  a confirmation dialog her ???  to ask user if  he want to close this dialog windows  ...
 
-                new BottomDialog.Builder(ChatActivity.this)
+                new BottomDialog.Builder(ChatActivity_backup.this)
                         .setTitle("voice Mail")
                         .setContent("Your message will be deleted !")
                         .setPositiveText("are you sure ? ")
@@ -2505,7 +2436,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 // maybe  a confirmation dialog her ???  to ask user if  he want to close this dialog windows  ...
 
-                new BottomDialog.Builder(ChatActivity.this)
+                new BottomDialog.Builder(ChatActivity_backup.this)
                         .setTitle("voice Mail")
                         .setContent("Your message will be deleted !")
                         .setPositiveText("are you sure ? ")
@@ -3015,7 +2946,7 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         final File localFile = new File(rootPath,filename);
-        ChatActivity.data_processing.setVisibility(View.VISIBLE);
+        ChatActivity_backup.data_processing.setVisibility(View.VISIBLE);
 
         FileLoader.with(mContext)
                 //.load("https://firebasestorage.googleapis.com/v0/b/gudana-cloud-technology.appspot.com/o/post_video%2F%232GbnW-3null?alt=media&token=d11d6cc2-0068-43b2-a39c-575cba04ea15")
@@ -3029,7 +2960,7 @@ public class ChatActivity extends AppCompatActivity {
                         try {
                             //update_work_background.setVisibility(View.GONE);
                             File myUriFile = response.getDownloadedFile().getAbsoluteFile();
-                            ChatActivity.data_processing.setVisibility(View.GONE);
+                            ChatActivity_backup.data_processing.setVisibility(View.GONE);
                             Uri uri_file = Uri.parse(response.getDownloadedFile().getAbsolutePath());
                             try {
                                 FileOpen.openFile(mContext,myUriFile);

@@ -108,7 +108,7 @@ public class user_room_message_db extends SQLiteOpenHelper {
                 fileAllLocation.add(local_message);
                 while(cursor.moveToNext()){
 
-                    message LiveLoc_2 = new message(
+                    message second_message = new message(
 
                             cursor.getString(cursor.getColumnIndex(this.ROOM_ID)),
                             cursor.getString(cursor.getColumnIndex(this.ROOM_UID)),
@@ -118,7 +118,8 @@ public class user_room_message_db extends SQLiteOpenHelper {
                             cursor.getString(cursor.getColumnIndex(this.DataTime))
 
                     );
-                    fileAllLocation.add(local_message);
+                    fileAllLocation.add(second_message);
+
                 }
             }
             cursor.close();

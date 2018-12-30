@@ -89,16 +89,6 @@ public class live_location_sharing_db extends SQLiteOpenHelper {
             );
             fileAllLocation.add(LiveLoc);
             while(cursor.moveToNext()){
-
-                LiveTrackingObjet LiveLoc_2 = new LiveTrackingObjet(
-                        cursor.getString(cursor.getColumnIndex(this.CONTACTS_TABLE_MATRITCULE_LIVE)),
-                        cursor.getString(cursor.getColumnIndex(this.CONTACTS_COLUMN_START_TIME)),
-                        cursor.getString(cursor.getColumnIndex(this.CONTACTS_COLUMN_SHARING_TYPE)),
-                        cursor.getString(cursor.getColumnIndex(this.CONTACTS_COLUMN_MESSAGE)),
-                        cursor.getString(cursor.getColumnIndex(this.CONTACTS_COLUMN_ID_USER)),
-                        cursor.getString(cursor.getColumnIndex(this.CONTACTS_COLUMN_ACTIV))
-
-                );
                 fileAllLocation.add(LiveLoc);
             }
         }

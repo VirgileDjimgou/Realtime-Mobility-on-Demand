@@ -8,7 +8,6 @@ public class message {
     public  String USER_UID ;
     public  String CONTENT;
     public  String DataTime;
-    private int id;
 
     public message(String ROOM_ID, String ROOM_UID,
                    String USER_ID, String USER_UID, String CONTENT, String dataTime) {
