@@ -225,6 +225,7 @@ public class ChatFragment extends Fragment implements ContactsAdapter.ContactsAd
             intent.putExtra("room_id", contact.getRoom_id());
             intent.putExtra("room_name", contact.getName());
             intent.putExtra("type", ChatActivity.ROOM);
+            intent.putExtra("room_uid", contact.getRoom_uid());
             startActivity(intent);
         }else{
 

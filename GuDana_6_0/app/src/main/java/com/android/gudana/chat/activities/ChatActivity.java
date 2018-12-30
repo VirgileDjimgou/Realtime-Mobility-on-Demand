@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
@@ -64,6 +65,8 @@ import com.android.gudana.apprtc.CallFragment;
 import com.android.gudana.chat.ChatApplication;
 import com.android.gudana.chat.adapters.MessageAdapter;
 import com.android.gudana.chat.model.User;
+import com.android.gudana.chat.model.message;
+import com.android.gudana.chat.model.user_room_message_db;
 import com.android.gudana.chatapp.models.Message;
 import com.android.gudana.chatapp.models.StaticConfigUser_fromFirebase;
 import com.android.gudana.chatapp.utils_v2.FileOpen;
@@ -309,6 +312,9 @@ public class ChatActivity extends AppCompatActivity {
 
     HashMap<String, Emitter.Listener> eventListeners = new HashMap<>();
 
+    private user_room_message_db message_db;
+    private String room_uid = "";
+
     public static void startActivity(Context context){
         Intent intent = new Intent(context,ChatActivity.class);
         context.startActivity(intent);
@@ -378,12 +384,12 @@ public class ChatActivity extends AppCompatActivity {
         // will only be used when type == ROOM
         room_name = intent.getStringExtra("room_name");
         room_id = intent.getIntExtra("room_id", -1);
+        room_uid = intent.getStringExtra("room_uid");
+
 
         // will only be used when type == FRIEND
         String friend_username = intent.getStringExtra("friend_username");
         int friend_user_id = intent.getIntExtra("friend_user_id", -1);
-
-
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -391,6 +397,8 @@ public class ChatActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(room_name);
 
+        // init sqlite helper
+        message_db = new user_room_message_db(ChatActivity.this);
 
         /*
         ActionBar actionBar = getSupportActionBar();
@@ -745,10 +753,16 @@ public class ChatActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
-        mSocket.emit("leave", info);
-        mSocket.disconnect();
-        setListeningToEvents(false);
+        try{
 
+
+            mSocket.emit("leave", info);
+            mSocket.disconnect();
+            setListeningToEvents(false);
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
         Log.i(TAG, "Destroying...");
 
         super.onDestroy();
@@ -785,6 +799,9 @@ public class ChatActivity extends AppCompatActivity {
                 msg_username = json.getString("username");
                 message_contents = json.getString("message");
                 datetimeutc = json.getString("datetimeutc");
+
+                // save message  on local  database  for offline use  ...
+                new Save_offline_MessageTask (json).execute();
 
                 if(user_id == msg_user_id && not_on_server_indices.size() > 0) {
                     /** TODO: remove assumption that messages are received in order
@@ -1007,6 +1024,42 @@ public class ChatActivity extends AppCompatActivity {
             Log.i("socket", "sent message to server");
             final MessageAdapter.MessageItem msgItem = new MessageAdapter.MessageItem(user_id, username, message_contents);
             not_on_server_indices.add(adapter.addItem(msgItem));
+        }
+    }
+
+
+
+    // private  message saver  on Sqlite  database
+    private class Save_offline_MessageTask extends AsyncTask<String, String, Void> {
+        private final JSONObject message_contents;
+
+        public Save_offline_MessageTask(JSONObject message) {
+            this.message_contents = message;
+        }
+
+        @Override
+        protected Void doInBackground(String... args) {
+            JSONObject inputJson;
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+
+
+            try {
+                message new_message = new message(Integer.toString(room_id), room_uid , Integer.toString(user_id)
+                ,FirebaseAuth.getInstance().getUid(),message_contents.toString() , timeStamp);
+
+                message_db.insert_new_message(new_message);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void a) {
+            Log.i("Sqlite saver", "message locally persisted ");
         }
     }
 
@@ -1958,8 +2011,6 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
-
-
     public static  void showDiag_gps_menu(final Context mContext , final ImageButton Startposition , final String msg) {
 
         final View dialogView = View.inflate(mContext,R.layout.dialog_gps_navi_choice,null);
@@ -2075,7 +2126,38 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Toasty.info(context, "Surprise surpise :) ....Comming Soon ", Toast.LENGTH_SHORT).show();
+                Toasty.info(context, "Only for Test purpose .. ", Toast.LENGTH_SHORT).show();
+                //Cursor rs = live_location.getData(1);
+                //rs.moveToFirst();
+                //int Number_of_live_event = live_location.getRownumber(rs,"id");
+                int Numb_Event = 0;
+                Numb_Event = message_db.getNumberOfmessage();
+                Toast.makeText(context, "Number of message: " + Integer.toString(Numb_Event), Toast.LENGTH_SHORT).show();
+                Cursor rs = message_db.getData_message(Numb_Event);
+                rs.moveToFirst();
+
+                if(Numb_Event > 0){
+                    for(int i=0; i<Numb_Event; i++){
+                        String room_uid =rs.getString(rs.getColumnIndex(user_room_message_db.ROOM_UID));
+                        String content = rs.getString(rs.getColumnIndex(user_room_message_db.CONTENT));
+                        String room_id = rs.getString(rs.getColumnIndex(user_room_message_db.ROOM_ID));
+                        System.out.println("The value of i is: "+content);
+                        Toasty.info(context,"Live Location : "+Integer.toString(i)+"  : "+room_uid +"  "+ content+"   "+room_id , Toast.LENGTH_SHORT).show();
+                    }
+
+                    // get all  Raw from Table   ...
+                    //Cursor  cursor = live_location.rawQuery("select * from table",null);
+                    List<message> data = message_db.getAllMessage();
+                    for(message msg : data){
+                        System.out.println("message on local db  :"+msg);
+                        System.out.println(" #### ");
+                    }
+                    rs.close();
+
+                }else{
+                    // keine  Event registered ..
+
+                }
             }
         });
 
@@ -2901,7 +2983,6 @@ public class ChatActivity extends AppCompatActivity {
                 });
 
     }
-
 
 
 }
