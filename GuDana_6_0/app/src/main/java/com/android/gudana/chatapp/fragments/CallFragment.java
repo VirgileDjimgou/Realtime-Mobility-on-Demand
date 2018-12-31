@@ -43,9 +43,6 @@ public class CallFragment extends Fragment
 
         try{
 
-
-            // Initialize Chat Database
-
             //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
             // DatabaseReference chatDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId);
             DatabaseReference callDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId).child("call_History").child("Call_room");

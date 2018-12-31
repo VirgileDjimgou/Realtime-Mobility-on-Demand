@@ -39,4 +39,10 @@ public class Config {
     // Directory name to store captured images and videos
     // public static final String IMAGE_DIRECTORY_NAME = "Android File Upload";
     public static final String  UID_EVENT_LOCATION_LIVE_CHANNEL =  "GUDANA_LIVE_LOCATION"+FirebaseAuth.getInstance().getUid();
+
+
+    // variable Chat
+    public static boolean Chat_Activity_running = false;
+    public static String Chat_Activity_otherUserId = "";
+
 }

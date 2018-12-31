@@ -62,6 +62,7 @@ import android.widget.Toast;
 import com.android.gudana.MoD.MoD_Live_Location_sharing_Activity;
 import com.android.gudana.R;
 import com.android.gudana.apprtc.CallFragment;
+import com.android.gudana.apprtc.ConnectActivity;
 import com.android.gudana.chat.ChatApplication;
 import com.android.gudana.chat.adapters.MessageAdapter;
 import com.android.gudana.chat.model.User;
@@ -198,8 +199,7 @@ public class ChatActivity extends AppCompatActivity {
     private CircleImageView messageImageRight = null;
     // Will be used on Notifications to detairminate if user has chat window open
 
-    public static String otherUserId , OtherUserIdPhone = "" , PhoneCorrespondant = "";
-    public static boolean running = false;
+    public static String  OtherUserIdPhone = "" , PhoneCorrespondant = "";
     private static final int GALLERY_INTENT=2;
     private StorageReference mStorage;
     private ProgressDialog mProgress;
@@ -314,6 +314,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private user_room_message_db message_db;
     private String room_uid = "";
+    private String token_id, image_url;
 
     public static void startActivity(Context context){
         Intent intent = new Intent(context,ChatActivity.class);
@@ -385,6 +386,10 @@ public class ChatActivity extends AppCompatActivity {
         room_name = intent.getStringExtra("room_name");
         room_id = intent.getIntExtra("room_id", -1);
         room_uid = intent.getStringExtra("room_uid");
+        TokenFCM_OtherUser = token_id = intent.getStringExtra("token_id");
+        image_url = intent.getStringExtra("image_url");
+        Config.Chat_Activity_otherUserId = getIntent().getStringExtra("userid");
+
 
 
         // will only be used when type == FRIEND
@@ -562,7 +567,25 @@ public class ChatActivity extends AppCompatActivity {
                 if (!msg.isEmpty()) {
                     // define type of message ... extrem important
                     stype_of_message = Type_Text;
+                    try {
+                        System.out.println("Send Notification");
+                        FCM_Message_Sender.sendWithOtherThread("token",
+                                TokenFCM_OtherUser,
+                                "Friend Request",
+                                FirebaseAuth.getInstance().getUid(),
+                                room_name,
+                                image_url,
+                                getDateAndTime(),
+                                "room_disable",
+                                msg.trim());
+
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+
                     new SendMessageTask(msg.trim()).execute();
+                    // send notification parraleli
+
                 }
             }
         });
@@ -571,7 +594,7 @@ public class ChatActivity extends AppCompatActivity {
         ListView listView_messages = findViewById(R.id.listView_messages);
 
 
-        running = true;
+        Config.Chat_Activity_running = true;
         //ViCall = new LinphoneManager(CreateGroupChatActivity.this.getApplicationContext());
         if(Build.VERSION.SDK_INT>=24){
             try{
@@ -587,9 +610,6 @@ public class ChatActivity extends AppCompatActivity {
 
 
         currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        otherUserId = getIntent().getStringExtra("userid");
-
-
 
         // Get the widgets reference from XML layout
         infos_progress_layout = (RelativeLayout) findViewById(R.id.infos_progress);
@@ -696,6 +716,7 @@ public class ChatActivity extends AppCompatActivity {
         // create  fcm Utill to send call  notification and  special notification   ... to other users
         FCM_Message_Sender = new CustomFcm_Util();
 
+
         // enable offline capaibilities
         // get All message
         getAllmessage();
@@ -731,7 +752,7 @@ public class ChatActivity extends AppCompatActivity {
                     Toasty.warning(context, "you can not start  two calls at the same time  ! ", Toast.LENGTH_LONG).show();
 
                 }else {
-                    //call_infos_notification(com.android.gudana.chatapp.activities.ChatActivity.this.context ,"audio");
+                    call_infos_notification(ChatActivity.this.context ,"audio");
                     // call Button
 
                 }
@@ -745,7 +766,7 @@ public class ChatActivity extends AppCompatActivity {
                     Toasty.warning(context, "you can not start  two calls at the same time  ! ", Toast.LENGTH_LONG).show();
 
                 }else {
-                    //call_infos_notification(com.android.gudana.chatapp.activities.ChatActivity.this.context ,"video");
+                    call_infos_notification(ChatActivity.this.context ,"video");
                     // disable call Button  ...
 
                 }
@@ -806,6 +827,13 @@ public class ChatActivity extends AppCompatActivity {
 
                 // save message  on local  database  for offline use  ...
                 new Save_offline_MessageTask (json).execute();
+
+                // test offline  use ...must be removed     immediatly after test purpose
+                new Save_offline_MessageTask (json).execute();
+                new Save_offline_MessageTask (json).execute();
+                new Save_offline_MessageTask (json).execute();
+                // end test
+
 
                 if(user_id == msg_user_id && not_on_server_indices.size() > 0) {
                     /** TODO: remove assumption that messages are received in order
@@ -901,7 +929,7 @@ public class ChatActivity extends AppCompatActivity {
             datetimeutc = json.getString("datetimeutc");
 
             // save message  on local  database  for offline use  ...
-            new Save_offline_MessageTask (json).execute();
+            //new Save_offline_MessageTask (json).execute();
 
             if(user_id == msg_user_id && not_on_server_indices.size() > 0) {
                 /** TODO: remove assumption that messages are received in order
@@ -1095,6 +1123,120 @@ public class ChatActivity extends AppCompatActivity {
         }
     };
 
+
+
+    public   void call_infos_notification(final Context context_call ,final  String CallType){
+
+
+        // Pushing message/notification so we can get keyIds
+        DatabaseReference Call_Room = FirebaseDatabase.getInstance().getReference().child("Call_room").child(currentUserId).child(Config.Chat_Activity_otherUserId).push();
+        pushId_callRoom = Call_Room.getKey();
+
+        Map callroom_map = new HashMap();
+        callroom_map.put("room_id", pushId_callRoom);
+        callroom_map.put("id_caller", currentUserId);
+        callroom_map.put("id_receiver", Config.Chat_Activity_otherUserId);
+        callroom_map.put("timestamp", ServerValue.TIMESTAMP);
+        callroom_map.put("available_caller", true);
+        callroom_map.put("available_receiver", false);
+        callroom_map.put("room_status", true); //
+        callroom_map.put("call_type", call_type);
+        callroom_map.put("reason_interrupted_call", " -- ");
+        // the end of call extremely important    ..
+
+        Map callroom_map_messages = new HashMap();
+        callroom_map_messages.put("Call_room//" + pushId_callRoom, callroom_map);
+
+        // update call room id
+        FirebaseDatabase.getInstance().getReference().updateChildren(callroom_map_messages, new DatabaseReference.CompletionListener()
+        {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference)
+            {
+
+                if(databaseError != null)
+                {
+                    //Log.d("error", "sendMessage(): updateChildren failed: " + databaseError.getMessage());
+                    Toasty.info(context_call, "sendMessage(): updateChildren failed: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(CreateGroupChatActivity.this.getApplicationContext(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                }else{
+                    // we can  start the call intent  ....
+                    // start call
+                    // so now start the call
+                    if (CallType.equalsIgnoreCase("video")){
+
+                        // video call //
+
+                        // start a call pushId_callRoom
+
+                        callmelder_notification = true;  // send a notification for  to registread the call
+                        call_type = "video";
+                        Intent intentvideo = new Intent(ChatActivity.this.context, ConnectActivity.class);
+                        intentvideo.putExtra("vid_or_aud", call_type);
+                        intentvideo.putExtra("user_id", currentUserId);
+                        intentvideo.putExtra("room_id", pushId_callRoom);
+                        startActivity(intentvideo);
+
+                    }else {
+                        // audio call
+
+                        callmelder_notification = true;  // send a notification for  to registread the call
+                        // make web rtc call
+                        call_type = "audio";
+                        Intent intentaudio = new Intent(ChatActivity.this.context, ConnectActivity.class);
+                        ConnectActivity.received_call = "caller";
+                        intentaudio.putExtra("vid_or_aud", call_type);
+                        intentaudio.putExtra("user_id", currentUserId);
+                        intentaudio.putExtra("room_id", pushId_callRoom);
+                        startActivity(intentaudio);
+
+                    }
+                }
+            }
+        });
+
+
+        // send notification    ...
+
+        FCM_Message_Sender.sendWithOtherThread("token" ,
+                TokenFCM_OtherUser ,
+                "call" ,
+                currentUserId ,
+                NameCurrentUser,
+                url_Icon_currentUser,
+                getDateAndTime(),
+                pushId_callRoom,
+                " missed call ");
+
+
+        Map<String, Object> map = null;
+        map = new HashMap<>();
+        map.put("call_availability", false); // not available anymore to take another call
+        //userDB.updateChildren(map);
+
+
+        FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<Void> task)
+            {
+                if(task.isSuccessful())
+                {
+
+                    Toasty.info(context_call, "Initialisation with GuDana Voice Cloud successful ", Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    Toasty.error(context_call, "sorry GuDana Voice Cloud  is unreachable right now ! .... please try again later ", Toast.LENGTH_LONG).show();
+
+                }
+            }
+        });
+
+
+    }
+
+
     private class SendMessageTask extends AsyncTask<String, String, Void> {
         private final String message_contents;
 
@@ -1123,6 +1265,8 @@ public class ChatActivity extends AppCompatActivity {
             Log.i("socket", "sent message to server");
             final MessageAdapter.MessageItem msgItem = new MessageAdapter.MessageItem(user_id, username, message_contents);
             not_on_server_indices.add(adapter.addItem(msgItem));
+
+            // send  firebase cloud notification
         }
     }
 
@@ -1409,6 +1553,23 @@ public class ChatActivity extends AppCompatActivity {
                         new SendMessageTask(msg.trim()).execute();
                         ContactResult element = results.get(i);
                         i++;
+
+                        // send notification
+                        try {
+                            System.out.println("Send Notification");
+                            FCM_Message_Sender.sendWithOtherThread("token",
+                                    TokenFCM_OtherUser,
+                                    "Message",
+                                    FirebaseAuth.getInstance().getUid(),
+                                    room_name,
+                                    image_url,
+                                    getDateAndTime(),
+                                    "room_disable",
+                                    msg.trim());
+
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
                     }
                     while (i < results.size());
                 } else if(resultCode == RESULT_CANCELED){
@@ -1444,7 +1605,9 @@ public class ChatActivity extends AppCompatActivity {
 
 
 
-    public static  void missedCallNotification(final Context context_call , final String CallType , final String missedCallerId , final String Room_Id , String ClassName_func , final String reason){
+    public static  void missedCallNotification(final Context context_call , final String CallType ,
+                                               final String missedCallerId , final String Room_Id ,
+                                               String ClassName_func , final String reason){
 
 
         Toasty.info(context_call, "Call Reset Parameter  : " + ClassName_func, Toast.LENGTH_LONG).show();
@@ -1645,7 +1808,6 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-
     private void images_upload_images_to_firebase(String  Url_media){
 
         try{
@@ -1670,15 +1832,22 @@ public class ChatActivity extends AppCompatActivity {
             }
 
             btnSend.setEnabled(true);
-                    FCM_Message_Sender.sendWithOtherThread("token" ,
-                            TokenFCM_OtherUser ,
-                            "image",
-                            currentUserId,
-                            StaticConfigUser_fromFirebase.USER_NAME,
-                            StaticConfigUser_fromFirebase.USER_URL_IMAGE,
-                            getDateAndTime(),
-                            "room_disable",
-                            "photo message");
+            // send notification ...
+            try {
+                System.out.println("Send Notification");
+                FCM_Message_Sender.sendWithOtherThread("token",
+                        TokenFCM_OtherUser,
+                        "Message",
+                        FirebaseAuth.getInstance().getUid(),
+                        room_name,
+                        image_url,
+                        getDateAndTime(),
+                        "room_disable",
+                        msg.trim());
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
 
 
         }catch (Exception ex){
@@ -1709,15 +1878,21 @@ public class ChatActivity extends AppCompatActivity {
             }
 
             btnSend.setEnabled(true);
-                    FCM_Message_Sender.sendWithOtherThread("token" ,
-                            TokenFCM_OtherUser ,
-                            "voice",
-                            currentUserId,
-                            StaticConfigUser_fromFirebase.USER_NAME,
-                            StaticConfigUser_fromFirebase.USER_URL_IMAGE,
-                            getDateAndTime(),
-                            "room_disable",
-                            "voice message");
+            try {
+                System.out.println("Send Notification");
+                FCM_Message_Sender.sendWithOtherThread("token",
+                        TokenFCM_OtherUser,
+                        "Message",
+                        FirebaseAuth.getInstance().getUid(),
+                        room_name,
+                        image_url,
+                        getDateAndTime(),
+                        "room_disable",
+                        msg.trim());
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
 
         }catch (Exception ex){
             ex.printStackTrace();
@@ -1725,19 +1900,10 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-
     private void voice_upload_images_to_firebase(Uri Url_media ){
 
         Uri uri = Uri.fromFile(new File(mFileName));
         new UploadFileToServer_chat(new File(mFileName) , Config.FILE_UPLOAD_URL,"Voice").execute();
-    }
-
-    public void play_sound(){
-        AudioManager audioManager =
-                (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
-        audioManager.playSoundEffect(SoundEffectConstants.CLICK);
-
-        //playSoundEffect(SoundEffectConstants.CLICK);
     }
 
     private void doc_file__upload_to_Server(String uri ){
@@ -1763,17 +1929,23 @@ public class ChatActivity extends AppCompatActivity {
 
             }
 
-                    btnSend.setEnabled(true);
+            btnSend.setEnabled(true);
 
-                    FCM_Message_Sender.sendWithOtherThread("token" ,
-                            TokenFCM_OtherUser ,
-                            "doc",
-                            currentUserId,
-                            StaticConfigUser_fromFirebase.USER_NAME,
-                            StaticConfigUser_fromFirebase.USER_URL_IMAGE,
-                            getDateAndTime(),
-                            "no room",
-                            "document message");
+            try {
+                System.out.println("Send Notification");
+                FCM_Message_Sender.sendWithOtherThread("token",
+                        TokenFCM_OtherUser,
+                        "Message",
+                        FirebaseAuth.getInstance().getUid(),
+                        room_name,
+                        image_url,
+                        getDateAndTime(),
+                        "room_disable",
+                        msg.trim());
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
 
 
 
@@ -1784,8 +1956,6 @@ public class ChatActivity extends AppCompatActivity {
         }
 
     }
-
-
 
     private void GetInformation_from_Users(){
 
@@ -1823,8 +1993,6 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
     public static  String getDateAndTime() {
         Calendar cal = Calendar.getInstance();
@@ -1887,7 +2055,6 @@ public class ChatActivity extends AppCompatActivity {
             }
         }
     }
-
 
     private void pickContact(){
 
@@ -2074,7 +2241,6 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
-
     public static void Open_navi(Context context ,String message){
 
         String[] LatLong = message.split(":");
@@ -2186,7 +2352,6 @@ public class ChatActivity extends AppCompatActivity {
         dialog.show();
     }
 
-
     // media Menu  voice navigation
     private void showDiag_media_menu(final ImageButton Startposition) {
 
@@ -2224,6 +2389,37 @@ public class ChatActivity extends AppCompatActivity {
         feat1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // custom notification ....
+
+                try {
+                    System.out.println("Send Notification");
+                    FCM_Message_Sender.sendWithOtherThread("token",
+                            TokenFCM_OtherUser,
+                            "Friend Request",
+                            FirebaseAuth.getInstance().getUid(),
+                            room_name,
+                            image_url,
+                            getDateAndTime(),
+                            "room_disable",
+                            "you are a hev Friend Request");
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+
+
+
+
+
+                FCM_Message_Sender.sendWithOtherThread("token" ,
+                        TokenFCM_OtherUser ,
+                        "image",
+                        FirebaseAuth.getInstance().getUid(),
+                        room_name,
+                        image_url,
+                        getDateAndTime(),
+                        "room_disable",
+                        "photo message");
 
 
             }
@@ -2380,8 +2576,6 @@ public class ChatActivity extends AppCompatActivity {
         dialog.show();
     }
 
-
-
     private void sendMessage_location(final String type , String message)
     {
         btnSend.setEnabled(false);
@@ -2399,21 +2593,26 @@ public class ChatActivity extends AppCompatActivity {
             stype_of_message = Type_map;
             new SendMessageTask(msg.trim()).execute();
             //String imageUrl = task.getResult().getDownloadUrl().toString();
-            play_sound();
+            //play_sound();
 
-                    FCM_Message_Sender.sendWithOtherThread("token" ,
-                            TokenFCM_OtherUser ,
-                            type ,
-                            currentUserId ,
-                            StaticConfigUser_fromFirebase.USER_NAME,
-                            StaticConfigUser_fromFirebase.USER_URL_IMAGE,
-                            getDateAndTime(),
-                            "no room",
-                            " send you a media ");
+            try {
+                System.out.println("Send Notification");
+                FCM_Message_Sender.sendWithOtherThread("token",
+                        TokenFCM_OtherUser,
+                        "Message",
+                        FirebaseAuth.getInstance().getUid(),
+                        room_name,
+                        image_url,
+                        getDateAndTime(),
+                        "room_disable",
+                        msg.trim());
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
 
         }
     }
-
 
     // record voice navigation
     private void showDiag(final ImageButton Startposition) {
@@ -2606,7 +2805,6 @@ public class ChatActivity extends AppCompatActivity {
         }
 
     }
-
 
     // record voice navigation
     public static void showDiag_voice(final Context dialogContext , final String msg_url) {

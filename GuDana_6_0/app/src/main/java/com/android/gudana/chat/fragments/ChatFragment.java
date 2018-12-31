@@ -181,10 +181,12 @@ public class ChatFragment extends Fragment implements ContactsAdapter.ContactsAd
                                     String friend_name = doc.getDocument().getString("name");
                                     String room_uid = doc.getDocument().getString("room_uid");
                                     int room_id = (int) doc.getDocument().getLong("room_id").intValue();
+                                    String id = doc.getDocument().getString("id");
 
                                     // int money = snapshot.getLong("money").intValue();
                                     users_firestore.setRoom_id(room_id);
                                     users_firestore.setRoom_uid(room_uid);
+                                    users_firestore.setId(id);
                                     //usersList.add(users);
                                     // usersAdapter.notifyDataSetChanged();
                                     getActivity().runOnUiThread(new Runnable() {
@@ -226,6 +228,10 @@ public class ChatFragment extends Fragment implements ContactsAdapter.ContactsAd
             intent.putExtra("room_name", contact.getName());
             intent.putExtra("type", ChatActivity.ROOM);
             intent.putExtra("room_uid", contact.getRoom_uid());
+            intent.putExtra("token_id", contact.getToken_id());
+            intent.putExtra("image_url", contact.getImage());
+            intent.putExtra("userid", contact.getId());
+
             startActivity(intent);
         }else{
 

@@ -16,13 +16,14 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.widget.Toast;
+//import android.widget.Toast;
 
 import com.android.gudana.R;
 import com.android.gudana.apprtc.CallFragment;
 import com.android.gudana.apprtc.CallIncomingActivity;
 import com.android.gudana.chat.activities.ChatActivity;
 import com.android.gudana.hify.ui.activities.MainActivity_GuDDana;
+import com.android.gudana.hify.utils.Config;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,7 +38,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import es.dmoral.toasty.Toasty;
+//import es.dmoral.toasty.Toasty;
 
 import static com.android.gudana.service.SensorService.notificationManager;
 import static com.android.gudana.service.SensorService.notificationBuilder;
@@ -135,7 +136,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 					// If it's a message notification
 					// Checking if CreateGroupChatActivity is not open or if its, it should have a different userId from current
 
-					if(!ChatActivity.running || ChatActivity.running && !ChatActivity.otherUserId.equals(senderID))
+					/*
+					if(Config.Chat_Activity_running!=false )
 					{
 						//sendNotification( data);
 						sendNotification_unreadMessage(data);
@@ -143,6 +145,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 						//setDataForNotificationWithActionButton();
 
 					}
+					*/
+
+					if(!Config.Chat_Activity_running || Config.Chat_Activity_running&& !Config.Chat_Activity_otherUserId.equals(senderID))
+					{
+						//sendNotification( data);
+						sendNotification_unreadMessage(data);
+						//setDataForSimpleNotification();
+						//setDataForNotificationWithActionButton();
+
+					}
+
 				}
 				else if(notificationTitle.equals("Friend Request"))
 				{
@@ -165,7 +178,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 				// to send a notification for  your phone  ...s
 				// sendNotification(remoteMessage, data);
-				Toasty.info(this, "Xshaka Notification  activated ...", Toast.LENGTH_SHORT).show();
+				//Toasty.info(this, "Xshaka Notification  activated ...", Toast.LENGTH_SHORT).show();
 
 			}
 
@@ -489,7 +502,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
 						}catch(Exception ex){
-							Toasty.error(getApplicationContext(), ex.toString() , Toast.LENGTH_LONG).show();
+							//Toasty.error(getApplicationContext(), ex.toString() , Toast.LENGTH_LONG).show();
 							ex.printStackTrace();
 						}
 
@@ -498,7 +511,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 				@Override
 				public void onCancelled(DatabaseError databaseError) {
-					Toasty.error(getApplicationContext(),databaseError.toString(), Toast.LENGTH_LONG).show();
+					//Toasty.error(getApplicationContext(),databaseError.toString(), Toast.LENGTH_LONG).show();
 
 				}
 			});
@@ -563,8 +576,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 			}
 		}
 	}
-
-
 
 }
 

@@ -1286,14 +1286,19 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
 
     @Override
     protected void onDestroy() {
+        try{
+            unregisterReceiver(NetworkChangeReceiver);
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
 
-        unregisterReceiver(NetworkChangeReceiver);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
         super.onDestroy();
 
     }
 
     public boolean isOnline() {
+
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
