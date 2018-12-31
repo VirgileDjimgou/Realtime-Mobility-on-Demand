@@ -76,6 +76,9 @@ import com.android.gudana.hify.utils.AndroidMultiPartEntity;
 import com.android.gudana.hify.utils.Config;
 import com.android.gudana.hify.utils.JSONParser;
 import com.android.gudana.hify.utils.database.UserHelper;
+import com.android.gudana.hify.utils.refresh_token_on_firestore;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
 import com.github.javiersantos.bottomdialogs.BottomDialog;
@@ -85,6 +88,7 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -95,6 +99,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.StorageReference;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -148,6 +155,7 @@ import org.json.JSONArray;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import java.util.Random;
@@ -167,6 +175,8 @@ public class ChatActivity extends AppCompatActivity {
     public static String Type_map = "map";
     public static  String Type_live_location = "live_loc";
     public static String  stype_of_message = Type_Text;
+    private MediaPlayer mediaPlayer_song_out;
+    private MediaPlayer mediaPlayer_song_in;
 
     // ############### import from  old Chat  #######################
 
@@ -315,6 +325,7 @@ public class ChatActivity extends AppCompatActivity {
     private user_room_message_db message_db;
     private String room_uid = "";
     private String token_id, image_url;
+    private FirebaseFirestore mFirestore;
 
     public static void startActivity(Context context){
         Intent intent = new Intent(context,ChatActivity.class);
@@ -390,7 +401,7 @@ public class ChatActivity extends AppCompatActivity {
         image_url = intent.getStringExtra("image_url");
         Config.Chat_Activity_otherUserId = getIntent().getStringExtra("userid");
 
-
+        refresh_token_on_firestore.refresh_token();
 
         // will only be used when type == FRIEND
         String friend_username = intent.getStringExtra("friend_username");
@@ -404,6 +415,9 @@ public class ChatActivity extends AppCompatActivity {
 
         // init sqlite helper
         message_db = new user_room_message_db(ChatActivity.this);
+
+        mediaPlayer_song_out = MediaPlayer.create(ChatActivity.this, R.raw.stairs);
+        mediaPlayer_song_in = MediaPlayer.create(ChatActivity.this, R.raw.relentless);
 
         /*
         ActionBar actionBar = getSupportActionBar();
@@ -605,10 +619,6 @@ public class ChatActivity extends AppCompatActivity {
             }
         }
 
-
-        // messageEditText = findViewById(R.id.chat_message);
-
-
         currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // Get the widgets reference from XML layout
@@ -705,9 +715,7 @@ public class ChatActivity extends AppCompatActivity {
 
             askPermission();
 
-
-            // get User Imformation from remote Database or from local Cache ...
-            GetInformation_from_Users();
+            // get Users infos
 
         }catch(Exception ex){
             ex.printStackTrace();
@@ -715,11 +723,36 @@ public class ChatActivity extends AppCompatActivity {
         // appBarName.setText("GuDana User");
         // create  fcm Utill to send call  notification and  special notification   ... to other users
         FCM_Message_Sender = new CustomFcm_Util();
+        mFirestore = FirebaseFirestore.getInstance();
+        get_otherUsers_infos_token_fcm();
+
 
 
         // enable offline capaibilities
         // get All message
         getAllmessage();
+
+        // refresh Token Id in Firestore ...
+
+    }
+
+    public void get_otherUsers_infos_token_fcm(){
+
+        // get Users Informations
+        mFirestore.collection("Users")
+                .document(Config.Chat_Activity_otherUserId )
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                        //friend_name = documentSnapshot.getString("name");
+                        //friend_email = documentSnapshot.getString("email");
+                        //friend_image = documentSnapshot.getString("image");
+                        TokenFCM_OtherUser = token_id = documentSnapshot.getString("token_id");
+
+                    }
+                });
 
     }
 
@@ -1471,7 +1504,7 @@ public class ChatActivity extends AppCompatActivity {
             Log.i("socket", "sent message to server");
             final MessageAdapter.MessageItem msgItem = new MessageAdapter.MessageItem(user_id, username, message_contents);
             not_on_server_indices.add(adapter.addItem(msgItem));
-
+            Play_Song_out_message();
             // send  firebase cloud notification
         }
     }
@@ -1960,42 +1993,6 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
-    private void GetInformation_from_Users(){
-
-        userDB_current = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId);
-        // Set the  Driver Response to true ...
-        //HashMap map = new HashMap();
-        //map.put("Authentified" , "await");
-        //userDB.updateChildren(map);
-        userDB_current.keepSynced(true);
-        userDB_current.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
-                    try{
-                        Map<String, Object> user_data = (Map<String, Object>) dataSnapshot.getValue();
-                        // test if the recors Phone already exist  ...if not than
-                        // than you are a new user   ...
-                        NameCurrentUser   =  user_data.get("name").toString();
-                        url_Icon_currentUser =  user_data.get("image").toString();
-
-
-
-                    }catch(Exception ex){
-                        Toasty.error(getApplicationContext(), ex.toString() , Toast.LENGTH_LONG).show();
-                        ex.printStackTrace();
-                    }
-
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Toasty.error(getApplicationContext(),databaseError.toString(), Toast.LENGTH_LONG).show();
-
-            }
-        });
-    }
 
     public static  String getDateAndTime() {
         Calendar cal = Calendar.getInstance();
@@ -2411,19 +2408,21 @@ public class ChatActivity extends AppCompatActivity {
                 }
 
 
+                try {
+                    System.out.println("Send Notification");
+                    FCM_Message_Sender.sendWithOtherThread("token",
+                            FirebaseInstanceId.getInstance().getToken(),
+                            "Friend Request",
+                            FirebaseAuth.getInstance().getUid(),
+                            room_name,
+                            image_url,
+                            getDateAndTime(),
+                            "room_disable",
+                            "you are a hev Friend Request");
 
-
-
-                FCM_Message_Sender.sendWithOtherThread("token" ,
-                        TokenFCM_OtherUser ,
-                        "image",
-                        FirebaseAuth.getInstance().getUid(),
-                        room_name,
-                        image_url,
-                        getDateAndTime(),
-                        "room_disable",
-                        "photo message");
-
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
 
             }
         });
@@ -2488,7 +2487,7 @@ public class ChatActivity extends AppCompatActivity {
                         .enableSelectAll(true)
                         .showFolderView(true)
                         // .setActivityTheme(R.style.LibAppTheme)
-                        .pickFile(ChatActivity.this);            }
+                        .pickFile(ChatActivity.this);  }
         });
 
         ImageView camera = (ImageView)dialog.findViewById(R.id.camera);
@@ -3253,5 +3252,30 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
+    public void Play_Song_out_message() {
+
+        try {
+
+            mediaPlayer_song_out.start();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void Play_Song_in_message() {
+
+        try {
+
+            mediaPlayer_song_in.start();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+
+
+
+    }
 
 }
