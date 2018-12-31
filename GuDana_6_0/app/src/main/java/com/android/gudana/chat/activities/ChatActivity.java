@@ -473,7 +473,7 @@ public class ChatActivity extends AppCompatActivity {
 
             eventListeners.put("received message", onMessageReceive);
             eventListeners.put("broadcast", onBroadcast);
-            //eventListeners.put("history", onHistory);
+            eventListeners.put("history", onHistory);
             eventListeners.put("typing", onTyping);
             eventListeners.put("stop typing", onStopTyping);
             setListeningToEvents(true);
@@ -736,6 +736,25 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
+    public void getUnreeadmessage_onServer() {
+
+        if (!first_message_history_lock) {
+            try {
+                JSONObject json = new JSONObject(info.toString());
+                if(adapter.getCount() > 0) {
+                    json.put("before_msg_id", adapter.getFirstID());
+                    json.put("after_msg_id", adapter.getLastID());
+                }
+
+                // get message  on local datasore  sqlite  ...
+                mSocket.emit("fetch messages", json);
+                first_message_history_lock = true;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+          }
+        }
+
     public void get_otherUsers_infos_token_fcm(){
 
         // get Users Informations
@@ -862,9 +881,9 @@ public class ChatActivity extends AppCompatActivity {
                 new Save_offline_MessageTask (json).execute();
 
                 // test offline  use ...must be removed     immediatly after test purpose
-                new Save_offline_MessageTask (json).execute();
-                new Save_offline_MessageTask (json).execute();
-                new Save_offline_MessageTask (json).execute();
+                //new Save_offline_MessageTask (json).execute();
+                //new Save_offline_MessageTask (json).execute();
+                //new Save_offline_MessageTask (json).execute();
                 // end test
 
 
@@ -885,6 +904,7 @@ public class ChatActivity extends AppCompatActivity {
 
                             listViewMessages.setAdapter(listViewMessages.getAdapter());
                             not_on_server_indices.remove(0);
+                            Play_Song_in_message();
                         }
                     });
                 } else {
@@ -894,6 +914,7 @@ public class ChatActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             adapter.addItem(msgItem);
+                            Play_Song_in_message();
                         }
                     });
                 }
@@ -945,6 +966,14 @@ public class ChatActivity extends AppCompatActivity {
 
         }
 
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // than get unread message on server
+        getUnreeadmessage_onServer();
 
     }
 
@@ -1504,7 +1533,7 @@ public class ChatActivity extends AppCompatActivity {
             Log.i("socket", "sent message to server");
             final MessageAdapter.MessageItem msgItem = new MessageAdapter.MessageItem(user_id, username, message_contents);
             not_on_server_indices.add(adapter.addItem(msgItem));
-            Play_Song_out_message();
+            //Play_Song_out_message();
             // send  firebase cloud notification
         }
     }
@@ -2371,6 +2400,21 @@ public class ChatActivity extends AppCompatActivity {
         });
 
 
+        LinearLayout CloseLayout = (LinearLayout) dialog.findViewById(R.id.closeDialog_layout);
+        CloseLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                revealShow(dialogView, false, dialog , Startposition);
+            }
+        });
+
+        CloseLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                revealShow(dialogView, false, dialog , Startposition);
+                return false;
+            }
+        });
 
         ImageView live_tracking = (ImageView)dialog.findViewById(R.id.live_tracking);
         live_tracking.setOnClickListener(new View.OnClickListener() {

@@ -7,6 +7,15 @@
     android:layout_gravity="bottom"
     android:background="@android:color/transparent">
 
+    <LinearLayout
+        android:id="@+id/closeDialog_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="top">
+
+    </LinearLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="340dp"
