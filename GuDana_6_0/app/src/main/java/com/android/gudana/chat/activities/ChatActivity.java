@@ -1237,6 +1237,212 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
+
+    public static  void missedCallNotification(final Context context_call , final String CallType ,
+                                               final String missedCallerId , final String Room_Id ,
+                                               String ClassName_func , final String reason){
+
+
+        currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Toasty.info(context_call, "Call Reset Parameter  : " + ClassName_func, Toast.LENGTH_LONG).show();
+        Map<String, Object> map = null;
+        map = new HashMap<>();
+        map.put("room_status", false); // that meant you are  at the moment online  .....
+        map.put("reason_interrupted_call", reason);
+        map.put("available_caller", false);
+        map.put("available_receiver", false);
+
+
+        //  a user or the both is not available anymore  ......
+
+        //userDB.updateChildren(map);
+        FirebaseDatabase.getInstance().getReference().child("Call_room").child(Room_Id).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<Void> task)
+            {
+
+                if(task.isSuccessful())
+                {
+
+                    //Toasty.info(context_call, "interrupted call ...", Toast.LENGTH_LONG).show();
+                    // Call enabledb
+
+                }
+                else
+                {
+
+                    //Toasty.error(context_call, "sorry GuDana Voice Cloud  is unreachable right now ! .... please try again later ", Toast.LENGTH_LONG).show();
+
+                }
+
+            }
+        });
+
+
+        // and Update Call History    ....
+
+        Map callroom_map = new HashMap();
+        callroom_map.put("room_id", Room_Id);
+        callroom_map.put("id_caller", missedCallerId);
+        callroom_map.put("id_receiver", FirebaseAuth.getInstance().getCurrentUser().getUid());
+        callroom_map.put("timestamp", ServerValue.TIMESTAMP);
+        callroom_map.put("available_caller", false);
+        callroom_map.put("available_receiver", false);
+        callroom_map.put("room_status", false); //
+        callroom_map.put("call_type", CallType);
+        callroom_map.put("call_duration", "1:62");
+        callroom_map.put("call_attribut", "missed call"); // incomming Call ...outgoing Call ... missed Call
+        callroom_map.put("reason_interrupted_call", reason);
+        // the end of call extremely important    ..
+
+
+        Map callroom_map_messages = new HashMap();
+        callroom_map_messages.put("Call_room//" + Room_Id, callroom_map);
+
+
+        FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId).child("call_History").updateChildren(callroom_map_messages).addOnCompleteListener(new OnCompleteListener<Void>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<Void> task)
+            {
+                if(task.isSuccessful())
+                {
+                    Toasty.info(context_call, "call History updated ", Toast.LENGTH_LONG).show();
+                    // start call
+                    // so now start the call
+
+                }
+                else
+                {
+                    Toasty.error(context_call, "sorry GuDana Voice Cloud  is unreachable right now ! .... " +
+                            "please check your internet connection or try again later ", Toast.LENGTH_LONG).show();
+
+                }
+            }
+        });
+
+    }
+
+
+    public static  void resetCallparameter(final Context context_call ,
+                                           final String Room_Id ,
+                                           String ClassName_func ,
+                                           String reason ,
+                                           int call_attribut,
+                                           final String missedCallerId
+    ){
+
+        currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Toasty.info(context_call, "Call Reset Parameter  : " + ClassName_func, Toast.LENGTH_LONG).show();
+
+        Map<String, Object> map = null;
+        map = new HashMap<>();
+        map.put("room_status", false); // that meant you are  at the moment online  .....
+        map.put("reason_interrupted_call", reason);
+        map.put("available_caller", false);
+        map.put("available_receiver", false);
+
+
+        //  a user or the both is not available anymore  ......
+
+        //userDB.updateChildren(map);
+        FirebaseDatabase.getInstance().getReference().child("Call_room").child(Room_Id).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<Void> task)
+            {
+
+                if(task.isSuccessful())
+                {
+
+                    Toasty.info(context_call, "interrupted call ...", Toast.LENGTH_LONG).show();
+                    // Call enabledb
+
+                }
+                else
+                {
+
+                    Toasty.error(context_call, "sorry GuDana Voice Cloud  is unreachable right now ! .... please try again later ", Toast.LENGTH_LONG).show();
+
+                }
+
+            }
+        });
+
+
+        // and Update Call History    ....
+
+        Map callroom_map = new HashMap();
+        callroom_map.put("room_id", Room_Id);
+        callroom_map.put("id_caller", FirebaseAuth.getInstance().getCurrentUser().getUid());
+        callroom_map.put("id_receiver", missedCallerId);
+        callroom_map.put("timestamp", ServerValue.TIMESTAMP);
+        callroom_map.put("available_caller", true);
+        callroom_map.put("available_receiver", false);
+        callroom_map.put("room_status", true); //
+        callroom_map.put("call_type", call_type);
+        callroom_map.put("call_duration", "1:62");
+        callroom_map.put("call_attribut", call_attribut); // 0 = incomming Call ... 1= outgoing Call ... 2= missed Call
+        callroom_map.put("reason_interrupted_call", " -- ");
+        // the end of call extremely important    ..
+
+
+        Map callroom_map_messages = new HashMap();
+        callroom_map_messages.put("Call_room//" + Room_Id, callroom_map);
+
+
+        FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId).child("call_History").updateChildren(callroom_map_messages).addOnCompleteListener(new OnCompleteListener<Void>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<Void> task)
+            {
+                if(task.isSuccessful())
+                {
+                    Toasty.info(context_call, "call History updated ", Toast.LENGTH_LONG).show();
+                    // start call
+                    // so now start the call
+
+                }
+                else
+                {
+                    Toasty.error(context_call, "sorry GuDana Voice Cloud  is unreachable right now ! .... " +
+                            "please check your internet connection or try again later ", Toast.LENGTH_LONG).show();
+
+                }
+            }
+        });
+
+        // update call availability
+        Map<String, Object> map_dispo = null;
+        map_dispo = new HashMap<>();
+        map_dispo.put("call_availability", true); // not available anymore to take another call
+        //userDB.updateChildren(map);
+
+
+        FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId).updateChildren(map_dispo).addOnCompleteListener(new OnCompleteListener<Void>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<Void> task)
+            {
+                if(task.isSuccessful())
+                {
+
+                    Toast.makeText(context_call, "user available to take amother call  ", Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    Toast.makeText(context_call, "sorry GuDana Voice Cloud  is unreachable right now ! ... ", Toast.LENGTH_LONG).show();
+
+                }
+            }
+        });
+
+
+    }
+
+
+
     private class SendMessageTask extends AsyncTask<String, String, Void> {
         private final String message_contents;
 
@@ -1603,210 +1809,6 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
-
-
-    public static  void missedCallNotification(final Context context_call , final String CallType ,
-                                               final String missedCallerId , final String Room_Id ,
-                                               String ClassName_func , final String reason){
-
-
-        currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Toasty.info(context_call, "Call Reset Parameter  : " + ClassName_func, Toast.LENGTH_LONG).show();
-        Map<String, Object> map = null;
-        map = new HashMap<>();
-        map.put("room_status", false); // that meant you are  at the moment online  .....
-        map.put("reason_interrupted_call", reason);
-        map.put("available_caller", false);
-        map.put("available_receiver", false);
-
-
-        //  a user or the both is not available anymore  ......
-
-        //userDB.updateChildren(map);
-        FirebaseDatabase.getInstance().getReference().child("Call_room").child(Room_Id).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>()
-        {
-            @Override
-            public void onComplete(@NonNull Task<Void> task)
-            {
-
-                if(task.isSuccessful())
-                {
-
-                    //Toasty.info(context_call, "interrupted call ...", Toast.LENGTH_LONG).show();
-                    // Call enabledb
-
-                }
-                else
-                {
-
-                    //Toasty.error(context_call, "sorry GuDana Voice Cloud  is unreachable right now ! .... please try again later ", Toast.LENGTH_LONG).show();
-
-                }
-
-            }
-        });
-
-
-        // and Update Call History    ....
-
-        Map callroom_map = new HashMap();
-        callroom_map.put("room_id", Room_Id);
-        callroom_map.put("id_caller", missedCallerId);
-        callroom_map.put("id_receiver", FirebaseAuth.getInstance().getCurrentUser().getUid());
-        callroom_map.put("timestamp", ServerValue.TIMESTAMP);
-        callroom_map.put("available_caller", false);
-        callroom_map.put("available_receiver", false);
-        callroom_map.put("room_status", false); //
-        callroom_map.put("call_type", CallType);
-        callroom_map.put("call_duration", "1:62");
-        callroom_map.put("call_attribut", "missed call"); // incomming Call ...outgoing Call ... missed Call
-        callroom_map.put("reason_interrupted_call", reason);
-        // the end of call extremely important    ..
-
-
-        Map callroom_map_messages = new HashMap();
-        callroom_map_messages.put("Call_room//" + Room_Id, callroom_map);
-
-
-        FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId).child("call_History").updateChildren(callroom_map_messages).addOnCompleteListener(new OnCompleteListener<Void>()
-        {
-            @Override
-            public void onComplete(@NonNull Task<Void> task)
-            {
-                if(task.isSuccessful())
-                {
-                    Toasty.info(context_call, "call History updated ", Toast.LENGTH_LONG).show();
-                    // start call
-                    // so now start the call
-
-                }
-                else
-                {
-                    Toasty.error(context_call, "sorry GuDana Voice Cloud  is unreachable right now ! .... " +
-                            "please check your internet connection or try again later ", Toast.LENGTH_LONG).show();
-
-                }
-            }
-        });
-
-    }
-
-
-    public static  void resetCallparameter(final Context context_call ,
-                                           final String Room_Id ,
-                                           String ClassName_func ,
-                                           String reason ,
-                                           int call_attribut,
-                                           final String missedCallerId
-    ){
-
-        currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Toasty.info(context_call, "Call Reset Parameter  : " + ClassName_func, Toast.LENGTH_LONG).show();
-
-        Map<String, Object> map = null;
-        map = new HashMap<>();
-        map.put("room_status", false); // that meant you are  at the moment online  .....
-        map.put("reason_interrupted_call", reason);
-        map.put("available_caller", false);
-        map.put("available_receiver", false);
-
-
-        //  a user or the both is not available anymore  ......
-
-        //userDB.updateChildren(map);
-        FirebaseDatabase.getInstance().getReference().child("Call_room").child(Room_Id).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>()
-        {
-            @Override
-            public void onComplete(@NonNull Task<Void> task)
-            {
-
-                if(task.isSuccessful())
-                {
-
-                    Toasty.info(context_call, "interrupted call ...", Toast.LENGTH_LONG).show();
-                    // Call enabledb
-
-                }
-                else
-                {
-
-                    Toasty.error(context_call, "sorry GuDana Voice Cloud  is unreachable right now ! .... please try again later ", Toast.LENGTH_LONG).show();
-
-                }
-
-            }
-        });
-
-
-        // and Update Call History    ....
-
-        Map callroom_map = new HashMap();
-        callroom_map.put("room_id", Room_Id);
-        callroom_map.put("id_caller", FirebaseAuth.getInstance().getCurrentUser().getUid());
-        callroom_map.put("id_receiver", missedCallerId);
-        callroom_map.put("timestamp", ServerValue.TIMESTAMP);
-        callroom_map.put("available_caller", true);
-        callroom_map.put("available_receiver", false);
-        callroom_map.put("room_status", true); //
-        callroom_map.put("call_type", call_type);
-        callroom_map.put("call_duration", "1:62");
-        callroom_map.put("call_attribut", call_attribut); // 0 = incomming Call ... 1= outgoing Call ... 2= missed Call
-        callroom_map.put("reason_interrupted_call", " -- ");
-        // the end of call extremely important    ..
-
-
-        Map callroom_map_messages = new HashMap();
-        callroom_map_messages.put("Call_room//" + Room_Id, callroom_map);
-
-
-        FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId).child("call_History").updateChildren(callroom_map_messages).addOnCompleteListener(new OnCompleteListener<Void>()
-        {
-            @Override
-            public void onComplete(@NonNull Task<Void> task)
-            {
-                if(task.isSuccessful())
-                {
-                    Toasty.info(context_call, "call History updated ", Toast.LENGTH_LONG).show();
-                    // start call
-                    // so now start the call
-
-                }
-                else
-                {
-                    Toasty.error(context_call, "sorry GuDana Voice Cloud  is unreachable right now ! .... " +
-                            "please check your internet connection or try again later ", Toast.LENGTH_LONG).show();
-
-                }
-            }
-        });
-
-        // update call availability
-        Map<String, Object> map_dispo = null;
-        map_dispo = new HashMap<>();
-        map_dispo.put("call_availability", true); // not available anymore to take another call
-        //userDB.updateChildren(map);
-
-
-        FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId).updateChildren(map_dispo).addOnCompleteListener(new OnCompleteListener<Void>()
-        {
-            @Override
-            public void onComplete(@NonNull Task<Void> task)
-            {
-                if(task.isSuccessful())
-                {
-
-                    Toast.makeText(context_call, "user available to take amother call  ", Toast.LENGTH_LONG).show();
-                }
-                else
-                {
-                    Toast.makeText(context_call, "sorry GuDana Voice Cloud  is unreachable right now ! ... ", Toast.LENGTH_LONG).show();
-
-                }
-            }
-        });
-
-
-    }
 
 
     private void images_upload_images_to_firebase(String  Url_media){

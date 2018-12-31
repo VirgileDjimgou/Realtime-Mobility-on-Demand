@@ -38,7 +38,6 @@ import com.android.gudana.apprtc.compatibility.Compatibility;
 import com.android.gudana.apprtc.linphone.LinphoneManager;
 import com.android.gudana.chat.activities.ChatActivity;
 import com.android.gudana.hify.ui.activities.MainActivity_GuDDana;
-//import com.android.gudana.tindroid.MessageActivity_fire_tinode;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -65,6 +64,8 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
+
+//import com.android.gudana.tindroid.MessageActivity_fire_tinode;
 
 
 public class CallIncomingActivity extends Activity{
