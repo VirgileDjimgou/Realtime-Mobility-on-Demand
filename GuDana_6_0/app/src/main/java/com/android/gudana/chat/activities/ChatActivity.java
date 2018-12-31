@@ -1610,6 +1610,7 @@ public class ChatActivity extends AppCompatActivity {
                                                String ClassName_func , final String reason){
 
 
+        currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Toasty.info(context_call, "Call Reset Parameter  : " + ClassName_func, Toast.LENGTH_LONG).show();
         Map<String, Object> map = null;
         map = new HashMap<>();
@@ -1664,7 +1665,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
         Map callroom_map_messages = new HashMap();
-        callroom_map_messages.put("Call_room//" + pushId_callRoom, callroom_map);
+        callroom_map_messages.put("Call_room//" + Room_Id, callroom_map);
 
 
         FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId).child("call_History").updateChildren(callroom_map_messages).addOnCompleteListener(new OnCompleteListener<Void>()
