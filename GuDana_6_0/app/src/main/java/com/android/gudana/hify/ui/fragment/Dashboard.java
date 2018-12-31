@@ -16,6 +16,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -852,6 +853,22 @@ public class Dashboard extends Fragment
             public void onClick(View v) {
 
                 revealShow(dialogView, false, dialog , Startposition);
+            }
+        });
+
+        LinearLayout CloseLayout = (LinearLayout) dialog.findViewById(R.id.closeDialog_layout);
+        CloseLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                revealShow(dialogView, false, dialog , Startposition);
+            }
+        });
+
+        CloseLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                revealShow(dialogView, false, dialog , Startposition);
+                return false;
             }
         });
 

@@ -360,7 +360,6 @@ public class ProfileFragment extends Fragment {
 
             Cursor rs = userHelper.getData(1);
             rs.moveToFirst();
-
             String usernam=rs.getString(rs.getColumnIndex(UserHelper.CONTACTS_COLUMN_USERNAME));
             String nam = rs.getString(rs.getColumnIndex(UserHelper.CONTACTS_COLUMN_NAME));
             String emai = rs.getString(rs.getColumnIndex(UserHelper.CONTACTS_COLUMN_EMAIL));
