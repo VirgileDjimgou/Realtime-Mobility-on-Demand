@@ -484,7 +484,7 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         mSocket.emit("join", info);
-       // mSocket.emit("fetch messages", info);
+        //mSocket.emit("fetch messages", info);
         first_message_history_lock = true;
 
         listViewMessages = (ListView) findViewById(R.id.listView_messages);
@@ -738,21 +738,19 @@ public class ChatActivity extends AppCompatActivity {
 
     public void getUnreeadmessage_onServer() {
 
-        if (!first_message_history_lock) {
             try {
                 JSONObject json = new JSONObject(info.toString());
                 if(adapter.getCount() > 0) {
-                    json.put("before_msg_id", adapter.getFirstID());
-                    json.put("after_msg_id", adapter.getLastID());
-                }
+                    json.put("after_id_message", 1);
 
+                }
                 // get message  on local datasore  sqlite  ...
-                mSocket.emit("fetch messages", json);
+                mSocket.emit("fetch_messages_from_msg_id", json);
                 first_message_history_lock = true;
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-          }
+
         }
 
     public void get_otherUsers_infos_token_fcm(){
