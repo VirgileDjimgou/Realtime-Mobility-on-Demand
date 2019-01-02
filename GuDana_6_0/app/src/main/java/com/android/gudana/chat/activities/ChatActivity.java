@@ -326,6 +326,7 @@ public class ChatActivity extends AppCompatActivity {
     private String room_uid = "";
     private String token_id, image_url;
     private FirebaseFirestore mFirestore;
+    private int Lastmsg_Id;
 
     public static void startActivity(Context context){
         Intent intent = new Intent(context,ChatActivity.class);
@@ -741,7 +742,9 @@ public class ChatActivity extends AppCompatActivity {
             try {
                 JSONObject json = new JSONObject(info.toString());
                 if(adapter.getCount() > 0) {
-                    json.put("after_id_message", 1);
+                    // json.put("after_id_message", -1); // always -1 to get all message  history ...for new users on Group  ...
+                    // get  custom message  from custom position...
+                    json.put("after_id_message", Lastmsg_Id-3); // get last message - 3
 
                 }
                 // get message  on local datasore  sqlite  ...
@@ -860,67 +863,6 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    private final Emitter.Listener onMessageReceive = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            JSONObject json;
-            final int msg_user_id, message_id;
-            final String msg_username, message_contents, datetimeutc;
-            try {
-                json = (JSONObject) args[0];
-
-                msg_user_id = json.getInt("user_id");
-                message_id = json.getInt("message_id");
-                msg_username = json.getString("username");
-                message_contents = json.getString("message");
-                datetimeutc = json.getString("datetimeutc");
-
-                // save message  on local  database  for offline use  ...
-                new Save_offline_MessageTask (json).execute();
-
-                // test offline  use ...must be removed     immediatly after test purpose
-                //new Save_offline_MessageTask (json).execute();
-                //new Save_offline_MessageTask (json).execute();
-                //new Save_offline_MessageTask (json).execute();
-                // end test
-
-
-                if(user_id == msg_user_id && not_on_server_indices.size() > 0) {
-                    /** TODO: remove assumption that messages are received in order
-                      * Proper way is to sort messages by their IDs in ascending order
-                      **/
-
-                    ChatActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            MessageAdapter.MessageItem msg_item = (MessageAdapter.MessageItem) adapter.getItem(not_on_server_indices.get(0));
-                            msg_item.savedToServer(message_id, datetimeutc);
-
-                            // In case there are messages that were sent to server before this one,
-                            // move it to the end of the list.
-                            // adapter.moveItemToEndOfList(not_on_server_indices.get(0));
-
-                            listViewMessages.setAdapter(listViewMessages.getAdapter());
-                            not_on_server_indices.remove(0);
-                            Play_Song_in_message();
-                        }
-                    });
-                } else {
-                    final MessageAdapter.MessageItem msgItem = new MessageAdapter.MessageItem(message_id, user_id, msg_username, message_contents, datetimeutc);
-
-                    ChatActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            adapter.addItem(msgItem);
-                            Play_Song_in_message();
-                        }
-                    });
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    };
 
     public void getAllmessage(){
 
@@ -930,17 +872,6 @@ public class ChatActivity extends AppCompatActivity {
         rs.moveToFirst();
 
         if(Numb_Event > 0){
-
-
-            for(int i=0; i<Numb_Event; i++){
-                String room_uid =rs.getString(rs.getColumnIndex(user_room_message_db.ROOM_UID));
-                String content = rs.getString(rs.getColumnIndex(user_room_message_db.CONTENT));
-                String room_id = rs.getString(rs.getColumnIndex(user_room_message_db.ROOM_ID));
-                System.out.println("The value of message  is: "+content);
-                //rs.moveToNext();
-                //Toasty.info(context,"Live Location : "+Integer.toString(i)+"  : "+room_uid +"  "+ content+"   "+room_id , Toast.LENGTH_SHORT).show();
-            }
-
 
             // get all  Raw from Table   ...
             //Cursor  cursor = live_location.rawQuery("select * from table",null);
@@ -965,7 +896,7 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         try {
-            Thread.sleep(1000);
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -990,6 +921,8 @@ public class ChatActivity extends AppCompatActivity {
 
             // save message  on local  database  for offline use  ...
             //new Save_offline_MessageTask (json).execute();
+
+            Lastmsg_Id = message_id;
 
             if(user_id == msg_user_id && not_on_server_indices.size() > 0) {
                 /** TODO: remove assumption that messages are received in order
@@ -1101,87 +1034,155 @@ public class ChatActivity extends AppCompatActivity {
         }
     };
 
-    private final Emitter.Listener onHistory = new Emitter.Listener() {
+
+    private final Emitter.Listener onMessageReceive = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
             JSONObject json;
-            JSONArray arr;
-
-            Log.i("ChatActivity", "receiving message history");
-
-            final ArrayList<Object> items_before = new ArrayList<>();
-            final ArrayList<Object> items_after = new ArrayList<>();
-
+            final int msg_user_id, message_id;
+            final String msg_username, message_contents, datetimeutc;
             try {
                 json = (JSONObject) args[0];
-                arr = json.getJSONArray("messages");
-                JSONObject jsonObject;
-                int messageID;
 
-                for (int i = 0; i < arr.length(); i++) {
-                    jsonObject = arr.getJSONObject(i);
+                msg_user_id = json.getInt("user_id");
+                message_id = json.getInt("message_id");
+                msg_username = json.getString("username");
+                message_contents = json.getString("message");
+                datetimeutc = json.getString("datetimeutc");
 
-                    MessageAdapter.MessageItem messageItem = new MessageAdapter.MessageItem(
-                            jsonObject.getInt("message_id"),
-                            jsonObject.getInt("user_id"),
-                            jsonObject.getString("username"),
-                            jsonObject.getString("message"),
-                            jsonObject.getString("datetimeutc")
-                    );
+                // save message  on local  database  for offline use  ...
+                new Save_offline_MessageTask (json).execute();
 
-                    messageID = jsonObject.getInt("message_id");
+                // test offline  use ...must be removed     immediatly after test purpose
+                //new Save_offline_MessageTask (json).execute();
+                //new Save_offline_MessageTask (json).execute();
+                //new Save_offline_MessageTask (json).execute();
+                // end test
 
-                    if(adapter.getCount() > 0) {
-                        if (messageID < adapter.getFirstID()) {
-                            items_before.add(messageItem);
-                        } else if (messageID > adapter.getLastID()) {
-                            items_after.add(messageItem);
+
+                if(user_id == msg_user_id && not_on_server_indices.size() > 0) {
+                    /** TODO: remove assumption that messages are received in order
+                     * Proper way is to sort messages by their IDs in ascending order
+                     **/
+
+                    ChatActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            MessageAdapter.MessageItem msg_item = (MessageAdapter.MessageItem) adapter.getItem(not_on_server_indices.get(0));
+                            msg_item.savedToServer(message_id, datetimeutc);
+
+                            // In case there are messages that were sent to server before this one,
+                            // move it to the end of the list.
+                            // adapter.moveItemToEndOfList(not_on_server_indices.get(0));
+
+                            listViewMessages.setAdapter(listViewMessages.getAdapter());
+                            not_on_server_indices.remove(0);
+                            Play_Song_in_message();
                         }
-                    } else {
-                        items_before.add(messageItem);
-                    }
+                    });
+                } else {
+                    final MessageAdapter.MessageItem msgItem = new MessageAdapter.MessageItem(message_id, user_id, msg_username, message_contents, datetimeutc);
+
+                    ChatActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.addItem(msgItem);
+                            Play_Song_in_message();
+                        }
+                    });
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            ChatActivity.this.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    try{
-
-                        if(first_history) {
-                            adapter.prependItems(items_before);
-                            first_history = false;
-                        } else {
-                            // https://stackoverflow.com/questions/22051556/maintain-scroll-position-when-adding-to-listview-with-reverse-endless-scrolling
-                            // https://stackoverflow.com/questions/8276128/retaining-position-in-listview-after-calling-notifydatasetchanged
-                            // save index and top position
-                            int index = listViewMessages.getFirstVisiblePosition();
-                            View v = listViewMessages.getChildAt(0);
-                            int top = (v == null) ? 0 : v.getTop();
-                            int oldCount = adapter.getCount();
-
-                            // notify dataset changed or re-assign adapter here
-                            adapter.prependItems(items_before);
-                            adapter.addItems(items_after);
-
-                            // restore the position of listview
-                            listViewMessages.setSelectionFromTop(index + adapter.getCount() - oldCount, top);
-                        }
-
-                        // if we haven't reached the start of the messages, release first message history lock
-                        if (items_before.size() > 0) first_message_history_lock = false;
-
-
-                    }catch (Exception ex){
-                        ex.printStackTrace();
-                    }
-
-                }
-            });
         }
     };
+
+
+    private final Emitter.Listener onHistory = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            JSONObject json_global;
+            JSONArray arr;
+
+            try{
+
+                Log.i("ChatActivity", "receiving message history");
+                final ArrayList<Object> items_before = new ArrayList<>();
+                final ArrayList<Object> items_after = new ArrayList<>();
+
+                json_global = (JSONObject) args[0];
+                arr = json_global.getJSONArray("messages");
+                JSONObject jsonObject;
+                int messageID;
+
+
+                for (int i = 0; i < arr.length(); i++) {
+                    jsonObject = arr.getJSONObject(i);
+                    JSONObject json;
+                    final int msg_user_id, message_id;
+                    final String msg_username, message_contents, datetimeutc;
+                    try {
+                        json =  jsonObject;
+
+                        msg_user_id = json.getInt("user_id");
+                        message_id = json.getInt("message_id");
+                        msg_username = json.getString("username");
+                        message_contents = json.getString("message");
+                        datetimeutc = json.getString("datetimeutc");
+
+                        if(message_id > Lastmsg_Id){
+
+
+                            // save message  on local  database  for offline use  ...
+                            new Save_offline_MessageTask (json).execute();
+
+                            if(user_id == msg_user_id && not_on_server_indices.size() > 0) {
+                                /** TODO: remove assumption that messages are received in order
+                                 * Proper way is to sort messages by their IDs in ascending order
+                                 **/
+
+                                ChatActivity.this.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        MessageAdapter.MessageItem msg_item = (MessageAdapter.MessageItem) adapter.getItem(not_on_server_indices.get(0));
+                                        msg_item.savedToServer(message_id, datetimeutc);
+
+                                        // In case there are messages that were sent to server before this one,
+                                        // move it to the end of the list.
+                                        // adapter.moveItemToEndOfList(not_on_server_indices.get(0));
+
+                                        listViewMessages.setAdapter(listViewMessages.getAdapter());
+                                        not_on_server_indices.remove(0);
+                                        Play_Song_in_message();
+                                    }
+                                });
+                            } else {
+                                final MessageAdapter.MessageItem msgItem = new MessageAdapter.MessageItem(message_id, user_id, msg_username, message_contents, datetimeutc);
+
+                                ChatActivity.this.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        adapter.addItem(msgItem);
+                                        Play_Song_in_message();
+                                    }
+                                });
+                            }
+
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+
+      }
+    };
+
 
 
 

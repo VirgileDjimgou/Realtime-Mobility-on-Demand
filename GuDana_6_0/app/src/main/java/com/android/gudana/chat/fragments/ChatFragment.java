@@ -159,7 +159,7 @@ public class ChatFragment extends Fragment implements ContactsAdapter.ContactsAd
 
     private void getContactList() {
         ContentResolver cr = getActivity().getContentResolver();
-        Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
+         Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
                 null, null, null, null);
 
         contactList.clear();
