@@ -875,7 +875,7 @@ public class ChatActivity extends AppCompatActivity {
 
             // get all  Raw from Table   ...
             //Cursor  cursor = live_location.rawQuery("select * from table",null);
-            List<message> data = message_db.getAllMessage();
+            List<message> data = message_db.getAllMessage(Integer.toString(room_id), room_uid);
             for(message msg : data){
                 System.out.println("message on local db  :"+msg);
 

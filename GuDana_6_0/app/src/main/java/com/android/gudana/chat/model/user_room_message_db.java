@@ -86,11 +86,31 @@ public class user_room_message_db extends SQLiteOpenHelper {
 
     }
 
+    public void resetDB() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        // query to obtain the names of all tables in your database
+        Cursor c = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
+        List<String> tables = new ArrayList<>();
 
-    public List<message> getAllMessage(){
+        // iterate over the result set, adding every table name to a list
+        while (c.moveToNext()) {
+            tables.add(c.getString(0));
+        }
+
+        // call DROP TABLE on every table name
+        for (String table : tables) {
+            String dropQuery = "DROP TABLE IF EXISTS " + table;
+            db.execSQL(dropQuery);
+        }
+    }
+
+
+    public List<message> getAllMessage(String room_id , String room_uid){
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("select * from " + this.Table_room_message, null);
+        //Cursor cursor = db.rawQuery("select * from " + this.Table_room_message, null);
+        //SELECT * FROM `messages` WHERE `id` = 1 AND `other_id` = 12
+        Cursor cursor = db.rawQuery("select * from " + this.Table_room_message+ " WHERE room_id = ? AND room_uid = ? ", new String[] {room_id,room_uid});
 
         List<message> fileAllLocation = new ArrayList<>();
         try{
