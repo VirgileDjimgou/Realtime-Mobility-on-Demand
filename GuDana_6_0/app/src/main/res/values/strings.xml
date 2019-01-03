@@ -73,9 +73,9 @@
     <string name="password_reset_message_sent">Message with instructions sent</string>
 
 
-    <string name="app_name_full">GuDana Messenger</string>
+    <string name="app_name_full">OkMboa Messenger</string>
     <string name="app_version">Version</string>
-    <string name="copyright">© 2014 – 2018 GuDana</string>
+    <string name="copyright">© 2014 – 2018 OkMboa</string>
     <string name="tinode">Tinode</string>
 
     <string name="login_hint">Login: alice, bob, carol, dave, eve, frank</string>
@@ -504,7 +504,7 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
 
-    <string name="Welcome_message">Welcome to GuDana</string>
+    <string name="Welcome_message">Welcome to OkMboa</string>
     <string name="register_message">Create a new Account</string>
     <string name="loading_name">Loading Name...</string>
 
@@ -534,7 +534,7 @@
     <string name="title_activity_weather">Weather</string>
 
     <!-- app. -->
-    <string name="package_name">com.GuDana.GuDana</string>
+    <string name="package_name">com.OkMboa.OkMboa</string>
     <string name="version_code">v1.6.5</string>
 
     <!-- keyword. -->
@@ -814,8 +814,8 @@
     <string name="send_email">Send email</string>
     <string name="limit">= ? LIMIT 1</string>
     <string name="limit1">= ? LIMIT 1</string>
-    <string name="app_name_weather">GuDana Weather</string>
-    <string name="app_name_planner">GuDana Planner</string>
+    <string name="app_name_weather">OkMboa Weather</string>
+    <string name="app_name_planner">OkMboa Planner</string>
     <string-array name="repeat_array">
         <item>Does not repeat</item>
         <item>Every hour</item>
@@ -841,7 +841,7 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="default_bio">Hey there, I am a GuDana user.</string>
+    <string name="default_bio">Hey there, I am a OkMboa user.</string>
     <string name="username">\@username</string>
     <string name="dummy_location">Getting location</string>
     <string name="loading_username">\@loading...</string>
@@ -866,7 +866,7 @@
 
     <string name="action_add_favourite">Add to your Favourites</string>
     <string name="action_play_next">Hide this Post</string>
-    <string name="backdrop_title">GuDana</string>
+    <string name="backdrop_title">OkMboa</string>
     <string name="backdrop_subtitle">Advertising with future Partners,... </string>
 
 
@@ -927,22 +927,22 @@
     <string name="menu_enable_disable_items">Disable Items</string>
 
 
-    <!-- ad GuDana  parameters   and string variables -->
+    <!-- ad OkMboa  parameters   and string variables -->
 
 
     <!-- Custom -->
-    <string name="service_name">GuDana voice Service</string>
-    <string name="addressbook_label">GuDana</string>
-    <string name="notification_title">GuDana</string>
+    <string name="service_name">OkMboa voice Service</string>
+    <string name="addressbook_label">OkMboa</string>
+    <string name="notification_title">OkMboa</string>
     <string name="wait_dialog_text">Starting up</string>
     <string name="notification_registered">%s registered</string>
     <string name="notification_register_failure">%s failed to register</string>
     <string name="tunnel_host"></string>
-    <string name="about_version">GuDana Android %s</string>
-    <string name="about_liblinphone_version">GuDana Core %s</string>
-    <string name="about_text">© 2010-2018 GuDana Communications</string>
-    <string name="about_link">www.GuDana.com</string>
-    <string name="sync_account_name">GuDana contacts</string>
+    <string name="about_version">OkMboa Android %s</string>
+    <string name="about_liblinphone_version">OkMboa Core %s</string>
+    <string name="about_text">© 2010-2018 OkMboa Communications</string>
+    <string name="about_link">www.OkMboa.com</string>
+    <string name="sync_account_name">OkMboa contacts</string>
     <string name="history_date_format">EEE, d MMM</string>
     <string name="history_detail_date_format">yyyy/MM/dd - HH:mm - </string>
     <string name="inapp_popup_date_format">yyyy/MM/dd</string>
@@ -981,7 +981,7 @@
     <string name="link_account">Link your account</string>
 
     <!-- Launch screen -->
-    <string name="app_description">GuDana Talk</string>
+    <string name="app_description">OkMboa Talk</string>
 
 
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBb7F-tT5vbdBNFsUdrr8kwPJh6SkEeUiI</string>
@@ -1252,7 +1252,7 @@
     <string name="result">Something will happen here&#8230;</string>
     <string name="subscribed">Subscribed to news topic</string>
     <string name="unsubscribed">Unsubscribed from news topic</string>
-    <string name="by">\"Developed by GuDana Technology\"</string>
+    <string name="by">\"Developed by OkMboa Technology\"</string>
     <string name="connect_phone">Start</string>
     <string name="email_connect">connect  with Email</string>
     <string name="dev_under">backed by Google Cloud Platform and FireBase</string>
@@ -1269,7 +1269,7 @@
     <string name="wait_your_response">waiting your response ....</string>
 
     <!-- Assistant -->
-    <string name="welcome">Welcome on GuDana</string>
+    <string name="welcome">Welcome on OkMboa</string>
     <string name="assistant">Assistant</string>
     <string name="assistant_create_account">Create account</string>
     <string name="assistant_link_account">Link account</string>
@@ -1278,21 +1278,21 @@
     <string name="assistant_finish">Finish configuration</string>
     <string name="assistant_validate_account_1">Your account is created. Please check your mails to validate your account:</string>
     <string name="assistant_validate_account_2">Once it is done, come back here and click on the button.</string>
-    <string name="assistant_welcome_desc">This assistant will help you register  and use your GuDana  account.</string>
-    <string name="assistant_linphone_login_desc">Please enter your username and password of GuDana account</string>
+    <string name="assistant_welcome_desc">This assistant will help you register  and use your OkMboa  account.</string>
+    <string name="assistant_linphone_login_desc">Please enter your username and password of OkMboa account</string>
     <string name="assistant_login_desc">Please enter your username and password with your SIP domain</string>
     <string name="assistant_remote_provisioning_desc">Please provide your provisioning URL</string>
     <string name="transport">Transport</string>
     <string name="assistant_create_account_phone_number_address">Your SIP address is</string>
-    <string name="assistant_login_linphone">Use GuDana account</string>
+    <string name="assistant_login_linphone">Use OkMboa account</string>
     <string name="assistant_login_generic">Continue on registration screen.</string>
     <string name="assistant_remote_provisioning">Fetch remote configuration</string>
     <string name="assistant_create_account_part_1">Please confirm your country code and enter your phone number</string>
     <string name="assistant_create_account_part_2">We have sent you a SMS with a validation code to your phone number:</string>
     <string name="assistant_create_account_part_3">To complete your phone number verification, please enter the 4 digit code below:\n</string>
-    <string name="assistant_create_account_part_email">Please enter an username, email and password for your GuDana account</string>
+    <string name="assistant_create_account_part_email">Please enter an username, email and password for your OkMboa account</string>
     <string name="assistant_display_name_optional">Display name (optional)</string>
-    <string name="assistant_linphone_account">Use your GuDana account</string>
+    <string name="assistant_linphone_account">Use your OkMboa account</string>
     <string name="assistant_generic_account">Use SIP account</string>
     <string name="assistant_remote_provisioning_title">Fetch remote configuration</string>
     <string name="assistant_fetch_apply">Fetch and apply</string>
@@ -1325,9 +1325,9 @@
     <string name="use_email_for_validation">Use email address for account validation</string>
     <string name="login_with_username">Use your username and password instead of your phone number</string>
     <string name="phone_number_info_title">What will my phone number be used for?</string>
-    <string name="phone_number_info_content">\nThanks to your phone number, your friends will find you more easily.\n\n You will see in your address book who is using GuDana and your friends will know that they can rach you on GuDana as well.\n</string>
-    <string name="phone_number_link_info_content">\nYour friends will find you more easily if you link your account to your phone number\n\nYou will see in your address book who is using GuDana and your friends will know that they can reach you on GuDana as well.\n</string>
-    <string name="phone_number_link_info_content_already_account">You can only use your phone number with one GuDana account.\n\nIf you had already linked your number to an other account but you prefer to use this one, simply link it now and your number will automatically be moved to this account.</string>
+    <string name="phone_number_info_content">\nThanks to your phone number, your friends will find you more easily.\n\n You will see in your address book who is using OkMboa and your friends will know that they can rach you on OkMboa as well.\n</string>
+    <string name="phone_number_link_info_content">\nYour friends will find you more easily if you link your account to your phone number\n\nYou will see in your address book who is using OkMboa and your friends will know that they can reach you on OkMboa as well.\n</string>
+    <string name="phone_number_link_info_content_already_account">You can only use your phone number with one OkMboa account.\n\nIf you had already linked your number to an other account but you prefer to use this one, simply link it now and your number will automatically be moved to this account.</string>
 
     <!-- Status -->
     <string name="invalid_email">Invalid email</string>
@@ -1404,8 +1404,8 @@
     <string name="quit">Quit</string>
 
     <!-- Call -->
-    <string name="incoming_call">GuDana Voice call</string>
-    <string name="outgoing_call">GuDana Voice  call</string>
+    <string name="incoming_call">OkMboa Voice call</string>
+    <string name="outgoing_call">OkMboa Voice  call</string>
     <string name="add_video_dialog">Your correspondent would like to turn on video</string>
     <string name="no_current_call">No active call</string>
     <string name="call_paused_by_remote">Your correspondent paused the call</string>
@@ -1629,7 +1629,7 @@
     <string name="content_description_search_contact">Search contact</string>
     <string name="content_description_search_country">Search country</string>
     <string name="content_description_all_contacts">All contacts</string>
-    <string name="content_description_linphone_contacts">GuDana contacts</string>
+    <string name="content_description_linphone_contacts">OkMboa contacts</string>
     <string name="content_description_call_direction">Call direction</string>
     <string name="content_description_all_calls">All calls</string>
     <string name="content_description_missed_calls">Missed calls</string>
@@ -1752,7 +1752,7 @@
     <string name="profil_status"><![CDATA[&quot;Welcome to my Profile!&quot;]]></string>
     <string name="slogan">Bigger.  Better.  Technology</string>
     <string name="name">Name</string>
-    <string name="see_all_users">all GuDana users</string>
+    <string name="see_all_users">all OkMboa users</string>
     <string name="not_implemented">Not Yet Implemented</string>
     <string name="type_your_message_hint">Type a message</string>
     <string name="transporter">Transporter Driver</string>
@@ -1986,7 +1986,7 @@ Curiosity might have killed the cat, but it is the driving force behind all inno
     <string name="like">gud tamtam</string>
     <string name="UserName_Post">UserName_Id</string>
     <string name="minus">bad tamtam</string>
-    <string name="GuDana_Apps">GuDana Apps</string>
+    <string name="GuDana_Apps">OkMboa Apps</string>
     <string name="requests">Requests</string>
     <string name="service_not_available">We are sorry. The service you requested is currently unavailable on your location . Please try again later.</string>
     <string name="your_feeds">your Feeds</string>

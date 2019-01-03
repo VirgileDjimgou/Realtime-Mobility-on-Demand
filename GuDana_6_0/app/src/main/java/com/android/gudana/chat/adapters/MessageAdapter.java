@@ -583,18 +583,27 @@ public class MessageAdapter extends BaseAdapter {
                 detailsLinearLayoutParams.setMargins(0, 0, 32, 32);
                 messageViewHolder.detailsText.setLayoutParams(detailsLinearLayoutParams);
                 if (messageViewHolder.bg instanceof ShapeDrawable) {
-                    ((ShapeDrawable) messageViewHolder.bg).getPaint().setColor(Color.parseColor("#FFDDDDDD"));
+                    ((ShapeDrawable) messageViewHolder.bg).getPaint().setColor(Color.parseColor("#731CFF"));
+                    messageViewHolder.detailsText.setTextColor(context.getResources().getColor( R.color.black));
+                    messageViewHolder.messageText.setTextColor(context.getResources().getColor( R.color.white));
                 } else if (messageViewHolder.bg instanceof GradientDrawable) {
-                    ((GradientDrawable) messageViewHolder.bg).setColor(Color.parseColor("#FFDDDDDD"));
+                    ((GradientDrawable) messageViewHolder.bg).setColor(Color.parseColor("#731CFF"));
+                    messageViewHolder.detailsText.setTextColor(context.getResources().getColor( R.color.black));
+                    messageViewHolder.messageText.setTextColor(context.getResources().getColor( R.color.white));
                 }
             } else {
                 messageViewHolder.message.setGravity(Gravity.START);
                 detailsLinearLayoutParams.setMargins(32, 0, 0, 32);
-                messageViewHolder.detailsText.setLayoutParams(detailsLinearLayoutParams);
+                messageViewHolder.detailsText.setLayoutParams(detailsLinearLayoutParams);  // initial color "#FFDDDDDD"
                 if (messageViewHolder.bg instanceof ShapeDrawable) {
-                    ((ShapeDrawable) messageViewHolder.bg).getPaint().setColor(Color.parseColor("#FFFFFFFF"));
+                    ((ShapeDrawable) messageViewHolder.bg).getPaint().setColor(Color.parseColor("#FFFFFF"));
+
+                    messageViewHolder.detailsText.setTextColor(context.getResources().getColor( R.color.black));
+                    messageViewHolder.messageText.setTextColor(context.getResources().getColor( R.color.black));
                 } else if (messageViewHolder.bg instanceof GradientDrawable) {
-                    ((GradientDrawable) messageViewHolder.bg).setColor(Color.parseColor("#FFFFFFFF"));
+                    ((GradientDrawable) messageViewHolder.bg).setColor(Color.parseColor("#FFFFFF"));
+                    messageViewHolder.detailsText.setTextColor(context.getResources().getColor( R.color.black));
+                    messageViewHolder.messageText.setTextColor(context.getResources().getColor( R.color.black));
                 }
             }
 

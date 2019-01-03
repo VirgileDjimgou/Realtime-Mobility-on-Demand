@@ -45,6 +45,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.gudana.BootNavigation.BaseActivity;
 // import com.android.gudana.apprtc.CallIncomingActivity_rtc;
+import com.android.gudana.BootNavigation.providers.CustomBadgeProvider;
 import com.android.gudana.apprtc.linphone.LinphoneManager;
 import com.android.gudana.chat.activities.MenuActivity;
 import com.android.gudana.chat.fragments.ChatFragment;
@@ -105,6 +106,7 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 import it.sephiroth.android.library.bottomnavigation.BadgeProvider;
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
+import it.sephiroth.android.library.bottomnavigation.FloatingActionButtonBehavior;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -132,7 +134,8 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
 
     private String username_chat, session;
     private int user_id = -1;
-    static Fragment roomsFragment , ChatFragment ,Friends_Contact_Fragment ;
+    public static Fragment roomsFragment   ,Friends_Contact_Fragment ;
+    public static  ChatFragment ChatFragment;
     Fragment friendsListFragment;
     private Intent intent;
     public CoordinatorLayout coordinatorLayout;
@@ -324,9 +327,9 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        askPermission();
+        //askPermission();
         FirebaseApp.initializeApp(this);
-        askPermission();
+        //askPermission();
         // set offline capiblities    ...
         try{
             askPermission();
@@ -389,7 +392,8 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
         activity=this;
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle("OkMboa");
+        toolbar.setTitle(R.string.app_name);
+        toolbar.setTitleTextColor(getResources().getColor(R.color.purple));
 
             getSupportActionBar().setTitle("OkMboa");
         } catch (Exception e) {
@@ -608,8 +612,10 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
         if (null == savedInstanceState) {
             getBottomNavigation().setDefaultSelectedIndex(0);
             final BadgeProvider provider = getBottomNavigation().getBadgeProvider();
-            provider.show(R.id.bbn_item3);
-            provider.show(R.id.bbn_item4);
+            //final CustomBadgeProvider provider = (CustomBadgeProvider) getBottomNavigation().getBadgeProvider();
+
+            //provider.show(R.id.bbn_item3);
+            provider.show(R.id.bbn_item5);
         }
     }
 
@@ -617,7 +623,7 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
         final FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         if (null != floatingActionButton) {
 
-            /*
+
             if (hasTranslucentNavigation()) {
                 final ViewGroup.LayoutParams params = floatingActionButton.getLayoutParams();
                 if (CoordinatorLayout.LayoutParams.class.isInstance(params)) {
@@ -627,7 +633,7 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
                     }
                 }
             }
-            */
+
         }
 
         final ViewPager viewPager = getViewPager();
@@ -668,6 +674,21 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
         }else{
             navigation.inflateMenu(R.menu.bottombar_menu_5items);
         }
+
+
+
+        int selectedIndex = getBottomNavigation().getSelectedIndex() + 1;
+        final int totalCount = getBottomNavigation().getMenuItemCount();
+
+        if (selectedIndex >= totalCount) {
+            selectedIndex = 0;
+        }
+
+        final int itemId = getBottomNavigation().getMenuItemId(selectedIndex);
+
+        BadgeProvider provider = (BadgeProvider) getBottomNavigation().getBadgeProvider();
+
+
     }
 
 

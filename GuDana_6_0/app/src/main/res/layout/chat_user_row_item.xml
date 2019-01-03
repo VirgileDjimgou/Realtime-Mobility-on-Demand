@@ -26,12 +26,53 @@
         android:textSize="@dimen/contact_name" />
 
     <TextView
-        android:id="@+id/phone"
+        android:id="@+id/last_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/name"
         android:layout_toRightOf="@id/thumbnail"
         android:textColor="@color/contact_number"
+        android:text="last received  message"
         android:textSize="@dimen/contact_number" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/last_message"
+        android:layout_alignParentEnd="true"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/unread_messages"
+            android:visibility="visible"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:text="0"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/white"
+            android:background="@drawable/rounded_textview"
+            android:textSize="16dp" />
+
+
+        <TextView
+            android:id="@+id/time_last_unread_messages"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/unread_messages"
+            android:layout_alignParentEnd="true"
+            android:gravity="bottom"
+            android:layout_gravity="center_horizontal"
+            android:text=""
+            android:textColor="@color/black"
+            android:textSize="11dp"
+            android:visibility="visible" />
+
+    </LinearLayout>
+
+
+
+
 
 </RelativeLayout>

@@ -34,6 +34,9 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import es.dmoral.toasty.Toasty;
 
@@ -73,6 +76,8 @@ public class ChatFragment extends Fragment implements ContactsAdapter.ContactsAd
     LinearLayout  new_contact;
     LinearLayout new_room;
     public static  String member_user_id =  "fakemenber_uid_hkhjjhk_jhgjhgj6546546fhfg676546utuh65764";
+    public  static  int global_number_unread_message = 0;
+    private Timer myTimer;
 
 
     View mView;
@@ -126,6 +131,7 @@ public class ChatFragment extends Fragment implements ContactsAdapter.ContactsAd
         menu_chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Increment_unread_message("0000", "456", "tets message");
                 Intent ContactListActivity = new Intent(getActivity(), com.android.gudana.chat.recyclerviewsearch.ContactListActivity.class);
                 startActivity(ContactListActivity);
             }
@@ -133,6 +139,90 @@ public class ChatFragment extends Fragment implements ContactsAdapter.ContactsAd
 
         //fetchAllContact();
         return view;
+    }
+
+    public void TimerMethod(Map<String, String> data)
+    {
+        //This method is called directly by the timer
+        //and runs in the same thread as the timer.
+
+        //We call the method that will work with the UI
+        //through the runOnUiThread method.
+        getActivity().runOnUiThread(update_Chat_read_message);
+    }
+
+
+    public Runnable update_Chat_read_message = new Runnable() {
+        public void run() {
+            //Increment_unread_message("0000", "456", "tets message");
+            //This method runs in the same thread as the UI.
+
+            //Do something to the UI thread here
+
+        }
+    };
+
+
+    public  void Update_ui_Chat(final Map<String, String> data){
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+
+                String FCM_ICON_SENDER = "picture";
+                String FCM_name_Sender = "SenderName";
+                String FCM_message_sender = "body";
+                String fcm_msg = "msg";
+                String CHANNEL_NAME = "FCM";
+                String CHANNEL_DESC = "Xshaka Cloud Messaging";
+                String senderName = "";
+                String  MessageSended = "";
+                String msg = "";
+                String TimeSend = "";
+                String senderID = "";
+
+                String picture_url = data.get(FCM_ICON_SENDER);
+                senderName = data.get(FCM_name_Sender);
+                MessageSended = data.get(FCM_message_sender);
+                msg = data.get(fcm_msg);
+                senderID = data.get("SenderID");
+                TimeSend = data.get("TimeSend");
+                String Room_id_received = data.get("Room_id");
+
+                //jData.put("Room_id", Room_Call_ID);
+
+                for (ViewFriends row : contactList) {
+                    if(Integer.toString(row.getRoom_id()).equalsIgnoreCase(Room_id_received) ){
+                        final String[] type_of_message = MessageSended.split(ChatActivity.splitter_pattern_message);
+                        if(type_of_message !=null && type_of_message[0] != null && type_of_message.length >1 ) {
+
+                            if (type_of_message[0].equalsIgnoreCase(ChatActivity.Type_Text)) {
+                                row.setLast_message(type_of_message[1]);
+                            }else if(type_of_message[0].equalsIgnoreCase(ChatActivity.Type_image)){
+                                row.setLast_message(ChatActivity.Type_image);
+                            }
+                            else if(type_of_message[0].equalsIgnoreCase(ChatActivity.Type_Doc)){
+                                row.setLast_message(ChatActivity.Type_Doc);
+                            }
+                            else if(type_of_message[0].equalsIgnoreCase(ChatActivity.Type_map)){
+                                row.setLast_message(ChatActivity.Type_map);
+                            }
+                            else if(type_of_message[0].equalsIgnoreCase(ChatActivity.Type_voice)){
+                                row.setLast_message(ChatActivity.Type_voice);
+                            }
+                            else if(type_of_message[0].equalsIgnoreCase(ChatActivity.Type_live_location)){
+                                row.setLast_message(ChatActivity.Type_live_location);
+                            }
+                        }
+                        row.setTime_lastmessage(TimeSend);
+                        row.setNumber_of_unread_message(row.getNumber_of_unread_message() + 1);
+                        mAdapter.notifyDataSetChanged();
+                    }
+
+                    //row.getRoom_id();
+
+                }
+
+            }
+        });
     }
 
 
@@ -187,6 +277,7 @@ public class ChatFragment extends Fragment implements ContactsAdapter.ContactsAd
                                     users_firestore.setRoom_id(room_id);
                                     users_firestore.setRoom_uid(room_uid);
                                     users_firestore.setId(id);
+                                    users_firestore.setLast_message("blalala");
                                     //usersList.add(users);
                                     // usersAdapter.notifyDataSetChanged();
                                     getActivity().runOnUiThread(new Runnable() {
@@ -215,6 +306,32 @@ public class ChatFragment extends Fragment implements ContactsAdapter.ContactsAd
 
 
         mAdapter.notifyDataSetChanged();
+        // start timer
+
+        myTimer = new Timer();
+        myTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                //TimerMethod();
+                // get all  the unread message  ...
+            }
+
+        }, 1000, 1000);
+    }
+
+
+    // increment unread message ...
+    public void  Increment_unread_message(String room_id , String room_uid , String last_message){
+
+        //final ViewFriends users_firestore = contactList.get(1);
+        //users_firestore.setLast_message(last_message);
+        contactList.get(1).setLast_message(last_message);
+        contactList.get(1).setNumber_of_unread_message(contactList.get(1).getNumber_of_unread_message() + global_number_unread_message );
+        mAdapter.notifyDataSetChanged();
+        //mAdapter.notifyDataSetChanged();
+
+        //Toast.makeText(ChatFragment.this.getContext(), "get last message "+users_firestore.getLast_message(), Toast.LENGTH_SHORT).show();
+
     }
 
 
@@ -222,6 +339,10 @@ public class ChatFragment extends Fragment implements ContactsAdapter.ContactsAd
     public void onContactSelected(ViewFriends contact) {
 
         if(contact.getRoom_id()!= -1){
+
+            // reset  unreda message this Item
+            contact.setNumber_of_unread_message(0);
+            mAdapter.notifyDataSetChanged();
 
             Intent intent = new Intent(ChatFragment.this.getContext(), ChatActivity.class);
             intent.putExtra("room_id", contact.getRoom_id());

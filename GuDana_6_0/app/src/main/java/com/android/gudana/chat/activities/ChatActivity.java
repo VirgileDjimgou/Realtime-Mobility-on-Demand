@@ -220,6 +220,7 @@ public class ChatActivity extends AppCompatActivity {
     private String mFileName = null;
     private static final String LOG_TAG = "Record_log";
     private ValueEventListener mValueEventListener;
+    private int goto_position=1;
 
     //Audio Runtime Permissions
     private boolean permissionToRecordAccepted = false;
@@ -327,6 +328,9 @@ public class ChatActivity extends AppCompatActivity {
     private String token_id, image_url;
     private FirebaseFirestore mFirestore;
     private int Lastmsg_Id;
+    private ImageView back_bottom;
+    private TextView room_name_textview , usre_infos;
+    private CircleImageView pic_profile;
 
     public static void startActivity(Context context){
         Intent intent = new Intent(context,ChatActivity.class);
@@ -412,7 +416,14 @@ public class ChatActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         // toolbar fancy stuff
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(room_name);
+        //getSupportActionBar().setTitle(room_name);
+
+        room_name_textview = (TextView) findViewById(R.id.room_name);
+        room_name_textview.setText(room_name);
+
+
+        pic_profile = (CircleImageView) findViewById(R.id.pic_profile);
+        usre_infos = (TextView) findViewById(R.id.infos_user) ;
 
         // init sqlite helper
         message_db = new user_room_message_db(ChatActivity.this);
@@ -420,7 +431,7 @@ public class ChatActivity extends AppCompatActivity {
         mediaPlayer_song_out = MediaPlayer.create(ChatActivity.this, R.raw.stairs);
         mediaPlayer_song_in = MediaPlayer.create(ChatActivity.this, R.raw.relentless);
 
-        /*
+
         ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {
@@ -441,8 +452,6 @@ public class ChatActivity extends AppCompatActivity {
 
             actionBar.setCustomView(v);
         }
-
-        */
 
 
         try {
@@ -489,7 +498,6 @@ public class ChatActivity extends AppCompatActivity {
         first_message_history_lock = true;
 
         listViewMessages = (ListView) findViewById(R.id.listView_messages);
-        messageEditText = (EmojiconEditText) findViewById(R.id.txt_message);
 
         footerView = (LinearLayout) findViewById(R.id.layout_typing);
         footerView.setVisibility(View.GONE);
@@ -509,8 +517,15 @@ public class ChatActivity extends AppCompatActivity {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                goto_position = totalItemCount;
                 if (adapter.getCount() == 0) {
                     return;
+                }
+                //System.out.println("first : " + Integer.toString(firstVisibleItem - firstVisibleItem) + "  visible : " + Integer.toString(visibleItemCount) + "third  :" + Integer.toString(totalItemCount));
+                if((totalItemCount - firstVisibleItem)  >25){
+                    back_bottom.setVisibility(View.VISIBLE);
+                }else{
+                    back_bottom.setVisibility(View.GONE);
                 }
 
                 if (firstVisibleItem == 0) {
@@ -521,19 +536,8 @@ public class ChatActivity extends AppCompatActivity {
                         // reached the top:
                         Log.d("ChatActivity", "first_message_history_lock=" + first_message_history_lock);
                         if (!first_message_history_lock) {
-                            try {
-                                JSONObject json = new JSONObject(info.toString());
-                                if(adapter.getCount() > 0) {
-                                    json.put("before_msg_id", adapter.getFirstID());
-                                    json.put("after_msg_id", adapter.getLastID());
-                                }
 
-                                // get message  on local datasore  sqlite  ...
-                                //mSocket.emit("fetch messages", json);
-                                first_message_history_lock = true;
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+
                         }
                     }
                 }
@@ -545,8 +549,19 @@ public class ChatActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+
+        back_bottom = (ImageView) findViewById(R.id.back_bottom);
+        back_bottom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listViewMessages.smoothScrollToPosition(goto_position);
+            }
+        });
+
         btnSend = (Button) findViewById(R.id.btn_send);
 
+        messageEditText = (EmojiconEditText) findViewById(R.id.txt_message);
+        messageEditText = (EmojiconEditText) findViewById(R.id.txt_message);
         messageEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -582,21 +597,6 @@ public class ChatActivity extends AppCompatActivity {
                 if (!msg.isEmpty()) {
                     // define type of message ... extrem important
                     stype_of_message = Type_Text;
-                    try {
-                        System.out.println("Send Notification");
-                        FCM_Message_Sender.sendWithOtherThread("token",
-                                TokenFCM_OtherUser,
-                                "Friend Request",
-                                FirebaseAuth.getInstance().getUid(),
-                                room_name,
-                                image_url,
-                                getDateAndTime(),
-                                "room_disable",
-                                msg.trim());
-
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
 
                     new SendMessageTask(msg.trim()).execute();
                     // send notification parraleli
@@ -770,6 +770,13 @@ public class ChatActivity extends AppCompatActivity {
                         //friend_email = documentSnapshot.getString("email");
                         //friend_image = documentSnapshot.getString("image");
                         TokenFCM_OtherUser = token_id = documentSnapshot.getString("token_id");
+                        String friend_image = documentSnapshot.getString("image");
+
+                        Glide.with(ChatActivity.this)
+                                .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.default_user_art_g_2))
+                                .load(friend_image)
+                                .into(pic_profile);
+                       //pic_profile ...
 
                     }
                 });
@@ -833,7 +840,7 @@ public class ChatActivity extends AppCompatActivity {
     public void onDestroy() {
         try{
 
-
+            Config.Chat_Activity_running = false;
             mSocket.emit("leave", info);
             mSocket.disconnect();
             setListeningToEvents(false);
@@ -844,6 +851,30 @@ public class ChatActivity extends AppCompatActivity {
         Log.i(TAG, "Destroying...");
 
         super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        Config.Chat_Activity_running = false;
+        super.onPause();
+    }
+
+    @Override
+    protected void onStart() {
+        Config.Chat_Activity_running = true;
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        Config.Chat_Activity_running = false;
+        super.onStop();
+    }
+
+    @Override
+    protected void onResume() {
+        Config.Chat_Activity_running = true;
+        super.onResume();
     }
 
     private void setListeningToEvents(boolean start_listening) {
@@ -1506,9 +1537,11 @@ public class ChatActivity extends AppCompatActivity {
 
     private class SendMessageTask extends AsyncTask<String, String, Void> {
         private final String message_contents;
+        //private final String message_raw;
 
         public SendMessageTask(String message_contents) {
             this.message_contents = stype_of_message + splitter_pattern_message + message_contents;
+            // this.message_raw = message_contents;
         }
 
         @Override
@@ -1532,6 +1565,21 @@ public class ChatActivity extends AppCompatActivity {
             Log.i("socket", "sent message to server");
             final MessageAdapter.MessageItem msgItem = new MessageAdapter.MessageItem(user_id, username, message_contents);
             not_on_server_indices.add(adapter.addItem(msgItem));
+            try {
+                System.out.println("Send Notification");
+                FCM_Message_Sender.sendWithOtherThread("token",
+                        TokenFCM_OtherUser,
+                        "Message",
+                        FirebaseAuth.getInstance().getUid(),
+                        room_name,
+                        image_url,
+                        getDateAndTime(),
+                        Integer.toString(room_id),
+                        this.message_contents );
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             //Play_Song_out_message();
             // send  firebase cloud notification
         }

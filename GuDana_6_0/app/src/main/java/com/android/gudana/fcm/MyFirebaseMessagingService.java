@@ -13,6 +13,7 @@ import android.media.RingtoneManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -24,6 +25,7 @@ import com.android.gudana.apprtc.CallIncomingActivity;
 import com.android.gudana.chat.activities.ChatActivity;
 import com.android.gudana.hify.ui.activities.MainActivity_GuDDana;
 import com.android.gudana.hify.utils.Config;
+import com.android.gudana.service.MainActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -133,23 +135,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 				if(notificationTitle.equals("Message"))
 				{
-					// If it's a message notification
-					// Checking if CreateGroupChatActivity is not open or if its, it should have a different userId from current
-
-					/*
-					if(Config.Chat_Activity_running!=false )
-					{
-						//sendNotification( data);
-						sendNotification_unreadMessage(data);
-						//setDataForSimpleNotification();
-						//setDataForNotificationWithActionButton();
-
-					}
-					*/
-
 					if(!Config.Chat_Activity_running || Config.Chat_Activity_running&& !Config.Chat_Activity_otherUserId.equals(senderID))
 					{
-						//sendNotification( data);
+
+
+						MainActivity_GuDDana.ChatFragment.global_number_unread_message ++;
+						//MainActivity_GuDDana.ChatFragment.TimerMethod(data);
+						MainActivity_GuDDana.ChatFragment.Update_ui_Chat(data);
 						sendNotification_unreadMessage(data);
 						//setDataForSimpleNotification();
 						//setDataForNotificationWithActionButton();
@@ -304,6 +296,29 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 			msg = data.get(fcm_msg);
 			senderID = data.get("SenderID");
 			TimeSend = data.get("TimeSend");
+
+			// parse message sended
+			final String[] type_of_message = MessageSended.split(ChatActivity.splitter_pattern_message);
+			if(type_of_message !=null && type_of_message[0] != null && type_of_message.length >1 ) {
+
+				if (type_of_message[0].equalsIgnoreCase(ChatActivity.Type_Text)) {
+					MessageSended = type_of_message[1];
+				}else if(type_of_message[0].equalsIgnoreCase(ChatActivity.Type_image)){
+					MessageSended = ChatActivity.Type_image;
+				}
+				else if(type_of_message[0].equalsIgnoreCase(ChatActivity.Type_Doc)){
+					MessageSended = ChatActivity.Type_Doc;
+				}
+				else if(type_of_message[0].equalsIgnoreCase(ChatActivity.Type_map)){
+					MessageSended = ChatActivity.Type_map;
+				}
+				else if(type_of_message[0].equalsIgnoreCase(ChatActivity.Type_voice)){
+					MessageSended = ChatActivity.Type_voice;
+				}
+				else if(type_of_message[0].equalsIgnoreCase(ChatActivity.Type_live_location)){
+					MessageSended =ChatActivity.Type_live_location;
+				}
+			}
 
 			// added
 
@@ -541,20 +556,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 				sendNotification(datal);
 
-				/*
-				return Glide.with(context)
-						.asBitmap()
-						.load(url)
-						.apply(RequestOptions.circleCropTransform())
-						.into(100,100).get();
-
-				return Glide.with(context)
-						.load(url)
-						.asBitmap()
-						.into(256, 256)
-						.get();
-
-						*/
 
 			} catch (Exception e) {
 				e.printStackTrace();

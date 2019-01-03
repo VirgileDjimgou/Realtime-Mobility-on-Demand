@@ -281,7 +281,7 @@ public class LoginActivity extends AppCompatActivity  implements Validator.Valid
                         if (task.getResult().getUser().isEmailVerified()) {
 
                             final String token_id = FirebaseInstanceId.getInstance().getToken();
-                            Log.i("TOKEN", token_id);
+                            //Log.i("TOKEN", token_id);
                             final String current_id = task.getResult().getUser().getUid();
 
                             mFirestore.collection("Users").document(current_id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {

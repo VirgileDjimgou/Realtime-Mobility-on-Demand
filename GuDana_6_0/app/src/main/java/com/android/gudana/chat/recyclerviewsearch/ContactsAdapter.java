@@ -29,14 +29,17 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
     private ContactsAdapterListener listener;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView name, phone;
+        public TextView name, last_message , unread_messages, time_last_unread_messages;
         public ImageView thumbnail;
+
 
         public MyViewHolder(View view) {
             super(view);
             name = view.findViewById(R.id.name);
-            phone = view.findViewById(R.id.phone);
+            last_message = view.findViewById(R.id.last_message);
             thumbnail = view.findViewById(R.id.thumbnail);
+            unread_messages = view.findViewById(R.id.unread_messages);
+            time_last_unread_messages = view.findViewById(R.id.time_last_unread_messages);
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -69,7 +72,14 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         final ViewFriends contact = contactListFiltered.get(position);
         holder.name.setText(contact.getName());
-        holder.phone.setText(contact.getPhone());
+        holder.last_message.setText(contact.getLast_message());
+        holder.unread_messages.setText(Integer.toString(contact.getNumber_of_unread_message()));
+        holder.time_last_unread_messages.setText(contact.getTime_lastmessage());
+        if(contact.getNumber_of_unread_message() > 0){
+            holder.unread_messages.setVisibility(View.VISIBLE);
+        }else {
+            holder.unread_messages.setVisibility(View.GONE);
+        }
 
         Glide.with(context)
                 .load(contact.getImage())

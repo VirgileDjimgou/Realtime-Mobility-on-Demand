@@ -6,11 +6,21 @@ package com.android.gudana.hify.models;
 
 public class ViewFriends {
 
-    private String id,username, name, image, email, token_id , phone;
+    private String id;
+    private String username;
+    private String name;
+    private String image;
+    private String email;
+    private String token_id;
+    private String phone;
+
+    private String last_message = "";
 
     // second constructto r   ..
     private String room_uid,type_id;
-    private  int room_id;
+    private int room_id;
+    private int number_of_unread_message = 0;
+    private String time_lastmessage= "";
 
 
 
@@ -31,6 +41,30 @@ public class ViewFriends {
         this.room_uid = room_uid;
         this.type_id = type_id;
         this.room_id = room_id;
+    }
+
+    public String getTime_lastmessage() {
+        return time_lastmessage;
+    }
+
+    public void setTime_lastmessage(String time_lastmessage) {
+        this.time_lastmessage = time_lastmessage;
+    }
+
+    public int getNumber_of_unread_message() {
+        return number_of_unread_message;
+    }
+
+    public void setNumber_of_unread_message(int number_of_unread_message) {
+        this.number_of_unread_message = number_of_unread_message;
+    }
+
+    public String getLast_message() {
+        return last_message;
+    }
+
+    public void setLast_message(String last_message) {
+        this.last_message = last_message;
     }
 
     public String getRoom_uid() {

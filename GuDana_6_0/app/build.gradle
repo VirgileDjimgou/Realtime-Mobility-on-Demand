@@ -223,6 +223,7 @@ dependencies {
 
     // import bottom navigation  ...
     implementation 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:2.0.1-rc1'
+    //implementation 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:3.0.0'
 
     // boom menu
     implementation 'com.nightonke:boommenu:2.1.1'
