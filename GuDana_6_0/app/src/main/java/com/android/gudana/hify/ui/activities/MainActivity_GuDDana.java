@@ -2,10 +2,20 @@ package com.android.gudana.hify.ui.activities;
 
 import android.Manifest;
 import android.app.ActivityManager;
-import android.support.annotation.IdRes;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
+
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+
+import com.android.gudana.chatapp.fragments.CallFragment;
+import com.android.gudana.hify.adapters.BottomBarAdapter;
+import com.android.gudana.hify.adapters.NoSwipePager;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationViewPager;
+import com.aurelhubert.ahbottomnavigation.notification.AHNotification;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.fragment.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -13,26 +23,29 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.TypedArray;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetDialog;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.snackbar.Snackbar;
+
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.core.content.ContextCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
+
+import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,14 +56,10 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.android.gudana.BootNavigation.BaseActivity;
-// import com.android.gudana.apprtc.CallIncomingActivity_rtc;
-import com.android.gudana.BootNavigation.providers.CustomBadgeProvider;
 import com.android.gudana.apprtc.linphone.LinphoneManager;
 import com.android.gudana.chat.activities.MenuActivity;
 import com.android.gudana.chat.fragments.ChatFragment;
 import com.android.gudana.chat.fragments.Friends_Contact_Fragment;
-import com.android.gudana.chatapp.fragments.CallFragment;
 import com.android.gudana.gpslocationtracking.LocationTrack;
 import com.android.gudana.hify.adapters.DrawerAdapter;
 import com.android.gudana.hify.models.DrawerItem;
@@ -59,16 +68,14 @@ import com.android.gudana.hify.ui.activities.account.StartLoginActivity;
 import com.android.gudana.hify.ui.activities.post.PostImage;
 import com.android.gudana.hify.ui.activities.post.PostText;
 import com.android.gudana.hify.ui.fragment.Dashboard;
-import com.android.gudana.hify.ui.fragment.Friends;
 import com.android.gudana.hify.ui.fragment.FriendsFragment;
 import com.android.gudana.hify.ui.fragment.ProfileFragment;
 import com.android.gudana.hify.utils.Config;
 import com.android.gudana.hify.utils.NetworkUtil;
+import com.android.gudana.hify.utils.Test_RestHttp_Server_Activity;
 import com.android.gudana.hify.utils.database.UserHelper;
 import com.android.gudana.R;
-// import com.android.gudana.linphone.DialerFragment;
 import com.android.gudana.hify.utils.database.live_location_sharing_db;
-import com.android.gudana.hify.utils.random_Utils;
 import com.android.gudana.service.SensorService;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -85,6 +92,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -97,6 +106,7 @@ import com.yarolegovich.slidingrootnav.SlidingRootNav;
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -104,15 +114,11 @@ import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import it.sephiroth.android.library.bottomnavigation.BadgeProvider;
-import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
-import it.sephiroth.android.library.bottomnavigation.FloatingActionButtonBehavior;
+import es.dmoral.toasty.Toasty;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-import static android.util.Log.INFO;
-import static android.util.Log.VERBOSE;
-import static it.sephiroth.android.library.bottomnavigation.MiscUtils.log;
+import static com.android.gudana.hify.utils.Config.cacheExpiration;
 
 import com.android.gudana.chat.ChatApplication;
 import com.android.gudana.chat.fragments.FriendsListFragment;
@@ -128,29 +134,34 @@ import org.json.JSONObject;
  * Created by amsavarthan on 29/3/18.
  */
 
-public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.OnItemSelectedListener ,
-        BottomNavigation.OnMenuItemSelectionListener{
+public class MainActivity_GuDDana extends AppCompatActivity implements DrawerAdapter.OnItemSelectedListener {
 
 
     private String username_chat, session;
     private int user_id = -1;
     public static Fragment roomsFragment   ,Friends_Contact_Fragment ;
-    public static  ChatFragment ChatFragment;
+    public static ChatFragment ChatFragment;
+    public static Dashboard Dashboard;
+    public static CallFragment CallFragment;
+    public static FriendsFragment FriendsFragment;
+    public  static  ProfileFragment ProfileFragment;
+
     Fragment friendsListFragment;
     private Intent intent;
     public CoordinatorLayout coordinatorLayout;
     ChatApplication chatApplication;
 
 
+    private final int[] colors = {R.color.bottomtab_0, R.color.bottomtab_1, R.color.bottomtab_2};
+    public static NoSwipePager viewPager;
+    public static AHBottomNavigation bottomNavigation;
+    public BottomBarAdapter pagerAdapter;
+    public static boolean notificationVisible = false;
 
-    // POS_DASHBOARD   CHAT  POS_SEND_FRIEND   POS_ABOUT  POS_LOGOUT
 
-    static final String TAG = com.android.gudana.BootNavigation.MainActivity.class.getSimpleName();
-    static final String FRAGMENT_CONTACTS = "contacts";
-    static final String FRAGMENT_EDIT_ACCOUNT = "edit_account";
-
-
-    private FirebaseFirestore mFirestore;
+    // notification  Item navigation ...
+    public static  Integer unreadChat = 0;
+    public static  Integer missedCall = 0;
 
     private static final int POS_DASHBOARD = 0;
     private static final int CHAT = 1 ;
@@ -181,6 +192,15 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
     private Fragment mCurrentFragment;
     LinphoneManager ViCall ;
 
+    // Remote Config keys
+    public static final String Server_MASTER = "Server_MASTER";
+    public static final String Server_BACKUP = "Server_BACKUP";
+    public static final String Server_Debug = "Server_Debug";
+
+    public static FirebaseRemoteConfig mFirebaseRemoteConfig;
+    public static TextView mWelcomeTextView;
+
+
     // variable for backroung service
 
     Intent mServiceIntent;
@@ -204,7 +224,7 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
                 if (status != NetworkUtil.NETWORK_STATUS_NOT_CONNECTED) {
                     performUploadTask();
                     try {
-                        Snackbar.make(findViewById(R.id.activity_main), "Syncing...", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(findViewById(R.id.CoordinatorLayout01), "Syncing...", Snackbar.LENGTH_LONG).show();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -281,35 +301,8 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
         }
     }
 
-    /*
 
-    @Override
-    public void onBackPressed() {
-        if(!toolbar.getTitle().toString().equals("Dashboard")){
 
-            toolbar.setTitle("Dashboard");
-            try {
-                getSupportActionBar().setTitle("Dashboard");
-            }catch (Exception e){
-                Log.e("Error",e.getMessage());
-            }
-
-            //this.invalidateOptionsMenu();
-            mState=true;
-            showFragment(new Dashboard());
-            if(slidingRootNav.isMenuOpened()) {
-                slidingRootNav.closeMenu(true);
-            }
-            adapter.setSelected(POS_DASHBOARD);
-
-        }else if(slidingRootNav.isMenuOpened()){
-            slidingRootNav.closeMenu(true);
-        }else{
-            super.onBackPressed();
-        }
-    }
-
-    */
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
@@ -329,18 +322,43 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
         super.onCreate(savedInstanceState);
         //askPermission();
         FirebaseApp.initializeApp(this);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+        }
         //askPermission();
         // set offline capiblities    ...
         try{
+
+
             askPermission();
             ctx = this;
+
+            boolean enabledTranslucentNavigation = true;
+            setTheme(enabledTranslucentNavigation ? R.style.AppTheme_TranslucentNavigation : R.style.AppTheme);
             setContentView(R.layout.hi_activity_main);
-            coordinatorLayout = (CoordinatorLayout) findViewById(R.id.activity_main);
+
+
+
+            CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                    .setDefaultFontPath("fonts/regular.ttf")
+                    .setFontAttrId(R.attr.fontPath)
+                    .build()
+            );
+
+
+
+            // enable translucid
+
+
+            coordinatorLayout = (CoordinatorLayout) findViewById(R.id.CoordinatorLayout01);
 
             FirebaseApp.initializeApp(MainActivity_GuDDana.this.getApplicationContext());
 
         }catch (Exception ex){
             ex.printStackTrace();
+        }finally {
+            askPermission();
         }
 
         // added
@@ -363,7 +381,29 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
         roomsFragment.setArguments(fragmentArguments);
         friendsListFragment.setArguments(fragmentArguments);
 
+        // set remote Config server ...
+        // Get Remote Config instance.
+        // [START get_remote_config_instance]
+        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+        // [END get_remote_config_instance]
 
+        // Create a Remote Config Setting to enable developer mode, which you can use to increase
+        // the number of fetches available per hour during development. See Best Practices in the
+        // README for more information.
+        // [START enable_dev_mode]
+        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+                .setDeveloperModeEnabled(true)
+                .build();
+        mFirebaseRemoteConfig.setConfigSettings(configSettings);
+        // [END enable_dev_mode]
+
+        // Set default Remote Config parameter values. An app uses the in-app default values, and
+        // when you need to adjust those defaults, you set an updated value for only the values you
+        // want to change in the Firebase console. See Best Practices in the README for more
+        // information.
+        // [START set_default_values]
+        // mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
+        // [END set_default_values]
 
         if(chatApplication.isLoggedIn() && intent.getBooleanExtra("returning user", false)) {
 
@@ -379,7 +419,7 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
         // end added  ...
         askPermission();
 
-        final ViewGroup root = (ViewGroup) findViewById(R.id.activity_main);
+        final ViewGroup root = (ViewGroup) findViewById(R.id.CoordinatorLayout01);
         final CoordinatorLayout coordinatorLayout;
         if (root instanceof CoordinatorLayout) {
             coordinatorLayout = (CoordinatorLayout) root;
@@ -401,36 +441,6 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
         }
 
         // add bottom OnCreate  ...
-
-        final int statusbarHeight = getStatusBarHeight();
-        final boolean translucentStatus = hasTranslucentStatusBar();
-        final boolean translucentNavigation = hasTranslucentNavigation();
-
-        log(TAG, VERBOSE, "translucentStatus: %b", translucentStatus);
-
-        if (translucentStatus) {
-            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) root.getLayoutParams();
-            params.topMargin = -statusbarHeight;
-
-            params = (ViewGroup.MarginLayoutParams) toolbar.getLayoutParams();
-            params.topMargin = statusbarHeight;
-        }
-
-        if (translucentNavigation) {
-            final ViewPager viewPager = getViewPager();
-            if (null != viewPager) {
-                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) viewPager.getLayoutParams();
-                params.bottomMargin = -getNavigationBarHeight();
-            }
-        }
-
-        initializeBottomNavigation(savedInstanceState);
-        initializeUI(savedInstanceState);
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/regular.ttf")
-                .setFontAttrId(R.attr.fontPath)
-                .build()
-        );
 
         try{
 
@@ -463,6 +473,7 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
             //this.finish();
 
         } else {
+
 
             mCurrentFragment = new Dashboard();
             //firebaseMessagingService();
@@ -511,6 +522,7 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
                     e.printStackTrace();
                 }
 
+                /*
                 mSensorService = new SensorService(getCtx());
                 mServiceIntent = new Intent(getCtx(), mSensorService.getClass());
 
@@ -518,6 +530,7 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
                 if (!isMyServiceRunning(mSensorService.getClass())) {
                     startService(mServiceIntent);
                 }
+                */
 
             } else {
                 // stop the service  locaion sharing
@@ -604,115 +617,247 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
 
         }
 
+        // setup   bottom navigation  ..
+
+        setupViewPager();
+        setupBottom_Navigation();
+
+        fetchServerConfig();
+
+        //test botification   ...
+        //IncNotification(1);
+    }
+
+    // get  server Config
+
+
+    private void setupBottom_Navigation(){
+        bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
+        setupBottomNavStyle();
+
+        //createFakeNotification();
+
+        addBottomNavigationItems();
+        bottomNavigation.setCurrentItem(0);
+
+
+        bottomNavigation.setTranslucentNavigationEnabled(true);
+        bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
+            @Override
+            public boolean onTabSelected(int position, boolean wasSelected) {
+//                fragment.updateColor(ContextCompat.getColor(MainActivity.this, colors[position]));
+
+                if (!wasSelected)
+                    viewPager.setCurrentItem(position);
+
+                // remove notification badge
+                int lastItemPos = bottomNavigation.getItemsCount() - 1;
+                if (notificationVisible && position == lastItemPos)
+                    bottomNavigation.setNotification(new AHNotification(), lastItemPos);
+
+                return true;
+            }
+        });
+
+    }
+
+    private void setupViewPager() {
+        // create test Fragment
+        viewPager = (NoSwipePager) findViewById(R.id.viewpager);
+        viewPager.setPagingEnabled(false);
+        pagerAdapter = new BottomBarAdapter(getSupportFragmentManager());
+
+        pagerAdapter.addFragments(new Dashboard());
+        pagerAdapter.addFragments(ChatFragment);
+        pagerAdapter.addFragments(new CallFragment());
+        pagerAdapter.addFragments(new FriendsFragment());
+        pagerAdapter.addFragments(new ProfileFragment());
+
+
+        viewPager.setAdapter(pagerAdapter);
+    }
+
+
+    public static void IncNotification(final Integer Item ) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(Item == 1){
+                    /// Chat Notification ...
+                    AHNotification notification = new AHNotification.Builder()
+                            .setText(Integer.toString(unreadChat))
+                            .setBackgroundColor(R.color.purple)
+                            .setTextColor(Color.WHITE)
+                            .build();
+                    // Adding notification to Chat item.
+
+                    bottomNavigation.setNotification(notification, Item);
+
+                    if(unreadChat >0){
+                        notificationVisible = true;
+
+                    }else {
+                        notificationVisible = false;
+                    }
+
+                }else if(Item == 2){
+                    // Call notification
+                    AHNotification notification = new AHNotification.Builder()
+                            .setText(Integer.toString(missedCall))
+                            .setBackgroundColor(Color.GREEN)
+                            .setTextColor(Color.WHITE)
+                            .build();
+                    // Adding notification to Chat item.
+
+                    bottomNavigation.setNotification(notification, Item);
+
+                    if( missedCall>0){
+                        notificationVisible = true;
+
+                    }else {
+                        notificationVisible = false;
+                    }
+
+                }
+            }
+        }, 1000);
+    }
+
+    private void DeccrementChatNotification() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                AHNotification notification = new AHNotification.Builder()
+                        .setText("1")
+                        .setBackgroundColor(Color.YELLOW)
+                        .setTextColor(Color.BLACK)
+                        .build();
+                // Adding notification to last item.
+
+                bottomNavigation.setNotification(notification, 0);
+
+                notificationVisible = true;
+            }
+        }, 1000);
+    }
+
+
+    /**
+     * Adds styling properties to {@link AHBottomNavigation}
+     */
+    private void setupBottomNavStyle() {
+        /*
+        Set Bottom Navigation colors. Accent color for active item,
+        Inactive color when its view is disabled.
+
+        Will not be visible if setColored(true) and default current item is set.
+         */
+        bottomNavigation.setDefaultBackgroundColor(Color.WHITE);
+        bottomNavigation.setAccentColor(fetchColor(R.color.colorAccentt));
+        bottomNavigation.setInactiveColor(fetchColor(R.color.black_overlay));
+
+        // Colors for selected (active) and non-selected items.
+        bottomNavigation.setColoredModeColors(R.color.white,
+                fetchColor(R.color.black_overlay));
+
+        //  Enables Reveal effect
+        // bottomNavigation.setColored(true);
+
+        //  Displays item Title always (for selected and non-selected items)
+        bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
+    }
+
+
+    /**
+     * Adds (items) {@link AHBottomNavigationItem} to {@link AHBottomNavigation}
+     * Also assigns a distinct color to each Bottom Navigation item, used for the color ripple.
+     */
+    private void addBottomNavigationItems() {
+        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.nav_home, R.drawable.ic_home_purple_24dp, colors[0]);
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.nav_chats, R.drawable.ic_chat_purple_24dp, colors[1]);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.nav_calls, R.drawable.ic_call_black_24dp, colors[2]);
+        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.nav_friends, R.drawable.ic_friend, colors[2]);
+        AHBottomNavigationItem item5 = new AHBottomNavigationItem(R.string.nav_calls, R.drawable.ic_person_white, colors[2]);
+
+
+        bottomNavigation.addItem(item1);
+        bottomNavigation.addItem(item2);
+        bottomNavigation.addItem(item3);
+        bottomNavigation.addItem(item4);
+        bottomNavigation.addItem(item5);
+    }
+
+
+    /**
+     * Simple facade to fetch color resource, so I avoid writing a huge line every time.
+     *
+     * @param color to fetch
+     * @return int color value.
+     */
+    private int fetchColor(@ColorRes int color) {
+        return ContextCompat.getColor(this, color);
+    }
+
+
+    /**
+     * Fetch a welcome message from the Remote Config service, and then activate it.
+     */
+    public  void fetchServerConfig() {
+        //mWelcomeTextView.setText(mFirebaseRemoteConfig.getString(LOADING_PHRASE_CONFIG_KEY));
+
+        // long cacheExpiration = 3600; // 1 hour in seconds.
+        // or  for Debug
+        ; // 30 seconds.
+
+
+        // If your app is using developer mode, cacheExpiration is set to 0, so each fetch will
+        // retrieve values from the service.
+        if (mFirebaseRemoteConfig.getInfo().getConfigSettings().isDeveloperModeEnabled()) {
+            cacheExpiration = 0;
+        }
+
+        // [START fetch_config_with_callback]
+        // cacheExpirationSeconds is set to cacheExpiration here, indicating the next fetch request
+        // will use fetch data from the Remote Config service, rather than cached parameter values,
+        // if cached parameter values are more than cacheExpiration seconds old.
+        // See Best Practices in the README for more information.
+        mFirebaseRemoteConfig.fetch(cacheExpiration)
+                .addOnCompleteListener(MainActivity_GuDDana.this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toasty.info(MainActivity_GuDDana.this, "Fetch Succeeded",
+                                    Toast.LENGTH_SHORT).show();
+
+                            // After config data is successfully fetched, it must be activated before newly fetched
+                            // values are returned.
+                            mFirebaseRemoteConfig.activateFetched();
+                            // [START get_config_values]
+                            String Server_MASTER_Adr = mFirebaseRemoteConfig.getString(Server_MASTER);
+                            String Server_BACKUP_Adr = mFirebaseRemoteConfig.getString(Server_BACKUP);
+                            String Media_Server = mFirebaseRemoteConfig.getString("Media_Server");
+                            //String Server_MASTER = mFirebaseRemoteConfig.getString(Server_MASTER);
+                            Config.Server_Adresse = Server_MASTER_Adr;
+                            Config.Media_Server = Media_Server;
+
+
+                            // File upload url (replace the ip with your server address)// 35.237.197.121
+                            Config.FILE_UPLOAD_URL = Media_Server.trim() + "/AndroidFileUpload/fileUpload.php";
+                            Config.IMAGES_UPLOAD_URL = Media_Server.trim() + "/AndroidFileUpload/Images_fileUpload.php";
+                            Config.VIDEOS_UPLOAD_URL = Media_Server.trim() + "/AndroidFileUpload/Videos_fileUpload.php";
+                            Config.URL_CHAT_SERVER = Server_MASTER_Adr.trim() +  ":5000";
+
+
+                        } else{
+                            Toasty.info(MainActivity_GuDDana.this, "get remote Config  failed  ..  chak your  Internet connection ", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+        // [END fetch_config_with_callback]
     }
 
     //##############################
 
-    protected void initializeBottomNavigation(final Bundle savedInstanceState) {
-        if (null == savedInstanceState) {
-            getBottomNavigation().setDefaultSelectedIndex(0);
-            final BadgeProvider provider = getBottomNavigation().getBadgeProvider();
-            //final CustomBadgeProvider provider = (CustomBadgeProvider) getBottomNavigation().getBadgeProvider();
-
-            //provider.show(R.id.bbn_item3);
-            provider.show(R.id.bbn_item5);
-        }
-    }
-
-    protected void initializeUI(final Bundle savedInstanceState) {
-        final FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
-        if (null != floatingActionButton) {
-
-
-            if (hasTranslucentNavigation()) {
-                final ViewGroup.LayoutParams params = floatingActionButton.getLayoutParams();
-                if (CoordinatorLayout.LayoutParams.class.isInstance(params)) {
-                    CoordinatorLayout.LayoutParams params1 = (CoordinatorLayout.LayoutParams) params;
-                    if (FloatingActionButtonBehavior.class.isInstance(params1.getBehavior())) {
-                        ((FloatingActionButtonBehavior) params1.getBehavior()).setNavigationBarHeight(getNavigationBarHeight());
-                    }
-                }
-            }
-
-        }
-
-        final ViewPager viewPager = getViewPager();
-        if (null != viewPager) {
-
-            getBottomNavigation().setOnMenuChangedListener(new BottomNavigation.OnMenuChangedListener() {
-                @Override
-                public void onMenuChanged(final BottomNavigation parent) {
-
-                    viewPager.setAdapter(new ViewPagerAdapter(MainActivity_GuDDana.this, parent.getMenuItemCount()));
-                    viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                        @Override
-                        public void onPageScrolled(
-                                final int position, final float positionOffset, final int positionOffsetPixels) { }
-
-                        @Override
-                        public void onPageSelected(final int position) {
-                            if (getBottomNavigation().getSelectedIndex() != position) {
-                                getBottomNavigation().setSelectedIndex(position, false);
-                            }
-                        }
-
-                        @Override
-                        public void onPageScrollStateChanged(final int state) { }
-                    });
-                }
-            });
-
-        }
-
-
-        //   inflate menu   to 5 items   ... and change background color  ..
-        BottomNavigation navigation = getBottomNavigation();
-
-        if (null == navigation) {
-            // return 0; ... do something to avoid  Exception   ...
-            navigation.inflateMenu(R.menu.bottombar_menu_5items);
-        }else{
-            navigation.inflateMenu(R.menu.bottombar_menu_5items);
-        }
-
-
-
-        int selectedIndex = getBottomNavigation().getSelectedIndex() + 1;
-        final int totalCount = getBottomNavigation().getMenuItemCount();
-
-        if (selectedIndex >= totalCount) {
-            selectedIndex = 0;
-        }
-
-        final int itemId = getBottomNavigation().getMenuItemId(selectedIndex);
-
-        BadgeProvider provider = (BadgeProvider) getBottomNavigation().getBadgeProvider();
-
-
-    }
-
-
-    @Override
-    public void onMenuItemSelect(final int itemId, final int position, final boolean fromUser) {
-        log(TAG, INFO, "onMenuItemSelect(" + itemId + ", " + position + ", " + fromUser + ")");
-        if (fromUser) {
-            getBottomNavigation().getBadgeProvider().remove(itemId);
-            if (null != getViewPager()) {
-                getViewPager().setCurrentItem(position);
-            }
-        }
-    }
-
-    @Override
-    public void onMenuItemReselect(@IdRes final int itemId, final int position, final boolean fromUser) {
-        log(TAG, INFO, "onMenuItemReselect(" + itemId + ", " + position + ", " + fromUser + ")");
-
-        if (fromUser) {
-            final FragmentManager manager = getSupportFragmentManager();
-
-        }
-
-    }
 
     public static class ViewPagerAdapter extends FragmentPagerAdapter {
 
@@ -746,7 +891,7 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
                 case 2:
                     // Call fragment
                     return new CallFragment();
-                    //return Friends_Contact_Fragment;
+                //return Friends_Contact_Fragment;
                 case 3:
                     //  Story   ... like status    Whatsapp
                     // return new GuDStory_Fragment();
@@ -756,7 +901,7 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
                     // return new FriendsFragment();
                     return new ProfileFragment();
 
-                    // return new GuDStory_Fragment();
+                // return new GuDStory_Fragment();
             }
 
             return null;
@@ -770,6 +915,8 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
         }
     }
 
+
+    // ##################
 
     // ##################
 
@@ -840,6 +987,21 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
                     .into(imageView);
 
         }catch (Exception ex){
+            // alwaway close cursor
+            ex.printStackTrace();
+        }finally {
+            // this gets called even if there is an exception somewhere above
+            if(rs != null)
+                rs.close();
+        }
+
+        try{
+
+            // this gets called even if there is an exception somewhere above
+            if(rs != null)
+                rs.close();
+
+        }catch (Exception ex){
             ex.printStackTrace();
         }
 
@@ -887,7 +1049,7 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
     @Override
     public void onItemSelected(int position) {
 
-        android.support.v4.app.Fragment selectedScreen;
+        Fragment selectedScreen;
         Log.d("position" , Integer.toString(position));
 
         switch (position) {
@@ -938,31 +1100,9 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
 
             case POS_ABOUT:
 
-                // test incomming call
-                // Intent intent = new Intent(this, CallIncomingActivity_rtc.class);
-                // startActivity(intent);
+                Intent  TestApi_Activity = new Intent(MainActivity_GuDDana.this, Test_RestHttp_Server_Activity.class);
+                startActivity(TestApi_Activity);
 
-
-                /*
-
-                // test about  ...
-                if(currentuser.isEmailVerified()) {
-                    toolbar.setTitle("About");
-                    try {
-                        getSupportActionBar().setTitle("About");
-                    } catch (Exception e) {
-                        Log.e("Error", e.getMessage());
-                    }
-                    this.invalidateOptionsMenu();
-                    mState = false;
-                    selectedScreen = new About();
-                    showFragment(selectedScreen);
-                    slidingRootNav.closeMenu(true);
-                }else{
-                    showDialog();
-                }
-
-                */
 
                 return;
 
@@ -1056,7 +1196,7 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
 
     }
 
-    private void showFragment(android.support.v4.app.Fragment fragment) {
+    private void showFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, fragment)
                 .commit();
@@ -1293,6 +1433,21 @@ public class MainActivity_GuDDana extends BaseActivity implements DrawerAdapter.
 
 
                 }catch(Exception ex){
+                    ex.printStackTrace();
+                }// alway close cursor
+                finally {
+                    // this gets called even if there is an exception somewhere above
+                    if(rc != null)
+                        rc.close();
+                }
+
+                try{
+
+                    // this gets called even if there is an exception somewhere above
+                    if(rc != null)
+                        rc.close();
+
+                }catch (Exception ex){
                     ex.printStackTrace();
                 }
 

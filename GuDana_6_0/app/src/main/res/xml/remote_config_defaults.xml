@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- START xml_defaults -->
+<defaultsMap>
+    <entry>
+        <key>Server_MASTER</key>
+        <value>http://35.237.197.121</value>
+    </entry>
+
+    <entry>
+        <key>Server_BACKUP</key>
+        <value>http://35.237.197.121</value>
+    </entry>
+
+    <entry>
+        <key>Server_Debug</key>
+        <value>http://192.168.12.1</value>
+    </entry>
+</defaultsMap>
+    <!-- END xml_defaults -->

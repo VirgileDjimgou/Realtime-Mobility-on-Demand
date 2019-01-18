@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout android:id="@+id/CoordinatorLayout01"
+<androidx.coordinatorlayout.widget.CoordinatorLayout android:id="@+id/CoordinatorLayout01"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -34,7 +34,7 @@
                 android:orientation="horizontal">
 
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:id="@+id/driver"
                     android:layout_width="170dp"
                     android:layout_height="170dp"
@@ -83,10 +83,10 @@
                             android:src="@drawable/taxi_driver" />
 
                     </LinearLayout>
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:id="@+id/passenger"
                     android:layout_width="170dp"
                     android:layout_height="170dp"
@@ -133,7 +133,7 @@
                             android:src="@drawable/cab_passenger" />
 
                     </LinearLayout>
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
 
             </LinearLayout>
@@ -146,7 +146,7 @@
                 android:orientation="horizontal">
 
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:id="@+id/delivery"
                     android:layout_width="170dp"
                     android:layout_height="170dp"
@@ -194,10 +194,10 @@
                             android:src="@drawable/gud_delivery" />
 
                     </LinearLayout>
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:id="@+id/money"
                     android:layout_width="170dp"
                     android:layout_height="170dp"
@@ -244,7 +244,7 @@
                             android:src="@drawable/cash_back" />
 
                     </LinearLayout>
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
 
             </LinearLayout>
@@ -264,7 +264,7 @@
             android:paddingTop="10dp">
 
 
-            <android.support.v4.view.ViewPager
+            <androidx.viewpager.widget.ViewPager
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"
                 android:layout_height="350dp"
@@ -280,7 +280,7 @@
                 android:paddingRight="@dimen/card_padding"
                 android:paddingStart="@dimen/card_padding" />
 
-            <android.support.design.widget.FloatingActionButton
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -306,6 +306,6 @@
             app:bmb_piecePlaceEnum="piecePlace_ham_4" />
 
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 

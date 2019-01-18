@@ -3,7 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
@@ -13,7 +13,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/listView_friends"
             android:layout_gravity="center_horizontal" />
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.android.gudana.chat.layouts.StatusLayout
         android:id="@+id/layout_status_friendlist"

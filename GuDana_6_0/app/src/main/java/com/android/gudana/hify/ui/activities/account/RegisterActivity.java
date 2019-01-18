@@ -1,25 +1,20 @@
 package com.android.gudana.hify.ui.activities.account;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.PreferenceManager;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.transition.Fade;
 import android.util.Log;
@@ -29,8 +24,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.gudana.chat.ChatApplication;
-import com.android.gudana.chat.activities.MenuActivity;
-import com.android.gudana.chat.activities.WelcomeActivity;
 import com.android.gudana.chat.model.User;
 import com.android.gudana.chat.network.JSONParser;
 import com.android.gudana.gpslocationtracking.LocationTrack;
@@ -48,18 +41,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.MultiplePermissionsReport;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.mobsandgeeks.saripaar.Validator;
 import com.yalantis.ucrop.UCrop;
 import com.yarolegovich.lovelydialog.LovelyInfoDialog;
@@ -69,7 +56,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -84,17 +70,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
-import com.android.gudana.chat.ChatApplication;
-import com.android.gudana.chat.model.User;
-import com.android.gudana.chat.network.JSONParser;
 import com.mobsandgeeks.saripaar.ValidationError;
-import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.List;
 
 public class RegisterActivity extends AppCompatActivity implements Validator.ValidationListener {
 

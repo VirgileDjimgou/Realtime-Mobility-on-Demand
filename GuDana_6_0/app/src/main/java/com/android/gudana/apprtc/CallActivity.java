@@ -14,7 +14,9 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.FragmentTransaction;
+//import android.app.FragmentManager;
+//import android.app.FragmentTransaction;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -79,13 +81,17 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import es.dmoral.toasty.Toasty;
+import androidx.fragment.app.Fragment;
+
 
 /**
  * Activity for peer connection call setup, call waiting
  * and call view.
  */
-public class CallActivity extends Activity implements AppRTCClient.SignalingEvents,
+public class CallActivity extends AppCompatActivity implements AppRTCClient.SignalingEvents,
                                                       PeerConnectionClient.PeerConnectionEvents,
                                                       CallFragment.OnCallEvents {
   private static final String TAG = CallActivity.class.getSimpleName();
@@ -371,7 +377,7 @@ public class CallActivity extends Activity implements AppRTCClient.SignalingEven
     callFragment.setArguments(intent.getExtras());
     hudFragment.setArguments(intent.getExtras());
     // Activate call and HUD fragments and start the call.
-    FragmentTransaction ft = getFragmentManager().beginTransaction();
+    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
     ft.add(R.id.call_fragment_container, callFragment);
     ft.add(R.id.hud_fragment_container, hudFragment);
     ft.commit();
@@ -616,7 +622,9 @@ public class CallActivity extends Activity implements AppRTCClient.SignalingEven
     }
     // Show/hide call control fragment
     callControlFragmentVisible = !callControlFragmentVisible;
-    FragmentTransaction ft = getFragmentManager().beginTransaction();
+    androidx.fragment.app.FragmentManager fm = getSupportFragmentManager();
+    FragmentTransaction ft = fm.beginTransaction();
+
     if (callControlFragmentVisible) {
       ft.show(callFragment);
       ft.show(hudFragment);

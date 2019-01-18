@@ -34,6 +34,7 @@ public class JSONParser {
 
     public JSONObject getJSONFromUrl(String url, JSONObject jsonObject) {
 
+
         // Making HTTP request
         try {
             // defaultHttpClient
@@ -59,6 +60,8 @@ public class JSONParser {
         } catch (IOException e) {
             e.printStackTrace();
             return null;
+        } catch (Exception ex){
+            ex.printStackTrace();
         }
 
         try {

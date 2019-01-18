@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    android:id="@+id/CoordinatorLayout01"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/activity_main"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFF"
-    android:orientation="vertical"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:fitsSystemWindows="true"
-    android:padding="0dp">
+    android:background="#FFF">
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_alignParentTop="true"
         android:id="@+id/top"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             app:title="@string/app_name"
             android:layout_width="match_parent"
@@ -26,7 +22,7 @@
             android:background="#FFF"
             />
 
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <FrameLayout
         android:layout_below="@+id/top"
@@ -36,33 +32,21 @@
         android:layout_height="match_parent"
         />
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/ViewPager01"
+
+    <com.android.gudana.hify.adapters.NoSwipePager
+        android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="0dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-    <!--<include layout="@layout/content_main" />-->
-    <include layout="@layout/bn_floating_action_button_main" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:background="#EFEFEF"/>
 
 
-    <it.sephiroth.android.library.bottomnavigation.BottomNavigation
-        android:id="@+id/BottomNavigation"
+    <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
+        android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:background="@color/blue"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:bbn_badgeProvider="@string/bbn_badgeProvider"
-        app:bbn_entries="@menu/bottombar_menu_4items_no_background"
-        app:layout_behavior="@string/bbn_phone_view_behavior" />
+        app:selectedBackgroundVisible="false"/>
 
-    <!--
 
-    app:bbn_badgeProvider="@string/bbn_badgeProvider"
-        app:bbn_entries="@menu/bottombar_menu_4items_no_background"
-        app:layout_behavior="@string/bbn_phone_view_behavior"
-    -->
-
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

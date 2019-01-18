@@ -18,7 +18,7 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 
-public class TouchImageView extends android.support.v7.widget.AppCompatImageView
+public class TouchImageView extends androidx.appcompat.widget.AppCompatImageView
 {
     Matrix matrix;
 

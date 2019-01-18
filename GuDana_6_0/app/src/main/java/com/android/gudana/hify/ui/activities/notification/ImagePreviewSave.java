@@ -14,13 +14,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.NotificationCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -29,6 +29,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.gudana.hify.models.MultipleImage;
 import com.android.gudana.hify.utils.Config;
 import com.android.gudana.R;
+import com.android.gudana.hify.utils.OnSwipeTouchListener;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.github.chrisbanes.photoview.PhotoView;
@@ -56,6 +57,7 @@ public class ImagePreviewSave extends AppCompatActivity {
     private String sender_name;
     private int position = 0;
     private ArrayList<String>  list_of_images= null;
+    private FrameLayout photo_view_frame;
     public BroadcastReceiver onComplete = new BroadcastReceiver() {
 
         public void onReceive(Context ctxt, Intent intent) {
@@ -145,40 +147,6 @@ public class ImagePreviewSave extends AppCompatActivity {
         list_of_images = getIntent().getStringArrayListExtra("Images");
         // ArrayList<CustomInput> fields = dw.getFields();
 
-        final ImageButton recht = (ImageButton) findViewById(R.id.recht);
-        recht.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // chehck offset recht
-                if(list_of_images.size()>0){
-
-                    if(position < list_of_images.size()-1){
-                        position = position +1;
-                        load_image(list_of_images.get(position));
-                    }else{
-                        load_image(list_of_images.get(position));
-                    }
-                }
-            }
-        });
-
-
-        final ImageButton link = (ImageButton) findViewById(R.id.link);
-        link.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // chehck offset recht ...
-                if(list_of_images.size() >0){
-                    if(position > 0){
-                        position = position -1;
-                        load_image(list_of_images.get(position));
-                    }else{
-                        load_image(list_of_images.get(position));
-                    }
-                }
-
-            }
-        });
 
 
         ImageView return_button  = (ImageView) findViewById(R.id.return_button);
@@ -202,22 +170,60 @@ public class ImagePreviewSave extends AppCompatActivity {
 
         }else {
 
-            Glide.with(this)
+            String Url_to_load = intent_URL.trim();
+            Glide.with(ImagePreviewSave.this)
                     .setDefaultRequestOptions(new RequestOptions().placeholder(getResources().getDrawable(R.drawable.placeholder)))
-                    .load(intent_URL)
+                    .load(Url_to_load)
                     .into(photoView);
 
 
         }
+
+        photo_view_frame = findViewById(R.id.photo_view_frame);
+
+        // images touch listener ...
+        photoView.setOnTouchListener(new OnSwipeTouchListener(ImagePreviewSave.this) {
+            public void onSwipeTop() {
+                //Toast.makeText(ImagePreviewSave.this, "top", Toast.LENGTH_SHORT).show();
+            }
+            public void onSwipeRight() {
+                //Toast.makeText(ImagePreviewSave.this, "right", Toast.LENGTH_SHORT).show();
+                if(list_of_images.size()>0){
+
+                    if(position < list_of_images.size()-1){
+                        position = position +1;
+                        load_image(list_of_images.get(position));
+                    }else{
+                        load_image(list_of_images.get(position));
+                    }
+                }
+            }
+            public void onSwipeLeft() {
+                //Toast.makeText(ImagePreviewSave.this, "left", Toast.LENGTH_SHORT).show();
+                if(list_of_images.size() >0){
+                    if(position > 0){
+                        position = position -1;
+                        load_image(list_of_images.get(position));
+                    }else{
+                        load_image(list_of_images.get(position));
+                    }
+                }
+            }
+            public void onSwipeBottom() {
+               // Toast.makeText(ImagePreviewSave.this, "bottom", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
 
     }
 
     private void load_image (String url_to_load){
 
 
-        Glide.with(this)
+        Glide.with(ImagePreviewSave.this)
                 .setDefaultRequestOptions(new RequestOptions().placeholder(getResources().getDrawable(R.drawable.placeholder)))
-                .load(url_to_load)
+                .load(url_to_load.trim())
                 .into(photoView);
 
     }

@@ -19,10 +19,17 @@
 -keepattributes *Annotation*
 # Add this global rule
 -keepattributes Signature
+-keep class io.grpc.** {*;}
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+buildScan { termsOfServiceUrl = 'https://gradle.com/terms-of-service'; termsOfServiceAgree = 'yes' }
+
 
 # This rule will properly ProGuard all the model classes in
 # the package com.yourcompany.models. Modify to fit the structure
 # of your app.
--keepclassmembers class com.hieuapp.rivchat.** {
+-keepclassmembers class com.android.gudana.** {
   *;
 }

@@ -2,19 +2,15 @@ package com.android.gudana.chatapp.holders;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Typeface;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.gudana.R;
-import com.android.gudana.chatapp.activities.FullScreenActivity;
-import com.android.gudana.chatapp.activities.ProfileActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,8 +22,6 @@ import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -163,32 +157,39 @@ public class CallHolder extends RecyclerView.ViewHolder
 
                                                     if(!image.equals("default"))
                                                     {
-                                                        Picasso.with(context)
-                                                                .load(image)
-                                                                .networkPolicy(NetworkPolicy.OFFLINE)
-                                                                .resize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, context.getResources().getDisplayMetrics()), (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, context.getResources().getDisplayMetrics()))
-                                                                .centerCrop()
-                                                                .placeholder(R.drawable.user)
-                                                                .into(userImage, new Callback()
-                                                                {
-                                                                    @Override
-                                                                    public void onSuccess()
-                                                                    {
+                                                        try{
 
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onError()
+                                                            Picasso.with(context)
+                                                                    .load(image)
+                                                                    .networkPolicy(NetworkPolicy.OFFLINE)
+                                                                    .resize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, context.getResources().getDisplayMetrics()), (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, context.getResources().getDisplayMetrics()))
+                                                                    .centerCrop()
+                                                                    .placeholder(R.drawable.user)
+                                                                    .into(userImage, new Callback()
                                                                     {
-                                                                        Picasso.with(context)
-                                                                                .load(image)
-                                                                                .resize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, context.getResources().getDisplayMetrics()), (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, context.getResources().getDisplayMetrics()))
-                                                                                .centerCrop()
-                                                                                .placeholder(R.drawable.user)
-                                                                                .error(R.drawable.user)
-                                                                                .into(userImage);
-                                                                    }
-                                                                });
+                                                                        @Override
+                                                                        public void onSuccess()
+                                                                        {
+
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onError()
+                                                                        {
+                                                                            Picasso.with(context)
+                                                                                    .load(image)
+                                                                                    .resize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, context.getResources().getDisplayMetrics()), (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, context.getResources().getDisplayMetrics()))
+                                                                                    .centerCrop()
+                                                                                    .placeholder(R.drawable.user)
+                                                                                    .error(R.drawable.user)
+                                                                                    .into(userImage);
+                                                                        }
+                                                                    });
+
+                                                        }catch(Exception ex){
+                                                            ex.printStackTrace();
+                                                        }
+
                                                     }
                                                     else
                                                     {

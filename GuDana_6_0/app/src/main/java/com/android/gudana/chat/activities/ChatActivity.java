@@ -14,34 +14,44 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.media.AudioManager;
+
+import android.os.AsyncTask;
+import android.util.Log;
+import android.view.View;
+
+import com.android.gudana.chat.ChatApplication;
+import com.android.gudana.hify.utils.Config;
+import com.google.firebase.database.ServerValue;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.view.SoundEffectConstants;
-import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewTreeObserver;
 import android.view.Window;
@@ -63,17 +73,14 @@ import com.android.gudana.MoD.MoD_Live_Location_sharing_Activity;
 import com.android.gudana.R;
 import com.android.gudana.apprtc.CallFragment;
 import com.android.gudana.apprtc.ConnectActivity;
-import com.android.gudana.chat.ChatApplication;
 import com.android.gudana.chat.adapters.MessageAdapter;
 import com.android.gudana.chat.model.User;
 import com.android.gudana.chat.model.message;
 import com.android.gudana.chat.model.user_room_message_db;
 import com.android.gudana.chatapp.models.Message;
-import com.android.gudana.chatapp.models.StaticConfigUser_fromFirebase;
 import com.android.gudana.chatapp.utils_v2.FileOpen;
 import com.android.gudana.fcm.CustomFcm_Util;
 import com.android.gudana.hify.utils.AndroidMultiPartEntity;
-import com.android.gudana.hify.utils.Config;
 import com.android.gudana.hify.utils.JSONParser;
 import com.android.gudana.hify.utils.database.UserHelper;
 import com.android.gudana.hify.utils.refresh_token_on_firestore;
@@ -92,12 +99,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -125,14 +129,10 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import droidninja.filepicker.FilePickerBuilder;
@@ -150,12 +150,9 @@ import io.socket.emitter.Emitter;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-import org.json.JSONArray;
-
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import java.util.Random;
@@ -486,6 +483,7 @@ public class ChatActivity extends AppCompatActivity {
             eventListeners.put("history", onHistory);
             eventListeners.put("typing", onTyping);
             eventListeners.put("stop typing", onStopTyping);
+            eventListeners.put("rethink_db", rethink_db_event_receive);
             setListeningToEvents(true);
 
 
@@ -1051,6 +1049,7 @@ public class ChatActivity extends AppCompatActivity {
         }
     };
 
+
     private final Emitter.Listener onBroadcast = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
@@ -1064,6 +1063,39 @@ public class ChatActivity extends AppCompatActivity {
             });
         }
     };
+
+
+    private final Emitter.Listener rethink_db_event_receive = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            JSONObject json;
+            final int msg_user_id, message_id;
+            final String msg_username, message_contents, datetimeutc;
+            try {
+                json = (JSONObject) args[0];
+
+                msg_user_id = json.getInt("user_id");
+                message_id = json.getInt("message_id");
+                msg_username = json.getString("username");
+                message_contents = json.getString("message");
+                datetimeutc = json.getString("datetimeutc");
+
+                // save message  on local  database  for offline use  ...
+                // new Save_offline_MessageTask (json).execute();
+
+                // test offline  use ...must be removed     immediatly after test purpose
+                //new Save_offline_MessageTask (json).execute();
+                //new Save_offline_MessageTask (json).execute();
+                //new Save_offline_MessageTask (json).execute();
+                // end test
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
 
 
     private final Emitter.Listener onMessageReceive = new Emitter.Listener() {
@@ -1239,93 +1271,248 @@ public class ChatActivity extends AppCompatActivity {
         Map callroom_map_messages = new HashMap();
         callroom_map_messages.put("Call_room//" + pushId_callRoom, callroom_map);
 
-        // update call room id
-        FirebaseDatabase.getInstance().getReference().updateChildren(callroom_map_messages, new DatabaseReference.CompletionListener()
-        {
-            @Override
-            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference)
-            {
+        // create jsonObject  ...
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("room_id", pushId_callRoom);
+            jsonObject.put("id_caller", currentUserId);
+            jsonObject.put("id_receiver", Config.Chat_Activity_otherUserId);
+            jsonObject.put("timestamp", ServerValue.TIMESTAMP);
+            jsonObject.put("available_caller", true);
+            jsonObject.put("available_receiver", false);
+            jsonObject.put("room_status", true); //
+            jsonObject.put("call_type", CallType);
+            jsonObject.put("reason_interrupted_call", " -- ");
 
-                if(databaseError != null)
-                {
-                    //Log.d("error", "sendMessage(): updateChildren failed: " + databaseError.getMessage());
-                    Toasty.info(context_call, "sendMessage(): updateChildren failed: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                    // Toast.makeText(CreateGroupChatActivity.this.getApplicationContext(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        // start ac call  ...
+        try{
+            new Start_Call_AsyncTask(jsonObject).execute();
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+    }
+
+
+    public class Start_Call_AsyncTask extends AsyncTask<String, String, JSONObject> {
+
+        JSONObject jsonObject_local;
+
+        public Start_Call_AsyncTask( JSONObject jsonObject) {
+            //this.roomsFragment = roomsFragment;
+            this.jsonObject_local = jsonObject;
+        }
+
+
+        @Override
+        protected JSONObject doInBackground(String... params) {
+            JSONObject json_objet = null;
+
+            try{
+
+                String Server_url_api_start_call = (Config.URL_CHAT_SERVER.trim()+"/Start_Call").trim();
+                json_objet = (new com.android.gudana.chat.network.JSONParser()).getJSONFromUrl(Server_url_api_start_call, jsonObject_local);
+
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+
+            return json_objet;
+
+        }
+
+        @Override
+        protected void onPostExecute(final JSONObject jsonObject_result) {
+
+            try{
+
+
+                if(jsonObject_result == null) {
+
+                    Log.d("receive ", "onPostExecute: ");
+                    System.out.println(jsonObject_result);
+
                 }else{
-                    // we can  start the call intent  ....
-                    // start call
-                    // so now start the call
-                    if (CallType.equalsIgnoreCase("video")){
 
-                        // video call //
+                    // get errors
 
-                        // start a call pushId_callRoom
+                    Boolean  Response = jsonObject_result.getBoolean("created");
+                    String index_call_rethink_db = jsonObject_result.getString("index");
+                    String Call_id_rethink_db = jsonObject_result.getString("call_id");
+                    if(Response && Response != null && index_call_rethink_db != null && Call_id_rethink_db != null){
+                        // than
+                        Log.d("receive ", "onPostExecute: ");
+                        System.out.println(jsonObject_result);
+                        this.jsonObject_local.put("index_call", index_call_rethink_db);
+                        this.jsonObject_local.put("call_id_rethink", Call_id_rethink_db);
 
-                        callmelder_notification = true;  // send a notification for  to registread the call
-                        call_type = "video";
-                        Intent intentvideo = new Intent(ChatActivity.this.context, ConnectActivity.class);
-                        intentvideo.putExtra("vid_or_aud", call_type);
-                        intentvideo.putExtra("user_id", currentUserId);
-                        intentvideo.putExtra("room_id", pushId_callRoom);
-                        startActivity(intentvideo);
+                        try{
 
-                    }else {
-                        // audio call
+                            // add call_id and send id  to jsonresponse
 
-                        callmelder_notification = true;  // send a notification for  to registread the call
-                        // make web rtc call
-                        call_type = "audio";
-                        Intent intentaudio = new Intent(ChatActivity.this.context, ConnectActivity.class);
-                        ConnectActivity.received_call = "caller";
-                        intentaudio.putExtra("vid_or_aud", call_type);
-                        intentaudio.putExtra("user_id", currentUserId);
-                        intentaudio.putExtra("room_id", pushId_callRoom);
-                        startActivity(intentaudio);
+
+                            String CallType = this.jsonObject_local.getString("call_type");
+                            String pushId_callRoom = this.jsonObject_local.getString("room_id");
+                            String currentUserId = this.jsonObject_local.getString("id_caller");
+
+                            if (CallType.equalsIgnoreCase("video")){
+
+                                // video call //
+
+                                // start a call pushId_callRoom
+
+                                callmelder_notification = true;  // send a notification for  to registread the call
+                                call_type = "video";
+                                Intent intentvideo = new Intent(ChatActivity.this.context, ConnectActivity.class);
+                                intentvideo.putExtra("vid_or_aud", call_type);
+                                intentvideo.putExtra("user_id", currentUserId);
+                                intentvideo.putExtra("room_id", index_call_rethink_db);
+                                // intentvideo.putExtra("room_id", pushId_callRoom);
+                                startActivity(intentvideo);
+
+                            }else {
+                                // audio call
+
+                                callmelder_notification = true;  // send a notification for  to registread the call
+                                // make web rtc call
+                                call_type = "audio";
+                                Intent intentaudio = new Intent(ChatActivity.this.context, ConnectActivity.class);
+                                ConnectActivity.received_call = "caller";
+                                intentaudio.putExtra("vid_or_aud", call_type);
+                                intentaudio.putExtra("user_id", currentUserId);
+                                intentaudio.putExtra("room_id", index_call_rethink_db);
+                                startActivity(intentaudio);
+
+                            }
+
+                            // send notification ....
+
+                            FCM_Message_Sender.sendWithOtherThread("token" ,
+                                    TokenFCM_OtherUser ,
+                                    "call" ,
+                                    currentUserId ,
+                                    NameCurrentUser,
+                                    url_Icon_currentUser,
+                                    getDateAndTime(),
+                                    index_call_rethink_db,
+                                    this.jsonObject_local.toString());
+
+
+
+                            Map<String, Object> map = null;
+                            map = new HashMap<>();
+                            map.put("call_availability", false); // not available anymore to take another call
+                            //userDB.updateChildren(map);
+
+
+                            FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>()
+                            {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task)
+                                {
+                                    if(task.isSuccessful())
+                                    {
+
+                                        Toasty.info(ChatActivity.this, "Initialisation with GuDana Voice Cloud successful ", Toast.LENGTH_LONG).show();
+                                    }
+                                    else
+                                    {
+                                        Toasty.error(ChatActivity.this, "sorry GuDana Voice Cloud  is unreachable right now ! .... please try again later ", Toast.LENGTH_LONG).show();
+
+                                    }
+                                }
+                            });
+
+
+                        }catch (Exception ex){
+                            Toasty.error(ChatActivity.this, "Voice  Server Unreachable when trying to call ! ", Toast.LENGTH_SHORT).show();
+                            ex.printStackTrace();
+                        }
+
+
+                    }else{
+
+                        Toasty.error(ChatActivity.this, "Voice  Server Unreachable when trying to call ! ", Toast.LENGTH_SHORT).show();
+                    }
+
+
+
+                }
+
+            }catch (Exception ex){
+                Toasty.error(ChatActivity.this, "Voice  Server Unreachable when trying to call ! ", Toast.LENGTH_SHORT).show();
+                ex.printStackTrace();
+            }
+
+        }
+    }
+
+
+
+    // reset call
+    public static class Reset_Call extends AsyncTask<String, String, JSONObject> {
+
+        JSONObject jsonObject_local;
+
+        public Reset_Call( JSONObject jsonObject) {
+            //this.roomsFragment = roomsFragment;
+            this.jsonObject_local = jsonObject;
+        }
+
+
+        @Override
+        protected JSONObject doInBackground(String... params) {
+            JSONObject jsonObject = null;
+            try{
+                String Server_url_api_start_call = (Config.URL_CHAT_SERVER.trim()+"/Reset_Call").trim();
+                jsonObject = (new com.android.gudana.chat.network.JSONParser()).getJSONFromUrl(Server_url_api_start_call, jsonObject_local);
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+
+            return  jsonObject;
+        }
+
+        @Override
+        protected void onPostExecute(final JSONObject jsonObject_result) {
+
+            try{
+
+                if(jsonObject_result == null) {
+
+                    Log.d("receive ", "onPostExecute: ");
+                    System.out.println(jsonObject_result);
+
+                }else{
+
+                    Boolean  Response = jsonObject_result.getBoolean("reset");
+                    if(Response == true && Response != null){
+                        try{
+                            System.out.println("Call Reseted");
+
+                        }catch (Exception ex){
+                            ex.printStackTrace();
+                        }
+
+                    }else{
+                        System.out.println("voice server  unreachable ...");
 
                     }
+
                 }
+
+            }catch (Exception ex){
+                System.out.println("voice server  unreachable ...");
+                ex.printStackTrace();
             }
-        });
 
-
-        // send notification    ...
-
-        FCM_Message_Sender.sendWithOtherThread("token" ,
-                TokenFCM_OtherUser ,
-                "call" ,
-                currentUserId ,
-                NameCurrentUser,
-                url_Icon_currentUser,
-                getDateAndTime(),
-                pushId_callRoom,
-                " missed call ");
-
-
-        Map<String, Object> map = null;
-        map = new HashMap<>();
-        map.put("call_availability", false); // not available anymore to take another call
-        //userDB.updateChildren(map);
-
-
-        FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>()
-        {
-            @Override
-            public void onComplete(@NonNull Task<Void> task)
-            {
-                if(task.isSuccessful())
-                {
-
-                    Toasty.info(context_call, "Initialisation with GuDana Voice Cloud successful ", Toast.LENGTH_LONG).show();
-                }
-                else
-                {
-                    Toasty.error(context_call, "sorry GuDana Voice Cloud  is unreachable right now ! .... please try again later ", Toast.LENGTH_LONG).show();
-
-                }
-            }
-        });
-
-
+        }
     }
 
 
@@ -1623,14 +1810,6 @@ public class ChatActivity extends AppCompatActivity {
 
 
 
-    // #####################################   import from old chat   #################################
-
-    /// new import   ...
-
-    //gps_menu navigation
-
-
-
     private static boolean hasPermissions(Context context, String... permissions) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
             for (String permission : permissions) {
@@ -1917,8 +2096,6 @@ public class ChatActivity extends AppCompatActivity {
         }
 
     }
-
-
 
     private void images_upload_images_to_firebase(String  Url_media){
 
@@ -3363,9 +3540,6 @@ public class ChatActivity extends AppCompatActivity {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
-
-
 
     }
 

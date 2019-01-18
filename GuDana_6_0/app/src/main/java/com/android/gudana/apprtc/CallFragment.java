@@ -11,9 +11,10 @@
 package com.android.gudana.apprtc;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import com.android.gudana.R;
 import com.android.gudana.apprtc.linphone.LinphoneManager;
 //import com.android.gudana.tindroid.MessageActivity_fire_tinode;
 import com.android.gudana.chat.activities.ChatActivity;
+import com.android.gudana.hify.utils.Config;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -38,10 +40,15 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.webrtc.RendererCommon.ScalingType;
 
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import androidx.fragment.app.Fragment;
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
 
@@ -71,6 +78,9 @@ public class CallFragment extends Fragment {
   public static DatabaseReference CallRoomDb;
 
   public static boolean running = false;
+
+  // start chehck avaibility
+  Timer myTimer = new Timer();
 
 
   /**
@@ -125,7 +135,8 @@ public class CallFragment extends Fragment {
 
         }catch (Exception ex){
           ex.printStackTrace();
-        }      }
+        }
+      }
     });
 
     cameraSwitchButton.setOnClickListener(new View.OnClickListener() {
@@ -165,7 +176,7 @@ public class CallFragment extends Fragment {
 
 
     // start call status  ...
-    Check_Correspondantavailibility(controlView.getContext(), ConnectActivity.user_id);
+    //Check_Correspondantavailibility(controlView.getContext(), ConnectActivity.user_id);
 
     // init  caller id
     InitCallerProfil(ConnectActivity.user_id);
@@ -194,7 +205,46 @@ public class CallFragment extends Fragment {
     // set the running method  to tell that you can not take another call
     running = true;
 
+
+    // start  timer  to chehck correspondant avalabilty
+
+    // create jsonObject  ...
+    final JSONObject jsonObject = new JSONObject();
+    try {
+      jsonObject.put("index", room_is_voice_Server);
+
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+
+
+    myTimer.schedule(new TimerTask() {
+      @Override
+      public void run() {
+        // start ac call  ...
+        try{
+          TimerMethod(jsonObject);
+        }catch (Exception ex){
+          ex.printStackTrace();
+        }
+      }
+
+    }, 0, 2000);
+
+
     return controlView;
+  }
+
+  private void TimerMethod(JSONObject jsonObject)
+  {
+    System.out.println("echos ...");
+    // start ac call  ...
+    try{
+      new Caller_Availability(jsonObject).execute();
+    }catch (Exception ex){
+      ex.printStackTrace();
+    }
+
   }
 
   // init profil but we can optimize that
@@ -229,104 +279,84 @@ public class CallFragment extends Fragment {
 
   }
 
-  public void Check_Correspondantavailibility(final Context context , String UserID){
 
-    try{
+  // chehck  caller availabilty  ...
 
-      CallRoomDb = FirebaseDatabase.getInstance().getReference().child("Call_room").child(room_is_voice_Server);
-      // Set the  Driver Response to true ...
-      //HashMap map = new HashMap();
-      //map.put("Authentified" , "await");
-      //userDB.updateChildren(map);
-      mListener = CallRoomDb.addValueEventListener(new ValueEventListener() {
-        @Override
-        public void onDataChange(DataSnapshot dataSnapshot) {
-          if(dataSnapshot.exists()){
-            try{
-              Map<String, Object> map_call = (Map<String, Object>) dataSnapshot.getValue();
-              // test if the recors Phone already exist  ...if not than
-              // than you are a new user   ...
-              if(map_call.get("available_caller")!=null){
-                // than this user is already registered ...
-                boolean caller_availibilty  = (boolean) map_call.get("available_caller");
-                if(caller_availibilty == false) {
-                  // than we must stop the call  ...
-                  ViCall.stopRinging();
-                  // put the  call  dispo enable
-                  /*
-                  CreateGroupChatActivity.resetCallparameter(context ,
-                          room_is_voice_Server ,
-                          this.getClass().getName() + "chehcCorrespondant",
-                          "your correspondant ist not available");
-                          */
-                  CallRoomDb.child("Call_room").child(room_is_voice_Server).removeEventListener(mListener);
-                  try{
+  public class Caller_Availability extends AsyncTask<String, String, JSONObject> {
 
-                    if(CallFragment.this.getActivity() != null){
-                      CallFragment.this.getActivity().finish();
+    JSONObject jsonObject_local;
 
-                    }
-
-                  }catch (Exception ex){
-                    ex.printStackTrace();
-                  }
-                }
-
-              }
-
-              if(map_call.get("room_status")!=null){
-                // than this user is already registered ...
-                boolean room_Status  = (boolean) map_call.get("room_status");
-                if(room_Status == false) {
-                  // than we must stop the call  ...
-                  ViCall.stopRinging();
-
-                  CallRoomDb.child("Call_room").child(room_is_voice_Server).removeEventListener(mListener);
-                  if(CallFragment.this.getActivity() != null){
-                    CallFragment.this.getActivity().finish();
-
-                  }
-                }
-
-              }
-
-
-            }catch(Exception ex){
-
-              ChatActivity.resetCallparameter(context ,
-                      room_is_voice_Server ,
-                      this.getClass().getName() + "chehcCorrespondant",
-              "your correspondant  ist not available ", 0, ConnectActivity.user_id);
-
-              CallRoomDb.child("Call_room").child(room_is_voice_Server).removeEventListener(mListener);
-              Toasty.error(context, ex.toString() , Toast.LENGTH_LONG).show();
-              ex.printStackTrace();
-            }
-
-          }
-        }
-
-        @Override
-        public void onCancelled(DatabaseError databaseError) {
-          Toasty.error(context,databaseError.toString(), Toast.LENGTH_LONG).show();
-
-        }
-      });
-
-
-
-    }catch(Exception ex){
-
-      ChatActivity.resetCallparameter(context , room_is_voice_Server,
-              this.getClass().getName() + "chehcCorrespondant",
-              "your correspndant ist not available ", 1, ConnectActivity.user_id);
-      CallRoomDb.child("Call_room").child(room_is_voice_Server).removeEventListener(mListener);
-      ex.printStackTrace();
+    public Caller_Availability( JSONObject jsonObject) {
+      //this.roomsFragment = roomsFragment;
+      this.jsonObject_local = jsonObject;
     }
 
 
-  }
+    @Override
+    protected JSONObject doInBackground(String... params) {
+      JSONObject json_return = null;
 
+      try {
+
+        String Server_url_api_start_call = (Config.URL_CHAT_SERVER.trim()+"/check_caller").trim();
+        json_return =  (new com.android.gudana.chat.network.JSONParser()).getJSONFromUrl(Server_url_api_start_call, jsonObject_local);
+
+
+      }catch (Exception ex){
+        ex.printStackTrace();
+      }
+
+      return  json_return;
+
+    }
+
+    @Override
+    protected void onPostExecute(final JSONObject jsonObject_result) {
+
+      try{
+
+
+        if(jsonObject_result == null) {
+
+          Log.d("receive ", "onPostExecute: ");
+          System.out.println(jsonObject_result);
+
+        }else{
+
+
+
+          Boolean  Response = jsonObject_result.getBoolean("caller_available");
+          if(Response == false && Response != null){
+            // than
+            Log.d("receive ", "onPostExecute: ");
+            System.out.println(jsonObject_result);
+            if(Response == false){
+
+              try{
+
+                if(CallFragment.this.getActivity() != null){
+                  CallFragment.this.getActivity().finish(); }
+
+              }catch (Exception ex){
+                ex.printStackTrace();
+              }
+
+            }
+
+          }else{
+            System.out.println("voice server  unreachable ...");
+
+          }
+
+        }
+
+      }catch (Exception ex){
+        System.out.println("voice server  unreachable ...");
+        ex.printStackTrace();
+      }
+
+    }
+  }
 
   // call
 
@@ -369,19 +399,36 @@ public class CallFragment extends Fragment {
   @Override
   public void onDestroy() {
     // set the avaibility  ...
+
     try{
+      myTimer.cancel();
+    }catch (Exception ex){
+      ex.printStackTrace();
+    }
+
+
+    try{
+
+      try{
+        final JSONObject jsonObject = new JSONObject();
+        try {
+          jsonObject.put("index", room_is_voice_Server);
+
+        } catch (JSONException e) {
+          e.printStackTrace();
+        }
+
+        new ChatActivity.Reset_Call(jsonObject).execute();
+
+      }catch (Exception ex){
+        ex.printStackTrace();
+      }
+
+
 
       running = false;
       ViCall.stopRinging();
       callEvents.onCallHangUp();
-      // send notification ...to tell that your are not available anymore ....
-      // i think ..we should start this  operation in  a backgroung thread  before to  close this activity  ...
-      ChatActivity.resetCallparameter(controlView.getContext() ,
-              room_is_voice_Server ,
-              getClass().getName()+" CallFragment  : onDestroy",
-              "Call End",0,ConnectActivity.user_id );
-
-      CallRoomDb.child("Call_room").child(room_is_voice_Server).removeEventListener(mListener);
 
     }catch(Exception ex){
       ViCall.stopRinging();
@@ -394,6 +441,7 @@ public class CallFragment extends Fragment {
   @Override
   public void onDetach() {
       try{
+        myTimer.cancel();
         // when  the fragment ist in background for example  ...  we  can manage his state in fragment manager ...
 
       }catch(Exception ex){

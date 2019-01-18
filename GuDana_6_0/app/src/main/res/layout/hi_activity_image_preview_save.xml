@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/photo_view_frame"
     android:background="@color/colorPrimary">
 
     <com.github.chrisbanes.photoview.PhotoView
@@ -21,8 +22,7 @@
         android:clickable="true"
         android:focusable="true"
         android:onClick="saveImage"
-        android:padding="16dp"
-        />
+        android:padding="16dp" />
 
 
     <ImageButton
@@ -36,34 +36,7 @@
         android:focusable="true"
         android:onClick="saveImage"
         android:padding="16dp"
-        android:src="@drawable/ic_share_white_preview"
-        />
-
-    <ImageButton
-        android:id="@+id/link"
-        android:layout_width="60dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center|left"
-        android:background="@drawable/rounded_preview_images_save"
-        android:clickable="true"
-        android:focusable="true"
-        android:onClick="saveImage"
-        android:padding="16dp"
-        android:src="@drawable/ic_keyboard_arrow_left_black_24dp"
-        />
-
-    <ImageButton
-        android:id="@+id/recht"
-        android:layout_width="60dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center|right"
-        android:background="@drawable/rounded_preview_images_save"
-        android:clickable="true"
-        android:focusable="true"
-        android:onClick="saveImage"
-        android:padding="16dp"
-        android:src="@drawable/ic_keyboard_arrow_right_black_24dp"
-        />
+        android:src="@drawable/ic_share_white_preview" />
 
 
     <ImageButton
@@ -76,8 +49,7 @@
         android:focusable="true"
         android:onClick="saveImage"
         android:padding="16dp"
-        android:src="@drawable/ic_file_download_white_24dp"
-        />
+        android:src="@drawable/ic_file_download_white_24dp" />
 
 
 </FrameLayout>

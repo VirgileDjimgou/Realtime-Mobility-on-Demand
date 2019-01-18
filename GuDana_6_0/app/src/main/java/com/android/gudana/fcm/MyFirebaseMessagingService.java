@@ -13,9 +13,9 @@ import android.media.RingtoneManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
+
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 import android.util.Log;
 //import android.widget.Toast;
 
@@ -25,17 +25,16 @@ import com.android.gudana.apprtc.CallIncomingActivity;
 import com.android.gudana.chat.activities.ChatActivity;
 import com.android.gudana.hify.ui.activities.MainActivity_GuDDana;
 import com.android.gudana.hify.utils.Config;
-import com.android.gudana.service.MainActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -82,6 +81,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 	private String senderID = "";
 	private String room_call = "FCM";
 	private Boolean NotifierExist = false;
+	private String message;
 
 
 	@Override
@@ -109,10 +109,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 		RemoteMessage.Notification notification = remoteMessage.getNotification();
 		Map<String, String> data = remoteMessage.getData();
+		String to_id = remoteMessage.getTo();
+		RemoteMessage.Notification notification_id = remoteMessage.getNotification();
+		String msg_id = remoteMessage.getMessageId();
+		long time_msg = remoteMessage.getSentTime();
+		String key = remoteMessage.getCollapseKey();
+		String msg_type = remoteMessage.getMessageType();
+		String from = remoteMessage.getFrom();
+
+
 		Log.d("FROM", remoteMessage.getFrom());
 
 		// pparse notification  ....
-
 		try{
 			notificationTitle = data.get("title");
 			senderID = data.get("SenderID");
@@ -122,6 +130,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 			msg = data.get(fcm_msg);
 			TimeSend = data.get("TimeSend");
 			room_call = data.get("Room_id");
+			message = data.get("body");
 
 			if(notificationTitle != null){
 
@@ -177,6 +186,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 		}catch (Exception ex){
 			ex.printStackTrace();
 		}
+
 
 	}
 
@@ -419,123 +429,106 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 		String  System_echo_  = "hello jeune ";
 		String ferreadi = "accept und  ";
 		String hello = "helloprint system infos ";
+		message = data.get("body");
+		JSONObject jsonObj = null;
 
-		try{
+		try {
+			jsonObj = new JSONObject(message);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 
-			CallRoom = FirebaseDatabase.getInstance().getReference().child("Call_room").child(room_call);
-			CallRoom.keepSynced(true); // because  of keepsychronised for  offline  usage  ...to avoid the lecture of cache data
-			EventListener = CallRoom.addValueEventListener (new ValueEventListener() {
-				@Override
-				public void onDataChange(DataSnapshot dataSnapshot) {
-					DataSnapshot dataSnapshot_local = dataSnapshot;
-					if(dataSnapshot_local.exists()){
-						try{
-							Map<String, Object> map_call = (Map<String, Object>) dataSnapshot.getValue();
-							// test if the recors Phone already exist  ...if not than
-							// than you are a new user   ...
-							if(map_call.get("id_receiver")!=null){
-								// than this user is already registered ...
-								String  Call_availibilty  =  map_call.get("id_receiver").toString();
-								if(Call_availibilty.equalsIgnoreCase(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
 
-									// once after that we  can start  the  call oder
-									// and of cour se remove the listener     ..  otherwise  we will startoo many listeners    ....
-									// check if you are in  a conversation a the moment  ....
-									if(map_call.get("room_status")!=null){
+		if(jsonObj != null ){
+			try{
 
-										boolean  room_status  = (boolean) map_call.get("room_status");
-										if(room_status == true) { // that meams  this room ist  Op
+				if(jsonObj.get("id_receiver")!=null){
+					// than this user is already registered ...
+					String  Call_availibilty  =  jsonObj.get("id_receiver").toString();
+					if(Call_availibilty.equalsIgnoreCase(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
 
-											if(CallFragment.running == false){ // you are available ...
-												try {
+						// once after that we  can start  the  call oder
+						// and of cour se remove the listener     ..  otherwise  we will startoo many listeners    ....
+						// check if you are in  a conversation a the moment  ....
+						if(jsonObj.get("room_status")!=null){
 
-													// remove listeners ...
-													CallRoom.child("Call_room").child(room_call).removeEventListener(EventListener);
+							boolean  room_status  = (boolean) jsonObj.get("room_status");
+							if(room_status == true) { // that meams  this room ist  Op
 
-													// always chehck is the notification ist not old  ...
-													Intent CallStart = new Intent(getApplication(), CallIncomingActivity.class);
-													CallStart.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-													CallStart.putExtra("userid", senderID);
-													CallStart.putExtra("room_id_call", room_call);
-													startActivity(CallStart);
+								if(CallFragment.running == false){ // you are available ...
+									try {
 
-												}catch(Exception ex){
-													ex.printStackTrace();
-												}
+										// always chehck is the notification ist not old  ...
+										Intent CallStart = new Intent(getApplication(), CallIncomingActivity.class);
+										CallStart.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+										CallStart.putExtra("userid", senderID);
+										CallStart.putExtra("room_id_call", room_call);
+                                        CallStart.putExtra("message", message);
+                                        startActivity(CallStart);
 
-											}else{ // if not you will get a notification
-												try{
-													CallRoom.child("Call_room").child(room_call).removeEventListener(EventListener);
-													EventListener = null;
-
-												}catch (Exception Ex){
-													Ex.printStackTrace();
-												}
-												new MyAsyncTask(MyFirebaseMessagingService.this, data).execute();
-
-												// sendNotification(data);
-												// or  for missed call  in history   ...
-												// send unavailibilty notfication  to another user  ...s
-												ChatActivity.missedCallNotification(getApplication(),
-														room_call,
-														"video",
-														senderID ,
-														"Firebase messaging  notification" ,
-														"missed call");
-											}
-
-										}else{
-
-											new MyAsyncTask(MyFirebaseMessagingService.this, data).execute();
-
-											// sendNotification(data);
-											// or  for missed call  in history   ...
-											// send unavailibilty notfication  to another user  ...s
-											ChatActivity.missedCallNotification(getApplication(),
-													"video",
-													senderID,
-													room_call ,
-													"Firebase messaging  notification" ,
-													"missed call");
-
-											ChatActivity.missedCallNotification(getApplication(),
-													room_call,
-													"video",
-													senderID ,
-													"Firebase messaging  notification" ,
-													"missed call");
-
-										}
-
+									}catch(Exception ex){
+										ex.printStackTrace();
 									}
 
+								}else{ // if not you will get a notification
+									try{
+										CallRoom.child("Call_room").child(room_call).removeEventListener(EventListener);
+										EventListener = null;
 
+									}catch (Exception Ex){
+										Ex.printStackTrace();
+									}
+									new MyAsyncTask(MyFirebaseMessagingService.this, data).execute();
 
+									// sendNotification(data);
+									// or  for missed call  in history   ...
+									// send unavailibilty notfication  to another user  ...s
+									ChatActivity.missedCallNotification(getApplication(),
+											room_call,
+											"video",
+											senderID ,
+											"Firebase messaging  notification" ,
+											"missed call");
 								}
+
+							}else{
+
+								new MyAsyncTask(MyFirebaseMessagingService.this, data).execute();
+
+								// sendNotification(data);
+								// or  for missed call  in history   ...
+								// send unavailibilty notfication  to another user  ...s
+								ChatActivity.missedCallNotification(getApplication(),
+										"video",
+										senderID,
+										room_call ,
+										"Firebase messaging  notification" ,
+										"missed call");
+
+								ChatActivity.missedCallNotification(getApplication(),
+										room_call,
+										"video",
+										senderID ,
+										"Firebase messaging  notification" ,
+										"missed call");
 
 							}
 
-
-						}catch(Exception ex){
-							//Toasty.error(getApplicationContext(), ex.toString() , Toast.LENGTH_LONG).show();
-							ex.printStackTrace();
 						}
 
+
 					}
-				}
-
-				@Override
-				public void onCancelled(DatabaseError databaseError) {
-					//Toasty.error(getApplicationContext(),databaseError.toString(), Toast.LENGTH_LONG).show();
 
 				}
-			});
 
 
+			}catch(Exception ex){
+				//Toasty.error(getApplicationContext(), ex.toString() , Toast.LENGTH_LONG).show();
+				ex.printStackTrace();
+			}
 
-		}catch(Exception ex){
-			ex.printStackTrace();
 		}
+
 	}
 
 

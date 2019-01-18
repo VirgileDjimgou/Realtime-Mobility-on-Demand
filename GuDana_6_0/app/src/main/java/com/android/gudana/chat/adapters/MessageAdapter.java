@@ -10,7 +10,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import android.text.util.Linkify;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,10 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +29,7 @@ import com.android.gudana.chat.activities.ChatActivity;
 import com.android.gudana.chat.activities.UserProfileActivity;
 import com.android.gudana.chat.utilities.Utility;
 import com.android.gudana.hify.ui.activities.notification.ImagePreviewSave;
+import com.android.gudana.hify.utils.Config;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -340,6 +339,8 @@ public class MessageAdapter extends BaseAdapter {
                     messageViewHolder.layout_voice_chat.setVisibility(View.GONE);
                     messageViewHolder.layout_live_Location.setVisibility(View.GONE);
 
+                    final String url_image = (Config.Media_Server.trim()+type_of_message[1].trim()).trim();
+
 
                     messageViewHolder.layout_image.setOnClickListener(new View.OnClickListener()
                                                                {
@@ -348,12 +349,12 @@ public class MessageAdapter extends BaseAdapter {
                                                                    {
 
                                                                        ArrayList<String> ImagesList = new ArrayList<>();
-                                                                       ImagesList.add(type_of_message[1]);
+                                                                       ImagesList.add(url_image);
 
                                                                        Intent intent=new Intent(context,ImagePreviewSave.class)
                                                                                .putExtra("uri","")
                                                                                .putExtra("sender_name","Gudana_Image_User")
-                                                                               .putExtra("url",type_of_message[1])                                                                               .putStringArrayListExtra("Images",ImagesList)
+                                                                               .putExtra("url",Config.Media_Server.trim()+type_of_message[1].trim())                                                                               .putStringArrayListExtra("Images",ImagesList)
                                                                                .putStringArrayListExtra("Images",ImagesList);
 
 
@@ -363,7 +364,7 @@ public class MessageAdapter extends BaseAdapter {
                                                                });
 
                     Picasso.with(context)
-                            .load(type_of_message[1]) // not from  firebase .... direct local because i have already the uri of imag
+                            .load(url_image) // not from  firebase .... direct local because i have already the uri of imag
                             .fit()
                             .networkPolicy(NetworkPolicy.OFFLINE)
                             .into(messageViewHolder.ImageContainer, new Callback()
@@ -380,7 +381,7 @@ public class MessageAdapter extends BaseAdapter {
                                 public void onError()
                                 {
                                     Picasso.with(context)
-                                            .load(type_of_message[1])
+                                            .load(url_image)
                                             .fit()
                                             .into(messageViewHolder.ImageContainer, new Callback()
                                             {
@@ -409,10 +410,12 @@ public class MessageAdapter extends BaseAdapter {
                     messageViewHolder.layout_doc.setVisibility(View.GONE);
                     messageViewHolder.layout_image.setVisibility(View.GONE);
                     messageViewHolder.layout_live_Location.setVisibility(View.GONE);
+
+                    final String voice_url = Config.Media_Server.trim()+type_of_message[1].trim();
                     messageViewHolder.layout_voice_chat.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ChatActivity.showDiag_voice(context, type_of_message[1]);
+                            ChatActivity.showDiag_voice(context, voice_url);
 
                         }
                     });
@@ -420,7 +423,7 @@ public class MessageAdapter extends BaseAdapter {
                     messageViewHolder.ButtonPlayStop.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ChatActivity.showDiag_voice(context, type_of_message[1]);
+                            ChatActivity.showDiag_voice(context, voice_url);
                         }
                     });
 
@@ -460,7 +463,7 @@ public class MessageAdapter extends BaseAdapter {
                         @Override
                         public void onClick(View v) {
                             Intent LiveLocationReceiver = new Intent(context , MoD_Live_Location_receiver_Activity.class);
-                            LiveLocationReceiver.putExtra("data",type_of_message[1]);
+                            LiveLocationReceiver.putExtra("data",type_of_message[1].trim());
                             context.startActivity(LiveLocationReceiver);
                             // ChatActivity.showDiag_gps_menu(context , ChatActivity.Startposition_Custom_dialog  ,type_of_message[1].toString());
                         }
@@ -475,12 +478,14 @@ public class MessageAdapter extends BaseAdapter {
                     messageViewHolder.layout_voice_chat.setVisibility(View.GONE);
                     messageViewHolder.layout_live_Location.setVisibility(View.GONE);
 
+                    final String Doc_url = (Config.Media_Server.trim()+type_of_message[1].toString().trim()).trim();
+
                     messageViewHolder.layout_doc.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             String filename = "";
                             try {
-                                ChatActivity.download_and_open_document(context, type_of_message[1].toString(), filename);
+                                ChatActivity.download_and_open_document(context, Doc_url, filename);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }

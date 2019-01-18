@@ -11,23 +11,18 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.android.gudana.MoD.LiveTrackingObjet;
-import com.android.gudana.MoD.MoD_Live_Location_sharing_Activity;
 import com.android.gudana.R;
 import com.android.gudana.gpslocationtracking.LocationTrack;
 import com.android.gudana.hify.utils.Config;
-import com.android.gudana.hify.utils.database.live_location_sharing_db;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFrame;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -35,7 +30,6 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import es.dmoral.toasty.Toasty;
 import io.github.sac.Ack;
 import io.github.sac.BasicListener;
 import io.github.sac.Emitter;

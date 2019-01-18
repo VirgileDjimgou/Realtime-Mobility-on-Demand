@@ -4,11 +4,15 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.gudana.chat.model.User;
 import com.android.gudana.hify.ui.activities.MainActivity_GuDDana;
+import com.android.gudana.hify.utils.ServerConfig;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.FirebaseDatabase;
+
+import es.dmoral.toasty.Toasty;
 
 public class ChatApplication extends Application {
     private static final String TAG = "ChatApplication";
@@ -28,6 +32,8 @@ public class ChatApplication extends Application {
         FirebaseApp.initializeApp(this.getApplicationContext());
         FirebaseApp.initializeApp(ChatApplication.this.getApplicationContext());
         FirebaseApp.initializeApp(ChatApplication.this.getBaseContext());
+
+
 
         sharedPreferences =
                 getBaseContext().getSharedPreferences("user", Context.MODE_PRIVATE);

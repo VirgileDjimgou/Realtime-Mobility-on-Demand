@@ -10,7 +10,6 @@
 
 package com.android.gudana.apprtc;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -24,6 +23,8 @@ import org.webrtc.StatsReport;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import androidx.fragment.app.Fragment;
 
 /**
  * Fragment for HUD statistics display.

@@ -55,15 +55,11 @@
     <string name="are_typing"> are typing&#8230;</string>
     <string name="write_a_message">Write a message</string>
 
-    <string-array
-        name="message_dialog_choice_list">
+    <string-array name="message_dialog_choice_list">
         <item>Copy text</item>
         <item>View details</item>
         <item>View profile</item>
     </string-array>
-
-
-
 
 
     <string name="asset_statements" translatable="false">[{ \"include\": \"https://api.tinode.co/.well-known/assetlinks.json\" }]</string>
@@ -2099,6 +2095,12 @@ Curiosity might have killed the cat, but it is the driving force behind all inno
     <string name="receiver_live_location">Live Location Receiver</string>
     <string name="share_your">click here to share your own live location</string>
     <string name="stop_shaing">Stop Sharing Location</string>
+    <string name="title_activity_test__rest_http__server_">Test_RestHttp_Server_Activity</string>
+    <string name="nav_chats">Chats</string>
+    <string name="nav_calls">Calls</string>
+    <string name="nav_people">Friend</string>
+    <string name="nav_profile">Profile</string>
+    <string name="nav_friends">friend</string>
 </resources>
 
 

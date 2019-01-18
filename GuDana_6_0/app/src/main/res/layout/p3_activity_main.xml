@@ -8,7 +8,7 @@
 
     <include layout="@layout/p3_content_main" />
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/add_conversation"
         android:layout_width="wrap_content"

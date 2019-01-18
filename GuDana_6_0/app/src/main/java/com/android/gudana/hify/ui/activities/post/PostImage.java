@@ -1,6 +1,5 @@
 package com.android.gudana.hify.ui.activities.post;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,12 +8,12 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -45,7 +44,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 //import com.nguyenhoanglam.imagepicker.model.Config;
 //import com.nguyenhoanglam.imagepicker.model.Image;
 //import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImagePicker;
@@ -78,8 +76,6 @@ import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import static com.android.gudana.hify.adapters.UploadListAdapter.uploadedImagesUrl;
@@ -682,7 +678,7 @@ public class PostImage extends AppCompatActivity {
 
                 if(error == false){
 
-                    this.url_file_uploaded = url_file;
+                    this.url_file_uploaded =  url_file;
                     fileDoneList.remove(finalI);
                     fileDoneList.add(finalI,"done");
                     uploadedImagesUrl.add(this.url_file_uploaded);

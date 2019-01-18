@@ -15,9 +15,9 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.viewpager.widget.ViewPager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
@@ -40,6 +40,7 @@ import com.android.gudana.hify.models.Post;
 import com.android.gudana.hify.ui.activities.friends.FriendProfile;
 import com.android.gudana.hify.ui.activities.post.CommentsActivity;
 import com.android.gudana.R;
+import com.android.gudana.hify.utils.Config;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.github.ivbaranov.mfb.MaterialFavoriteButton;
@@ -63,7 +64,6 @@ import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import es.dmoral.toasty.Toasty;
 import me.grantland.widget.AutofitTextView;
 import pl.droidsonroids.gif.GifImageView;
 
@@ -465,49 +465,49 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
 
         if(!TextUtils.isEmpty(url0)){
-            MultipleImage image=new MultipleImage(url0);
+            MultipleImage image=new MultipleImage((Config.Media_Server.trim() + url0).trim());
             multipleImages.add(image);
             photosAdapter.notifyDataSetChanged();
             Log.i("url0",url0);
         }
 
         if(!TextUtils.isEmpty(url1)){
-            MultipleImage image=new MultipleImage(url1);
+            MultipleImage image=new MultipleImage((Config.Media_Server.trim() + url1).trim());
             multipleImages.add(image);
             photosAdapter.notifyDataSetChanged();
             Log.i("url1",url1);
         }
 
         if(!TextUtils.isEmpty(url2)){
-            MultipleImage image=new MultipleImage(url2);
+            MultipleImage image=new MultipleImage((Config.Media_Server.trim() + url2).trim());
             multipleImages.add(image);
             photosAdapter.notifyDataSetChanged();
             Log.i("url2",url2);
         }
 
         if(!TextUtils.isEmpty(url3)){
-            MultipleImage image=new MultipleImage(url3);
+            MultipleImage image=new MultipleImage((Config.Media_Server.trim() + url3).trim());
             multipleImages.add(image);
             photosAdapter.notifyDataSetChanged();
             Log.i("url3",url3);
         }
 
         if(!TextUtils.isEmpty(url4)){
-            MultipleImage image=new MultipleImage(url4);
+            MultipleImage image=new MultipleImage((Config.Media_Server.trim() + url4).trim());
             multipleImages.add(image);
             photosAdapter.notifyDataSetChanged();
             Log.i("url4",url4);
         }
 
         if(!TextUtils.isEmpty(url5)){
-            MultipleImage image=new MultipleImage(url5);
+            MultipleImage image=new MultipleImage((Config.Media_Server.trim() + url5).trim());
             multipleImages.add(image);
             photosAdapter.notifyDataSetChanged();
             Log.i("url5",url5);
         }
 
         if(!TextUtils.isEmpty(url6)){
-            MultipleImage image=new MultipleImage(url6);
+            MultipleImage image=new MultipleImage((Config.Media_Server.trim() + url6).trim());
             multipleImages.add(image);
             photosAdapter.notifyDataSetChanged();
             Log.i("ur6",url6);

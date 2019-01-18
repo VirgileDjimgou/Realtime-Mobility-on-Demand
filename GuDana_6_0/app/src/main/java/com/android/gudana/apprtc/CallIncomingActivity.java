@@ -23,9 +23,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PowerManager;
-import android.support.v4.app.ActivityCompat;
+
+import androidx.core.app.ActivityCompat;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -38,15 +41,13 @@ import com.android.gudana.apprtc.compatibility.Compatibility;
 import com.android.gudana.apprtc.linphone.LinphoneManager;
 import com.android.gudana.chat.activities.ChatActivity;
 import com.android.gudana.hify.ui.activities.MainActivity_GuDDana;
+import com.android.gudana.hify.utils.Config;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -56,11 +57,14 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.linphone.core.LinphoneCall;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
@@ -70,6 +74,9 @@ import es.dmoral.toasty.Toasty;
 
 public class CallIncomingActivity extends Activity{
 	private static CallIncomingActivity instance;
+
+	// timer task
+	Timer timer = new Timer();
 
 	private TextView name, number;
 	private Button  accept, decline;
@@ -92,6 +99,10 @@ public class CallIncomingActivity extends Activity{
 	private String call_type = "video";
 	private String user_id = null;
 	private String room_id = null;
+	Timer myTimer = new Timer();
+	String message;
+	JSONObject jsonObj;
+
 
 
 	public static CallIncomingActivity instance() {
@@ -167,6 +178,8 @@ public class CallIncomingActivity extends Activity{
 
 		user_id = getIntent().getStringExtra("userid");
 		room_id = getIntent().getStringExtra("room_id_call");
+		message = getIntent().getStringExtra("message");
+
 		// sett context ...
 		mContext = CallIncomingActivity.this.getApplicationContext();
 
@@ -186,7 +199,6 @@ public class CallIncomingActivity extends Activity{
 			askPermission();
 			InitCallerProfil(user_id);
 			// start chechker
-			Check_Correspondantavailibility(CallIncomingActivity.this.getApplicationContext(),user_id);
 
 		}else{
 
@@ -197,7 +209,40 @@ public class CallIncomingActivity extends Activity{
 
 		}
 
+		// create jsonObject  ...
+		final JSONObject jsonObject = new JSONObject();
+		try {
+			jsonObject.put("index", room_id);
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		// start chehck avaibility 
+		myTimer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				TimerMethod(jsonObject);
+			}
+
+		}, 0, 2000);
+
 	}
+
+	private void TimerMethod(JSONObject jsonObject)
+	{
+		System.out.println("echos ...");
+
+		// start ac call  ...
+		try{
+			new Caller_Availability(jsonObject).execute();
+
+		}catch (Exception ex){
+			ex.printStackTrace();
+		}
+
+	}
+
 
 	private void askPermission() {
 
@@ -283,11 +328,9 @@ public class CallIncomingActivity extends Activity{
 	@Override
 	protected void onDestroy() {
 
-		SanityChechCall_Db.child("Call_room").child(room_id).removeEventListener(mListener);
+		//SanityChechCall_Db.child("Call_room").child(room_id).removeEventListener(mListener);
 		super.onDestroy();
 	}
-
-
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -301,25 +344,41 @@ public class CallIncomingActivity extends Activity{
 	}
 
 	private void decline() {
+
+		//reset Call
+		try{
+			final JSONObject jsonObject = new JSONObject();
+			try {
+				jsonObject.put("index", room_id);
+
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+
+			new ChatActivity.Reset_Call(jsonObject).execute();
+
+		}catch (Exception ex){
+			ex.printStackTrace();
+		}
+
+
+
+		try{
+			myTimer.cancel();
+		}catch (Exception ex){
+			ex.printStackTrace();
+		}
+
+
 		try{
 
 			decline.setEnabled(false);
 			ViCall.stopRinging();
 			// put the  call  dispo enable
-			SanityChechCall_Db.child("Call_room").child(room_id).removeEventListener(mListener);
-
-			// reset call
-			ChatActivity.resetCallparameter(CallIncomingActivity.this , room_id , "CallIncomming : Decline ",
-					"your correspondant ist not available",1,
-					user_id
-			);
-
-
 
 		}catch(Exception ex){
 
 
-			SanityChechCall_Db.child("Call_room").child(room_id).removeEventListener(mListener);
 			ex.printStackTrace();
 		}
 		
@@ -329,72 +388,35 @@ public class CallIncomingActivity extends Activity{
 	private void answer() {
 
 		try{
+			myTimer.cancel();
+		}catch (Exception ex){
+			ex.printStackTrace();
+		}
+
+
+
+		try{
 
 			accept.setEnabled(false);
 			ViCall.stopRinging();
 
-			//SanityChechCall_Db.keepSynced(true);
-			SanityChechCall_Db = FirebaseDatabase.getInstance().getReference().child("Call_room").child(room_id);
-				// add listeners for single Value
-			SanityChechCall_Db.keepSynced(true);
-			SanityChechCall_Db.addListenerForSingleValueEvent(new ValueEventListener() {
-				@Override
-				public void onDataChange(DataSnapshot dataSnapshot) {
+			try {
+				jsonObj = new JSONObject(message);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 
-					if(dataSnapshot.exists()){
-						try{
-							Map<String, Object> map_call = (Map<String, Object>) dataSnapshot.getValue();
-							// test if the recors Phone already exist  ...if not than
-							// than you are a new user   ...
-							if(map_call.get("room_id")!=null){
-								// than this user is already registered ...
-								call_server_id = map_call.get("room_id").toString();
-								// Toasty.info(mContext, "Server Channel  : "+ call_server_id, Toast.LENGTH_LONG).show();
-								if(map_call.get("call_type")!=null){
-									call_type = map_call.get("call_type").toString();
-								}else{
-									call_type = "audio";
-								}
+			call_type = jsonObj.getString("call_type");
 
-
-								Intent intentaudio = new Intent(CallIncomingActivity.this, ConnectActivity.class);
-								intentaudio.putExtra("vid_or_aud", call_type);
-								intentaudio.putExtra("user_id", user_id );
-								intentaudio.putExtra("call_channel", call_server_id );
-								startActivity(intentaudio);
-								// remove listener
-								// userDB.child("Users").child(user_id).removeEventListener(mListener);
-								finish();
-
-
-							}else{
-
-							}
-
-
-						}catch(Exception ex){
-							SanityChechCall_Db.child("Call_room").child(room_id).removeEventListener(mListener);
-							Toasty.error(CallIncomingActivity.this, ex.toString() , Toast.LENGTH_LONG).show();
-							ex.printStackTrace();
-						}
-
-					}
-				}
-
-				@Override
-				public void onCancelled(DatabaseError databaseError) {
-					Toasty.error(getApplicationContext(),databaseError.toString(), Toast.LENGTH_LONG).show();
-
-				}
-			});
-
-
-
+			Intent intentaudio = new Intent(CallIncomingActivity.this, ConnectActivity.class);
+			intentaudio.putExtra("vid_or_aud", call_type);
+			intentaudio.putExtra("user_id", user_id);
+			intentaudio.putExtra("call_channel", room_id );
+			startActivity(intentaudio);
+			finish();
 
 		}catch(Exception ex){
 
-
-			SanityChechCall_Db.child("Call_room").child(room_id).removeEventListener(mListener);
 			ex.printStackTrace();
 		}
 
@@ -406,101 +428,6 @@ public class CallIncomingActivity extends Activity{
 
 	}
 
-	public void Check_Correspondantavailibility(final Context context , String UserID){
-
-		try{
-
-			SanityChechCall_Db = FirebaseDatabase.getInstance().getReference().child("Call_room").child(room_id);
-			// Set the  Driver Response to true ...
-			//HashMap map = new HashMap();
-			//map.put("Authentified" , "await");
-			//userDB.updateChildren(map);
-			mListener = SanityChechCall_Db.addValueEventListener(new ValueEventListener() {
-				@Override
-				public void onDataChange(DataSnapshot dataSnapshot) {
-					if(dataSnapshot.exists()){
-						try{
-							Map<String, Object> map_call = (Map<String, Object>) dataSnapshot.getValue();
-							// test if the recors Phone already exist  ...if not than
-							// than you are a new user   ...
-							if(map_call.get("available_caller")!=null){
-								// than this user is already registered ...
-								boolean caller_availibilty  = (boolean) map_call.get("available_caller");
-								if(caller_availibilty == false) {
-									// than we must stop the call  ...
-									ViCall.stopRinging();
-									// put the  call  dispo enable
-									/*
-									CreateGroupChatActivity.resetCallparameter(getApplicationContext() , room_id ,
-											this.getClass().getName() + "chehcCorrespondant",
-											"your correspondant ist not available"
-									);
-									*/
-									SanityChechCall_Db.child("Call_room").child(room_id).removeEventListener(mListener);
-									finish();
-								}
-
-							}
-
-							if(map_call.get("room_status")!=null){
-								// than this user is already registered ...
-								boolean room_Status  = (boolean) map_call.get("room_status");
-								if(room_Status == false) {
-									// than we must stop the call  ...
-									ViCall.stopRinging();
-									// put the  call  dispo enable
-									/*
-									CreateGroupChatActivity.resetCallparameter(getApplicationContext() , room_id ,
-											this.getClass().getName() + "chehcCorrespondant",
-											"your correspondant ist not available"
-									);
-									*/
-									SanityChechCall_Db.child("Call_room").child(room_id).removeEventListener(mListener);
-									finish();
-								}
-
-							}
-
-
-						}catch(Exception ex){
-
-							/*
-							CreateGroupChatActivity.resetCallparameter(getApplicationContext() , room_id ,
-									this.getClass().getName() + "chehcCorrespondant",
-									"your correspondant ist not available"
-							);
-							*/
-							SanityChechCall_Db.child("Call_room").child(room_id).removeEventListener(mListener);
-							Toasty.error(context, ex.toString() , Toast.LENGTH_LONG).show();
-							ex.printStackTrace();
-						}
-
-					}
-				}
-
-				@Override
-				public void onCancelled(DatabaseError databaseError) {
-					Toasty.error(context,databaseError.toString(), Toast.LENGTH_LONG).show();
-
-				}
-			});
-
-
-
-		}catch(Exception ex){
-			/*
-
-			CreateGroupChatActivity.resetCallparameter(getApplicationContext() ,
-					room_id , this.getClass().getName() + "chehcCorrespondant",
-					"your correspondant ist not available"
-			);
-			*/
-			SanityChechCall_Db.child("Call_room").child(room_id).removeEventListener(mListener);
-			ex.printStackTrace();
-		}
-
-
-	}
 
 	private void checkAndRequestCallPermissions() {
 		ArrayList<String> permissionsList = new ArrayList<String>();
@@ -526,4 +453,85 @@ public class CallIncomingActivity extends Activity{
 
 		}
 	}
+
+
+	public class Caller_Availability extends AsyncTask<String, String, JSONObject> {
+
+		JSONObject jsonObject_local;
+
+		public Caller_Availability( JSONObject jsonObject) {
+			//this.roomsFragment = roomsFragment;
+			this.jsonObject_local = jsonObject;
+		}
+
+
+		@Override
+		protected JSONObject doInBackground(String... params) {
+		    JSONObject json_return = null;
+		    try{
+
+                String Server_url_api_start_call = (Config.URL_CHAT_SERVER.trim()+"/check_caller").trim();
+                json_return = (new com.android.gudana.chat.network.JSONParser()).getJSONFromUrl(Server_url_api_start_call, jsonObject_local);
+
+            }catch (Exception ex){
+		        ex.printStackTrace();
+            }
+
+            if(json_return == null){
+		    	// reset call ...
+				ViCall.stopRinging();
+				decline();
+
+			}
+
+            return  json_return;
+
+		}
+
+		@Override
+		protected void onPostExecute(final JSONObject jsonObject_result) {
+
+			try{
+
+
+				if(jsonObject_result == null) {
+
+					Log.d("receive ", "onPostExecute: ");
+					System.out.println(jsonObject_result);
+
+				}else{
+
+					Boolean  Response = jsonObject_result.getBoolean("caller_available");
+					if(Response == false && Response != null){
+						try{
+							if(isScreenActive) {
+
+								ViCall.stopRinging();
+								decline();
+							} else {
+								accept.setEnabled(false);
+								//accept.setEnabled(false);
+								//accept.setVisibility(View.GONE);
+							}
+
+						}catch (Exception ex){
+							ex.printStackTrace();
+						}
+
+
+					}else{
+						System.out.println("voice server  unreachable ...");
+
+					}
+
+				}
+
+			}catch (Exception ex){
+				System.out.println("voice server  unreachable ...");
+				ex.printStackTrace();
+			}
+
+		}
+	}
+
 }

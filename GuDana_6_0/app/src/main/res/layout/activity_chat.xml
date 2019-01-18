@@ -24,13 +24,13 @@
         android:background="@color/grey_200"
         android:layout_above="@id/btnSend"/>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerChat"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/line">
 
-    </android.support.v7.widget.RecyclerView>
+    </androidx.recyclerview.widget.RecyclerView>
 
     <EditText
         android:id="@+id/editWriteMessage"

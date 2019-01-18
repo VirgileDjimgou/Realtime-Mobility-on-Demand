@@ -4,17 +4,13 @@ import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
-import android.util.Log;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.android.gudana.R;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.github.chrisbanes.photoview.PhotoView;
 import com.halilibo.bettervideoplayer.BetterVideoPlayer;
 
 
@@ -104,7 +100,7 @@ public class FullscreenActivity extends AppCompatActivity {
 
         mBetterVideoPlayer.getToolbar().setTitle("FullScreen Sample");
         mBetterVideoPlayer.getToolbar()
-                .setNavigationIcon(android.support.v7.appcompat.R.drawable.abc_ic_ab_back_material);
+                .setNavigationIcon(androidx.appcompat.R.drawable.abc_ic_ab_back_material);
         mBetterVideoPlayer.getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
