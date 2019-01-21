@@ -302,8 +302,6 @@ public class MainActivity_GuDDana extends AppCompatActivity implements DrawerAda
     }
 
 
-
-
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -323,9 +321,6 @@ public class MainActivity_GuDDana extends AppCompatActivity implements DrawerAda
         //askPermission();
         FirebaseApp.initializeApp(this);
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-        }
         //askPermission();
         // set offline capiblities    ...
         try{
@@ -334,8 +329,8 @@ public class MainActivity_GuDDana extends AppCompatActivity implements DrawerAda
             askPermission();
             ctx = this;
 
-            boolean enabledTranslucentNavigation = true;
-            setTheme(enabledTranslucentNavigation ? R.style.AppTheme_TranslucentNavigation : R.style.AppTheme);
+            //boolean enabledTranslucentNavigation = false;
+            //setTheme(enabledTranslucentNavigation ? R.style.AppTheme_TranslucentNavigation : R.style.AppTheme);
             setContentView(R.layout.hi_activity_main);
 
 
@@ -345,10 +340,6 @@ public class MainActivity_GuDDana extends AppCompatActivity implements DrawerAda
                     .setFontAttrId(R.attr.fontPath)
                     .build()
             );
-
-
-
-            // enable translucid
 
 
             coordinatorLayout = (CoordinatorLayout) findViewById(R.id.CoordinatorLayout01);
@@ -619,8 +610,8 @@ public class MainActivity_GuDDana extends AppCompatActivity implements DrawerAda
 
         // setup   bottom navigation  ..
 
-        setupViewPager();
-        setupBottom_Navigation();
+        //setupViewPager();
+        //setupBottom_Navigation();
 
         fetchServerConfig();
 
@@ -640,8 +631,7 @@ public class MainActivity_GuDDana extends AppCompatActivity implements DrawerAda
         addBottomNavigationItems();
         bottomNavigation.setCurrentItem(0);
 
-
-        bottomNavigation.setTranslucentNavigationEnabled(true);
+        //bottomNavigation.setTranslucentNavigationEnabled(true);
         bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
             @Override
             public boolean onTabSelected(int position, boolean wasSelected) {
