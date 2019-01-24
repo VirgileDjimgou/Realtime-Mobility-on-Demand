@@ -1,0 +1,58 @@
+
+
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+        mavenLocal()
+        jcenter()
+        google()
+        mavenCentral()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    }
+    dependencies {
+
+        classpath 'com.android.tools.build:gradle:3.3.0'
+        classpath 'com.google.gms:google-services:4.2.0'
+
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
+        classpath 'com.github.dcendents:android-maven-plugin:1.2'
+
+    }
+}
+
+allprojects {
+    repositories {
+        maven {
+            url 'https://maven.fabric.io/public'
+        }
+        maven { url "https://s3.amazonaws.com/repo.commonsware.com" }
+
+        mavenLocal()
+        mavenCentral()
+        google()
+        jcenter()
+        maven { url "https://jitpack.io" }
+
+        maven {
+            url "https://maven.google.com" // Google's Maven repository
+        }
+        maven { url "https://dl.bintray.com/hani-momanii/maven"}
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+
+
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+
+
+
+
+
+

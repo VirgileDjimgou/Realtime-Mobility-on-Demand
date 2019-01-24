@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.android.gudana">
+
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission
+        android:name="android.permission.CLEAR_APP_CACHE"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="android.permission.DELETE_CACHE_FILES"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" /> <!-- Used for optional Applock Feature -->
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+
+    <uses-feature
+        android:name="android.hardware.fingerprint"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.network"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.microphone"
+        android:required="false" />
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
+    <supports-screens android:anyDensity="true" />
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" /> <!-- Permissions for Push Notification -->
+    <permission
+        android:name="com.android.gudana.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" /> <!-- Change package ! -->
+    <uses-permission android:name="com.lituo.linphone.permission.C2D_MESSAGE" /> <!-- Change package ! -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+    <uses-permission android:name="android.permission.CALL_PHONE" /> <!-- Needed to allow Linphone to install on tablets, since android.permission.CALL_PHONE implies android.hardware.telephony is required -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- Needed to use our own Contact editor -->
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" /> <!-- Needed to route the lin_audio to the bluetooth headset if available -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" /> <!-- Needed to pre fill the wizard email field (only if enabled in custom lin_settings) -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" /> <!-- Needed for in-app purchase -->
+    <uses-permission android:name="com.android.vending.BILLING" /> <!-- Needed for overlay widget -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
+
+    <application
+        android:name=".chat.ChatApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:manageSpaceActivity="com.android.gudana.hify.ui.activities.ManageSpace"
+        android:roundIcon="@drawable/xshaka_icon"
+        android:screenOrientation="portrait"
+        android:supportsRtl="true">
+        <activity
+            android:name=".chatapp.activities.FullscreenActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_fullscreen"
+            android:theme="@style/FullscreenTheme"></activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/api_key_google_places" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/notification_channel_id" />
+
+        <service android:name=".fcm.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name=".hify.ui.activities.MainActivity_GuDDana"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan|stateHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.CALL" />
+                <action android:name="android.intent.action.CALL_PRIVILEGED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="tel" />
+                <data android:scheme="sip" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SENDTO" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="sip" />
+                <data android:scheme="imto" />
+            </intent-filter>
+        </activity> <!-- background Service  .... -->
+        <service
+            android:name=".service.SensorService"
+            android:enabled="true" />
+
+        <receiver
+            android:name=".service.SensorRestarterBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:label="RestartServiceWhenStopped" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/notification_channel_id" /> <!-- android:name="com.android.gudana.hify.ui.activities.MainActivity_GuDDana_GuDDana" -->
+        <!-- main Start Activity  hify  .... -->
+        <activity
+            android:name=".fcm.MainActivity_fcm"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/TranslucentBackground" />
+        <activity
+            android:name=".hify.ui.activities.account.LoginActivity"
+            android:allowBackup="true"
+            android:screenOrientation="portrait"
+            android:supportsRtl="true"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".hify.ui.activities.account.RegisterActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/LoginAppTheme"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".hify.ui.activities.friends.SendActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".apprtc.ConnectActivity"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustPan">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="appr.tc"
+                    android:scheme="https" />
+                <data
+                    android:host="appr.tc"
+                    android:scheme="http" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".apprtc.CallActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="fullUser"
+            android:theme="@style/AppTheme" />
+
+        <service android:name=".hify.receivers.InstanceIdService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name=".hify.ui.activities.notification.NotificationActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden">
+            <intent-filter>
+                <action android:name="com.android.gudana.TARGETNOTIFICATION" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".hify.ui.activities.notification.NotificationReplyActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.android.gudana.TARGETNOTIFICATIONREPLY" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".hify.ui.activities.notification.ImagePreviewSave"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".hify.ui.activities.notification.ImagePreview"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".video_player.BackgroundActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".video_player.FullscreenActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_fullscreen"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".hify.ui.activities.notification.NotificationImage"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.android.gudana.hify.TARGETNOTIFICATION_IMAGE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".hify.ui.activities.notification.NotificationImageReply"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.android.gudana.hify.TARGETNOTIFICATIONREPLY_IMAGE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".hify.ui.activities.friends.FriendsViewForMessage"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".hify.ui.activities.friends.MessagesView"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".apprtc.SettingsActivity"
+            android:label="@string/settings_name" />
+        <activity
+            android:name=".apprtc.CallIncomingActivity"
+            android:launchMode="singleTop"
+            android:noHistory="true"
+            android:screenOrientation="behind"
+            android:theme="@style/NoTitle">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".hify.ui.activities.friends.AddUserDetail"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".hify.ui.activities.friends.SearchUsersActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".hify.ui.activities.post.PostText"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".hify.ui.activities.post.CommentsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="com.android.gudana.hify.TARGET_COMMENT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".hify.ui.activities.post.PostImage"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".hify.ui.activities.friends.FriendProfile"
+            android:screenOrientation="portrait"
+            android:theme="@style/ChatTheme">
+            <intent-filter>
+                <action android:name="com.android.gudana.hify.TARGET_FRIENDREQUEST" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".hify.ui.activities.account.UpdateAvailable"
+            android:theme="@style/UpdateAppTheme">
+            <intent-filter>
+                <action android:name="com.android.gudana.hify.TARGET_UPDATE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".hify.ui.activities.ManageSpace"
+            android:screenOrientation="portrait"
+            android:theme="@style/UpdateAppTheme" /> <!-- add linphone   minifest ... -->
+        <activity
+            android:name=".hify.ui.activities.FriendlistScrollingActivity"
+            android:theme="@style/ChatTheme">
+            <intent-filter>
+                <action android:name="com.android.gudana.chatapp.chatapp_CHAT_TARGET_NOTIFICATION" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".hify.ui.activities.FriendsUpdates"
+            android:theme="@style/ChatTheme">
+            <intent-filter>
+                <action android:name="com.android.gudana.chatapp.chatapp_CHAT_TARGET_NOTIFICATION" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name=".GuDFeed.ImagePreviewActivity"
+            android:label="Image Preview"
+            android:parentActivityName=".hify.ui.activities.MainActivity_GuDDana"
+            android:screenOrientation="portrait"
+            android:theme="@style/UsersTheme" />
+        <activity
+            android:name=".hify.ui.activities.create_post"
+            android:label="@string/title_activity_create_post"
+            android:launchMode="singleTop"
+            android:parentActivityName=".hify.ui.activities.MainActivity_GuDDana"
+            android:theme="@style/ChatTheme" />
+        <activity
+            android:name=".hify.ui.activities.SeePost"
+            android:label="@string/title_activity_see_post"
+            android:launchMode="singleTop"
+            android:parentActivityName=".hify.ui.activities.MainActivity_GuDDana"
+            android:theme="@style/UsersTheme" />
+        <activity
+            android:name=".hify.ui.activities.FriendUpdatesActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_friend_updates"
+            android:theme="@style/ChatTheme" /> <!-- add tindroid client   minifest ... -->
+        <!--
+        FCM handling
+        <service android:name=".tindroid.fcm.FBaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        -->
+        <!-- original file provider  tindroid  but i have conflict with  some library in gradle  to handle file -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.android.gudana.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
+        <activity
+            android:name=".hify.ui.activities.account.StartLoginActivity"
+            android:label="@string/title_activity_phone_login"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".hify.ui.activities.account.PhoneAuthActivity"
+            android:label="@string/title_activity_phone_login"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".chat.activities.ChatActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden"></activity>
+        <activity
+            android:name=".chat.activities.SettingsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_settings"></activity>
+        <activity
+            android:name=".chat.activities.UserProfileActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_user_profile"></activity>
+        <activity
+            android:name=".chat.recyclerviewsearch.ContactListActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".chat.activities.MenuActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_chat"
+            android:launchMode="singleTop"
+            android:theme="@style/ChatTheme"></activity>
+        <activity
+            android:name=".MoD.MoD_Live_Location_sharing_Activity"
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTop"
+            android:theme="@style/ChatTheme"></activity>
+        <activity
+            android:name=".MoD.MoD_Live_Location_receiver_Activity"
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTop"
+            android:theme="@style/ChatTheme"></activity>
+        <activity
+            android:name=".hify.utils.Test_RestHttp_Server_Activity"
+            android:label="@string/title_activity_test__rest_http__server_"
+            android:theme="@style/AppTheme"></activity>
+    </application>
+
+</manifest>

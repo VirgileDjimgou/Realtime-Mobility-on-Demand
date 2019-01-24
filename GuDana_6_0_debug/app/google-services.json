@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "650661540071",
+    "firebase_url": "https://gudana-cloud-technology.firebaseio.com",
+    "project_id": "gudana-cloud-technology",
+    "storage_bucket": "gudana-cloud-technology.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:650661540071:android:081dde19ed5016cf",
+        "android_client_info": {
+          "package_name": "com.android.gudana"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "650661540071-6hrdd9bam3tfraen3c8o10mdefkf4ds2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.android.gudana",
+            "certificate_hash": "a29bdf36185c0241e1f8dc89e4f228e8cd00b4a1"
+          }
+        },
+        {
+          "client_id": "650661540071-41bl9gpqomd376io8tb2sr8ph3b7p6vr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxLaOz8RQs6582PZm_ODv1rM2j_s3-c9A"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "650661540071-41bl9gpqomd376io8tb2sr8ph3b7p6vr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

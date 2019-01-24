@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <group
+        android:id="@+id/offline"
+        android:visible="false">
+        <item
+            android:id="@+id/action_offline"
+            android:orderInCategory="10"
+            android:title="@string/action_offline"
+            android:icon="@drawable/ic_offline"
+            app:showAsAction="always" />
+    </group>
+
+    <item
+        android:id="@+id/action_new_p2p_topic"
+        android:orderInCategory="100"
+        android:title="@string/action_new_chat"
+        android:icon="@drawable/ic_chat"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_new_grp_topic"
+        android:orderInCategory="101"
+        android:title="@string/action_new_group"
+        android:icon="@drawable/ic_group_add"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_add_by_id"
+        android:orderInCategory="102"
+        android:title="@string/action_start_by_id"
+        android:icon="@drawable/ic_add"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="103"
+        android:title="@string/action_settings"
+        android:icon="@drawable/ic_settings"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_about"
+        android:orderInCategory="104"
+        android:title="@string/action_about"
+        android:icon="@drawable/ic_info"
+        app:showAsAction="never" />
+
+</menu>
