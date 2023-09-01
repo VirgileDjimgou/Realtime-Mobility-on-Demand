@@ -1,6 +1,5 @@
 
-The purpose of this project is to specify software requirements of the Real-time and Autonome Online Moto-Taxi / Taxi Booking in specifically Region (Sud-Asia, 
-Africa or Sud-America). It is intended to be a complete specification of what functionality the system provides. 
+The purpose of this project is to specify software requirements of the Real-time and Autonome Online Moto-Taxi / Taxi Booking in specifically Region (Sud-Asia, Africa or Sud-America). It is intended to be a complete specification of what functionality the system provides. 
 
 ### . This includes passenger app, driver app and web admin dashboard.
 
@@ -16,7 +15,6 @@ Africa or Sud-America). It is intended to be a complete specification of what fu
 
 ### Sample Android [HERE](http://virgiledjimgou.esy.es/)
 
-### Sample Video [HERE](https://www.youtube.com/watch?v=LFlCkfhgfSFw)
 
 ![](http://virgiledjimgou.esy.es/)
 
@@ -36,8 +34,6 @@ Africa or Sud-America). It is intended to be a complete specification of what fu
 ![layer_8](https://github.com/chichikolon/Bee_Realtime_Vehicle_Booking_System/blob/master/Ressource/markdown/Untitled%20collage-9.png)
 
 
-
-
 ### Web Admin and Visualisation
 ![download 2](https://github.com/chichikolon/Bee_Realtime_Vehicle_Booking_System/blob/master/Ressource/markdown/WebAdmin/Screenshot%20from%202018-02-05%2006-22-37.png)
 ![download 1](https://github.com/chichikolon/Bee_Realtime_Vehicle_Booking_System/blob/master/Ressource/markdown/WebAdmin/Screenshot%20from%202018-02-05%2006-22-50.png)
@@ -52,18 +48,6 @@ Africa or Sud-America). It is intended to be a complete specification of what fu
 ![download](https://github.com/chichikolon/Bee_Realtime_Vehicle_Booking_System/blob/master/Ressource/markdown/WebAdmin/Screenshot%20from%202018-02-05%2006-32-13.png)
 
 
-## Features
-1. Google Maps SDK 
-2. Firebase Realtime DB
-3. Firebase  Cloud Messaging
-4. Paystack
-5. geofire.
-6. App Engine.
-7. Compute Engine .
-8. Google Cloud SQL
-9. Firestore
-10.Node.js
-11.
 
 ## How It Works
 
@@ -85,27 +69,29 @@ Once You Get A Driver Then Your Phone Vibrates And The Credentials Of The Driver
 On Completion Of the ride your payment reciept is shown to you, then you can check out and rate your ride and then, you are ready for another booking.
 
 
-## Features in this app
+## Features in Customer(client) App
 
-Intro splash screen to give appealing look to the app. Google api integration for autocomplete. 
-Plotting of places to google map with distance and minutes calculation between routes. One step and easy booking process.
- Integration with Stripe Payment gateway. Option to set cab types with rates from backend Firebase . 
- Stylish animation between views with Facebook style slide menu. Display all booking with scroll to load and clean UI.
- Enable Auto refresh when driver accept job on driver arrival, journey begin ,
- journey completed / dropped etc. Support Push messages for all the status as well. 
- Live tracking Driver who are assigned for your booking. 
- Option to Cancel the Job till driver is not assigned. Rate card screen. 
- User can rate driver after completion of Ride , ALSO driver can rate user as well. 100% Java native Project.
+* Plotting of places to google map with distance and minutes calculation between routes.
+* Integration with Stripe Payment gateway. Option to set cab types with rates from backend Firebase . 
+* Stylish animation between views with Facebook style slide menu. Display all booking with scroll to load and clean UI.
+* Enable Auto refresh when driver accept job on driver arrival, journey begin , journey completed / dropped etc. Support Push messages for all the status as well. 
+* Live tracking Driver who are assigned for your booking.
+* Intro splash screen to give appealing look to the app. 
+* Google api integration for autocomplete. 
+* Option to Cancel the Job till driver is not assigned. Rate card screen. 
+* User can rate driver after completion of Ride , ALSO driver can rate user as well. 100% Java native Project.
 
-## Driver App Feature 
+## Features in Driver App Feature 
 
-3 Step registration form with all required field capture and validation done to make app ready to go live .. 
-Facebook style sliding menu .. Option to set status available and unavailable ... 
-Support Firebase Realtime for tracking Driver . 
-Support FCM notification Interface when new booking is arrived and Phone will start beeping . 
-Backend in Compute Engine to  Auto assigning of Driver for Jobs on the basis of availability of Driver avaibality , 
-car type and nearest available driver using Robust Spatial GEO Queries .. 
-Support Push messages to driver if app is in background. .. Calculating Tariff on the basis of Miles + Minutes require to travel . .
+* 3 Step registration form with all required field capture and validation done to make app ready to go live .. 
+* Facebook style sliding menu. 
+* Option to set status available and unavailable. 
+* Support Firebase Realtime for tracking Driver. 
+* Support FCM notification Interface when new booking is arrived and Phone will start beeping . 
+* Backend in Compute Engine to  Auto assigning of Driver for Jobs on the basis of availability of Driver avaibality , 
+* car type and nearest available driver using Robust Spatial GEO Queries. 
+* Support Push messages to driver if app is in background.
+* Calculating Tariff on the basis of Miles + Minutes require to travel.
 
 ## Features in Web admin: 
 
@@ -118,13 +104,20 @@ Option to view all users.. Set Prices for Car types ..
 Set Currencies .. And much more …
 
 
-## Thanks
+## Technology i used to create this Application.
 
-  * [Firebase](https://github.com/firebase/quickstart-android)
+  * [Firebase Realtime DB / Firestore / Cloud messaging](https://github.com/firebase/quickstart-android)
+  * Google Maps SDK 
+  * Paystack
+  * geofire.
   * [Volley](https://github.com/google/volley)
   * [Picasso](https://github.com/square/picasso)
+  * App Engine.
+  * Compute Engine .
+  * NodeJs
   * [Sweet Alert](https://github.com/pedant/sweet-alert-dialog)
   * [FlatUI](https://github.com/eluleci/FlatUI)
+  
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
