@@ -6,7 +6,7 @@ this Solution is an on-demand taxi booking software that helps expand business r
 this platform is built with native Android with the required functions and latest features for riders convenience. Prospering the freakishly growing taxi booking industry becomes super easy. The solution aims to connect the business with the customers seamlessly. 
 
 
-### . This Solution includes passenger app, driver app and web admin dashboard.
+### This Solution includes passenger app, driver app and web admin dashboard.
 
 ### Driver App
 ![layer_1](https://github.com/chichikolon/Bee_Realtime_Vehicle_Booking_System/blob/master/Ressource/markdown/Untitled%20collage-1.png)
