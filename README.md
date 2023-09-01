@@ -8,11 +8,6 @@ this platform is built with native Android with the required functions and lates
 
 ### . This Solution includes passenger app, driver app and web admin dashboard.
 
-### Sample Android [HERE](http://virgiledjimgou.esy.es/)
-
-![](http://virgiledjimgou.esy.es/)
-
-
 ### Driver App
 ![layer_1](https://github.com/chichikolon/Bee_Realtime_Vehicle_Booking_System/blob/master/Ressource/markdown/Untitled%20collage-1.png)
 ![layer_2](https://github.com/chichikolon/Bee_Realtime_Vehicle_Booking_System/blob/master/Ressource/markdown/Untitled%20collage-2.png)
