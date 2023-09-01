@@ -122,3 +122,24 @@ Set Currencies .. And much more …
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 
+ Who made this
+--------------
+
+| <a href="https://github.com/VirgileDjimgou"><img src="https://avatars1.githubusercontent.com/u/8148300?s=400&v=4" alt="IoEngine" align="left" height="100" width="100" /></a>
+|---
+| [VirgileDjimgou](https://github.com/VirgileDjimgou)
+
+
+
+Contribute
+----------
+
+1. Create an issue to discuss about your idea
+2. [Fork it] (https://github.com/VirgileDjimgou/P125_RealtimeMoD.git)
+3. Create your feature branch (`git checkout -b my-new-feature`)
+4. Commit your changes (`git commit -am 'Add some feature'`)
+5. Push to the branch (`git push origin my-new-feature`)
+6. Create a new Pull Request
+7. Profit! :white_check_mark:
+
+
