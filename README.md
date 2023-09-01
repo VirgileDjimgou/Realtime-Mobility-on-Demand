@@ -1,23 +1,16 @@
 
-The purpose of this project is to specify software requirements of the Real-time and Autonome Online Moto-Taxi / Taxi Booking in specifically Region (Sud-Asia, Africa or Sud-America). It is intended to be a complete specification of what functionality the system provides. 
+The purpose of this project is to specify software requirements of the Real-time and Autonome Online Moto-Taxi / Taxi Booking in Cameroon (Central Africa ) or in specificaly in regions where urban transport is not properly structured or is done mainly with motorcycle taxi (Sud-Asia, Africa or Sud-America).
 
-### . This includes passenger app, driver app and web admin dashboard.
+this Solution is an on-demand taxi booking software that helps expand business reach by providing taxi services to customers anytime. Any services like taxi booking, carpooling, taxi renting, car sharing, etc., are all managed within the platform.thiss software is a ride-hailing app solution that allows a company to launch its taxi-booking support online. It supports customers to find rides at their convenience and helps the drivers earn by completing the trips that users have requested.
 
-### *With Firebase serveless cloud realtime database.
-### *Stripe Payment included.
-### *Neat App Design.
-### *Excellent Notification System.
-### *Driver Tracking. etc.
+this platform is built with native Android with the required functions and latest features for riders convenience. Prospering the freakishly growing taxi booking industry becomes super easy. The solution aims to connect the business with the customers seamlessly. 
 
 
-[![Dockbit](http://virgiledjimgou.esy.es/)]()
-[![npm (scoped)](http://virgiledjimgou.esy.es/)]()
+### . This Solution includes passenger app, driver app and web admin dashboard.
 
 ### Sample Android [HERE](http://virgiledjimgou.esy.es/)
 
-
 ![](http://virgiledjimgou.esy.es/)
-
 
 
 ### Driver App
@@ -50,7 +43,6 @@ The purpose of this project is to specify software requirements of the Real-time
 
 
 ## How It Works
-
 
 ### Start The App
 
